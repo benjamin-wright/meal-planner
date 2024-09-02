@@ -7,7 +7,13 @@ import "./index.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    errorElement: <div>404 Not Found</div>,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+    ],
   },
 ]);
 

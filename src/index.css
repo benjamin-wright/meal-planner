@@ -10,17 +10,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --light-background-low: #ecdfcc;
-  --light-background-high: #697565;
+  --light-background-low: #ffffff5a;
+  --light-background-high: #ffffffff;
+  --light-background-shadow: #00000044;
   --light-foreground-low: #1e201e;
   --light-foreground-high: #fb773c;
 
-  --dark-background-low: #222831;
-  --dark-background-high: #31363f;
+  --dark-background-low: #22283199;
+  --dark-background-high: #31363fff;
+  --dark-background-shadow: #00000077;
   --dark-foreground-low: #eeeeee;
   --dark-foreground-high: #76abae;
 
   --background-color: var(--dark-background-low);
+  --background-color-high: var(--dark-background-high);
+  --background-color-shadow: var(--dark-background-shadow);
   --foreground-color: var(--dark-foreground-low);
   --background-image: url("dark-background.jpg");
 }
@@ -28,6 +32,8 @@
 @media (prefers-color-scheme: light) {
   :root {
     --background-color: var(--light-background-low);
+    --background-color-high: var(--light-background-high);
+    --background-color-shadow: var(--light-background-shadow);
     --foreground-color: var(--light-foreground-low);
     --background-image: url("light-background.webp");
   }
@@ -42,28 +48,15 @@ body {
   background-image: var(--background-image);
   background-size: cover;
   background-position: center;
-  backdrop-filter: blur(2em);
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+  backdrop-filter: blur(1em);
+  -webkit-backdrop-filter: blur(1em);
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2em;
   line-height: 1.1;
 }
 
@@ -86,6 +79,15 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+a {
+  color: var(--foreground-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: inherit;
+}
+
 #root {
   height: 100vh;
   width: 100vw;
@@ -95,4 +97,36 @@ button:focus-visible {
   box-sizing: border-box;
   height: 100%;
   padding: 1em;
+}
+
+.card {
+  background-color: var(--background-color);
+  margin: 2em;
+  border-radius: 1em;
+  box-shadow: 0 0 1em 0.2em var(--background-color-shadow);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  letter-spacing: 0.5em;
+}
+
+.button {
+  width: fit-content;
+  padding: 0.5em 1em;
+  background-color: var(--background-color-high);
+  font-size: 1.5em;
+  border-radius: 1.5em;
+  box-shadow: 0 0 1em 0.2em var(--background-color-shadow);
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: start;
+  flex-wrap: wrap;
 }
