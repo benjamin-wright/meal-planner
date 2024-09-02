@@ -22,18 +22,27 @@
 
   --background-color: var(--dark-background-low);
   --foreground-color: var(--dark-foreground-low);
+  --background-image: url("dark-background.jpg");
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     --background-color: var(--light-background-low);
     --foreground-color: var(--light-foreground-low);
+    --background-image: url("light-background.webp");
   }
 }
 
 :root {
   color: var(--foreground-color);
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
+}
+
+body {
+  background-image: var(--background-image);
+  background-size: cover;
+  background-position: center;
+  backdrop-filter: blur(2em);
 }
 
 a {
