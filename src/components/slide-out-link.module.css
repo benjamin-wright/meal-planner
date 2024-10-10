@@ -1,0 +1,35 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  overflow-x: hidden;
+  padding: 0.5em 1em 0.5em 0.5em;
+  background-color: var(--background-color-high);
+  font-size: 1.5em;
+  border-radius: 1.5em;
+  box-shadow: 0 0 1em 0.2em var(--background-color-shadow);
+  width: 1.5em;
+  transition: width 0.5s ease-in-out;
+}
+
+.slide {
+  width: auto;
+}
+
+.wrapper {
+  text-align: center;
+  vertical-align: middle;
+  background-color: var(--foreground-color);
+  border-radius: 50%;
+  padding: 0.5em;
+}
+
+:global(svg).icon:global(.svg-inline--fa) {
+  padding: 0.4em;
+  color: var(--background-color);
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
+  padding: 0;
+}
