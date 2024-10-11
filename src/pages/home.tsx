@@ -26,7 +26,7 @@ export function Home() {
             to={`/${category.name}`}
             icon={category.icon}
             content={category.name}
-            delay={index * 100 + 200}
+            delay={index * 100 + 100}
           />
         ))}
       </section>
