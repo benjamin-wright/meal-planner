@@ -1,32 +1,30 @@
 import { Link } from "react-router-dom";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import classes from "./slide-out-link.module.css";
+import { CircularIcon } from "./circular-icon";
 
 interface SlideOutLinkProps {
   icon: IconDefinition;
   content: string;
   to: string;
-  delay: number;
+  delay?: number;
 }
 
-export default function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
+export function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
   const [isActive, setActive] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       setActive(true);
-    }, delay)
+    }, delay || 0);
   }, [setActive]);
 
   const styles = [classes.button, ...(isActive ? [classes.active] : [])].join(" ");
 
   return (
     <Link className={styles} to={to}>
-      <span className={classes.wrapper}>
-        <FontAwesomeIcon icon={icon} className={classes.icon} fixedWidth />
-      </span>
+      <CircularIcon icon={icon} />
       <span>{content}</span>
     </Link>
   );

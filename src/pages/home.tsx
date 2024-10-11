@@ -1,4 +1,4 @@
-import SlideOutLink from "../components/slide-out-link";
+import { SlideOutLink } from "../components";
 import {
   faCalendar,
   faUtensils,
@@ -20,13 +20,13 @@ export function Home() {
           { name: "ingredients", icon: faCarrot },
           { name: "categories", icon: faTags },
           { name: "units", icon: faBalanceScale },
-        ].map((category, index) => (
+        ].map((category) => (
           <SlideOutLink
             key={category.name}
             to={`/${category.name}`}
             icon={category.icon}
             content={category.name}
-            delay={index * 100 + 100}
+            delay={100}
           />
         ))}
       </section>
