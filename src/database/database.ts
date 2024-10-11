@@ -1,5 +1,7 @@
 import { IDatabaseTransport } from "./transport";
 
+export type IMigration = (db: Database) => Promise<void>;
+
 export type DatabaseOptions = {
   transport: IDatabaseTransport;
 };
@@ -19,33 +21,49 @@ export class Database {
         ingredients: ingredientSchema,
         categories: categorySchema,
         units: unitSchema,
+        migrations: migrationSchema,
       },
     });
   }
 
-  Planner() {
+  get planner() {
     return this.transport.store<Planner>("planner");
   }
 
-  Recipies() {
+  get recipies() {
     return this.transport.store<Recipie>("recipies");
   }
 
-  Ingredients() {
+  get ingredients() {
     return this.transport.store<Ingredient>("ingredients");
   }
 
-  Categories() {
+  get categories() {
     return this.transport.store<Category>("categories");
   }
 
-  Units() {
+  get units() {
     return this.transport.store<Unit>("units");
+  }
+
+  get migrations() {
+    return this.transport.store<Migration>("migrations");
+  }
+
+  async migrate(id: number, migration: IMigration): Promise<void> {
+    const existing = await this.migrations.get(id);
+    if (existing) {
+      console.info(`Skipping migration ${id}: already done`);
+      return;
+    }
+
+    await migration(this);
+    await this.migrations.add({ id });
   }
 }
 
 export type Planner = {
-  id: number;
+  id?: number;
   name: string;
   date: Date;
 };
@@ -59,7 +77,7 @@ const plannerSchema = {
 };
 
 export type Recipie = {
-  id: number;
+  id?: number;
   name: string;
 };
 
@@ -72,7 +90,7 @@ const recipieSchema = {
 };
 
 export type Ingredient = {
-  id: number;
+  id?: number;
   name: string;
   category: number;
 };
@@ -86,7 +104,7 @@ const ingredientSchema = {
 };
 
 export type Category = {
-  id: number;
+  id?: number;
   name: string;
 };
 
@@ -98,7 +116,7 @@ const categorySchema = {
 };
 
 export type Unit = {
-  id: number;
+  id?: number;
   name: string;
 };
 
@@ -108,3 +126,11 @@ const unitSchema = {
     name: { keyPath: "name", options: { unique: true } },
   },
 };
+
+export type Migration = {
+  id: number;
+}
+
+const migrationSchema = {
+  options: { keyPath: "id" },
+}

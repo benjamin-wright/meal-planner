@@ -25,6 +25,7 @@ export interface IDatabaseStore<T> {
   getIndex<K extends keyof T>(key: K, value: T[K] & IDBValidKey): Promise<T[]>;
   put(id: number, value: T): Promise<void>;
   delete(id: number): Promise<void>;
+  add(value: T): Promise<number>;
 }
 
 export class IndexedDBDatabase implements IDatabaseTransport {
@@ -37,6 +38,7 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   }
 
   init(schema: DatabaseSchema): void {
+    this.db.catch(() => {});
     this.db = new Promise((resolve, reject) => {
       let req = this.factory.open(schema.name, schema.version);
 
@@ -124,6 +126,21 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
+      };
+      req.onerror = () => {
+        reject(req.error);
+      };
+    });
+  }
+
+  async add(value: T): Promise<number> {
+    const db = await this.db;
+    const tx = db.transaction(this.name, "readwrite");
+    const store = tx.objectStore(this.name);
+    const req = store.add(value);
+    return new Promise((resolve, reject) => {
+      req.onsuccess = () => {
+        resolve(req.result as number);
       };
       req.onerror = () => {
         reject(req.error);

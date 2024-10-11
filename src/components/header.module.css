@@ -1,0 +1,6 @@
+.nav {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+}

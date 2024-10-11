@@ -10,7 +10,7 @@
 }
 
 :global(svg).icon:global(.svg-inline--fa) {
-  color: var(--background-color);
+  color: var(--background-color-high);
   box-sizing: border-box;
   width: 1em;
   height: 1em;
