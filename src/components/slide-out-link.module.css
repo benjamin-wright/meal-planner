@@ -10,11 +10,35 @@
   border-radius: 1.5em;
   box-shadow: 0 0 1em 0.2em var(--background-color-shadow);
   width: 1.5em;
-  transition: width 0.5s ease-in-out;
 }
 
-.slide {
-  width: auto;
+.button.active {
+  animation: slidein 1s ease-in-out;
+  width: 10em;
+}
+
+@keyframes slidein {
+  from {
+    width: 1.5em;
+  }
+
+  to {
+    width: 10em;
+  }
+}
+
+.button.active :global(svg) {
+  animation: spinin 1s ease-in-out;
+}
+
+@keyframes spinin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .wrapper {

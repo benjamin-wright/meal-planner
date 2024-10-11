@@ -20,12 +20,13 @@ export function Home() {
           { name: "ingredients", icon: faCarrot },
           { name: "categories", icon: faTags },
           { name: "units", icon: faBalanceScale },
-        ].map((category) => (
+        ].map((category, index) => (
           <SlideOutLink
             key={category.name}
             to={`/${category.name}`}
             icon={category.icon}
             content={category.name}
+            delay={index * 100 + 200}
           />
         ))}
       </section>

@@ -8,22 +8,22 @@ interface SlideOutLinkProps {
   icon: IconDefinition;
   content: string;
   to: string;
+  delay: number;
 }
 
-export default function SlideOutLink({ icon, content, to }: SlideOutLinkProps) {
-  const [initial, setInitial] = useState(true);
+export default function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
+  const [isActive, setActive] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setInitial(false), 1000);
-  }, [setInitial]);
+    setTimeout(() => {
+      setActive(true);
+    }, delay)
+  }, [setActive]);
 
-  const styles = [classes.button];
-  if (!initial) {
-    styles.push(classes.slide);
-  }
+  const styles = [classes.button, ...(isActive ? [classes.active] : [])].join(" ");
 
   return (
-    <Link className={styles.join(" ")} to={to}>
+    <Link className={styles} to={to}>
       <span className={classes.wrapper}>
         <FontAwesomeIcon icon={icon} className={classes.icon} fixedWidth />
       </span>
