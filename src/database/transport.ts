@@ -12,6 +12,7 @@ export type DatabaseSchema = {
       };
     };
   };
+  migrations: ((db: IDBDatabase) => void)[];
 };
 
 export interface IDatabaseTransport {
@@ -40,19 +41,19 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   init(schema: DatabaseSchema): void {
     this.db.catch(() => {});
     this.db = new Promise((resolve, reject) => {
-      let req = this.factory.open(schema.name, schema.version);
+      const req = this.factory.open(schema.name, schema.version);
 
       req.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-        let db = (event.target as IDBOpenDBRequest).result;
+        const db = (event.target as IDBOpenDBRequest).result;
 
         for (const [name, { options, indexes }] of Object.entries(
-          schema.stores,
+          schema.stores
         )) {
           const store = db.createObjectStore(name, options);
 
           if (indexes) {
             for (const [indexName, { keyPath, options }] of Object.entries(
-              indexes,
+              indexes
             )) {
               store.createIndex(indexName, keyPath, options);
             }
@@ -116,7 +117,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
 
   async getIndex<K extends keyof T>(
     key: K,
-    value: T[K] & IDBValidKey,
+    value: T[K] & IDBValidKey
   ): Promise<T[]> {
     const db = await this.db;
     const tx = db.transaction(this.name, "readonly");
