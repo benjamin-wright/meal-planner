@@ -12,7 +12,6 @@ export type DatabaseSchema = {
       };
     };
   };
-  migrations: ((db: IDBDatabase) => void)[];
 };
 
 export interface IDatabaseTransport {
@@ -49,13 +48,28 @@ export class IndexedDBDatabase implements IDatabaseTransport {
         for (const [name, { options, indexes }] of Object.entries(
           schema.stores
         )) {
-          const store = db.createObjectStore(name, options);
+          if (!db.objectStoreNames.contains(name)) {
+            let store = db.createObjectStore(name, options);
+            if (indexes) {
+              for (const [indexName, { keyPath, options }] of Object.entries(
+                indexes
+              )) {
+                store.createIndex(indexName, keyPath, options);
+              }
+            }
+          } else {
+            let tx = db.transaction(name, "readwrite");
+            let store = tx.objectStore(name);
+            if (indexes) {
+              for (const [indexName, { keyPath, options }] of Object.entries(
+                indexes
+              )) {
+                if (store.indexNames.contains(indexName)) {
+                  store.deleteIndex(indexName);
+                }
 
-          if (indexes) {
-            for (const [indexName, { keyPath, options }] of Object.entries(
-              indexes
-            )) {
-              store.createIndex(indexName, keyPath, options);
+                store.createIndex(indexName, keyPath, options);
+              }
             }
           }
         }
