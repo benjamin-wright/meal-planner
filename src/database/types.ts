@@ -7,7 +7,7 @@ export type DatabaseSchema = {
       indexes?: DatabaseStoreIndexes;
     };
   };
-  migrations?: ((db: IDBDatabase) => void)[];
+  finalize?: (transport: IDatabaseTransport) => void;
 };
 
 export type DatabaseStoreIndexes = {

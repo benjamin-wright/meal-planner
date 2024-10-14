@@ -34,23 +34,6 @@ export class IndexedDBDatabase implements IDatabaseTransport {
             this.updateStore(db, name, options, indexes);
           }
         }
-
-        if (schema.migrations) {
-          const migrationsStore = db
-            .transaction("migrations", "readwrite")
-            .objectStore("migrations");
-
-          schema.migrations.forEach((migration, index) => {
-            if (migrationsStore.get(index) !== undefined) {
-              console.info(`Skipping migration ${index}: already exists`);
-              return;
-            }
-
-            console.info(`Running migration ${index}`);
-            migration(this);
-            migrationsStore.add({ id: index });
-          });
-        }
       };
 
       req.onsuccess = () => {

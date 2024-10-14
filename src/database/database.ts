@@ -32,7 +32,12 @@ export class Database {
         categories: categorySchema,
         units: unitSchema,
       },
-      migrations: [],
+      finalize: (transport: IDatabaseTransport) => {
+        transport.store<Unit>("units").put(1, {
+          id: 1,
+          name: "Initial migration",
+        });
+      },
     });
   }
 
