@@ -84,6 +84,14 @@ export class IndexedDBDatabase implements IDatabaseTransport {
       };
     });
   }
+  
+  private createStore(): void {
+    
+  }
+
+  private updateStore(): void {
+    
+  }
 
   store<T>(name: string): IDatabaseStore<T> {
     return new IndexedDBStore<T>(this.db, name);
