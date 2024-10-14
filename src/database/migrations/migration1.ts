@@ -1,5 +1,5 @@
-import { Database } from "../database";
-import { Unit } from "../database/schemas/units";
+import { Database } from "..";
+import { Unit } from "../schemas/units";
 
 export default {
   id: 1,

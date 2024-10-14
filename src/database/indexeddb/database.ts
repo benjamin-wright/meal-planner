@@ -1,4 +1,9 @@
-import { DatabaseSchema, IDatabaseStore, IDatabaseTransport } from "../types";
+import {
+  DatabaseSchema,
+  DatabaseStoreIndexes,
+  IDatabaseStore,
+  IDatabaseTransport,
+} from "../types";
 import { IndexedDBStore } from "./store";
 
 export class IndexedDBDatabase implements IDatabaseTransport {
@@ -11,12 +16,14 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   }
 
   init(schema: DatabaseSchema): void {
-    this.db.catch(() => { });
+    this.db.catch(() => {});
     this.db = new Promise((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
       req.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
+
+        this.initMigrationsStore(db);
 
         for (const [name, { options, indexes }] of Object.entries(
           schema.stores
@@ -26,6 +33,23 @@ export class IndexedDBDatabase implements IDatabaseTransport {
           } else {
             this.updateStore(db, name, options, indexes);
           }
+        }
+
+        if (schema.migrations) {
+          const migrationsStore = db
+            .transaction("migrations", "readwrite")
+            .objectStore("migrations");
+
+          schema.migrations.forEach((migration, index) => {
+            if (migrationsStore.get(index) !== undefined) {
+              console.info(`Skipping migration ${index}: already exists`);
+              return;
+            }
+
+            console.info(`Running migration ${index}`);
+            migration(this);
+            migrationsStore.add({ id: index });
+          });
         }
       };
 
@@ -39,29 +63,49 @@ export class IndexedDBDatabase implements IDatabaseTransport {
     });
   }
 
-  private createStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
-    let store = db.createObjectStore(name, options);
+  private initMigrationsStore(db: IDBDatabase): void {
+    if (!db.objectStoreNames.contains("migrations")) {
+      db.createObjectStore("migrations", {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+    }
+  }
+
+  private createStore(
+    db: IDBDatabase,
+    name: string,
+    options: IDBObjectStoreParameters,
+    indexes?: DatabaseStoreIndexes
+  ): void {
+    const store = db.createObjectStore(name, options);
     if (indexes) {
-      for (const [indexName, { keyPath, options }] of Object.entries(
-        indexes
-      )) {
+      for (const [indexName, { keyPath, options }] of Object.entries(indexes)) {
         store.createIndex(indexName, keyPath, options);
       }
     }
   }
 
-  private updateStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
-    let tx = db.transaction(name, "readwrite");
-    let store = tx.objectStore(name);
+  private updateStore(
+    db: IDBDatabase,
+    name: string,
+    options: IDBObjectStoreParameters,
+    indexes?: DatabaseStoreIndexes
+  ): void {
+    const tx = db.transaction(name, "readwrite");
+    const store = tx.objectStore(name);
 
-    if (store.autoIncrement !== options.autoIncrement || store.keyPath !== options.keyPath) {
-      throw new Error("Cannot change keyPath or autoIncrement property of existing object store");
+    if (
+      store.autoIncrement !== options.autoIncrement ||
+      store.keyPath !== options.keyPath
+    ) {
+      throw new Error(
+        "Cannot change keyPath or autoIncrement property of existing object store"
+      );
     }
 
     if (indexes) {
-      for (const [indexName, { keyPath, options }] of Object.entries(
-        indexes
-      )) {
+      for (const [indexName, { keyPath, options }] of Object.entries(indexes)) {
         if (store.indexNames.contains(indexName)) {
           store.deleteIndex(indexName);
         }

@@ -4,15 +4,17 @@ export type DatabaseSchema = {
   stores: {
     [name: string]: {
       options: IDBObjectStoreParameters;
-      indexes?: {
-        [name: string]: {
-          keyPath: string;
-          options?: IDBIndexParameters;
-        };
-      };
+      indexes?: DatabaseStoreIndexes;
     };
   };
   migrations?: ((db: IDBDatabase) => void)[];
+};
+
+export type DatabaseStoreIndexes = {
+  [name: string]: {
+    keyPath: string;
+    options?: IDBIndexParameters;
+  };
 };
 
 export interface IDatabaseTransport {

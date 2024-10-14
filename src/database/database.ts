@@ -12,11 +12,6 @@ import {
   unitSchema,
 } from "./schemas";
 
-export type IMigration = {
-  id: number;
-  migrate: (db: Database) => Promise<void>;
-};
-
 export type DatabaseOptions = {
   transport: IDatabaseTransport;
 };
