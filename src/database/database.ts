@@ -1,4 +1,12 @@
 import { IDatabaseTransport } from "./transport";
+import {
+  Planner, plannerSchema,
+  Recipie, recipieSchema,
+  Ingredient, ingredientSchema,
+  Category, categorySchema,
+  Unit, unitSchema,
+  Migration, migrationSchema,
+} from "./schemas";
 
 export type IMigration = (db: Database) => Promise<void>;
 
@@ -60,77 +68,4 @@ export class Database {
     await migration(this);
     await this.migrations.add({ id });
   }
-}
-
-export type Planner = {
-  id?: number;
-  name: string;
-  date: Date;
-};
-
-const plannerSchema = {
-  options: { keyPath: "id", autoIncrement: true },
-  indexes: {
-    name: { keyPath: "name", options: { unique: true } },
-    date: { keyPath: "date" },
-  },
-};
-
-export type Recipie = {
-  id?: number;
-  name: string;
-};
-
-const recipieSchema = {
-  options: { keyPath: "id", autoIncrement: true },
-  indexes: {
-    name: { keyPath: "name", options: { unique: true } },
-    category: { keyPath: "category" },
-  },
-};
-
-export type Ingredient = {
-  id?: number;
-  name: string;
-  category: number;
-};
-
-const ingredientSchema = {
-  options: { keyPath: "id", autoIncrement: true },
-  indexes: {
-    name: { keyPath: "name", options: { unique: true } },
-    category: { keyPath: "category" },
-  },
-};
-
-export type Category = {
-  id?: number;
-  name: string;
-};
-
-const categorySchema = {
-  options: { keyPath: "id", autoIncrement: true },
-  indexes: {
-    name: { keyPath: "name", options: { unique: true } },
-  },
-};
-
-export type Unit = {
-  id?: number;
-  name: string;
-};
-
-const unitSchema = {
-  options: { keyPath: "id", autoIncrement: true },
-  indexes: {
-    name: { keyPath: "name", options: { unique: true } },
-  },
-};
-
-export type Migration = {
-  id: number;
-}
-
-const migrationSchema = {
-  options: { keyPath: "id" },
 }

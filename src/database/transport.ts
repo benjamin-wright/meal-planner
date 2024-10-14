@@ -4,15 +4,17 @@ export type DatabaseSchema = {
   stores: {
     [name: string]: {
       options: IDBObjectStoreParameters;
-      indexes?: {
-        [name: string]: {
-          keyPath: string;
-          options?: IDBIndexParameters;
-        };
-      };
+      indexes?: DatabaseStoreIndexes;
     };
   };
 };
+
+export type DatabaseStoreIndexes = {
+  [name: string]: {
+    keyPath: string;
+    options?: IDBIndexParameters;
+  };
+}
 
 export interface IDatabaseTransport {
   init(schema: DatabaseSchema): void;
@@ -49,28 +51,9 @@ export class IndexedDBDatabase implements IDatabaseTransport {
           schema.stores
         )) {
           if (!db.objectStoreNames.contains(name)) {
-            let store = db.createObjectStore(name, options);
-            if (indexes) {
-              for (const [indexName, { keyPath, options }] of Object.entries(
-                indexes
-              )) {
-                store.createIndex(indexName, keyPath, options);
-              }
-            }
+            this.createStore(db, name, options, indexes);
           } else {
-            let tx = db.transaction(name, "readwrite");
-            let store = tx.objectStore(name);
-            if (indexes) {
-              for (const [indexName, { keyPath, options }] of Object.entries(
-                indexes
-              )) {
-                if (store.indexNames.contains(indexName)) {
-                  store.deleteIndex(indexName);
-                }
-
-                store.createIndex(indexName, keyPath, options);
-              }
-            }
+            this.updateStore(db, name, options, indexes);
           }
         }
       };
@@ -85,12 +68,38 @@ export class IndexedDBDatabase implements IDatabaseTransport {
     });
   }
   
-  private createStore(): void {
-    
+  private createStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
+    let store = db.createObjectStore(name, options);
+    if (indexes) {
+      for (const [indexName, { keyPath, options }] of Object.entries(
+        indexes
+      )) {
+        store.createIndex(indexName, keyPath, options);
+      }
+    }
   }
 
-  private updateStore(): void {
-    
+  private updateStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
+    let tx = db.transaction(name, "readwrite");
+    let store = tx.objectStore(name);
+
+    if (store.autoIncrement !== options.autoIncrement || store.keyPath !== options.keyPath) {
+      throw new Error("Cannot change keyPath or autoIncrement property of existing object store");
+    }
+
+    if (indexes) {
+      for (const [indexName, { keyPath, options }] of Object.entries(
+        indexes
+      )) {
+        if (store.indexNames.contains(indexName)) {
+          store.deleteIndex(indexName);
+        }
+
+        store.createIndex(indexName, keyPath, options);
+      }
+    }
+
+    tx.commit();
   }
 
   store<T>(name: string): IDatabaseStore<T> {
