@@ -11,7 +11,7 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   }
 
   init(schema: DatabaseSchema): void {
-    this.db.catch(() => {});
+    this.db.catch(() => { });
     this.db = new Promise((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
@@ -21,14 +21,10 @@ export class IndexedDBDatabase implements IDatabaseTransport {
         for (const [name, { options, indexes }] of Object.entries(
           schema.stores
         )) {
-          const store = db.createObjectStore(name, options);
-
-          if (indexes) {
-            for (const [indexName, { keyPath, options }] of Object.entries(
-              indexes
-            )) {
-              store.createIndex(indexName, keyPath, options);
-            }
+          if (!db.objectStoreNames.contains(name)) {
+            this.createStore(db, name, options, indexes);
+          } else {
+            this.updateStore(db, name, options, indexes);
           }
         }
       };
@@ -41,6 +37,40 @@ export class IndexedDBDatabase implements IDatabaseTransport {
         reject(req.error);
       };
     });
+  }
+
+  private createStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
+    let store = db.createObjectStore(name, options);
+    if (indexes) {
+      for (const [indexName, { keyPath, options }] of Object.entries(
+        indexes
+      )) {
+        store.createIndex(indexName, keyPath, options);
+      }
+    }
+  }
+
+  private updateStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
+    let tx = db.transaction(name, "readwrite");
+    let store = tx.objectStore(name);
+
+    if (store.autoIncrement !== options.autoIncrement || store.keyPath !== options.keyPath) {
+      throw new Error("Cannot change keyPath or autoIncrement property of existing object store");
+    }
+
+    if (indexes) {
+      for (const [indexName, { keyPath, options }] of Object.entries(
+        indexes
+      )) {
+        if (store.indexNames.contains(indexName)) {
+          store.deleteIndex(indexName);
+        }
+
+        store.createIndex(indexName, keyPath, options);
+      }
+    }
+
+    tx.commit();
   }
 
   store<T>(name: string): IDatabaseStore<T> {
