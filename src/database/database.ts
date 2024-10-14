@@ -1,11 +1,17 @@
-import { IDatabaseTransport } from "./transport";
+import { IDatabaseTransport } from "./types";
 import {
-  Planner, plannerSchema,
-  Recipie, recipieSchema,
-  Ingredient, ingredientSchema,
-  Category, categorySchema,
-  Unit, unitSchema,
-  Migration, migrationSchema,
+  Planner,
+  plannerSchema,
+  Recipie,
+  recipieSchema,
+  Ingredient,
+  ingredientSchema,
+  Category,
+  categorySchema,
+  Unit,
+  unitSchema,
+  Migration,
+  migrationSchema,
 } from "./schemas";
 
 export type IMigration = (db: Database) => Promise<void>;
@@ -56,16 +62,5 @@ export class Database {
 
   get migrations() {
     return this.transport.store<Migration>("migrations");
-  }
-
-  async migrate(id: number, migration: IMigration): Promise<void> {
-    const existing = await this.migrations.get(id);
-    if (existing) {
-      console.info(`Skipping migration ${id}: already done`);
-      return;
-    }
-
-    await migration(this);
-    await this.migrations.add({ id });
   }
 }

@@ -14,7 +14,7 @@ export type DatabaseStoreIndexes = {
     keyPath: string;
     options?: IDBIndexParameters;
   };
-}
+};
 
 export interface IDatabaseTransport {
   init(schema: DatabaseSchema): void;
@@ -67,30 +67,41 @@ export class IndexedDBDatabase implements IDatabaseTransport {
       };
     });
   }
-  
-  private createStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
-    let store = db.createObjectStore(name, options);
+
+  private createStore(
+    db: IDBDatabase,
+    name: string,
+    options: IDBObjectStoreParameters,
+    indexes?: DatabaseStoreIndexes
+  ): void {
+    const store = db.createObjectStore(name, options);
     if (indexes) {
-      for (const [indexName, { keyPath, options }] of Object.entries(
-        indexes
-      )) {
+      for (const [indexName, { keyPath, options }] of Object.entries(indexes)) {
         store.createIndex(indexName, keyPath, options);
       }
     }
   }
 
-  private updateStore(db: IDBDatabase, name: string, options: IDBObjectStoreParameters, indexes?: DatabaseStoreIndexes): void {
-    let tx = db.transaction(name, "readwrite");
-    let store = tx.objectStore(name);
+  private updateStore(
+    db: IDBDatabase,
+    name: string,
+    options: IDBObjectStoreParameters,
+    indexes?: DatabaseStoreIndexes
+  ): void {
+    const tx = db.transaction(name, "readwrite");
+    const store = tx.objectStore(name);
 
-    if (store.autoIncrement !== options.autoIncrement || store.keyPath !== options.keyPath) {
-      throw new Error("Cannot change keyPath or autoIncrement property of existing object store");
+    if (
+      store.autoIncrement !== options.autoIncrement ||
+      store.keyPath !== options.keyPath
+    ) {
+      throw new Error(
+        "Cannot change keyPath or autoIncrement property of existing object store"
+      );
     }
 
     if (indexes) {
-      for (const [indexName, { keyPath, options }] of Object.entries(
-        indexes
-      )) {
+      for (const [indexName, { keyPath, options }] of Object.entries(indexes)) {
         if (store.indexNames.contains(indexName)) {
           store.deleteIndex(indexName);
         }

@@ -18,9 +18,11 @@ export function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
     setTimeout(() => {
       setActive(true);
     }, delay || 0);
-  }, [setActive]);
+  }, [setActive, delay]);
 
-  const styles = [classes.button, ...(isActive ? [classes.active] : [])].join(" ");
+  const styles = [classes.button, ...(isActive ? [classes.active] : [])].join(
+    " "
+  );
 
   return (
     <Link className={styles} to={to}>

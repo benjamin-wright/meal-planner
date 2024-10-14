@@ -4,16 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home, Units } from "./pages";
 import "./index.css";
 
-import { Database, IndexedDBDatabase } from "./database";
-import migrations from "./migrations";
-
-const db = new Database(
-  new IndexedDBDatabase(indexedDB)
-);
-
-migrations.forEach((migration, index) => {
-  db.migrate(index, migration);
-});
+// import { Database, IndexedDBDatabase } from "./database";
+// const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
   {
@@ -27,7 +19,7 @@ const router = createBrowserRouter([
       {
         path: "units",
         element: <Units />,
-      }
+      },
     ],
   },
 ]);
