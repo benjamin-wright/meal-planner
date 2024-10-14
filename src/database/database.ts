@@ -10,11 +10,12 @@ import {
   categorySchema,
   Unit,
   unitSchema,
-  Migration,
-  migrationSchema,
 } from "./schemas";
 
-export type IMigration = (db: Database) => Promise<void>;
+export type IMigration = {
+  id: number;
+  migrate: (db: Database) => Promise<void>;
+};
 
 export type DatabaseOptions = {
   transport: IDatabaseTransport;
@@ -35,8 +36,8 @@ export class Database {
         ingredients: ingredientSchema,
         categories: categorySchema,
         units: unitSchema,
-        migrations: migrationSchema,
       },
+      migrations: [],
     });
   }
 
@@ -58,9 +59,5 @@ export class Database {
 
   get units() {
     return this.transport.store<Unit>("units");
-  }
-
-  get migrations() {
-    return this.transport.store<Migration>("migrations");
   }
 }

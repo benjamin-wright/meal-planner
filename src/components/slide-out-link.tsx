@@ -26,7 +26,7 @@ export function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
 
   return (
     <Link className={styles} to={to}>
-      <CircularIcon icon={icon} />
+      <CircularIcon icon={icon} active />
       <span>{content}</span>
     </Link>
   );

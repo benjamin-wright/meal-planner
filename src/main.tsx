@@ -1,11 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Units } from "./pages";
+import {
+  Home,
+  Units,
+  Settings,
+  Categories,
+  Ingredients,
+  Recipies,
+  Planner,
+} from "./pages";
 import "./index.css";
 
-// import { Database, IndexedDBDatabase } from "./database";
-// const db = new Database(new IndexedDBDatabase(indexedDB));
+import { Database, IndexedDBDatabase } from "./database";
+import { migrate } from "./migrations";
+const db = new Database(new IndexedDBDatabase(indexedDB));
+migrate(db);
 
 const router = createBrowserRouter([
   {
@@ -18,7 +28,27 @@ const router = createBrowserRouter([
       })),
       {
         path: "units",
-        element: <Units />,
+        element: <Units database={db} />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
+      },
+      {
+        path: "categories",
+        element: <Categories />,
+      },
+      {
+        path: "ingredients",
+        element: <Ingredients />,
+      },
+      {
+        path: "recipies",
+        element: <Recipies />,
+      },
+      {
+        path: "planner",
+        element: <Planner />,
       },
     ],
   },

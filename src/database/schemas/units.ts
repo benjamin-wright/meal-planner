@@ -1,15 +1,27 @@
-export type Unit = {
+export class Unit {
   id?: number;
   name: string;
-  plural: string;
-  abbrev: string;
   magnitudes: Magnitude[];
   base?: number;
   conversion?: number;
-};
+
+  constructor(
+    name: string,
+    magnitudes: Magnitude[],
+    base?: number,
+    conversion?: number,
+    id?: number
+  ) {
+    this.id = id;
+    this.name = name;
+    this.magnitudes = magnitudes;
+    this.base = base;
+    this.conversion = conversion;
+  }
+}
 
 export type Magnitude = {
-  name: string;
+  singular: string;
   plural: string;
   abbrev: string;
   multiplier: number;

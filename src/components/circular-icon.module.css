@@ -4,16 +4,23 @@
   -webkit-user-select: none;
   text-align: center;
   vertical-align: middle;
-  background-color: var(--foreground-color);
+  background-color: var(--background-color-high);
   border-radius: 50%;
   padding: 0.5em;
 }
 
 :global(svg).icon:global(.svg-inline--fa) {
-  color: var(--background-color-high);
+  color: var(--foreground-color);
   box-sizing: border-box;
   width: 1em;
   height: 1em;
   padding: 0;
 }
-  
+
+.wrapper.active {
+  background-color: var(--foreground-color);
+}
+
+.active > :global(svg).icon:global(.svg-inline--fa) {
+  color: var(--background-color-high);
+}

@@ -5,6 +5,7 @@ import {
   faCarrot,
   faTags,
   faBalanceScale,
+  faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function Home() {
@@ -20,6 +21,7 @@ export function Home() {
           { name: "ingredients", icon: faCarrot },
           { name: "categories", icon: faTags },
           { name: "units", icon: faBalanceScale },
+          { name: "settings", icon: faCog },
         ].map((category) => (
           <SlideOutLink
             key={category.name}

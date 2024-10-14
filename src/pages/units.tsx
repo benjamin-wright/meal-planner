@@ -1,38 +1,36 @@
-import { Header } from "../components";
+import { useEffect } from "react";
+import { Page } from "../components/page";
+import { Database } from "../database";
 
-type Unit = {
-  id: number;
-  name: string;
-  abbreviation: string;
+interface UnitsProps {
+  database: Database;
 }
 
-const units: Unit[] = [
-  { id: 1, name: "Cup", abbreviation: "c" },
-  { id: 2, name: "Fluid Ounce", abbreviation: "fl oz" },
-]
+export function Units({ database }: UnitsProps) {
+  useEffect(() => {
+    database.units.getAll().then((units) => {
+      console.log(units);
+    });
+  });
 
-export function Units() {
   return (
-    <div className="window">
-      <Header title="Units" home />
-      <section>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Abbreviation</th>
+    <Page title="Units">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Abbreviation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* {units.map((unit) => (
+            <tr key={unit.id}>
+              <td>{unit.name}</td>
+              <td>{unit.abbreviation}</td>
             </tr>
-          </thead>
-          <tbody>
-            {units.map((unit) => (
-              <tr key={unit.id}>
-                <td>{unit.name}</td>
-                <td>{unit.abbreviation}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-    </div>
+          ))} */}
+        </tbody>
+      </table>
+    </Page>
   );
 }

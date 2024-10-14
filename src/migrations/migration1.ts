@@ -1,18 +1,37 @@
 import { Database } from "../database";
+import { Unit } from "../database/schemas/units";
 
-export default async function migration1(db: Database): Promise<void> {
-  await db.units.add({ name: "g" });
-  await db.units.add({ name: "kg" });
-  await db.units.add({ name: "ml" });
-  await db.units.add({ name: "l" });
-  await db.units.add({ name: "pcs" });
-  await db.units.add({ name: "tsp" });
-  await db.units.add({ name: "tbsp" });
-  await db.units.add({ name: "cup" });
-  await db.units.add({ name: "oz" });
-  await db.units.add({ name: "lb" });
-  await db.units.add({ name: "pt" });
-  await db.units.add({ name: "qt" });
-  await db.units.add({ name: "gal" });
-  await db.units.add({ name: "fl oz" });
-}
+export default {
+  id: 1,
+  migrate: async function migration1(db: Database): Promise<void> {
+    await db.units.add(
+      new Unit("gram", [
+        { singular: "gram", plural: "grams", abbrev: "g", multiplier: 1 },
+        {
+          singular: "kilogram",
+          plural: "kilograms",
+          abbrev: "kg",
+          multiplier: 1000,
+        },
+        {
+          singular: "milligram",
+          plural: "milligrams",
+          abbrev: "mg",
+          multiplier: 0.001,
+        },
+      ])
+    );
+
+    await db.units.add(
+      new Unit("litre", [
+        { singular: "litre", plural: "litres", abbrev: "l", multiplier: 1 },
+        {
+          singular: "millilitre",
+          plural: "millilitres",
+          abbrev: "ml",
+          multiplier: 0.001,
+        },
+      ])
+    );
+  },
+};

@@ -4,11 +4,16 @@ import classes from "./circular-icon.module.css";
 
 interface CircularIconProps {
   icon: IconDefinition;
+  active?: boolean;
 }
 
-export function CircularIcon({ icon }: CircularIconProps) {
+export function CircularIcon({ icon, active }: CircularIconProps) {
+  const className = [classes.wrapper, ...(active ? [classes.active] : [])].join(
+    " "
+  );
+
   return (
-    <span className={classes.wrapper}>
+    <span className={className}>
       <FontAwesomeIcon icon={icon} className={classes.icon} fixedWidth />
     </span>
   );

@@ -10,8 +10,8 @@ interface HeaderProps {
 export function Header({ title, home }: HeaderProps) {
   return (
     <nav className={classes.nav}>
-        { home ? <IconLink to="/" icon={faHouse}></IconLink> : null }
-        <h1>{title}</h1>
+      {home ? <IconLink to="/" icon={faHouse}></IconLink> : null}
+      <h1>{title}</h1>
     </nav>
   );
 }
