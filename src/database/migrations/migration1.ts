@@ -1,8 +1,10 @@
 import { Unit } from "../schemas/units";
-import { Database } from "../database";
+import { IDatabaseTransport } from "../types";
 
-export async function migration1(db: Database) {
-  await db.units.add(
+export function migration1(transport: IDatabaseTransport) {
+  const units = transport.store<Unit>("units");
+
+  units.add(
     new Unit("gram", [
       { singular: "gram", plural: "grams", abbrev: "g", multiplier: 1 },
       {
@@ -20,7 +22,7 @@ export async function migration1(db: Database) {
     ])
   );
 
-  await db.units.add(
+  units.add(
     new Unit("litre", [
       { singular: "litre", plural: "litres", abbrev: "l", multiplier: 1 },
       {

@@ -1,3 +1,3 @@
-import { Database } from "../database";
+import { IDatabaseTransport } from "../types";
 
-export type Migration = (db: Database) => void;
+export type Migration = (transport: IDatabaseTransport) => void;

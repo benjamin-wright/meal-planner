@@ -13,9 +13,7 @@ import {
 import "./index.css";
 
 import { Database, IndexedDBDatabase } from "./database";
-import { migrate } from "./migrations";
 const db = new Database(new IndexedDBDatabase(indexedDB));
-migrate(db);
 
 const router = createBrowserRouter([
   {

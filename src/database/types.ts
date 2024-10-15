@@ -7,8 +7,10 @@ export type DatabaseSchema = {
       indexes?: DatabaseStoreIndexes;
     };
   };
-  finalize?: (transport: IDatabaseTransport) => void;
+  finalize?: Finalizer;
 };
+
+export type Finalizer = (transport: IDatabaseTransport, migrations: IMigrations) => Promise<void>;
 
 export type DatabaseStoreIndexes = {
   [name: string]: {
@@ -20,6 +22,12 @@ export type DatabaseStoreIndexes = {
 export interface IDatabaseTransport {
   init(schema: DatabaseSchema): void;
   store<T>(name: string): IDatabaseStore<T>;
+}
+
+export interface IMigrations {
+  exists(index: number): Promise<boolean>;
+  add(index: number): Promise<void>;
+  remove(index: number): Promise<void>;
 }
 
 export interface IDatabaseStore<T> {

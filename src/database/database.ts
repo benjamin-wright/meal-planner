@@ -1,4 +1,4 @@
-import { IDatabaseTransport } from "./types";
+import { IDatabaseTransport, IMigrations } from "./types";
 import {
   Planner,
   plannerSchema,
@@ -11,6 +11,7 @@ import {
   Unit,
   unitSchema,
 } from "./schemas";
+import { migrations } from "./migrations";
 
 export type DatabaseOptions = {
   transport: IDatabaseTransport;
@@ -32,10 +33,16 @@ export class Database {
         categories: categorySchema,
         units: unitSchema,
       },
-      finalize: (transport: IDatabaseTransport) => {
-        transport.store<Unit>("units").put(1, {
-          id: 1,
-          name: "Initial migration",
+      finalize: (transport: IDatabaseTransport, m: IMigrations) => {
+        migrations.forEach((migration, index) => {
+          if (m.exists(index)) {
+            console.info(`Skipping migration ${index}: already exists`);
+            return;
+          }
+
+          console.info(`Running migration ${index}`);
+          migration(transport);
+          m.add(index);
         });
       },
     });

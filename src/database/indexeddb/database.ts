@@ -16,8 +16,8 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   }
 
   init(schema: DatabaseSchema): void {
-    this.db.catch(() => {});
-    this.db = new Promise((resolve, reject) => {
+    this.db.catch(() => { });
+    this.db = new Promise<IDBDatabase>((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
       req.onupgradeneeded = (event: IDBVersionChangeEvent) => {
@@ -43,6 +43,31 @@ export class IndexedDBDatabase implements IDatabaseTransport {
       req.onerror = () => {
         reject(req.error);
       };
+    }).then((db: IDBDatabase) => {
+      if (schema.finalize) {
+        schema.finalize(this, {
+          exists: (index) => {
+            return !!db
+              .transaction("migrations")
+              .objectStore("migrations")
+              .get(index).;
+          },
+          add: (index) => {
+            db
+              .transaction("migrations", "readwrite")
+              .objectStore("migrations")
+              .add({ id: index });
+          },
+          remove: (index) => {
+            db
+              .transaction("migrations", "readwrite")
+              .objectStore("migrations")
+              .delete(index);
+          },
+        });
+      }
+
+      return db;
     });
   }
 
