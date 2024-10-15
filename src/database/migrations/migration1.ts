@@ -1,7 +1,7 @@
 import { Unit } from "../schemas/units";
 import { IDatabaseTransport } from "../types";
 
-export function migration1(transport: IDatabaseTransport) {
+export async function migration1(transport: IDatabaseTransport) {
   const units = transport.store<Unit>("units");
 
   units.add(

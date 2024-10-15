@@ -33,17 +33,17 @@ export class Database {
         categories: categorySchema,
         units: unitSchema,
       },
-      finalize: (transport: IDatabaseTransport, m: IMigrations) => {
-        migrations.forEach((migration, index) => {
-          if (m.exists(index)) {
+      finalize: async (transport: IDatabaseTransport, m: IMigrations) => {
+        for (const [index, migration] of migrations.entries()) {
+          if (await m.exists(index)) {
             console.info(`Skipping migration ${index}: already exists`);
             return;
           }
 
           console.info(`Running migration ${index}`);
-          migration(transport);
-          m.add(index);
-        });
+          await migration(transport);
+          await m.add(index);
+        }
       },
     });
   }

@@ -46,13 +46,23 @@ export class IndexedDBDatabase implements IDatabaseTransport {
     }).then((db: IDBDatabase) => {
       if (schema.finalize) {
         schema.finalize(this, {
-          exists: (index) => {
-            return !!db
-              .transaction("migrations")
-              .objectStore("migrations")
-              .get(index).;
+          exists: async (index) => {
+            return new Promise((resolve, reject) => {
+              const req = db
+                .transaction("migrations")
+                .objectStore("migrations")
+                .get(index);
+
+              req.onsuccess = () => {
+                resolve(!!req.result);
+              };
+
+              req.onerror = () => {
+                reject(req.error);
+              };
+            });
           },
-          add: (index) => {
+          add: async (index) => {
             db
               .transaction("migrations", "readwrite")
               .objectStore("migrations")
