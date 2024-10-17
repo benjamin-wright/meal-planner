@@ -9,10 +9,8 @@ export class Unit {
     name: string,
     magnitudes: Magnitude[],
     base?: number,
-    conversion?: number,
-    id?: number
+    conversion?: number
   ) {
-    this.id = id;
     this.name = name;
     this.magnitudes = magnitudes;
     this.base = base;

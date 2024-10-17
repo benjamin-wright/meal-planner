@@ -58,10 +58,11 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     });
   }
 
-  async add(value: T): Promise<number> {
+  async add(value: T & { id?: number }): Promise<number> {
     const db = await this.db;
     const tx = db.transaction(this.name, "readwrite");
     const store = tx.objectStore(this.name);
+    delete value.id;
     const req = store.add(value);
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {

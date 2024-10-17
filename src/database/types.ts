@@ -10,7 +10,10 @@ export type DatabaseSchema = {
   finalize?: Finalizer;
 };
 
-export type Finalizer = (transport: IDatabaseTransport, migrations: IMigrations) => Promise<void>;
+export type Finalizer = (
+  transport: IDatabaseTransport,
+  migrations: IMigrations
+) => Promise<void>;
 
 export type DatabaseStoreIndexes = {
   [name: string]: {

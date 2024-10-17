@@ -16,7 +16,7 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   }
 
   init(schema: DatabaseSchema): void {
-    this.db.catch(() => { });
+    this.db.catch(() => {});
     this.db = new Promise<IDBDatabase>((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
@@ -45,36 +45,58 @@ export class IndexedDBDatabase implements IDatabaseTransport {
       };
     }).then((db: IDBDatabase) => {
       if (schema.finalize) {
-        schema.finalize(this, {
-          exists: async (index) => {
-            return new Promise((resolve, reject) => {
-              const req = db
-                .transaction("migrations")
-                .objectStore("migrations")
-                .get(index);
+        return schema
+          .finalize(this, {
+            exists: async (index) => {
+              return new Promise((resolve, reject) => {
+                const req = db
+                  .transaction("migrations")
+                  .objectStore("migrations")
+                  .get(index);
 
-              req.onsuccess = () => {
-                resolve(!!req.result);
-              };
+                req.onsuccess = () => {
+                  resolve(!!req.result);
+                };
 
-              req.onerror = () => {
-                reject(req.error);
-              };
-            });
-          },
-          add: async (index) => {
-            db
-              .transaction("migrations", "readwrite")
-              .objectStore("migrations")
-              .add({ id: index });
-          },
-          remove: (index) => {
-            db
-              .transaction("migrations", "readwrite")
-              .objectStore("migrations")
-              .delete(index);
-          },
-        });
+                req.onerror = () => {
+                  reject(req.error);
+                };
+              });
+            },
+            add: async (index) => {
+              return new Promise((resolve, reject) => {
+                const req = db
+                  .transaction("migrations", "readwrite")
+                  .objectStore("migrations")
+                  .add({ id: index });
+
+                req.onsuccess = () => {
+                  resolve();
+                };
+
+                req.onerror = () => {
+                  reject(req.error);
+                };
+              });
+            },
+            remove: async (index) => {
+              return new Promise((resolve, reject) => {
+                const req = db
+                  .transaction("migrations", "readwrite")
+                  .objectStore("migrations")
+                  .delete(index);
+
+                req.onsuccess = () => {
+                  resolve();
+                };
+
+                req.onerror = () => {
+                  reject(req.error);
+                };
+              });
+            },
+          })
+          .then(() => db);
       }
 
       return db;
