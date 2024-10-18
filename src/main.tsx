@@ -10,7 +10,53 @@ import {
   Recipies,
   Planner,
 } from "./pages";
-import "./index.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+// import "./index.css";
+
+const theme = createTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: "#393e46",
+        },
+        secondary: {
+          main: "#222831",
+        },
+        background: {
+          default: "#eeeeee",
+          paper: "#393e46",
+        },
+        text: {
+          primary: "#222831",
+          secondary: "#222831",
+        },
+      }
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: "#393e46",
+        },
+        secondary: {
+          main: "#222831",
+        },
+        background: {
+          default: "#222831",
+          paper: "#393e46",
+        },
+        text: {
+          primary: "#eeeeee",
+          secondary: "#eeeeee",
+        },
+        error: {
+          main: "#990000",
+        }
+      },
+    },
+  },
+});
 
 import { Database, IndexedDBDatabase } from "./database";
 const db = new Database(new IndexedDBDatabase(indexedDB));
@@ -54,6 +100,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>
 );

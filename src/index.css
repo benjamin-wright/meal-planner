@@ -42,7 +42,6 @@
 
 :root {
   color: var(--foreground-color);
-  /* background-color: var(--background-color); */
 }
 
 body {
@@ -125,7 +124,7 @@ a:visited {
   flex-grow: 1;
 }
 
-button.MuiButtonBase-root {
+/* button.MuiButtonBase-root {
   background-color: var(--background-color-high);
   color: var(--foreground-color);
 }
@@ -133,4 +132,4 @@ button.MuiButtonBase-root {
 button.MuiButtonBase-root.active {
   background-color: var(--foreground-color);
   color: var(--background-color-high);
-}
+} */
