@@ -1,6 +1,6 @@
 import classes from "./header.module.css";
 import { IconLink } from "./icon-link";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import House from "@mui/icons-material/House";
 
 interface HeaderProps {
   title: string;
@@ -10,7 +10,7 @@ interface HeaderProps {
 export function Header({ title, home }: HeaderProps) {
   return (
     <nav className={classes.nav}>
-      {home ? <IconLink to="/" icon={faHouse}></IconLink> : null}
+      {home ? <IconLink to="/"><House /></IconLink> : null}
       <h1>{title}</h1>
     </nav>
   );

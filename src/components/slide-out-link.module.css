@@ -13,7 +13,7 @@
 }
 
 .button.active {
-  animation: slidein 1s ease-in-out;
+  animation: slidein 0.8s ease-in-out;
   width: 10em;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .button.active :global(svg) {
-  animation: spinin 1s ease-in-out;
+  animation: spinin 0.8s ease-in-out;
 }
 
 @keyframes spinin {

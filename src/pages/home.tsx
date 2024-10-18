@@ -1,12 +1,10 @@
 import { SlideOutLink } from "../components";
-import {
-  faCalendar,
-  faUtensils,
-  faCarrot,
-  faTags,
-  faBalanceScale,
-  faCog,
-} from "@fortawesome/free-solid-svg-icons";
+import Settings from "@mui/icons-material/Settings"
+import Scale from "@mui/icons-material/Scale"
+import Sell from "@mui/icons-material/Sell"
+import Egg from "@mui/icons-material/Egg"
+import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
+import CalendarMonth from "@mui/icons-material/CalendarMonth";
 
 export function Home() {
   return (
@@ -16,20 +14,21 @@ export function Home() {
       </section>
       <section className="flex">
         {[
-          { name: "planner", icon: faCalendar },
-          { name: "recipies", icon: faUtensils },
-          { name: "ingredients", icon: faCarrot },
-          { name: "categories", icon: faTags },
-          { name: "units", icon: faBalanceScale },
-          { name: "settings", icon: faCog },
-        ].map((category) => (
+          { name: "planner", icon: CalendarMonth },
+          { name: "recipies", icon: RestaurantRounded },
+          { name: "ingredients", icon: Egg },
+          { name: "categories", icon: Sell },
+          { name: "units", icon: Scale },
+          { name: "settings", icon: Settings },
+        ].map((category, index) => (
           <SlideOutLink
             key={category.name}
             to={`/${category.name}`}
-            icon={category.icon}
             content={category.name}
-            delay={100}
-          />
+            delay={100 + (index * 100)}
+          >
+            <category.icon />
+          </SlideOutLink>
         ))}
       </section>
     </div>

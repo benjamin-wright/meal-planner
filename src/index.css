@@ -73,9 +73,11 @@ button {
   transition: border-color 0.25s;
   overflow-x: hidden;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -121,4 +123,14 @@ a:visited {
 
 .grower {
   flex-grow: 1;
+}
+
+.MuiButtonBase-root.Button {
+  background-color: var(--background-color-high);
+  color: var(--foreground-color);
+}
+
+.MuiButtonBase-root.Button.active {
+  background-color: var(--foreground-color);
+  color: var(--background-color-high);
 }

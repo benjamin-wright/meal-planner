@@ -1,23 +1,22 @@
 import classes from "./footer.module.css";
 import { IconLink } from "./icon-link";
-import {
-  faCalendar,
-  faUtensils,
-  faCarrot,
-  faTags,
-  faBalanceScale,
-  faCog,
-} from "@fortawesome/free-solid-svg-icons";
+
+import Settings from "@mui/icons-material/Settings"
+import Scale from "@mui/icons-material/Scale"
+import Sell from "@mui/icons-material/Sell"
+import Egg from "@mui/icons-material/Egg"
+import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
+import CalendarMonth from "@mui/icons-material/CalendarMonth";
 
 export function Footer() {
   return (
     <nav className={classes.nav}>
-      <IconLink to="/settings" icon={faCog} />
-      <IconLink to="/units" icon={faBalanceScale} />
-      <IconLink to="/categories" icon={faTags} />
-      <IconLink to="/ingredients" icon={faCarrot} />
-      <IconLink to="/recipies" icon={faUtensils} />
-      <IconLink to="/planner" icon={faCalendar} />
+      <IconLink to="/settings"><Settings /></IconLink>
+      <IconLink to="/units"><Scale /></IconLink>
+      <IconLink to="/categories"><Sell /></IconLink>
+      <IconLink to="/ingredients"><Egg /></IconLink>
+      <IconLink to="/recipies"><RestaurantRounded /></IconLink>
+      <IconLink to="/planner"><CalendarMonth /></IconLink>
     </nav>
   );
 }

@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useEffect, useState } from "react";
 import classes from "./slide-out-link.module.css";
-import { CircularIcon } from "./circular-icon";
+import IconButton from "@mui/material/IconButton";
 
 interface SlideOutLinkProps {
-  icon: IconDefinition;
   content: string;
   to: string;
   delay?: number;
+  children: React.ReactNode;
 }
 
-export function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
+export function SlideOutLink({ content, to, delay, children }: SlideOutLinkProps) {
   const [isActive, setActive] = useState(false);
 
   useEffect(() => {
@@ -26,7 +25,9 @@ export function SlideOutLink({ icon, content, to, delay }: SlideOutLinkProps) {
 
   return (
     <Link className={styles} to={to}>
-      <CircularIcon icon={icon} active />
+      <IconButton className="Button active">
+        {children}
+      </IconButton>
       <span>{content}</span>
     </Link>
   );
