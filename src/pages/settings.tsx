@@ -1,9 +1,11 @@
 import { Page } from "../components/page";
+import Button from "@mui/material/Button";
+
 
 export function Settings() {
   return (
     <Page title="Settings">
-      <h2>Scary Stuff</h2>
+      <Button variant="contained" color="error">Reset</Button>
     </Page>
   );
 }
