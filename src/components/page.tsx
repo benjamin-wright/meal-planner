@@ -1,5 +1,7 @@
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { Box, Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface PageProps {
   title: string;
@@ -7,11 +9,19 @@ interface PageProps {
 }
 
 export function Page({ title, children }: PageProps) {
+  const theme = useTheme();
+
   return (
-    <div className="window flex">
+    <Stack
+      justifyContent="space-between"
+      sx={{
+        height: "100%",
+        backgroundColor: theme.palette.background.default + "aa",
+      }}
+    >
       <Header title={title} home />
-      <section className="grower">{children}</section>
+      <Box sx={{ flexGrow: 1 }}>{children}</Box>
       <Footer />
-    </div>
+    </Stack>
   );
 }

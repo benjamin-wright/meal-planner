@@ -1,6 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
-import IconButton from '@mui/material/IconButton';
-import classes from "./icon-link.module.css";
+import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
 
 interface IconLinkProps {
   to: string;
@@ -8,14 +7,12 @@ interface IconLinkProps {
 }
 
 export function IconLink({ to, children }: IconLinkProps) {
-  const location = useLocation();
-  const isActive = location.pathname === to;
+  // const location = useLocation();
+  // const isActive = location.pathname === to;
 
   return (
-    <Link to={to} className={classes.link}>
-      <IconButton className={["Button", ... (isActive ? ["active"] : [])].join(" ")}>
-        {children}
-      </IconButton>
+    <Link to={to}>
+      <IconButton>{children}</IconButton>
     </Link>
   );
 }
