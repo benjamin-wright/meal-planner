@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import classes from "./slide-out-link.module.css";
-import IconButton from "@mui/material/IconButton";
+// import { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material/styles";
 
 interface SlideOutLinkProps {
   content: string;
@@ -10,25 +10,52 @@ interface SlideOutLinkProps {
   children: React.ReactNode;
 }
 
-export function SlideOutLink({ content, to, delay, children }: SlideOutLinkProps) {
-  const [isActive, setActive] = useState(false);
+export function SlideOutLink({
+  content,
+  to,
+  // delay,
+  children,
+}: SlideOutLinkProps) {
+  const theme = useTheme();
+  // const [isActive, setActive] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setActive(true);
-    }, delay || 0);
-  }, [setActive, delay]);
-
-  const styles = [classes.button, ...(isActive ? [classes.active] : [])].join(
-    " "
-  );
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setActive(true);
+  //   }, delay || 0);
+  // }, [setActive, delay]);
 
   return (
-    <Link className={styles} to={to}>
-      <IconButton className="Button active">
+    <Button
+      href={to}
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "1em",
+        minWidth: "3em",
+        width: "3em",
+        padding: "0.5em 1em 0.5em 0.5em",
+        overflow: "hidden",
+        fontSize: "1.5em",
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.primary,
+        lineHeight: 1,
+        borderRadius: "3em",
+      }}
+    >
+      <Box
+        display="flex"
+        padding="0.5em"
+        borderRadius="50%"
+        sx={{
+          backgroundColor: theme.palette.text.primary,
+          color: theme.palette.primary.main,
+        }}
+      >
         {children}
-      </IconButton>
+      </Box>
       <span>{content}</span>
-    </Link>
+    </Button>
   );
 }

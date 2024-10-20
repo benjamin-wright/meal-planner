@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
+import { Button } from "@mui/material";
 
 interface IconLinkProps {
   to: string;
@@ -10,9 +9,5 @@ export function IconLink({ to, children }: IconLinkProps) {
   // const location = useLocation();
   // const isActive = location.pathname === to;
 
-  return (
-    <Link to={to}>
-      <IconButton>{children}</IconButton>
-    </Link>
-  );
+  return <Button href={to}>{children}</Button>;
 }

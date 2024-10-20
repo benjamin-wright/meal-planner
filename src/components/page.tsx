@@ -6,20 +6,23 @@ import { useTheme } from "@mui/material/styles";
 interface PageProps {
   title: string;
   children?: React.ReactNode;
+  hideHome?: boolean;
 }
 
-export function Page({ title, children }: PageProps) {
+export function Page({ title, hideHome, children }: PageProps) {
   const theme = useTheme();
 
   return (
     <Stack
       justifyContent="space-between"
+      height="100%"
+      margin={0}
+      padding="0.5em"
       sx={{
-        height: "100%",
         backgroundColor: theme.palette.background.default + "aa",
       }}
     >
-      <Header title={title} home />
+      <Header title={title} home={!hideHome} />
       <Box sx={{ flexGrow: 1 }}>{children}</Box>
       <Footer />
     </Stack>
