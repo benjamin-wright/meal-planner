@@ -1,16 +1,25 @@
-import { IconLink } from "./icon-link";
-
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import Settings from "@mui/icons-material/Settings";
 import Scale from "@mui/icons-material/Scale";
 import Sell from "@mui/icons-material/Sell";
 import Egg from "@mui/icons-material/Egg";
 import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
-import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export function Footer() {
+  const navigate = useNavigate();
+
+  function navigateTo(category: string) {
+    navigate(`/${category}`);
+  }
+
   return (
-    <Box display="flex" flexDirection="row" justifyContent="space-around">
+    <SpeedDial
+      ariaLabel="SpeedDial basic example"
+      sx={{ position: 'absolute', bottom: 16, right: 16 }}
+      icon={<SpeedDialIcon />}
+    >
       {[
         { name: "planner", icon: CalendarMonth },
         { name: "recipies", icon: RestaurantRounded },
@@ -21,10 +30,14 @@ export function Footer() {
       ]
         .reverse()
         .map((category) => (
-          <IconLink key={category.name} to={`/${category.name}`}>
-            <category.icon />
-          </IconLink>
-        ))}
-    </Box>
-  );
+          <SpeedDialAction
+            key={category.name}
+            icon={<category.icon />}
+            tooltipTitle={category.name}
+            onClick={() => navigateTo(category.name)}
+          />
+        ))
+      }
+    </SpeedDial>
+  )
 }

@@ -79,6 +79,7 @@ export function Settings({ database }: SettingsProps) {
       <CheckDialog open={dialogOpen} onClose={handleClose} />
       <Snackbar
         open={successOpen}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={5000}
         onClose={() => setSuccessOpen(false)}
         message="Application reset successfully."
