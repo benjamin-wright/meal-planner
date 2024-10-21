@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <Settings />,
+        element: <Settings database={db} />,
       },
       {
         path: "categories",

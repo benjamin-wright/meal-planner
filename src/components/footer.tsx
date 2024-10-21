@@ -11,24 +11,20 @@ import { Box } from "@mui/material";
 export function Footer() {
   return (
     <Box display="flex" flexDirection="row" justifyContent="space-around">
-      <IconLink to="/settings">
-        <Settings />
-      </IconLink>
-      <IconLink to="/units">
-        <Scale />
-      </IconLink>
-      <IconLink to="/categories">
-        <Sell />
-      </IconLink>
-      <IconLink to="/ingredients">
-        <Egg />
-      </IconLink>
-      <IconLink to="/recipies">
-        <RestaurantRounded />
-      </IconLink>
-      <IconLink to="/planner">
-        <CalendarMonth />
-      </IconLink>
+      {[
+        { name: "planner", icon: CalendarMonth },
+        { name: "recipies", icon: RestaurantRounded },
+        { name: "ingredients", icon: Egg },
+        { name: "categories", icon: Sell },
+        { name: "units", icon: Scale },
+        { name: "settings", icon: Settings },
+      ]
+        .reverse()
+        .map((category) => (
+          <IconLink key={category.name} to={`/${category.name}`}>
+            <category.icon />
+          </IconLink>
+        ))}
     </Box>
   );
 }

@@ -160,4 +160,23 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   store<T>(name: string): IDatabaseStore<T> {
     return new IndexedDBStore<T>(this.db, name);
   }
+
+  clear(): Promise<void> {
+    const oldDb = this.db;
+    this.db = Promise.reject(new Error("Database not initialized"));
+    return oldDb.then((db) => {
+      db.close();
+      return new Promise((resolve, reject) => {
+        const req = this.factory.deleteDatabase(db.name);
+
+        req.onsuccess = () => {
+          resolve();
+        };
+
+        req.onerror = () => {
+          reject(req.error);
+        };
+      });
+    });
+  }
 }

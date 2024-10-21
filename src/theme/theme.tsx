@@ -8,7 +8,7 @@ export const theme = createTheme({
     light: {
       palette: {
         primary: {
-          main: "#393e46",
+          main: "#eeeeee",
         },
         secondary: {
           main: "#222831",
@@ -83,6 +83,10 @@ export const theme = createTheme({
           backdrop-filter: blur(0.3em);
           -webkit-backdrop-filter: blur(0.3em);
           margin: 0;
+        }
+
+        em {
+          display: inline;
         }
       `,
     },

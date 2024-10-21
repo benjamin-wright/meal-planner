@@ -2,6 +2,8 @@
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
+import { keyframes } from "@emotion/react";
+import { useState, useEffect } from "react";
 
 interface SlideOutLinkProps {
   content: string;
@@ -10,20 +12,42 @@ interface SlideOutLinkProps {
   children: React.ReactNode;
 }
 
+const minWidth = "3em";
+const maxWidth = "15em";
+
 export function SlideOutLink({
   content,
   to,
-  // delay,
+  delay,
   children,
 }: SlideOutLinkProps) {
   const theme = useTheme();
-  // const [isActive, setActive] = useState(false);
+  const [isExpanded, setExpanded] = useState(false);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setActive(true);
-  //   }, delay || 0);
-  // }, [setActive, delay]);
+  useEffect(() => {
+    setTimeout(() => {
+      setExpanded(true);
+    }, delay || 0);
+  }, [setExpanded, delay]);
+
+  const slideIn = keyframes`
+    0% {
+      width: ${minWidth};
+    }
+
+    100% {
+      width: ${maxWidth};
+    }
+  `;
+
+  const spinIn = keyframes`
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  `;
 
   return (
     <Button
@@ -33,15 +57,18 @@ export function SlideOutLink({
         justifyContent: "space-between",
         alignItems: "center",
         gap: "1em",
-        minWidth: "3em",
-        width: "3em",
+        minWidth: minWidth,
+        width: isExpanded ? maxWidth : minWidth,
         padding: "0.5em 1em 0.5em 0.5em",
         overflow: "hidden",
         fontSize: "1.5em",
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.text.primary,
         lineHeight: 1,
-        borderRadius: "3em",
+        borderRadius: minWidth,
+        ...(isExpanded && {
+          animation: `${slideIn} 0.8s ease-in-out`,
+        }),
       }}
     >
       <Box
@@ -51,6 +78,9 @@ export function SlideOutLink({
         sx={{
           backgroundColor: theme.palette.text.primary,
           color: theme.palette.primary.main,
+          ...(isExpanded && {
+            animation: `${spinIn} 0.8s ease-in-out`,
+          }),
         }}
       >
         {children}

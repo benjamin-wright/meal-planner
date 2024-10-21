@@ -8,21 +8,23 @@ interface UnitsProps {
 }
 
 export function Units({ database }: UnitsProps) {
+  const [loading, setLoading] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [units, setUnits] = useState<Unit[] | null>(null);
 
   useEffect(() => {
-    console.info("Loading units...");
-
-    if (loaded) {
+    if (loading || loaded) {
       return;
     }
+
+    setLoading(true);
 
     database.units.getAll().then((newUnits) => {
       setUnits(newUnits);
       setLoaded(true);
+      setLoading(false);
     });
-  });
+  }, [loading, loaded, database.units]);
 
   function unitsTable() {
     return (

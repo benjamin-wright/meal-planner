@@ -17,35 +17,36 @@ export type DatabaseOptions = {
   transport: IDatabaseTransport;
 };
 
+const schema = {
+  name: "meal-planner",
+  version: 1,
+  stores: {
+    planner: plannerSchema,
+    recipies: recipieSchema,
+    ingredients: ingredientSchema,
+    categories: categorySchema,
+    units: unitSchema,
+  },
+  finalize: async (transport: IDatabaseTransport, m: IMigrations) => {
+    for (const [index, migration] of migrations.entries()) {
+      if (await m.exists(index)) {
+        console.info(`Skipping migration ${index}: already exists`);
+        return;
+      }
+
+      console.info(`Running migration ${index}`);
+      await migration(transport);
+      await m.add(index);
+    }
+  },
+};
+
 export class Database {
   private transport: IDatabaseTransport;
 
   constructor(transport: IDatabaseTransport) {
     this.transport = transport;
-
-    this.transport.init({
-      name: "meal-planner",
-      version: 1,
-      stores: {
-        planner: plannerSchema,
-        recipies: recipieSchema,
-        ingredients: ingredientSchema,
-        categories: categorySchema,
-        units: unitSchema,
-      },
-      finalize: async (transport: IDatabaseTransport, m: IMigrations) => {
-        for (const [index, migration] of migrations.entries()) {
-          if (await m.exists(index)) {
-            console.info(`Skipping migration ${index}: already exists`);
-            return;
-          }
-
-          console.info(`Running migration ${index}`);
-          await migration(transport);
-          await m.add(index);
-        }
-      },
-    });
+    this.transport.init(schema);
   }
 
   get planner() {
@@ -66,5 +67,11 @@ export class Database {
 
   get units() {
     return this.transport.store<Unit>("units");
+  }
+
+  async reset() {
+    console.info("Resetting database");
+    await this.transport.clear();
+    this.transport.init(schema);
   }
 }
