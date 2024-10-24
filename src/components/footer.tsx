@@ -6,6 +6,7 @@ import Egg from "@mui/icons-material/Egg";
 import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import { useNavigate } from "react-router-dom";
+import House from "@mui/icons-material/House";
 
 export function Footer() {
   const navigate = useNavigate();
@@ -21,12 +22,13 @@ export function Footer() {
       icon={<SpeedDialIcon />}
     >
       {[
+        { name: "settings", icon: Settings },
         { name: "planner", icon: CalendarMonth },
         { name: "recipies", icon: RestaurantRounded },
         { name: "ingredients", icon: Egg },
         { name: "categories", icon: Sell },
         { name: "units", icon: Scale },
-        { name: "settings", icon: Settings },
+        { name: "", icon: House },
       ]
         .reverse()
         .map((category) => (

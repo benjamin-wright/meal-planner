@@ -14,6 +14,7 @@ export function CircleIcon({ children }: CircleIconProps) {
       display="flex"
       padding="0.5em"
       borderRadius="50%"
+      margin="0.5em"
       sx={{
         backgroundColor: theme.palette.text.primary,
         color: theme.palette.primary.main,

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Page } from "../components/page";
 import { Database } from "../database";
 import { Unit } from "../database/schemas";
+import Scale from "@mui/icons-material/Scale";
 
 interface UnitsProps {
   database: Database;
@@ -46,7 +47,7 @@ export function Units({ database }: UnitsProps) {
   }
 
   return (
-    <Page title="Units">
+    <Page title="Units" icon={<Scale />}>
       {!loaded && <p>Loading...</p>}
       {loaded && units?.length === 0 && <p>No units found.</p>}
       {loaded && units?.length !== 0 && unitsTable()}

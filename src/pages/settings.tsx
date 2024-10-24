@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
 import { Database } from "../database";
 import { Slide, Snackbar } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 interface CheckDialogProps {
   open: boolean;
@@ -72,7 +73,7 @@ export function Settings({ database }: SettingsProps) {
   }
 
   return (
-    <Page title="Settings">
+    <Page title="Settings" icon={<SettingsIcon />}>
       <Button variant="contained" color="error" onClick={handleOpen}>
         Reset
       </Button>

@@ -7,11 +7,12 @@ import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import { Page } from "../components/page";
 import { Box } from "@mui/material";
+import House from "@mui/icons-material/House";
 
 export function Home() {
   return (
-    <Page title="Meal Planner" hideHome>
-      <Box display="flex" flexDirection="column" gap="1em" height="100%">
+    <Page title="Meal Planner" icon={<House />} hideNav>
+      <Box display="flex" flexDirection="column" gap="1em" height="100%" justifyContent="center">
         {[
           { name: "planner", icon: CalendarMonth },
           { name: "recipies", icon: RestaurantRounded },

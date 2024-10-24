@@ -1,17 +1,18 @@
+import React from "react";
 import { IconLink } from "./icon-link";
-import House from "@mui/icons-material/House";
 
 interface HeaderProps {
   title: string;
+  icon: React.ReactNode;
   home: boolean;
 }
 
-export function Header({ title, home }: HeaderProps) {
+export function Header({ title, home, icon }: HeaderProps) {
   return (
     <nav>
       {home ? (
         <IconLink to="/">
-          <House />
+          {icon}
         </IconLink>
       ) : null}
       <h1>{title}</h1>
