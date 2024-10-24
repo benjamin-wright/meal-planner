@@ -6,9 +6,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Alert from "@mui/material/Alert";
-import { Database } from "../database";
+import { Database } from "../../database";
 import { Slide, Snackbar } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 
 interface CheckDialogProps {
   open: boolean;
@@ -49,7 +48,7 @@ interface SettingsProps {
 
 export function Settings({ database }: SettingsProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [successOpen, setSuccessOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
@@ -64,29 +63,37 @@ export function Settings({ database }: SettingsProps) {
       database
         .reset()
         .then(() => {
-          setSuccessOpen(true);
+          setErrorMessage(undefined);
         })
         .catch((error) => {
           setErrorMessage(error.message);
+        })
+        .finally(() => {
+          setAlertOpen(true);
         });
     }
   }
 
   return (
-    <Page title="Settings" icon={<SettingsIcon />}>
+    <Page title="Settings">
       <Button variant="contained" color="error" onClick={handleOpen}>
         Reset
       </Button>
       <CheckDialog open={dialogOpen} onClose={handleClose} />
       <Snackbar
-        open={successOpen}
+        open={alertOpen}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={5000}
-        onClose={() => setSuccessOpen(false)}
-        message="Application reset successfully."
+        autoHideDuration={3000}
+        onClose={() => setAlertOpen(false)}
         TransitionComponent={Slide}
-      />
-      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+      >
+        <Alert
+          severity={errorMessage ? "error" : "success"}
+          sx={{ width: "100%" }}
+        >
+          {errorMessage || "Application reset successfully."}
+        </Alert>
+      </Snackbar>
     </Page>
   );
 }

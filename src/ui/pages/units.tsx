@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Page } from "../components/page";
-import { Database } from "../database";
-import { Unit } from "../database/schemas";
-import Scale from "@mui/icons-material/Scale";
+import { Database } from "../../database";
+import { Unit } from "../../database/schemas";
+import { Editable } from "../components/editable";
 
 interface UnitsProps {
   database: Database;
@@ -27,30 +27,17 @@ export function Units({ database }: UnitsProps) {
     });
   }, [loading, loaded, database.units]);
 
-  function unitsTable() {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {units?.map((unit) => (
-            <tr key={unit.id}>
-              <td>{unit.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  }
-
   return (
-    <Page title="Units" icon={<Scale />}>
+    <Page title="Units">
       {!loaded && <p>Loading...</p>}
       {loaded && units?.length === 0 && <p>No units found.</p>}
-      {loaded && units?.length !== 0 && unitsTable()}
+      {loaded &&
+        units?.length !== 0 &&
+        units?.map((unit) => (
+          <Editable key={unit.id} title={unit.name}>
+            <span>{unit.magnitudes.map((m) => m.abbrev).join(", ")}</span>
+          </Editable>
+        ))}
     </Page>
   );
 }

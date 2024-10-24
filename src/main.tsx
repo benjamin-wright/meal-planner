@@ -9,11 +9,11 @@ import {
   Ingredients,
   Recipies,
   Planner,
-} from "./pages";
+} from "./ui/pages";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { theme } from "./theme";
+import { theme } from "./ui/theme";
 
 import { Database, IndexedDBDatabase } from "./database";
 const db = new Database(new IndexedDBDatabase(indexedDB));

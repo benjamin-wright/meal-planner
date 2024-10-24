@@ -1,9 +1,8 @@
-// import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import { keyframes } from "@emotion/react";
 import { useState, useEffect } from "react";
+import { CircleIcon } from "./circle-icon";
 
 interface SlideOutLinkProps {
   content: string;
@@ -71,20 +70,15 @@ export function SlideOutLink({
         }),
       }}
     >
-      <Box
-        display="flex"
-        padding="0.5em"
-        borderRadius="50%"
+      <CircleIcon
         sx={{
-          backgroundColor: theme.palette.text.primary,
-          color: theme.palette.primary.main,
           ...(isExpanded && {
             animation: `${spinIn} 0.8s ease-in-out`,
           }),
         }}
       >
         {children}
-      </Box>
+      </CircleIcon>
       <span>{content}</span>
     </Button>
   );
