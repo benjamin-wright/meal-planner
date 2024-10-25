@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Page } from "../components/page";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
-import { Editable } from "../components/editable";
+import { DetailView, DetailViewGroup } from "../components/detail-view";
 
 interface UnitsProps {
   database: Database;
@@ -32,12 +32,18 @@ export function Units({ database }: UnitsProps) {
       {!loaded && <p>Loading...</p>}
       {loaded && units?.length === 0 && <p>No units found.</p>}
       {loaded &&
-        units?.length !== 0 &&
-        units?.map((unit) => (
-          <Editable key={unit.id} title={unit.name}>
-            <span>{unit.magnitudes.map((m) => m.abbrev).join(", ")}</span>
-          </Editable>
-        ))}
+        units?.length !== 0 && (
+          <DetailViewGroup>
+            {
+              units?.map((unit) => (
+                <DetailView key={unit.id} title={unit.name}>
+                  <span>{unit.magnitudes.map((m) => m.abbrev).join(", ")}</span>
+                </DetailView>
+              ))
+            }
+          </DetailViewGroup>
+        )
+      }
     </Page>
   );
 }

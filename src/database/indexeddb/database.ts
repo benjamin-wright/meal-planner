@@ -7,16 +7,19 @@ import {
 import { IndexedDBStore } from "./store";
 
 export class IndexedDBDatabase implements IDatabaseTransport {
+  private name: string;
   private factory: IDBFactory;
   private db: Promise<IDBDatabase>;
 
   constructor(factory: IDBFactory) {
     this.factory = factory;
     this.db = Promise.reject(new Error("Database not initialized"));
+    this.name = "default";
   }
 
   init(schema: DatabaseSchema): void {
-    this.db.catch(() => {});
+    this.name = schema.name;
+    this.db.catch(() => { });
     this.db = new Promise<IDBDatabase>((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
@@ -164,10 +167,15 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   clear(): Promise<void> {
     const oldDb = this.db;
     this.db = Promise.reject(new Error("Database not initialized"));
-    return oldDb.then((db) => {
-      db.close();
+    return oldDb.catch(err => {
+      console.error("Clearing database in error state: ", err);
+    }).then((db) => {
+      if (db) {
+        db.close();
+      }
+
       return new Promise((resolve, reject) => {
-        const req = this.factory.deleteDatabase(db.name);
+        const req = this.factory.deleteDatabase(this.name);
 
         req.onsuccess = () => {
           resolve();
