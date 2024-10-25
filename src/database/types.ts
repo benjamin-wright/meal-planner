@@ -25,6 +25,7 @@ export type DatabaseStoreIndexes = {
 export interface IDatabaseTransport {
   init(schema: DatabaseSchema): void;
   store<T>(name: string): IDatabaseStore<T>;
+  clear(): Promise<void>;
 }
 
 export interface IMigrations {

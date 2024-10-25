@@ -9,10 +9,14 @@ import {
   Ingredients,
   Recipies,
   Planner,
-} from "./pages";
-import "./index.css";
+} from "./ui/pages";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+
+import { theme } from "./ui/theme";
 
 import { Database, IndexedDBDatabase } from "./database";
+import { AlertProvider } from "./ui/components/alerts";
 const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
@@ -30,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <Settings />,
+        element: <Settings database={db} />,
       },
       {
         path: "categories",
@@ -54,6 +58,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <AlertProvider>
+        <CssBaseline enableColorScheme />
+        <RouterProvider router={router} />
+      </AlertProvider>
+    </ThemeProvider>
   </StrictMode>
 );
