@@ -41,6 +41,10 @@ export const theme = createTheme({
         },
         error: {
           main: "#990000",
+          light: "#ff3333",
+          dark: "#660000",
+          contrastText: "#eeeeee",
+          contrastTextChannel: "primary",
         },
       },
     },

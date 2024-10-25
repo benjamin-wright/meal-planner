@@ -16,6 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "./ui/theme";
 
 import { Database, IndexedDBDatabase } from "./database";
+import { AlertProvider } from "./ui/components/alerts";
 const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
@@ -58,8 +59,10 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <RouterProvider router={router} />
+      <AlertProvider>
+        <CssBaseline enableColorScheme />
+        <RouterProvider router={router} />
+      </AlertProvider>
     </ThemeProvider>
   </StrictMode>
 );

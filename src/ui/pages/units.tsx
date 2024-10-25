@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Page } from "../components/page";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
 import { DetailView, DetailViewGroup } from "../components/detail-view";
+import { IconLink } from "../components/icon-link";
+import Edit from "@mui/icons-material/Edit";
+import Box from "@mui/material/Box";
+import { Typography } from "@mui/material";
+import Delete from "@mui/icons-material/Delete";
+import { AlertContext } from "../components/alerts";
 
 interface UnitsProps {
   database: Database;
@@ -12,6 +18,7 @@ export function Units({ database }: UnitsProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [units, setUnits] = useState<Unit[] | null>(null);
+  const { setMessage } = useContext(AlertContext);
 
   useEffect(() => {
     if (loading || loaded) {
@@ -27,23 +34,55 @@ export function Units({ database }: UnitsProps) {
     });
   }, [loading, loaded, database.units]);
 
+  function onEdit(unit: Unit) {
+    setMessage(`Editing unit ${unit.id}`);
+  }
+
+  async function onDelete(unit: Unit) {
+    if (unit.id === undefined) {
+      return;
+    }
+
+    await database.units.delete(unit.id);
+    setUnits(units?.filter((u) => u.id !== unit.id) || []);
+    setMessage(`Deleted unit '${unit.name}'`);
+  }
+
+  function UnitView({ unit }: { unit: Unit }) {
+    return (
+      <DetailView title={unit.name}>
+        <Box display="flex">
+          <Typography alignContent="center" flexGrow="1">
+            Units: {unit.magnitudes.map((m) => m.abbrev).join(", ")}
+          </Typography>
+          <IconLink
+            color="secondary"
+            sx={{ minWidth: "0" }}
+            onClick={() => onEdit(unit)}
+          >
+            <Edit />
+          </IconLink>
+          <IconLink
+            color="error"
+            sx={{ minWidth: "0" }}
+            onClick={() => onDelete(unit)}
+          >
+            <Delete />
+          </IconLink>
+        </Box>
+      </DetailView>
+    );
+  }
+
   return (
     <Page title="Units">
       {!loaded && <p>Loading...</p>}
       {loaded && units?.length === 0 && <p>No units found.</p>}
-      {loaded &&
-        units?.length !== 0 && (
-          <DetailViewGroup>
-            {
-              units?.map((unit) => (
-                <DetailView key={unit.id} title={unit.name}>
-                  <span>{unit.magnitudes.map((m) => m.abbrev).join(", ")}</span>
-                </DetailView>
-              ))
-            }
-          </DetailViewGroup>
-        )
-      }
+      {loaded && units?.length !== 0 && (
+        <DetailViewGroup>
+          {units?.map((unit) => <UnitView key={unit.id} unit={unit} />)}
+        </DetailViewGroup>
+      )}
     </Page>
   );
 }

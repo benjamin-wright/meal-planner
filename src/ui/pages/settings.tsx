@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Page } from "../components/page";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Alert from "@mui/material/Alert";
 import { Database } from "../../database";
-import { Slide, Snackbar } from "@mui/material";
+import { AlertContext } from "../components/alerts";
 
 interface CheckDialogProps {
   open: boolean;
@@ -48,10 +47,7 @@ interface SettingsProps {
 
 export function Settings({ database }: SettingsProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  const { setMessage, setError } = useContext(AlertContext);
 
   function handleOpen() {
     setDialogOpen(true);
@@ -63,13 +59,10 @@ export function Settings({ database }: SettingsProps) {
       database
         .reset()
         .then(() => {
-          setErrorMessage(undefined);
+          setMessage("Application reset successfully.");
         })
         .catch((error) => {
-          setErrorMessage(error.message);
-        })
-        .finally(() => {
-          setAlertOpen(true);
+          setError(error.message);
         });
     }
   }
@@ -80,20 +73,6 @@ export function Settings({ database }: SettingsProps) {
         Reset
       </Button>
       <CheckDialog open={dialogOpen} onClose={handleClose} />
-      <Snackbar
-        open={alertOpen}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        onClose={() => setAlertOpen(false)}
-        TransitionComponent={Slide}
-      >
-        <Alert
-          severity={errorMessage ? "error" : "success"}
-          sx={{ width: "100%" }}
-        >
-          {errorMessage || "Application reset successfully."}
-        </Alert>
-      </Snackbar>
     </Page>
   );
 }

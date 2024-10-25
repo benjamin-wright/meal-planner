@@ -1,13 +1,11 @@
-import Delete from "@mui/icons-material/Delete";
 import { Box, Card, CardActionArea, Collapse, keyframes } from "@mui/material";
 import { createContext, useContext, useState } from "react";
-import { IconLink } from "./icon-link";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import { CircleIcon } from "./circle-icon";
 
 const DetailGroupContext = createContext({
   selected: "",
-  setSelected: (_: string) => { },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setSelected: (_selected: string) => {},
 });
 
 interface DetailViewGroupProps {
@@ -29,7 +27,6 @@ interface DetailViewProps {
   children: React.ReactNode;
   group?: string;
 }
-
 
 export function DetailView({ title, children }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
@@ -80,27 +77,23 @@ export function DetailView({ title, children }: DetailViewProps) {
           justifyContent="space-between"
         >
           <h2>{title}</h2>
-          <CircleIcon
+          <KeyboardArrowDown
             sx={{
               transform: "rotate(0deg)",
               animation: `${spinOut} 0.3s ease-in-out`,
               ...(firstRender ? { animation: "none" } : {}),
               ...(selected === title
                 ? {
-                  animation: `${spinIn} 0.3s ease-in-out`,
-                  transform: "rotate(180deg)",
-                }
+                    animation: `${spinIn} 0.3s ease-in-out`,
+                    transform: "rotate(180deg)",
+                  }
                 : {}),
-            }}>
-            <KeyboardArrowDown />
-          </CircleIcon>
+            }}
+          />
         </Box>
       </CardActionArea>
       <Collapse in={selected === title}>
-        {children}
-        <IconLink>
-          <Delete />
-        </IconLink>
+        <Box margin="1em">{children}</Box>
       </Collapse>
     </Card>
   );
