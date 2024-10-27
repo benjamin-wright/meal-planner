@@ -74,6 +74,7 @@ export function SlideOutLink({
         sx={{
           ...(isExpanded && {
             animation: `${spinIn} 0.8s ease-in-out`,
+            color: theme.palette.primary.main,
           }),
         }}
       >

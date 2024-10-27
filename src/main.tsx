@@ -9,6 +9,7 @@ import {
   Ingredients,
   Recipies,
   Planner,
+  UnitsEdit,
 } from "./ui/pages";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "units",
         element: <Units database={db} />,
+      },
+      {
+        path: "units/:unit",
+        element: <UnitsEdit database={db} />,
       },
       {
         path: "settings",

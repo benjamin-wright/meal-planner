@@ -16,6 +16,7 @@ export function CircleIcon({ children, sx }: CircleIconProps) {
       padding="0.5em"
       borderRadius="50%"
       sx={{
+        // color: theme.palette.background.default,
         backgroundColor: theme.palette.text.primary,
         ...sx,
       }}

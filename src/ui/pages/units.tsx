@@ -6,9 +6,18 @@ import { DetailView, DetailViewGroup } from "../components/detail-view";
 import { IconLink } from "../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
 import { AlertContext } from "../components/alerts";
+import { useNavigate } from "react-router-dom";
 
 interface UnitsProps {
   database: Database;
@@ -19,6 +28,7 @@ export function Units({ database }: UnitsProps) {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [units, setUnits] = useState<Unit[] | null>(null);
   const { setMessage } = useContext(AlertContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (loading || loaded) {
@@ -35,7 +45,7 @@ export function Units({ database }: UnitsProps) {
   }, [loading, loaded, database.units]);
 
   function onEdit(unit: Unit) {
-    setMessage(`Editing unit ${unit.id}`);
+    navigate(`/units/${unit.id}`);
   }
 
   async function onDelete(unit: Unit) {
@@ -51,24 +61,47 @@ export function Units({ database }: UnitsProps) {
   function UnitView({ unit }: { unit: Unit }) {
     return (
       <DetailView title={unit.name}>
-        <Box display="flex">
-          <Typography alignContent="center" flexGrow="1">
-            Units: {unit.magnitudes.map((m) => m.abbrev).join(", ")}
-          </Typography>
-          <IconLink
-            color="secondary"
-            sx={{ minWidth: "0" }}
-            onClick={() => onEdit(unit)}
+        <Box display="flex" flexDirection="column">
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>Unit</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Abbr.</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Conversion</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {unit.magnitudes.map((c) => (
+                  <TableRow key={c.abbrev}>
+                    <TableCell>{c.singular}</TableCell>
+                    <TableCell>{c.abbrev}</TableCell>
+                    <TableCell>{c.multiplier}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            paddingTop="0.75em"
           >
-            <Edit />
-          </IconLink>
-          <IconLink
-            color="error"
-            sx={{ minWidth: "0" }}
-            onClick={() => onDelete(unit)}
-          >
-            <Delete />
-          </IconLink>
+            <IconLink
+              color="secondary"
+              sx={{ minWidth: "0" }}
+              onClick={() => onEdit(unit)}
+            >
+              <Edit />
+            </IconLink>
+            <IconLink
+              color="error"
+              sx={{ minWidth: "0" }}
+              onClick={() => onDelete(unit)}
+            >
+              <Delete />
+            </IconLink>
+          </Box>
         </Box>
       </DetailView>
     );
