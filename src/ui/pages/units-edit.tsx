@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Page } from "../components/page";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
-import { Box, Card } from "@mui/material";
+import { Box, Card, TextField } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 interface UnitsEditProps {
@@ -12,7 +12,7 @@ interface UnitsEditProps {
 export function UnitsEdit({ database }: UnitsEditProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [object, setObject] = useState<Unit | null>(null);
+  const [object, setObject] = useState<Unit>({ name: "", magnitudes: [] });
   const params = useParams<{ unit: string }>();
 
   useEffect(() => {
@@ -47,7 +47,15 @@ export function UnitsEdit({ database }: UnitsEditProps) {
       {loaded && (
         <Card>
           <Box component="form" margin="0.5em">
-            <h1>{object?.name}</h1>
+            <TextField
+              id="variant"
+              variant="outlined"
+              label="name"
+              value={object.name}
+              onChange={(e) =>
+                setObject({ ...object, name: e.target.value.toLowerCase() })
+              }
+            />
           </Box>
         </Card>
       )}

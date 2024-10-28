@@ -19,7 +19,7 @@ export class IndexedDBDatabase implements IDatabaseTransport {
 
   init(schema: DatabaseSchema): void {
     this.name = schema.name;
-    this.db.catch(() => { });
+    this.db.catch(() => {});
     this.db = new Promise<IDBDatabase>((resolve, reject) => {
       const req = this.factory.open(schema.name, schema.version);
 
@@ -52,10 +52,9 @@ export class IndexedDBDatabase implements IDatabaseTransport {
           .finalize(this, {
             exists: async (index) => {
               return new Promise((resolve, reject) => {
-                const req = db
-                  .transaction("migrations")
-                  .objectStore("migrations")
-                  .get(index);
+                const tx = db.transaction("migrations");
+                const req = tx.objectStore("migrations").get(index);
+                tx.commit();
 
                 req.onsuccess = () => {
                   resolve(!!req.result);
@@ -68,10 +67,9 @@ export class IndexedDBDatabase implements IDatabaseTransport {
             },
             add: async (index) => {
               return new Promise((resolve, reject) => {
-                const req = db
-                  .transaction("migrations", "readwrite")
-                  .objectStore("migrations")
-                  .add({ id: index });
+                const tx = db.transaction("migrations", "readwrite");
+                const req = tx.objectStore("migrations").add({ id: index });
+                tx.commit();
 
                 req.onsuccess = () => {
                   resolve();
@@ -84,10 +82,9 @@ export class IndexedDBDatabase implements IDatabaseTransport {
             },
             remove: async (index) => {
               return new Promise((resolve, reject) => {
-                const req = db
-                  .transaction("migrations", "readwrite")
-                  .objectStore("migrations")
-                  .delete(index);
+                const tx = db.transaction("migrations", "readwrite");
+                const req = tx.objectStore("migrations").delete(index);
+                tx.commit();
 
                 req.onsuccess = () => {
                   resolve();
@@ -167,24 +164,34 @@ export class IndexedDBDatabase implements IDatabaseTransport {
   clear(): Promise<void> {
     const oldDb = this.db;
     this.db = Promise.reject(new Error("Database not initialized"));
-    return oldDb.catch(err => {
-      console.error("Clearing database in error state: ", err);
-    }).then((db) => {
-      if (db) {
-        db.close();
-      }
+    return oldDb
+      .catch((err) => {
+        console.error("Clearing database in error state: ", err);
+      })
+      .then((db) => {
+        if (db) {
+          db.close();
+        }
 
-      return new Promise((resolve, reject) => {
-        const req = this.factory.deleteDatabase(this.name);
+        return new Promise((resolve, reject) => {
+          const req = this.factory.deleteDatabase(this.name);
 
-        req.onsuccess = () => {
-          resolve();
-        };
+          req.onsuccess = () => {
+            resolve();
+          };
 
-        req.onerror = () => {
-          reject(req.error);
-        };
+          req.onerror = () => {
+            reject(req.error);
+          };
+
+          req.onblocked = () => {
+            reject(
+              new Error(
+                "Database deletion blocked, check that the app isn't open in another tab!"
+              )
+            );
+          };
+        });
       });
-    });
   }
 }

@@ -14,6 +14,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const tx = db.transaction(this.name, "readonly");
     const store = tx.objectStore(this.name);
     const req = store.get(id);
+    tx.commit();
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
@@ -29,6 +30,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const tx = db.transaction(this.name, "readonly");
     const store = tx.objectStore(this.name);
     const req = store.getAll();
+    tx.commit();
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
@@ -48,6 +50,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const store = tx.objectStore(this.name);
     const index = store.index(key as string);
     const req = index.getAll(value);
+    tx.commit();
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result);
@@ -64,6 +67,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const store = tx.objectStore(this.name);
     delete value.id;
     const req = store.add(value);
+    tx.commit();
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
         resolve(req.result as number);
@@ -79,6 +83,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const tx = db.transaction(this.name, "readwrite");
     const store = tx.objectStore(this.name);
     store.put(value, id);
+    tx.commit();
     return new Promise((resolve, reject) => {
       tx.oncomplete = () => {
         resolve();
@@ -94,6 +99,7 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     const tx = db.transaction(this.name, "readwrite");
     const store = tx.objectStore(this.name);
     store.delete(id);
+    tx.commit();
     return new Promise((resolve, reject) => {
       tx.oncomplete = () => {
         resolve();

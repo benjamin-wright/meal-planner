@@ -27,7 +27,7 @@ export function Units({ database }: UnitsProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [units, setUnits] = useState<Unit[] | null>(null);
-  const { setMessage } = useContext(AlertContext);
+  const { setMessage, setError } = useContext(AlertContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,12 +37,17 @@ export function Units({ database }: UnitsProps) {
 
     setLoading(true);
 
-    database.units.getAll().then((newUnits) => {
-      setUnits(newUnits);
-      setLoaded(true);
-      setLoading(false);
-    });
-  }, [loading, loaded, database.units]);
+    database.units
+      .getAll()
+      .then((newUnits) => {
+        setUnits(newUnits);
+        setLoaded(true);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(`Failed to load units: ${error}`);
+      });
+  }, [loading, loaded, setError, database.units]);
 
   function onEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
