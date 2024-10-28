@@ -3,43 +3,42 @@ import { Page } from "../components/page";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
 import { Box, Card, TextField } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { LoaderFunction, useLoaderData, useParams } from "react-router-dom";
+
+export interface UnitsEditLoaderArgs {
+  database: Database;
+}
+
+export interface UnitsEditLoaderResult {
+  object?: Unit;
+  units: Unit[];
+}
+
+export function unitsEditLoader({
+  database,
+}: UnitsEditLoaderArgs): LoaderFunction<UnitsEditLoaderResult> {
+  return async ({ params }) => {
+    const units = await database.units.getAll();
+
+    if (params.unit) {
+      const object = await database.units.get(Number.parseInt(params.unit, 10));
+      return { object, units };
+    }
+
+    return { units };
+  };
+}
 
 interface UnitsEditProps {
   database: Database;
 }
 
 export function UnitsEdit({ database }: UnitsEditProps) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState(false);
   const [object, setObject] = useState<Unit>({ name: "", magnitudes: [] });
-  const params = useParams<{ unit: string }>();
+  const data = useLoaderData() as UnitsEditLoaderResult;
 
-  useEffect(() => {
-    if (loading || loaded) {
-      return;
-    }
-
-    if (!params.unit) {
-      setLoaded(true);
-      setObject({ name: "", magnitudes: [] });
-      return;
-    }
-
-    const unit = Number.parseInt(params.unit, 10);
-    if (isNaN(unit)) {
-      setLoaded(true);
-      setObject({ name: "", magnitudes: [] });
-      return;
-    }
-
-    setLoading(true);
-    database.units.get(unit).then((loadedUnit) => {
-      setObject(loadedUnit);
-      setLoaded(true);
-      setLoading(false);
-    });
-  }, [loading, loaded, database.units, params.unit]);
+  useEffect(() => {});
 
   return (
     <Page title={object ? `Editing ${object.name}` : "New Unit"}>
