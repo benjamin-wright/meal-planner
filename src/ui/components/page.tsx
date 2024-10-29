@@ -4,14 +4,16 @@ import { useTheme } from "@mui/material/styles";
 import { IconLink } from "./icon-link";
 import House from "@mui/icons-material/House";
 import Settings from "@mui/icons-material/Settings";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 interface PageProps {
   title: string;
   children?: React.ReactNode;
   hideNav?: boolean;
+  returnTo?: string;
 }
 
-export function Page({ title, hideNav, children }: PageProps) {
+export function Page({ title, hideNav, children, returnTo }: PageProps) {
   const theme = useTheme();
 
   return (
@@ -33,8 +35,8 @@ export function Page({ title, hideNav, children }: PageProps) {
         }}
       >
         <Toolbar sx={{ padding: "0" }}>
-          <IconLink to="/">
-            <House />
+          <IconLink to={returnTo ? returnTo : "/"}>
+            {returnTo ? <ArrowBack /> : <House />}
           </IconLink>
           <Typography
             variant="h6"
@@ -44,9 +46,11 @@ export function Page({ title, hideNav, children }: PageProps) {
           >
             {title}
           </Typography>
-          <IconLink to="/settings">
-            <Settings />
-          </IconLink>
+          {!returnTo && (
+            <IconLink to="/settings">
+              <Settings />
+            </IconLink>
+          )}
         </Toolbar>
       </AppBar>
       <Box sx={{ flexGrow: 1 }}>{children}</Box>

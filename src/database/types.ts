@@ -38,7 +38,7 @@ export interface IDatabaseStore<T> {
   get(id: number): Promise<T>;
   getAll(): Promise<T[]>;
   getIndex<K extends keyof T>(key: K, value: T[K] & IDBValidKey): Promise<T[]>;
-  put(id: number, value: T): Promise<void>;
+  put(value: T): Promise<void>;
   delete(id: number): Promise<void>;
   add(value: T): Promise<number>;
 }

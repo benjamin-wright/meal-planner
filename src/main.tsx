@@ -10,7 +10,8 @@ import {
   Recipies,
   Planner,
 } from "./ui/pages";
-import { UnitsEdit, unitsEditLoader } from "./ui/pages/units-edit";
+import { UnitsEdit } from "./ui/pages/units-edit";
+import { unitsEditLoader } from "./ui/pages/units-edit-loader";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
@@ -18,6 +19,7 @@ import { theme } from "./ui/theme";
 
 import { Database, IndexedDBDatabase } from "./database";
 import { AlertProvider } from "./ui/components/alerts";
+import { unitsLoader } from "./ui/pages/units-loader";
 const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
@@ -31,6 +33,7 @@ const router = createBrowserRouter([
       })),
       {
         path: "units",
+        loader: unitsLoader({ database: db }),
         element: <Units database={db} />,
       },
       {

@@ -1,4 +1,3 @@
-import { useContext, useEffect, useState } from "react";
 import { Page } from "../components/page";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
@@ -16,51 +15,33 @@ import {
   TableRow,
 } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
-import { AlertContext } from "../components/alerts";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { UnitsLoaderResult } from "./units-loader";
+import { useState } from "react";
+import { ConfirmDialog } from "../components/confirm-dialog";
 
 interface UnitsProps {
   database: Database;
 }
 
 export function Units({ database }: UnitsProps) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [units, setUnits] = useState<Unit[] | null>(null);
-  const { setMessage, setError } = useContext(AlertContext);
+  const [isOpen, setOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<Unit | null>(null);
+  const data = useLoaderData() as UnitsLoaderResult;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (loading || loaded) {
-      return;
-    }
-
-    setLoading(true);
-
-    database.units
-      .getAll()
-      .then((newUnits) => {
-        setUnits(newUnits);
-        setLoaded(true);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(`Failed to load units: ${error}`);
-      });
-  }, [loading, loaded, setError, database.units]);
 
   function onEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
   }
 
-  async function onDelete(unit: Unit) {
-    if (unit.id === undefined) {
+  async function onDelete() {
+    if (toDelete?.id === undefined) {
       return;
     }
 
-    await database.units.delete(unit.id);
-    setUnits(units?.filter((u) => u.id !== unit.id) || []);
-    setMessage(`Deleted unit '${unit.name}'`);
+    await database.units.delete(toDelete.id);
+    setOpen(false);
+    navigate("/units", { replace: true });
   }
 
   function UnitView({ unit }: { unit: Unit }) {
@@ -102,7 +83,10 @@ export function Units({ database }: UnitsProps) {
             <IconLink
               color="error"
               sx={{ minWidth: "0" }}
-              onClick={() => onDelete(unit)}
+              onClick={() => {
+                setToDelete(unit);
+                setOpen(true);
+              }}
             >
               <Delete />
             </IconLink>
@@ -114,13 +98,17 @@ export function Units({ database }: UnitsProps) {
 
   return (
     <Page title="Units">
-      {!loaded && <p>Loading...</p>}
-      {loaded && units?.length === 0 && <p>No units found.</p>}
-      {loaded && units?.length !== 0 && (
-        <DetailViewGroup>
-          {units?.map((unit) => <UnitView key={unit.id} unit={unit} />)}
-        </DetailViewGroup>
-      )}
+      <DetailViewGroup>
+        {data.units.map((unit) => (
+          <UnitView key={unit.id} unit={unit} />
+        ))}
+      </DetailViewGroup>
+      <ConfirmDialog
+        message={`Deleting "${toDelete?.name}"`}
+        open={isOpen}
+        onConfirm={onDelete}
+        onCancel={() => setOpen(false)}
+      />
     </Page>
   );
 }

@@ -78,11 +78,11 @@ export class IndexedDBStore<T> implements IDatabaseStore<T> {
     });
   }
 
-  async put(id: number, value: T): Promise<void> {
+  async put(value: T): Promise<void> {
     const db = await this.db;
     const tx = db.transaction(this.name, "readwrite");
     const store = tx.objectStore(this.name);
-    store.put(value, id);
+    store.put(value);
     tx.commit();
     return new Promise((resolve, reject) => {
       tx.oncomplete = () => {

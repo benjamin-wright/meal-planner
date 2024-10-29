@@ -71,12 +71,12 @@ export const theme = createTheme({
         }
 
         :root {
-          --background-image: url("dark-background.jpg");
+          --background-image: url("/dark-background.jpg");
         }
 
         @media (prefers-color-scheme: light) {
           :root {
-            --background-image: url("light-background.webp");
+            --background-image: url("/light-background.webp");
           }
         }
 
