@@ -73,6 +73,7 @@ export function SlideOutLink({
       <CircleIcon
         sx={{
           color: theme.palette.primary.main,
+          fontSize: "1rem",
           ...(isExpanded && {
             animation: `${spinIn} 0.8s ease-in-out`,
           }),

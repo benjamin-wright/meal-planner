@@ -1,15 +1,13 @@
 import { Box, Card } from "@mui/material";
 import { Page } from "./page";
-import Check from "@mui/icons-material/Check";
 import { IconLink } from "./icon-link";
-import Close from "@mui/icons-material/Close";
+import Save from "@mui/icons-material/Save";
 
 interface FormProps {
   title: string;
   returnTo?: string;
   children?: React.ReactNode;
   onSubmit?: () => void;
-  onCancel?: () => void;
 }
 
 export function Form({
@@ -17,7 +15,6 @@ export function Form({
   returnTo,
   children,
   onSubmit,
-  onCancel,
 }: FormProps) {
   return (
     <Page title={title} returnTo={returnTo} hideNav>
@@ -42,14 +39,11 @@ export function Form({
         <Box
           display="flex"
           width="100%"
-          justifyContent="space-between"
           flexShrink="1"
+          justifyContent="center"
         >
-          <IconLink color="success" onClick={onSubmit}>
-            <Check />
-          </IconLink>
-          <IconLink color="error" onClick={onCancel}>
-            <Close />
+          <IconLink color="success" onClick={onSubmit} big>
+            <Save />
           </IconLink>
         </Box>
       </Box>

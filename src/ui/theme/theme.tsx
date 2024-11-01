@@ -60,6 +60,13 @@ export const theme = createTheme({
         LinkComponent: LinkBehavior,
       },
     },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fontSize: "1.75em",
+        },
+      }
+    },
     MuiCssBaseline: {
       styleOverrides: `
         :root,

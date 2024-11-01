@@ -7,11 +7,15 @@ interface IconLinkProps {
   sx?: SxProps;
   onClick?: () => void;
   color?: ButtonProps["color"];
+  big?: boolean;
 }
 
-export function IconLink({ to, children, sx, onClick, color }: IconLinkProps) {
+export function IconLink({ to, children, sx, onClick, color, big }: IconLinkProps) {
   return (
-    <Button href={to} sx={sx} onClick={onClick} color={color} disableRipple>
+    <Button href={to} sx={{
+      fontSize: big ? "1.5em" : "1em",
+      ...sx
+    }} onClick={onClick} color={color} disableRipple>
       <CircleIcon>{children}</CircleIcon>
     </Button>
   );
