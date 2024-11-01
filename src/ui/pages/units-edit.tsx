@@ -99,7 +99,6 @@ export function UnitsEdit({ database }: UnitsEditProps) {
             id={`magnitude-${index}-multiplier`}
             value={magnitude.multiplier}
             onChange={(value) => {
-              console.log(value);
               object.magnitudes[index].multiplier = value;
               setObject({ ...object });
             }}
