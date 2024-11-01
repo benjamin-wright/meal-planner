@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
-import { TextField } from "@mui/material";
+import { Box, TextField, useTheme } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { UnitsEditLoaderResult } from "./units-edit-loader";
 import { Form } from "../components/form";
+import { NumericInput } from "../components/numeric-input";
 
 interface UnitsEditProps {
   database: Database;
@@ -14,6 +15,7 @@ export function UnitsEdit({ database }: UnitsEditProps) {
   const [object, setObject] = useState<Unit>({ name: "", magnitudes: [] });
   const data = useLoaderData() as UnitsEditLoaderResult;
   const navigate = useNavigate();
+  const theme = useTheme();
 
   useEffect(() => {
     if (data.object) {
@@ -33,9 +35,6 @@ export function UnitsEdit({ database }: UnitsEditProps) {
         }
         navigate("/units");
       }}
-      onCancel={() => {
-        navigate("/units");
-      }}
     >
       <TextField
         id="variant"
@@ -46,6 +45,67 @@ export function UnitsEdit({ database }: UnitsEditProps) {
           setObject({ ...object, name: e.target.value.toLowerCase() })
         }
       />
+
+      {object.magnitudes.map((magnitude, index) => (
+        <Box
+          key={index}
+          border="dashed 1px"
+          borderColor={theme.palette.primary.light}
+          padding="0.5em"
+          display="flex"
+          flexWrap="wrap"
+          gap="0.5em"
+        >
+          <TextField
+            size="small"
+            id={`magnitude-${index}-abbr`}
+            variant="outlined"
+            label="abbreviation"
+            value={magnitude.abbrev}
+            onChange={(e) => {
+              object.magnitudes[index].abbrev = e.target.value;
+              setObject({ ...object });
+            }}
+          />
+
+          <Box display="flex" gap="0.5em">
+            <TextField
+              size="small"
+              id={`magnitude-${index}-singular`}
+              variant="outlined"
+              label="singular"
+              value={magnitude.singular}
+              onChange={(e) => {
+                object.magnitudes[index].singular = e.target.value;
+                setObject({ ...object });
+              }}
+            />
+
+            <TextField
+              size="small"
+              id={`magnitude-${index}-plural`}
+              variant="outlined"
+              label="plural"
+              value={magnitude.plural}
+              onChange={(e) => {
+                object.magnitudes[index].plural = e.target.value;
+                setObject({ ...object });
+              }}
+            />
+          </Box>
+
+          <NumericInput
+            label="multiplier"
+            id={`magnitude-${index}-multiplier`}
+            value={magnitude.multiplier}
+            onChange={(value) => {
+              console.log(value);
+              object.magnitudes[index].multiplier = value;
+              setObject({ ...object });
+            }}
+          />
+        </Box>
+      ))}
     </Form>
   );
 }
