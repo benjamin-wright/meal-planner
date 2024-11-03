@@ -11,29 +11,30 @@ interface PageProps {
   children?: React.ReactNode;
   hideNav?: boolean;
   returnTo?: string;
+  noScroll?: boolean;
 }
 
-export function Page({ title, hideNav, children, returnTo }: PageProps) {
+export function Page({
+  title,
+  hideNav,
+  children,
+  returnTo,
+  noScroll,
+}: PageProps) {
   const theme = useTheme();
 
   return (
     <Stack
       justifyContent="space-between"
       height="100%"
+      maxHeight="100%"
       margin={0}
       padding="1em"
       sx={{
         backgroundColor: theme.palette.background.default + "aa",
       }}
     >
-      <AppBar
-        position="sticky"
-        sx={{
-          padding: "0",
-          margin: "-1em -1em 1em",
-          width: "calc(100% + 2em)",
-        }}
-      >
+      <AppBar>
         <Toolbar sx={{ padding: "0" }}>
           <IconLink to={returnTo ? returnTo : "/"}>
             {returnTo ? <ArrowBack /> : <House />}
@@ -53,7 +54,20 @@ export function Page({ title, hideNav, children, returnTo }: PageProps) {
           )}
         </Toolbar>
       </AppBar>
-      <Box sx={{ flexGrow: 1 }}>{children}</Box>
+      <Box
+        sx={{
+          marginTop: "3em",
+          flexGrow: 1,
+          height: "100%",
+          maxHeight: "100%",
+          overflow: noScroll ? "hidden" : "scroll",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1em",
+        }}
+      >
+        {children}
+      </Box>
       {!hideNav && <Footer />}
     </Stack>
   );

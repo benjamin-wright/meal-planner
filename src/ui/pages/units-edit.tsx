@@ -1,60 +1,53 @@
 import { useEffect, useState } from "react";
 import { Database } from "../../database";
 import { Unit } from "../../database/schemas";
-import { Box, TextField, useTheme } from "@mui/material";
+import { Box, Button, Card, CardActionArea, TextField } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { UnitsEditLoaderResult } from "./units-edit-loader";
 import { Form } from "../components/form";
 import { NumericInput } from "../components/numeric-input";
+import Add from "@mui/icons-material/Add";
+import Delete from "@mui/icons-material/Delete";
+import { Magnitude } from "../../database/schemas/units";
 
 interface UnitsEditProps {
   database: Database;
 }
 
 export function UnitsEdit({ database }: UnitsEditProps) {
+  const [isNew, setIsNew] = useState(false);
   const [object, setObject] = useState<Unit>({ name: "", magnitudes: [] });
   const data = useLoaderData() as UnitsEditLoaderResult;
   const navigate = useNavigate();
-  const theme = useTheme();
 
   useEffect(() => {
     if (data.object) {
+      setIsNew(false);
       setObject(data.object);
     }
   }, [data.object]);
 
-  return (
-    <Form
-      title={object ? `Editing ${object.name}` : "New Unit"}
-      returnTo="/units"
-      onSubmit={async () => {
-        if (object.id) {
-          await database.units.put(object);
-        } else {
-          await database.units.add(object);
-        }
-        navigate("/units");
-      }}
-    >
-      <TextField
-        id="variant"
-        variant="outlined"
-        label="name"
-        value={object.name}
-        onChange={(e) =>
-          setObject({ ...object, name: e.target.value.toLowerCase() })
-        }
-      />
-
-      {object.magnitudes.map((magnitude, index) => (
+  function MagnitudeView({
+    magnitude,
+    index,
+  }: {
+    magnitude: Magnitude;
+    index: number;
+  }) {
+    return (
+      <Box
+        display="flex"
+        component={Card}
+        overflow="unset"
+        alignItems="stretch"
+      >
         <Box
           key={index}
-          border="dashed 1px"
-          borderColor={theme.palette.primary.light}
-          padding="0.5em"
+          padding="0.75em"
           display="flex"
           flexWrap="wrap"
           gap="0.5em"
+          overflow="unset"
         >
           <TextField
             size="small"
@@ -104,7 +97,77 @@ export function UnitsEdit({ database }: UnitsEditProps) {
             }}
           />
         </Box>
+        <Button
+          color="error"
+          size="small"
+          sx={{ flexShrink: 1, minWidth: "unset", padding: "0.5em" }}
+          onClick={() => {
+            object.magnitudes.splice(index, 1);
+            setObject({ ...object });
+          }}
+        >
+          <Delete />
+        </Button>
+      </Box>
+    );
+  }
+
+  function NewMagnitude() {
+    return (
+      <Card
+        sx={{
+          overflow: "unset",
+        }}
+      >
+        <CardActionArea
+          onClick={() => {
+            object.magnitudes.push({
+              abbrev: "",
+              singular: "",
+              plural: "",
+              multiplier: 1,
+            });
+            setObject({ ...object });
+          }}
+          sx={{
+            padding: "1.5em",
+            textAlign: "center",
+          }}
+        >
+          <Add />
+        </CardActionArea>
+      </Card>
+    );
+  }
+
+  return (
+    <Form
+      title={isNew ? "Units: new" : `Units: ${object.name}`}
+      returnTo="/units"
+      onSubmit={async () => {
+        if (object.id) {
+          await database.units.put(object);
+        } else {
+          await database.units.add(object);
+        }
+        navigate("/units");
+      }}
+    >
+      <TextField
+        id="variant"
+        variant="outlined"
+        label="name"
+        value={object.name}
+        onChange={(e) =>
+          setObject({ ...object, name: e.target.value.toLowerCase() })
+        }
+      />
+
+      {object.magnitudes.map((magnitude, index) => (
+        <MagnitudeView magnitude={magnitude} index={index} />
       ))}
+
+      <NewMagnitude />
     </Form>
   );
 }

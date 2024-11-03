@@ -69,7 +69,6 @@ export function DetailView({ title, children }: DetailViewProps) {
   return (
     <Card
       sx={{
-        margin: "1em",
         padding: "0",
         display: "flex",
         flexDirection: "column",

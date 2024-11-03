@@ -6,6 +6,8 @@ import { IconLink } from "../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {
+  Card,
+  CardActionArea,
   Paper,
   Table,
   TableBody,
@@ -19,6 +21,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { UnitsLoaderResult } from "./units-loader";
 import { useState } from "react";
 import { ConfirmDialog } from "../components/confirm-dialog";
+import Add from "@mui/icons-material/Add";
 
 interface UnitsProps {
   database: Database;
@@ -92,6 +95,22 @@ export function Units({ database }: UnitsProps) {
     );
   }
 
+  function NewUnit() {
+    return (
+      <Card>
+        <CardActionArea
+          sx={{
+            padding: "1.5em",
+            textAlign: "center",
+          }}
+          onClick={() => navigate("/units/new")}
+        >
+          <Add />
+        </CardActionArea>
+      </Card>
+    );
+  }
+
   return (
     <Page title="Units">
       <DetailViewGroup>
@@ -99,6 +118,7 @@ export function Units({ database }: UnitsProps) {
           <UnitView key={unit.id} unit={unit} />
         ))}
       </DetailViewGroup>
+      <NewUnit />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
         open={isOpen}

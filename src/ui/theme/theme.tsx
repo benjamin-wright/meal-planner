@@ -6,6 +6,8 @@ const colorSchemeLight: ColorSystemOptions = {
   palette: {
     primary: {
       main: "#333333",
+      light: "#6e707a",
+      dark: "#222831",
     },
     secondary: {
       main: "#222831",
