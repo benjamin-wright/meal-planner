@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import { SxProps, useTheme } from "@mui/material/styles";
 
 interface CircleIconProps {
-  active?: boolean;
   children: React.ReactNode;
   sx?: SxProps;
 }
@@ -16,8 +15,7 @@ export function CircleIcon({ children, sx }: CircleIconProps) {
       padding="0.5em"
       borderRadius="50%"
       sx={{
-        // color: theme.palette.background.default,
-        backgroundColor: theme.palette.text.primary,
+        backgroundColor: theme.palette.background.paper,
         ...sx,
       }}
     >

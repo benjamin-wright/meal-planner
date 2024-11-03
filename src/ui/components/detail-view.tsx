@@ -1,4 +1,11 @@
-import { Box, Card, CardActionArea, Collapse, keyframes } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  Collapse,
+  keyframes,
+  Typography,
+} from "@mui/material";
 import { createContext, useContext, useState } from "react";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 
@@ -75,8 +82,11 @@ export function DetailView({ title, children }: DetailViewProps) {
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
+          gap="1em"
         >
-          <h2>{title}</h2>
+          <Typography variant="h2" flexGrow="1">
+            {title}
+          </Typography>
           <KeyboardArrowDown
             sx={{
               transform: "rotate(0deg)",

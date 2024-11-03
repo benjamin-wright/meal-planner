@@ -73,11 +73,7 @@ export function Units({ database }: UnitsProps) {
             justifyContent="space-between"
             paddingTop="0.75em"
           >
-            <IconLink
-              color="secondary"
-              sx={{ minWidth: "0" }}
-              onClick={() => onEdit(unit)}
-            >
+            <IconLink sx={{ minWidth: "0" }} onClick={() => onEdit(unit)}>
               <Edit />
             </IconLink>
             <IconLink

@@ -61,7 +61,7 @@ export function SlideOutLink({
         padding: "0.5em 1em 0.5em 0.5em",
         overflow: "hidden",
         fontSize: "1.5em",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.primary,
         lineHeight: 1,
         borderRadius: minWidth,
@@ -72,7 +72,6 @@ export function SlideOutLink({
     >
       <CircleIcon
         sx={{
-          color: theme.palette.primary.main,
           fontSize: "1rem",
           ...(isExpanded && {
             animation: `${spinIn} 0.8s ease-in-out`,
