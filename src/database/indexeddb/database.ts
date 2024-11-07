@@ -46,7 +46,9 @@ export class IndexedDBDatabase implements IDatabaseTransport {
       req.onerror = () => {
         reject(req.error);
       };
-    }).then((db: IDBDatabase) => {
+    });
+
+    this.db.then((db: IDBDatabase) => {
       if (schema.finalize) {
         return schema
           .finalize(this, {

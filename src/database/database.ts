@@ -28,15 +28,13 @@ const schema = {
     units: unitSchema,
   },
   finalize: async (transport: IDatabaseTransport, m: IMigrations) => {
-    for (const [index, migration] of migrations.entries()) {
-      if (await m.exists(index)) {
-        console.info(`Skipping migration ${index}: already exists`);
-        return;
+    for (let i = 0; i < migrations.length; i++) {
+      if (await m.exists(i)) {
+        console.info(`Skipping migration ${i}: already exists`);
+      } else {
+        await migrations[i](transport);
+        await m.add(i);
       }
-
-      console.info(`Running migration ${index}`);
-      await migration(transport);
-      await m.add(index);
     }
   },
 };

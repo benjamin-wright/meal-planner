@@ -1,4 +1,9 @@
-import { CloseReason, OpenReason, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import {
+  CloseReason,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+} from "@mui/material";
 import Scale from "@mui/icons-material/Scale";
 import Sell from "@mui/icons-material/Sell";
 import Egg from "@mui/icons-material/Egg";
@@ -25,7 +30,9 @@ export function Footer() {
       }}
       icon={<SpeedDialIcon />}
       onClose={(_, reason: CloseReason) => {
-        if (reason !== "mouseLeave") { setOpen(false); }
+        if (reason !== "mouseLeave") {
+          setOpen(false);
+        }
       }}
       onOpen={() => setOpen(true)}
       open={open}

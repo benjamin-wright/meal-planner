@@ -4,7 +4,7 @@ import { IDatabaseTransport } from "../types";
 export async function migration1(transport: IDatabaseTransport) {
   const units = transport.store<Unit>("units");
 
-  units.add(
+  await units.add(
     new Unit("gram", [
       {
         singular: "milligram",
@@ -22,7 +22,7 @@ export async function migration1(transport: IDatabaseTransport) {
     ])
   );
 
-  units.add(
+  await units.add(
     new Unit("litre", [
       {
         singular: "millilitre",
