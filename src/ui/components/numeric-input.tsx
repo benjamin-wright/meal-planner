@@ -7,7 +7,7 @@ import {
 import { useState } from "react";
 
 interface NumericInputProps {
-  id: string;
+  id?: string;
   label: string;
   value: number;
   onChange: (value: number) => void;

@@ -37,6 +37,11 @@ const router = createBrowserRouter([
         element: <Units database={db} />,
       },
       {
+        path: "units/new",
+        loader: unitsEditLoader({ database: db }),
+        element: <UnitsEdit database={db} />,
+      },
+      {
         path: "units/:unit",
         loader: unitsEditLoader({ database: db }),
         element: <UnitsEdit database={db} />,
