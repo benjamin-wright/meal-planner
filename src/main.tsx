@@ -20,6 +20,7 @@ import { theme } from "./ui/theme";
 import { Database, IndexedDBDatabase } from "./database";
 import { AlertProvider } from "./ui/components/alerts";
 import { unitsLoader } from "./ui/pages/units-loader";
+import { categoriesLoader } from "./ui/pages/categories-loader";
 const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "categories",
+        loader: categoriesLoader({ database: db }),
         element: <Categories />,
       },
       {
