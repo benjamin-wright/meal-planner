@@ -1,3 +1,4 @@
 # Ingredients
 
-Make the DetailViewGroup into a re-usable ToggleGroup component
+Work out how to drag and drop sorting:
+- https://docs.dndkit.com/presets/sortable/usesortable

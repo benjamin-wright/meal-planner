@@ -1,52 +1,34 @@
-import { Card, Typography } from "@mui/material";
+import { Card, Container, Typography } from "@mui/material";
 import { Category } from "../../database/schemas/categories";
-import {
-  DragSourceMonitor,
-  DropTargetMonitor,
-  useDrag,
-  useDrop,
-} from "react-dnd";
+import { DragHandle } from "@mui/icons-material";
+import { useSortable } from "@dnd-kit/sortable";
 
 interface CategoryViewProps {
   category: Category;
 }
 
 export function CategoryView({ category }: CategoryViewProps) {
-  const [{ opacity }, drag] = useDrag({
-    type: "category",
-    item: { id: category.id },
-    collect: (monitor: DragSourceMonitor) => ({
-      opacity: monitor.isDragging() ? 0.4 : 1,
-    }),
-  });
-
-  const [{ isOver }, drop] = useDrop({
-    accept: "category",
-    drop: (item: { id: string }) => {
-      console.log(item.id);
-    },
-    collect: (monitor: DropTargetMonitor) => ({
-      isOver: monitor.isOver(),
-    }),
-  });
-
-  function attachRef(el: HTMLDivElement | null) {
-    drag(el);
-    drop(el);
-  }
+  const { attributes, listeners, setNodeRef } = useSortable({ id: category.id || "" });
 
   return (
     <Card
-      ref={attachRef}
+      ref={setNodeRef}
       sx={{
         padding: "1em",
-        opacity,
-        border: isOver ? "2px dashed" : "",
+        display: "flex",
       }}
     >
-      <Typography variant="h2" fontSize="1em">
+      <Typography variant="h2" fontSize="1em" flexGrow="1">
         {category.name}
       </Typography>
+      <Container sx={{
+        width: "auto"
+      }}>
+        <DragHandle 
+          {...attributes}
+          {...listeners}
+        />
+      </Container>
     </Card>
   );
 }
