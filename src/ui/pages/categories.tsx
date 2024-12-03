@@ -1,33 +1,35 @@
 import { useLoaderData } from "react-router-dom";
+import { useState } from "react";
 import { Page } from "../components/page";
 import { CategoriesLoaderResult } from "./categories-loader";
 import { CategoryView } from "../components/category-view";
-import { closestCenter, DndContext, KeyboardSensor, PointerSensor, TouchSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
 import { Category } from "../../database/schemas";
+import { Reorder } from "motion/react";
+import { DetailViewGroup } from "../components/detail-view";
 
 export function Categories() {
   const data = useLoaderData() as CategoriesLoaderResult;
-  const items: UniqueIdentifier[] = data.categories.map((category: Category, index: number) => category.id || index);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor),
-    useSensor(KeyboardSensor),
-  );
+  const [items, setItems] = useState(data.categories);
 
-  function handleDragEnd(event: any) {
-    console.log(event);
+  function onEdit(category: Category) {
+    console.log("Edit", category);
+  }
+
+  function onDelete(category: Category) {
+    console.log("Delete", category);
   }
 
   return (
     <Page title="Categories">
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} >
-        <SortableContext items={items}>
-          {(data.categories || []).map((category) => (
-            <CategoryView key={category.id} category={category} />
+      <Reorder.Group axis="y" values={items} onReorder={setItems}>
+        <DetailViewGroup title="Categories">
+          {items.map((category: Category) => (
+            <Reorder.Item key={category.id} value={category}>
+              <CategoryView category={category} onEdit={onEdit} onDelete={onDelete} />
+            </Reorder.Item>
           ))}
-        </SortableContext>
-      </DndContext>
+        </DetailViewGroup>
+      </Reorder.Group>
     </Page>
   );
 }

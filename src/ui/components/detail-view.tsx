@@ -16,7 +16,7 @@ const DetailGroupContext = createContext({
 });
 
 interface DetailViewGroupProps {
-  children: React.ReactNode;
+  children: React.ReactNode; 
 }
 
 export function DetailViewGroup({ children }: DetailViewGroupProps) {
@@ -33,9 +33,11 @@ interface DetailViewProps {
   title: string;
   children: React.ReactNode;
   group?: string;
+  horizontal?: boolean;
+  narrow?: boolean;
 }
 
-export function DetailView({ title, children }: DetailViewProps) {
+export function DetailView({ title, horizontal, narrow, children }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
 
@@ -71,7 +73,8 @@ export function DetailView({ title, children }: DetailViewProps) {
       sx={{
         padding: "0",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: horizontal ? "row" : "column",
+        alignItems: horizontal ? "center" : "stretch"
       }}
     >
       <CardActionArea onClick={onClickHandler}>
@@ -83,26 +86,28 @@ export function DetailView({ title, children }: DetailViewProps) {
           justifyContent="space-between"
           gap="1em"
         >
-          <Typography variant="h2" flexGrow="1">
+          <Typography variant="h2" flexGrow="1" fontSize="1.5em">
             {title}
           </Typography>
-          <KeyboardArrowDown
-            sx={{
-              transform: "rotate(0deg)",
-              animation: `${spinOut} 0.3s ease-in-out`,
-              ...(firstRender ? { animation: "none" } : {}),
-              ...(selected === title
-                ? {
-                    animation: `${spinIn} 0.3s ease-in-out`,
-                    transform: "rotate(180deg)",
-                  }
-                : {}),
-            }}
-          />
+          { horizontal || (
+            <KeyboardArrowDown
+              sx={{
+                transform: "rotate(0deg)",
+                animation: `${spinOut} 0.3s ease-in-out`,
+                ...(firstRender ? { animation: "none" } : {}),
+                ...(selected === title
+                  ? {
+                      animation: `${spinIn} 0.3s ease-in-out`,
+                      transform: "rotate(180deg)",
+                    }
+                  : {}),
+              }}
+            />
+          )}
         </Box>
       </CardActionArea>
-      <Collapse in={selected === title}>
-        <Box margin="1em">{children}</Box>
+      <Collapse in={selected === title} orientation={horizontal ? "horizontal" : "vertical"}>
+        <Box margin={narrow ? "0" : "1em"}>{children}</Box>
       </Collapse>
     </Card>
   );

@@ -1,18 +1,35 @@
-import { Card, Container, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Container, Typography } from "@mui/material";
 import { Category } from "../../database/schemas/categories";
-import { DragHandle } from "@mui/icons-material";
-import { useSortable } from "@dnd-kit/sortable";
+import { DetailView } from "./detail-view";
+import { IconLink } from "./icon-link";
+
+import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
+
 
 interface CategoryViewProps {
   category: Category;
+  onEdit?: (category: Category) => void;
+  onDelete?: (category: Category) => void;
 }
 
-export function CategoryView({ category }: CategoryViewProps) {
-  const { attributes, listeners, setNodeRef } = useSortable({ id: category.id || "" });
-
-  return (
+export function CategoryView({ category, onEdit, onDelete }: CategoryViewProps) {
+  return (onEdit || onDelete) ? (
+    <DetailView title={category.name} horizontal narrow>
+      <Box display="flex" flexGrow="1">
+        <IconLink onClick={() => onEdit && onEdit(category)}>
+          <Edit />
+        </IconLink>
+        <IconLink
+          color="error"
+          onClick={() => onDelete && onDelete(category)}
+        >
+          <Delete />
+        </IconLink>
+      </Box>
+    </DetailView>
+  ) : (
     <Card
-      ref={setNodeRef}
       sx={{
         padding: "1em",
         display: "flex",
@@ -21,14 +38,6 @@ export function CategoryView({ category }: CategoryViewProps) {
       <Typography variant="h2" fontSize="1em" flexGrow="1">
         {category.name}
       </Typography>
-      <Container sx={{
-        width: "auto"
-      }}>
-        <DragHandle 
-          {...attributes}
-          {...listeners}
-        />
-      </Container>
     </Card>
   );
 }

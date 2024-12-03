@@ -66,6 +66,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCardActionArea: {
+      styleOverrides: {
+        root: {
+          width: "auto",
+          flexGrow: 1,
+        }
+      }
+    },
     MuiLink: {
       defaultProps: {
         component: LinkBehavior,
@@ -151,6 +159,11 @@ export const theme = createTheme({
   
         em {
           display: inline;
+        }
+
+        ul {
+          list-style-type: none;
+          padding: 0;
         }
       `,
     },
