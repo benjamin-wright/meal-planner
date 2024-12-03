@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { createContext, useContext, useState } from "react";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import DragHandle from "@mui/icons-material/DragHandle";
+import { DragControls } from "motion/react";
 
 const DetailGroupContext = createContext({
   selected: "",
@@ -35,9 +37,10 @@ interface DetailViewProps {
   group?: string;
   horizontal?: boolean;
   narrow?: boolean;
+  dragControls?: DragControls;
 }
 
-export function DetailView({ title, horizontal, narrow, children }: DetailViewProps) {
+export function DetailView({ title, horizontal, narrow, dragControls, children }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
 
@@ -86,10 +89,13 @@ export function DetailView({ title, horizontal, narrow, children }: DetailViewPr
           justifyContent="space-between"
           gap="1em"
         >
+          { dragControls && (
+            <DragHandle onPointerDown={(e) => dragControls.start(e)} style={{ touchAction: "none" }} sx={{boxSizing: "content-box", padding: "0.4em 0"}} />
+          ) }
           <Typography variant="h2" flexGrow="1" fontSize="1.5em">
             {title}
           </Typography>
-          { horizontal || (
+          { !horizontal && (
             <KeyboardArrowDown
               sx={{
                 transform: "rotate(0deg)",
