@@ -6,6 +6,7 @@ import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import { Page } from "../components/page";
 import { Box } from "@mui/material";
+import { Settings } from "@mui/icons-material";
 
 export function Home() {
   return (
@@ -23,6 +24,7 @@ export function Home() {
           { name: "ingredients", icon: Egg },
           { name: "categories", icon: Sell },
           { name: "units", icon: Scale },
+          { name: "settings", icon: Settings },
         ].map((category, index) => (
           <SlideOutLink
             key={category.name}

@@ -5,7 +5,7 @@ interface IconLinkProps {
   to?: string;
   children: React.ReactNode;
   sx?: SxProps;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   color?: ButtonProps["color"];
   big?: boolean;
 }

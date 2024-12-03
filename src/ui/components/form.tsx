@@ -12,7 +12,7 @@ interface FormProps {
 
 export function Form({ title, returnTo, children, onSubmit }: FormProps) {
   return (
-    <Page title={title} returnTo={returnTo} hideNav noScroll>
+    <Page title={title} returnTo={returnTo} noScroll>
       <Box
         height="100%"
         maxHeight="100%"

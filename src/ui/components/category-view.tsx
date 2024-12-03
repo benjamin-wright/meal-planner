@@ -1,4 +1,3 @@
-import { Card, CardActionArea, Container, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Category } from "../../database/schemas/categories";
 import { DetailView } from "./detail-view";
@@ -7,7 +6,6 @@ import { DragControls } from "motion/react";
 
 import Delete from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
-
 
 interface CategoryViewProps {
   category: Category;

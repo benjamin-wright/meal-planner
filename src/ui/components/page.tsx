@@ -1,25 +1,24 @@
-import { Footer } from "./footer";
 import { AppBar, Box, Stack, Toolbar, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLink } from "./icon-link";
 import House from "@mui/icons-material/House";
-import Settings from "@mui/icons-material/Settings";
+import { Nav } from "./nav";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 
 interface PageProps {
   title: string;
   children?: React.ReactNode;
-  hideNav?: boolean;
   returnTo?: string;
+  hideNav?: boolean;
   noScroll?: boolean;
 }
 
 export function Page({
   title,
-  hideNav,
   children,
   returnTo,
   noScroll,
+  hideNav,
 }: PageProps) {
   const theme = useTheme();
 
@@ -47,10 +46,8 @@ export function Page({
           >
             {title}
           </Typography>
-          {!returnTo && (
-            <IconLink to="/settings">
-              <Settings />
-            </IconLink>
+          {!returnTo && !hideNav && (
+            <Nav />
           )}
         </Toolbar>
       </AppBar>
@@ -69,7 +66,6 @@ export function Page({
       >
         {children}
       </Box>
-      {!hideNav && <Footer />}
     </Stack>
   );
 }

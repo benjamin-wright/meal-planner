@@ -42,7 +42,7 @@ export function Categories() {
   return (
     <Page title="Categories">
       <Reorder.Group axis="y" values={items} onReorder={onSetItems}>
-        <DetailViewGroup title="Categories">
+        <DetailViewGroup>
           {items.map((category: Category) => (
             <ReorderItem key={category.id} category={category} onDelete={onDelete} onEdit={onEdit} />
           ))}
