@@ -13,6 +13,6 @@ export function categoriesLoader({
 }): LoaderFunction<CategoriesLoaderResult> {
   return async () => {
     const categories = await database.categories.getAll();
-    return { categories };
+    return { categories: categories.sort((a, b) => a.order - b.order) };
   };
 }

@@ -8,6 +8,7 @@ interface IconLinkProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   color?: ButtonProps["color"];
   big?: boolean;
+  disabled?: boolean;
 }
 
 export function IconLink({
@@ -17,6 +18,7 @@ export function IconLink({
   onClick,
   color,
   big,
+  disabled
 }: IconLinkProps) {
   return (
     <Button
@@ -28,6 +30,7 @@ export function IconLink({
       onClick={onClick}
       color={color}
       disableRipple
+      disabled={disabled}
     >
       <CircleIcon>{children}</CircleIcon>
     </Button>

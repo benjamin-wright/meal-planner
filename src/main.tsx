@@ -54,7 +54,7 @@ const router = createBrowserRouter([
       {
         path: "categories",
         loader: categoriesLoader({ database: db }),
-        element: <Categories />,
+        element: <Categories database={db} />,
       },
       {
         path: "ingredients",

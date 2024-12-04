@@ -6,7 +6,7 @@ import {
   keyframes,
   Typography,
 } from "@mui/material";
-import { createContext, useContext, useState } from "react";
+import { createContext, PointerEvent, useContext, useState } from "react";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import DragHandle from "@mui/icons-material/DragHandle";
 import { DragControls } from "motion/react";
@@ -38,9 +38,10 @@ interface DetailViewProps {
   horizontal?: boolean;
   narrow?: boolean;
   dragControls?: DragControls;
+  working?: boolean;
 }
 
-export function DetailView({ title, horizontal, narrow, dragControls, children }: DetailViewProps) {
+export function DetailView({ title, horizontal, narrow, dragControls, working, children }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
 
@@ -51,6 +52,14 @@ export function DetailView({ title, horizontal, narrow, dragControls, children }
     }
     setSelected(title);
     setFirstRender(false);
+  }
+
+  function onDragStart(e: PointerEvent) {
+    if (working) {
+      return;
+    }
+  
+    dragControls?.start(e);
   }
 
   const spinIn = keyframes`
@@ -90,7 +99,7 @@ export function DetailView({ title, horizontal, narrow, dragControls, children }
           gap="1em"
         >
           { dragControls && (
-            <DragHandle onPointerDown={(e) => dragControls.start(e)} style={{ touchAction: "none" }} sx={{boxSizing: "content-box", padding: "0.4em 0"}} />
+            <DragHandle onPointerDown={onDragStart} style={{ touchAction: "none" }} sx={{boxSizing: "content-box", padding: "0.4em 0", opacity: working ? 0.4 : 1}} />
           ) }
           <Typography variant="h2" flexGrow="1" fontSize="1.5em">
             {title}
