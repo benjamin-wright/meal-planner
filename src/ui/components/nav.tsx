@@ -41,7 +41,7 @@ import {
         <IconLink onClick={() => setOpen(true)}>
           <MenuIcon />
         </IconLink>
-        <Drawer anchor="right" transitionDuration={{enter: 500000, exit: 500}} open={open} onClose={() => setOpen(false)} PaperProps={{
+        <Drawer anchor="right" open={open} onClose={() => setOpen(false)} PaperProps={{
           sx: {
             marginTop: "3.5em",
             height: "unset",
