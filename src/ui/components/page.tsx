@@ -61,7 +61,7 @@ export function Page({
           display: "flex",
           flexDirection: "column",
           gap: "1em",
-          paddingBottom: "3.5em"
+          paddingBottom: "3.5em",
         }}
       >
         {children}

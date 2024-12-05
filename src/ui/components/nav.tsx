@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useTheme } from "@mui/material";
 import { IconLink } from "./icon-link";
+import { BurgerMenu } from "./burger-menu";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -37,30 +38,19 @@ export function Nav() {
   ];
 
   return (
-    <>
-      <IconLink onClick={() => setOpen(true)}>
-        <MenuIcon />
-      </IconLink>
-      <Drawer anchor="right" transitionDuration={{ enter: 500000, exit: 500 }} open={open} onClose={() => setOpen(false)} PaperProps={{
-        sx: {
-          marginTop: "3.5em",
-          height: "unset",
-          bottom: "0"
-        }
-      }}>
-        {options.map((option) => (
-          <MenuItem key={option.name} onClick={() => navigateTo(option.name)} sx={{
-            padding: "1em",
-            display: "flex",
-            justifyContent: "stretch",
-          }} disabled={location.pathname === "/" + option.name}>
-            <option.icon />
-            <Typography variant="h6" sx={{
-              marginLeft: "1em",
-            }}>{option.name}</Typography>
-          </MenuItem>
-        ))}
-      </Drawer>
-    </>
+    <BurgerMenu>
+      {options.map((option) => (
+        <MenuItem key={option.name} onClick={() => navigateTo(option.name)} sx={{
+          padding: "1em",
+          display: "flex",
+          justifyContent: "stretch",
+        }} disabled={location.pathname === "/" + option.name}>
+          <option.icon />
+          <Typography variant="h6" sx={{
+            marginLeft: "1em",
+          }}>{option.name}</Typography>
+        </MenuItem>
+      ))}
+    </BurgerMenu>
   );
 }
