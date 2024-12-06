@@ -13,7 +13,7 @@ interface UnitsEditProps {
 }
 
 export function UnitsEdit({ database }: UnitsEditProps) {
-  const [isNew, setIsNew] = useState(false);
+  const [isNew, setIsNew] = useState(true);
   const [object, setObject] = useState<Unit>({ name: "", magnitudes: [] });
   const data = useLoaderData() as UnitsEditLoaderResult;
   const navigate = useNavigate();
@@ -72,8 +72,11 @@ export function UnitsEdit({ database }: UnitsEditProps) {
         label="name"
         value={object.name}
         onChange={(e) =>
-          setObject({ ...object, name: e.target.value.toLowerCase() })
+          setObject({ ...object, name: e.target.value })
         }
+        onBlur={(e) => {
+          setObject({ ...object, name: e.target.value.toLowerCase() });
+        }}
       />
 
       {object.magnitudes.map((magnitude, index) => (

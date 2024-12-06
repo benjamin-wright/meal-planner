@@ -12,6 +12,8 @@ import {
 } from "./ui/pages";
 import { UnitsEdit } from "./ui/pages/units-edit";
 import { unitsEditLoader } from "./ui/pages/units-edit-loader";
+import { CategoriesEdit } from "./ui/pages/categories-edit";
+import { categoriesEditLoader } from "./ui/pages/categories-edit-loader";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
@@ -55,6 +57,16 @@ const router = createBrowserRouter([
         path: "categories",
         loader: categoriesLoader({ database: db }),
         element: <Categories database={db} />,
+      },
+      {
+        path: "categories/new",
+        loader: categoriesEditLoader({ database: db }),
+        element: <CategoriesEdit database={db} />,
+      },
+      {
+        path: "categories/:category",
+        loader: categoriesEditLoader({ database: db }),
+        element: <CategoriesEdit database={db} />,
       },
       {
         path: "ingredients",
