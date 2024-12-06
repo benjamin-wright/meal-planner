@@ -6,6 +6,7 @@ import { DragControls } from "motion/react";
 
 import Delete from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
+import React from "react";
 
 interface CategoryViewProps {
   category: Category;
@@ -19,7 +20,7 @@ export function CategoryView({ category, onEdit, onDelete, dragControls, working
   return (
     <DetailView title={category.name} horizontal narrow dragControls={dragControls} working={working}>
       <Box display="flex" flexGrow="1">
-        <IconLink onClick={() => onEdit && onEdit(category)} disabled={working}>
+        <IconLink onClick={(event: React.MouseEvent<HTMLButtonElement>) => onEdit && onEdit(category)} disabled={working}>
           <Edit />
         </IconLink>
         <IconLink

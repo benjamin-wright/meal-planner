@@ -32,30 +32,17 @@ interface CategoriesProps {
 export function Categories({ database }: CategoriesProps) {
   const data = useLoaderData() as CategoriesLoaderResult;
   const [items, setItems] = useState(data.categories);
-  const [working, setWorking] = useState(false);
-  const [handle, setHandle] = useState<number | null>(null);
 
-  function persistUpdates() {
-    setTimeout(() => {
-      setWorking(false);
-    }, 2000);
-  }
-
-  function onSetItems(newItems: Category[]) {
-    if (working) {
-      return;
-    }
-  
-    if (handle) {
-      clearTimeout(handle);
-    }
-    
+  async function onReorder(newItems: Category[]) {
     setItems(newItems);
-    setHandle(setTimeout(() => {
-      setHandle(null);
-      setWorking(true);
-      persistUpdates();
-    }, 1000))
+    for (let i = 0; i < newItems.length; i++) {
+      if (newItems[i].order === i) {
+        continue;
+      }
+      
+      newItems[i].order = i;
+      await database.categories.put(newItems[i]);
+    }
   }
 
   function onEdit(category: Category) {
@@ -68,10 +55,10 @@ export function Categories({ database }: CategoriesProps) {
 
   return (
     <Page title="Categories">
-      <Reorder.Group axis="y" values={items} onReorder={onSetItems}>
+      <Reorder.Group axis="y" values={items} onReorder={onReorder}>
         <DetailViewGroup>
           {items.map((category: Category) => (
-            <ReorderItem key={category.id} category={category} onDelete={onDelete} onEdit={onEdit} working={working} />
+            <ReorderItem key={category.id} category={category} onDelete={onDelete} onEdit={onEdit} />
           ))}
         </DetailViewGroup>
       </Reorder.Group>
