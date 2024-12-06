@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import {
   Card,
   CardActionArea,
+  Fab,
   Paper,
   Table,
   TableBody,
@@ -45,6 +46,10 @@ export function Units({ database }: UnitsProps) {
     await database.units.delete(toDelete.id);
     setOpen(false);
     navigate("/units", { replace: true });
+  }
+
+  function onAdd() {
+    navigate("/units/new");
   }
 
   function UnitView({ unit }: { unit: Unit }) {
@@ -97,17 +102,13 @@ export function Units({ database }: UnitsProps) {
 
   function NewUnit() {
     return (
-      <Card>
-        <CardActionArea
-          sx={{
-            padding: "1.5em",
-            textAlign: "center",
-          }}
-          onClick={() => navigate("/units/new")}
-        >
-          <Add />
-        </CardActionArea>
-      </Card>
+      <Fab color="success" sx={{
+        position: "fixed",
+        bottom: "1em",
+        right: "1em",
+      }} onClick={onAdd}>
+        <Add />
+      </Fab>
     );
   }
 

@@ -44,6 +44,7 @@ export function BurgerMenu({ children }: BurgerMenuProps) {
         right: 0,
         bottom: 0,
         overflowX: "hidden",
+        pointerEvents: open ? "auto" : "none",
         zIndex: 1050,
       }}>
         <Paper sx={{

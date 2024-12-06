@@ -89,7 +89,9 @@ export function DetailView({ title, horizontal, narrow, dragControls, working, c
         alignItems: horizontal ? "center" : "stretch"
       }}
     >
-      <CardActionArea onClick={onClickHandler}>
+      <CardActionArea onClick={onClickHandler} sx={{
+        width: "auto"
+      }}>
         <Box
           margin="1em"
           display="flex"

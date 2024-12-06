@@ -12,17 +12,11 @@ import Egg from "@mui/icons-material/Egg";
 import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { Menu as MenuIcon } from "@mui/icons-material";
-import { useTheme } from "@mui/material";
-import { IconLink } from "./icon-link";
 import { BurgerMenu } from "./burger-menu";
 
 export function Nav() {
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
 
   function navigateTo(category: string) {
     navigate(`/${category}`);

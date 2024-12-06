@@ -69,7 +69,6 @@ export const theme = createTheme({
     MuiCardActionArea: {
       styleOverrides: {
         root: {
-          width: "auto",
           flexGrow: 1,
         }
       }
