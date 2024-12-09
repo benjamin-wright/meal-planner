@@ -7,10 +7,11 @@ interface FormProps {
   title: string;
   returnTo?: string;
   children?: React.ReactNode;
+  disabled?: boolean;
   onSubmit?: () => void;
 }
 
-export function Form({ title, returnTo, children, onSubmit }: FormProps) {
+export function Form({ title, returnTo, children, disabled, onSubmit }: FormProps) {
   return (
     <Page title={title} returnTo={returnTo} noScroll>
       <Box
@@ -33,7 +34,7 @@ export function Form({ title, returnTo, children, onSubmit }: FormProps) {
           {children}
         </Box>
         <Box display="flex" width="100%" justifyContent="center">
-          <IconLink color="success" onClick={onSubmit} big>
+          <IconLink color="success" onClick={onSubmit} big disabled={disabled}>
             <Save />
           </IconLink>
         </Box>

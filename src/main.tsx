@@ -23,6 +23,9 @@ import { Database, IndexedDBDatabase } from "./database";
 import { AlertProvider } from "./ui/components/alerts";
 import { unitsLoader } from "./ui/pages/units-loader";
 import { categoriesLoader } from "./ui/pages/categories-loader";
+import { ingredientsLoader } from "./ui/pages/ingredients-loader";
+import { IngredientsEdit } from "./ui/pages/ingredients-edit";
+import { ingredientsEditLoader } from "./ui/pages/ingredients-edit-loader";
 const db = new Database(new IndexedDBDatabase(indexedDB));
 
 const router = createBrowserRouter([
@@ -70,7 +73,18 @@ const router = createBrowserRouter([
       },
       {
         path: "ingredients",
+        loader: ingredientsLoader({ database: db }),
         element: <Ingredients />,
+      },
+      {
+        path: "ingredients/new",
+        loader: ingredientsEditLoader({ database: db }),
+        element: <IngredientsEdit database={db} />,
+      },
+      {
+        path: "ingredients/:ingredient",
+        loader: ingredientsEditLoader({ database: db }),
+        element: <IngredientsEdit database={db} />,
       },
       {
         path: "recipies",
