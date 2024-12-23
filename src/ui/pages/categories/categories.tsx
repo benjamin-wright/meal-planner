@@ -1,15 +1,14 @@
 import { useLoaderData } from "react-router-dom";
 import { useState } from "react";
-import { Page } from "../components/page";
+import { Page } from "../../components/page";
 import { CategoriesLoaderResult } from "./categories-loader";
-import { CategoryView } from "../components/category-view";
-import { Category } from "../../database/schemas";
+import { CategoryView } from "../../components/category-view";
 import { Reorder, useDragControls } from "motion/react";
-import { DetailViewGroup } from "../components/detail-view";
-import { Database } from "../../database";
-import { NewItemButton } from "../components/new-item-button";
+import { DetailViewGroup } from "../../components/detail-view";
+import { NewItemButton } from "../../components/new-item-button";
 import { useNavigate } from "react-router-dom";
-import { ConfirmDialog } from "../components/confirm-dialog";
+import { ConfirmDialog } from "../../components/confirm-dialog";
+import { Category } from "../../../models/categories";
 
 interface ReorderItemProps {
   category: Category;
@@ -28,11 +27,8 @@ function ReorderItem({ category, onEdit, onDelete, working }: ReorderItemProps) 
   );
 }
 
-interface CategoriesProps {
-  database: Database;
-}
 
-export function Categories({ database }: CategoriesProps) {
+export function Categories() {
   const navigate = useNavigate();
   const data = useLoaderData() as CategoriesLoaderResult;
   const [isOpen, setOpen] = useState(false);
@@ -47,7 +43,7 @@ export function Categories({ database }: CategoriesProps) {
       }
       
       newItems[i].order = i;
-      await database.categories.put(newItems[i]);
+      await data.store.put(newItems[i]);
     }
   }
 
@@ -60,7 +56,7 @@ export function Categories({ database }: CategoriesProps) {
       return;
     }
 
-    database.categories.delete(toDelete.id);
+    data.store.delete(toDelete.id);
     setOpen(false);
     setItems(items.filter((category) => category.id !== toDelete.id));
   }

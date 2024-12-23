@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
-import { Database } from "../../database";
-import { Ingredient } from "../../database/schemas";
 import { TextField } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { Form } from "../components/form";
+import { Form } from "../../components/form";
 import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
 
-interface IngredientsEditProps {
-  database: Database;
-}
-
 type IngredientInput = {
-  id?: number;
+  id: number;
   name: string;
   category?: number;
   unit?: number;
 }
 
-export function IngredientsEdit({ database }: IngredientsEditProps) {
+export function IngredientsEdit() {
   const [isNew, setIsNew] = useState(true);
   const data = useLoaderData() as IngredientsEditLoaderResult;
-  const [object, setObject] = useState<IngredientInput>({ name: "" });
+  const [object, setObject] = useState<IngredientInput>({ id: 0, name: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,19 +36,17 @@ export function IngredientsEdit({ database }: IngredientsEditProps) {
       onSubmit={async () => {
         if (object.category === undefined || object.unit === undefined) {
           return;
-        }
+        } 
 
-        const ingredient = {
-          id: object.id,
-          name: object.name,
-          category: object.category,
-          unit: object.unit,
-        }
-
-        if (ingredient.id) {
-          await database.ingredients.put(ingredient);
+        if (isNew) {
+          await data.store.add(object.name, object.category, object.unit);
         } else {
-          await database.ingredients.add(ingredient);
+          await data.store.put({
+            id: object.id,
+            name: object.name,
+            category: object.category,
+            unit: object.unit,
+          });
         }
         navigate("/ingredients");
       }}

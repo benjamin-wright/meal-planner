@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
-import { Database } from "../../database";
-import { Category } from "../../database/schemas";
 import { TextField } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { Form } from "../components/form";
+import { Form } from "../../components/form";
 import { CategoriesEditLoaderResult } from "./categories-edit-loader";
+import { Category } from "../../../models/categories";
 
-interface CategoriesEditProps {
-  database: Database;
-}
-
-export function CategoriesEdit({ database }: CategoriesEditProps) {
+export function CategoriesEdit() {
   const [isNew, setIsNew] = useState(true);
   const data = useLoaderData() as CategoriesEditLoaderResult;
-  const [object, setObject] = useState<Category>({ name: "", order: data.categories.length });
+  const [object, setObject] = useState<Category>({ id: 0, name: "", order: data.categories.length });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,10 +23,10 @@ export function CategoriesEdit({ database }: CategoriesEditProps) {
       title={isNew ? "Categories: new" : `Categories: ${object.name}`}
       returnTo="/categories"
       onSubmit={async () => {
-        if (object.id) {
-          await database.categories.put(object);
+        if (isNew) {
+          await data.store.add(object.name, object.order);
         } else {
-          await database.categories.add(object);
+          await data.store.put(object);
         }
         navigate("/categories");
       }}

@@ -1,8 +1,7 @@
-import { Page } from "../components/page";
-import { Database } from "../../database";
-import { Unit } from "../../database/schemas";
-import { DetailView, DetailViewGroup } from "../components/detail-view";
-import { IconLink } from "../components/icon-link";
+import { Page } from "../../components/page";
+import { Unit } from "../../../database/schemas";
+import { DetailView, DetailViewGroup } from "../../components/detail-view";
+import { IconLink } from "../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {
@@ -18,14 +17,10 @@ import Delete from "@mui/icons-material/Delete";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { UnitsLoaderResult } from "./units-loader";
 import { useState } from "react";
-import { ConfirmDialog } from "../components/confirm-dialog";
-import { NewItemButton } from "../components/new-item-button";
+import { ConfirmDialog } from "../../components/confirm-dialog";
+import { NewItemButton } from "../../components/new-item-button";
 
-interface UnitsProps {
-  database: Database;
-}
-
-export function Units({ database }: UnitsProps) {
+export function Units() {
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Unit | null>(null);
   const data = useLoaderData() as UnitsLoaderResult;
@@ -40,7 +35,7 @@ export function Units({ database }: UnitsProps) {
       return;
     }
 
-    await database.units.delete(toDelete.id);
+    await data.store.delete(toDelete.id);
     setOpen(false);
     navigate("/units", { replace: true });
   }

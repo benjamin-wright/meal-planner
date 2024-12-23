@@ -1,8 +1,8 @@
 export { Home } from "./home";
-export { Units } from "./units";
-export { UnitsEdit } from "./units-edit";
+export { Units } from "./units/units";
+export { UnitsEdit } from "./units/units-edit";
 export { Settings } from "./settings";
-export { Categories } from "./categories";
-export { Ingredients } from "./ingredients";
+export { Categories } from "./categories/categories";
+export { Ingredients } from "./ingredients/ingredients";
 export { Recipies } from "./recipies";
 export { Planner } from "./planner";

@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Category } from "../../database/schemas/categories";
+import { Category } from "../../models/categories";
 import { DetailView } from "./detail-view";
 import { IconLink } from "./icon-link";
 import { DragControls } from "motion/react";
