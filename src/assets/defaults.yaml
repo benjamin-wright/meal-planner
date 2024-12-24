@@ -1,0 +1,33 @@
+units:
+- name: gram
+  magnitudes:
+  - abbreviation: mg
+    singular: milligram
+    plural: milligrams
+    factor: 0.001
+  - abbreviation: g
+    singular: gram
+    plural: grams
+    factor: 1
+  - abbreviation: kg
+    singular: kilogram
+    plural: kilograms
+    factor: 1000
+- name: litre
+  magnitudes:
+  - abbreviation: ml
+    singular: millilitre
+    plural: millilitres
+    factor: 0.001
+  - abbreviation: l
+    singular: litre
+    plural: litres
+    factor: 1
+
+categories:
+- name: fruit
+- name: vegetable
+- name: meat
+- name: fish
+- name: dairy
+- name: cupboard

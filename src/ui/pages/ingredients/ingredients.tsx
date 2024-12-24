@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { NewItemButton } from "../../components/new-item-button";
 import { Page } from "../../components/page";
-import { Ingredient } from "../../../database/schemas/ingredients";
+import { Ingredient } from "../../../models/ingredients";
 
 export function Ingredients() {
   const [toDelete, setToDelete] = useState<Ingredient | null>(null);

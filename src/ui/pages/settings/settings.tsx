@@ -1,12 +1,13 @@
 import { useContext, useState } from "react";
-import { Page } from "../components/page";
+import { Page } from "../../components/page";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Database } from "../../database";
-import { AlertContext } from "../components/alerts";
+import { AlertContext } from "../../components/alerts";
+import { useLoaderData } from "react-router-dom";
+import { SettingsLoaderResult } from "./settings-loader";
 
 interface CheckDialogProps {
   open: boolean;
@@ -41,13 +42,10 @@ function CheckDialog({ open, onClose }: CheckDialogProps) {
   );
 }
 
-interface SettingsProps {
-  database: Database;
-}
-
-export function Settings({ database }: SettingsProps) {
+export function Settings() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { setMessage, setError } = useContext(AlertContext);
+  const data = useLoaderData() as SettingsLoaderResult;
 
   function handleOpen() {
     setDialogOpen(true);
@@ -56,14 +54,13 @@ export function Settings({ database }: SettingsProps) {
   function handleClose(ok: boolean) {
     setDialogOpen(false);
     if (ok) {
-      database
-        .reset()
-        .then(() => {
-          setMessage("Application reset successfully.");
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
+      try {
+        data.db.reset();
+        setMessage("Application reset successfully, reloading...");
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (err: any) {
+        setError(err.message);
+      }
     }
   }
 

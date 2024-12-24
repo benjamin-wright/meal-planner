@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   Home,
-  Settings,
   Recipies,
   Planner,
 } from "./ui/pages";
@@ -17,8 +16,9 @@ import { createDB } from "./persistence/IndexedDB/db";
 import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
+import { routes as settings } from "./ui/pages/settings/routes";
 
-const db = createDB(indexedDB);
+const db = createDB();
 
 const router = createBrowserRouter([
   {
@@ -29,10 +29,7 @@ const router = createBrowserRouter([
         path: name,
         element: <Home />,
       })),
-      {
-        path: "settings",
-        element: <Settings database={db} />,
-      },
+      ...settings(db),
       ...categories(db),
       ...units(db),
       ...ingredients(db),
