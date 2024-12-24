@@ -36,7 +36,9 @@ export function IngredientsEdit() {
       onSubmit={async () => {
         if (object.category === undefined || object.unit === undefined) {
           return;
-        } 
+        }
+
+        object.name = object.name.toLowerCase();
 
         if (isNew) {
           await data.store.add(object.name, object.category, object.unit);

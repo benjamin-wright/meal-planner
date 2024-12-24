@@ -6,7 +6,6 @@ import { UnitsEditLoaderResult } from "./units-edit-loader";
 import { Form } from "../../components/form";
 import Add from "@mui/icons-material/Add";
 import { MagnitudeEdit } from "../../components/magnitude-edit";
-import { UnitStore } from "../../../persistence/interfaces/units";
 
 export function UnitsEdit() {
   const [isNew, setIsNew] = useState(true);
@@ -54,6 +53,8 @@ export function UnitsEdit() {
       title={isNew ? "Units: new" : `Units: ${object.name}`}
       returnTo="/units"
       onSubmit={async () => {
+        object.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
+
         if (isNew) {
           await data.store.add(object.name, object.magnitudes);
         } else {
