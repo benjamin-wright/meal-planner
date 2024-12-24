@@ -141,6 +141,21 @@ export class DB {
     });
   }
 
+  async clear(db: string): Promise<void> {
+    const tx = this.db.transaction(db, "readwrite");
+    const store = tx.objectStore(db);
+    store.clear();
+    tx.commit();
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        resolve();
+      };
+      tx.onerror = () => {
+        reject(tx.error);
+      };
+    });
+  }
+
   reset() {
     this.db.close();
     indexedDB.deleteDatabase(DB_NAME);

@@ -6,4 +6,5 @@ export interface CategoryStore {
   add(name: string, order: number): Promise<number>;
   put(value: Category): Promise<void>;
   delete(id: number): Promise<void>;
+  clear(): Promise<void>;
 }

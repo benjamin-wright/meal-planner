@@ -33,4 +33,8 @@ export class Units implements UnitStore {
   async delete(id: number): Promise<void> {
     return this.db.delete("units", id);
   }
+
+  async clear(): Promise<void> {
+    return this.db.clear("units");
+  }
 }

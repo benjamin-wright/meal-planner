@@ -6,4 +6,5 @@ export interface UnitStore {
   add(name: string, magnitudes: Magnitude[]): Promise<number>;
   put(value: Unit): Promise<void>;
   delete(id: number): Promise<void>;
+  clear(): Promise<void>;
 }

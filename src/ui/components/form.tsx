@@ -30,6 +30,10 @@ export function Form({ title, returnTo, children, disabled, onSubmit }: FormProp
           flexGrow="1"
           gap="1em"
           overflow="scroll"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit?.();
+          }}
         >
           {children}
         </Box>

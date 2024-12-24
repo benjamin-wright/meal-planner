@@ -1,0 +1,70 @@
+{
+  "units": [
+    {
+      "name": "gram",
+      "magnitudes": [
+        {
+          "abbreviation": "mg",
+          "singular": "milligram",
+          "plural": "milligrams",
+          "factor": 0.001
+        },
+        {
+          "abbreviation": "g",
+          "singular": "gram",
+          "plural": "grams",
+          "factor": 1
+        },
+        {
+          "abbreviation": "kg",
+          "singular": "kilogram",
+          "plural": "kilograms",
+          "factor": 1000
+        }
+      ]
+    },
+    {
+      "name": "litre",
+      "magnitudes": [
+        {
+          "abbreviation": "ml",
+          "singular": "millilitre",
+          "plural": "millilitres",
+          "factor": 0.001
+        },
+        {
+          "abbreviation": "l",
+          "singular": "litre",
+          "plural": "litres",
+          "factor": 1
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "fruit",
+      "order": 0
+    },
+    {
+      "name": "vegetable",
+      "order": 1
+    },
+    {
+      "name": "meat",
+      "order": 2
+    },
+    {
+      "name": "fish",
+      "order": 3
+    },
+    {
+      "name": "dairy",
+      "order": 4
+    },
+    {
+      "name": "cupboard",
+      "order": 5
+    }
+  ]
+}

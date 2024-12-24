@@ -33,4 +33,8 @@ export class Categories implements CategoryStore {
   async delete(id: number): Promise<void> {
     return this.db.delete("categories", id);
   }
+
+  async clear(): Promise<void> {
+    return this.db.clear("categories");
+  }
 }

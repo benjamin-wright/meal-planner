@@ -23,6 +23,8 @@ export function CategoriesEdit() {
       title={isNew ? "Categories: new" : `Categories: ${object.name}`}
       returnTo="/categories"
       onSubmit={async () => {
+        object.name = object.name.toLowerCase();
+
         if (isNew) {
           await data.store.add(object.name, object.order);
         } else {

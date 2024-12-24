@@ -8,4 +8,5 @@ export interface IngredientStore {
   add(name: string, category: number, unit: number): Promise<number>;
   put(value: Ingredient): Promise<void>;
   delete(id: number): Promise<void>;
+  clear(): Promise<void>;
 }

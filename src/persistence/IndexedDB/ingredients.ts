@@ -43,4 +43,8 @@ export class Ingredients implements IngredientStore {
   async delete(id: number): Promise<void> {
     return this.db.delete("ingredients", id);
   }
+
+  async clear(): Promise<void> {
+    return this.db.clear("ingredients");
+  }
 }
