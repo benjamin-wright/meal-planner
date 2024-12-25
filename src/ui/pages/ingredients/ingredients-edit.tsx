@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { MenuItem, Select, TextField } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { Form } from "../../components/form";
 import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
@@ -65,6 +65,16 @@ export function IngredientsEdit() {
           setObject({ ...object, name: e.target.value.toLowerCase() });
         }}
       />
+
+      <Select>
+        {data.categories.map((category) => (
+          <MenuItem
+            key={category.id}
+            value={category.id}>
+              {category.name}
+            </MenuItem>
+        ))}
+      </Select>
     </Form>
   );
 }
