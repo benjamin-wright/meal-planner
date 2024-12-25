@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MenuItem, Select, TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { Form } from "../../components/form";
 import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
@@ -7,14 +7,14 @@ import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
 type IngredientInput = {
   id: number;
   name: string;
-  category?: number;
-  unit?: number;
+  category: number;
+  unit: number;
 }
 
 export function IngredientsEdit() {
   const [isNew, setIsNew] = useState(true);
   const data = useLoaderData() as IngredientsEditLoaderResult;
-  const [object, setObject] = useState<IngredientInput>({ id: 0, name: "" });
+  const [object, setObject] = useState<IngredientInput>({ id: 0, name: "", category: 1, unit: 1 });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export function IngredientsEdit() {
   }, [data.object]);
 
   function validate() {
-    return object.category !== undefined && object.unit !== undefined && object.name !== "";
+    return object.name !== "";
   }
 
   return (
@@ -34,10 +34,6 @@ export function IngredientsEdit() {
       returnTo="/ingredients"
       disabled={!validate()}
       onSubmit={async () => {
-        if (object.category === undefined || object.unit === undefined) {
-          return;
-        }
-
         object.name = object.name.toLowerCase();
 
         if (isNew) {
@@ -66,15 +62,43 @@ export function IngredientsEdit() {
         }}
       />
 
-      <Select>
-        {data.categories.map((category) => (
-          <MenuItem
-            key={category.id}
-            value={category.id}>
+      <FormControl variant="outlined">
+        <InputLabel id="category-label">category</InputLabel>
+        <Select
+          id="category"
+          labelId="category-label"
+          label="category"
+          value={object.category}
+          onChange={(e) => setObject({ ...object, category: e.target.value as number })}
+        >
+          {data.categories.map((category) => (
+            <MenuItem
+              key={category.id}
+              value={category.id}>
               {category.name}
             </MenuItem>
-        ))}
-      </Select>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl variant="outlined">
+        <InputLabel id="unit-label">unit</InputLabel>
+        <Select
+          id="unit"
+          labelId="unit-label"
+          label="unit"
+          value={object.unit}
+          onChange={(e) => setObject({ ...object, unit: e.target.value as number })}
+        >
+          {data.units.map((unit) => (
+            <MenuItem
+              key={unit.id}
+              value={unit.id}>
+              {unit.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </Form>
   );
 }

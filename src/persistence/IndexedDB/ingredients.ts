@@ -3,7 +3,7 @@ import { IngredientStore } from "../interfaces/ingredients";
 import { DB } from "./db";
 
 export function ingredientsV1(db: IDBDatabase) {
-  const store = db.createObjectStore("ingredients", { keyPath: "id" });
+  const store = db.createObjectStore("ingredients", { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
   store.createIndex("category", "category");
   store.createIndex("unit", "unit");
