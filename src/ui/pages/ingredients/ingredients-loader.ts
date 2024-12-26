@@ -2,9 +2,11 @@ import { LoaderFunction } from "react-router-dom";
 import { DB } from "../../../persistence/IndexedDB/db";
 import { Ingredient } from "../../../models/ingredients";
 import { Ingredients } from "../../../persistence/IndexedDB/ingredients";
+import { IngredientStore } from "../../../persistence/interfaces/ingredients";
 
 export interface IngredientsLoaderResult {
   ingredients: Ingredient[];
+  store: IngredientStore;
 }
 
 export function ingredientsLoader({
@@ -17,6 +19,6 @@ export function ingredientsLoader({
     const store = new Ingredients(db);
     const ingredients = await store.getAll();
     
-    return { ingredients };
+    return { ingredients, store };
   };
 }
