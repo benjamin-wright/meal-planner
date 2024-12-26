@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { CategoriesEditLoaderResult } from "./categories-edit-loader";
 import { Category } from "../../../models/categories";
@@ -8,8 +8,20 @@ import { Category } from "../../../models/categories";
 export function CategoriesEdit() {
   const [isNew, setIsNew] = useState(true);
   const data = useLoaderData() as CategoriesEditLoaderResult;
+  const [ URLSearchParams ] = useSearchParams();
   const [object, setObject] = useState<Category>({ id: 0, name: "", order: data.categories.length });
   const navigate = useNavigate();
+  
+  function getReturnTo() {
+    const returnTo = URLSearchParams.get("returnTo");
+    if (returnTo) {
+      return decodeURIComponent(returnTo);
+    }
+    
+    return "/categories";
+  }
+
+  const returnTo = getReturnTo();
 
   useEffect(() => {
     if (data.object) {
@@ -21,7 +33,7 @@ export function CategoriesEdit() {
   return (
     <Form
       title={isNew ? "Categories: new" : `Categories: ${object.name}`}
-      returnTo="/categories"
+      returnTo={returnTo}
       onSubmit={async () => {
         object.name = object.name.toLowerCase();
 
@@ -30,7 +42,7 @@ export function CategoriesEdit() {
         } else {
           await data.store.put(object);
         }
-        navigate("/categories");
+        navigate(returnTo);
       }}
     >
       <TextField

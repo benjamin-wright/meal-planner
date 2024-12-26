@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { TextField } from "@mui/material";
+import { useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
+import { SelectID } from "../../components/select-id";
+import { Category } from "../../../models/categories";
 
 type IngredientInput = {
   id: number;
@@ -14,18 +16,39 @@ type IngredientInput = {
 export function IngredientsEdit() {
   const [isNew, setIsNew] = useState(true);
   const data = useLoaderData() as IngredientsEditLoaderResult;
+  const location = useLocation();
+  const [URLSearchParams] = useSearchParams();
   const [object, setObject] = useState<IngredientInput>({ id: 0, name: "", category: 1, unit: 1 });
   const navigate = useNavigate();
 
   useEffect(() => {
+    const newObject = data.object || { id: 0, name: "", category: 1, unit: 1 };
+
     if (data.object) {
       setIsNew(false);
-      setObject(data.object);
     }
+
+    if (URLSearchParams.get("name")) {
+      newObject.name = URLSearchParams.get("name") || "";
+    }
+
+    if (URLSearchParams.get("category")) {
+      newObject.category = parseInt(URLSearchParams.get("category") || "");
+    }
+
+    if (URLSearchParams.get("unit")) {
+      newObject.unit = parseInt(URLSearchParams.get("unit") || "");
+    }
+
+    setObject(newObject);
   }, [data.object]);
 
   function validate() {
     return object.name !== "";
+  }
+
+  function selfLink(): string {
+    return encodeURIComponent(`${location.pathname}?name=${object.name}&category=${object.category}&unit=${object.unit}`);
   }
 
   return (
@@ -62,43 +85,25 @@ export function IngredientsEdit() {
         }}
       />
 
-      <FormControl variant="outlined">
-        <InputLabel id="category-label">category</InputLabel>
-        <Select
-          id="category"
-          labelId="category-label"
-          label="category"
-          value={object.category}
-          onChange={(e) => setObject({ ...object, category: e.target.value as number })}
-        >
-          {data.categories.map((category) => (
-            <MenuItem
-              key={category.id}
-              value={category.id}>
-              {category.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <SelectID
+        value={object.category}
+        items={data.categories}
+        id="category"
+        label="category"
+        link={`/categories/new?returnTo=${selfLink()}`}
+        toLabel={(category: Category) => category.name}
+        onChange={(id: number) => setObject({ ...object, category: id })}
+      />
 
-      <FormControl variant="outlined">
-        <InputLabel id="unit-label">unit</InputLabel>
-        <Select
-          id="unit"
-          labelId="unit-label"
-          label="unit"
-          value={object.unit}
-          onChange={(e) => setObject({ ...object, unit: e.target.value as number })}
-        >
-          {data.units.map((unit) => (
-            <MenuItem
-              key={unit.id}
-              value={unit.id}>
-              {unit.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <SelectID
+        value={object.unit}
+        items={data.units}
+        id="unit"
+        label="unit"
+        link={`/units/new?returnTo=${selfLink()}`}
+        toLabel={(unit) => unit.name}
+        onChange={(id: number) => setObject({ ...object, unit: id })}
+      />
     </Form>
   );
 }

@@ -22,8 +22,8 @@ export class Categories implements CategoryStore {
     return this.db.getAll<Category>("categories");
   }
 
-  async add(name: string, category: number, unit: number): Promise<number> {
-    return this.db.add("categories", { name, category, unit });
+  async add(name: string, order: number): Promise<number> {
+    return this.db.add("categories", { name, order });
   }
 
   async put(value: Category): Promise<void> {

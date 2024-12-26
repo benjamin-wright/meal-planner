@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Unit } from "../../../models/units";
 import { Card, CardActionArea, TextField } from "@mui/material";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsEditLoaderResult } from "./units-edit-loader";
 import { Form } from "../../components/form";
 import Add from "@mui/icons-material/Add";
@@ -11,7 +11,9 @@ export function UnitsEdit() {
   const [isNew, setIsNew] = useState(true);
   const [object, setObject] = useState<Unit>({ id: 0, name: "", magnitudes: [] });
   const data = useLoaderData() as UnitsEditLoaderResult;
+  const [URLSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const returnTo = URLSearchParams.get("returnTo") || "/units";
 
   useEffect(() => {
     if (data.object) {
@@ -51,7 +53,7 @@ export function UnitsEdit() {
   return (
     <Form
       title={isNew ? "Units: new" : `Units: ${object.name}`}
-      returnTo="/units"
+      returnTo={returnTo}
       onSubmit={async () => {
         object.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
 
@@ -60,7 +62,7 @@ export function UnitsEdit() {
         } else {
           await data.store.put(object);
         }
-        navigate("/units");
+        navigate(returnTo);
       }}
     >
       <TextField
