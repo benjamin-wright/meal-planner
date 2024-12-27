@@ -15,6 +15,8 @@ export class Magnitude {
 export class Unit {
   id: number;
   name: string;
+  singular?: string;
+  plural?: string;
   magnitudes: Magnitude[];
 
   constructor(id: number, name: string, magnitudes: Magnitude[]) {

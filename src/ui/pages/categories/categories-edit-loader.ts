@@ -1,4 +1,4 @@
-import { LoaderFunction, useLocation } from "react-router-dom";
+import { LoaderFunction } from "react-router-dom";
 import { CategoryStore } from "../../../persistence/interfaces/categories";
 import { Category } from "../../../models/categories";
 import { DB } from "../../../persistence/IndexedDB/db";

@@ -19,6 +19,7 @@ import { UnitsLoaderResult } from "./units-loader";
 import { useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { NewItemButton } from "../../components/new-item-button";
+import { Magnitude } from "../../../models/units";
 
 export function Units() {
   const [isOpen, setOpen] = useState(false);
@@ -40,30 +41,60 @@ export function Units() {
     navigate("/units", { replace: true });
   }
 
+  function CountView({ singular, plural }: { singular?: string; plural?: string }) {
+    return (
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Singular</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Plural</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>{singular}</TableCell>
+              <TableCell>{plural}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
+  function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
+    return (
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Abbreviation</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Singular</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Plural</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Multiplier</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {magnitudes.map((m: Magnitude) => (
+              <TableRow key={m.abbrev}>
+                <TableCell>{m.abbrev}</TableCell>
+                <TableCell>{m.singular}</TableCell>
+                <TableCell>{m.plural}</TableCell>
+                <TableCell>{m.multiplier}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
   function UnitView({ unit }: { unit: Unit }) {
     return (
       <DetailView title={unit.name}>
         <Box display="flex" flexDirection="column">
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Unit</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Abbr.</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Conversion</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {unit.magnitudes.map((c) => (
-                  <TableRow key={c.abbrev}>
-                    <TableCell>{c.singular}</TableCell>
-                    <TableCell>{c.abbrev}</TableCell>
-                    <TableCell>{c.multiplier}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          { unit.magnitudes.length > 0 && <MagnitudeView magnitudes={unit.magnitudes} /> }
+          { !unit.magnitudes && <CountView singular={unit.singular} plural={unit.plural} /> }
           <Box
             display="flex"
             justifyContent="space-between"

@@ -1,4 +1,4 @@
-import { LoaderFunction, useLocation } from "react-router-dom";
+import { LoaderFunction } from "react-router-dom";
 import { DB } from "../../../persistence/IndexedDB/db";
 import { Ingredient } from "../../../models/ingredients";
 import { Category } from "../../../models/categories";
