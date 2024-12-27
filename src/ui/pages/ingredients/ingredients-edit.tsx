@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TextField } from "@mui/material";
-import { useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { Form } from "../../components/form";
 import { IngredientsEditLoaderResult } from "./ingredients-edit-loader";
 import { SelectID } from "../../components/select-id";
@@ -14,41 +14,12 @@ type IngredientInput = {
 }
 
 export function IngredientsEdit() {
-  const [isNew, setIsNew] = useState(true);
-  const data = useLoaderData() as IngredientsEditLoaderResult;
-  const location = useLocation();
-  const [URLSearchParams] = useSearchParams();
-  const [object, setObject] = useState<IngredientInput>({ id: 0, name: "", category: 1, unit: 1 });
+  const { forms, ingredient, store, categories, units, isNew } = useLoaderData() as IngredientsEditLoaderResult;
+  const [object, setObject] = useState<IngredientInput>(ingredient);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const newObject = data.object || { id: 0, name: "", category: 1, unit: 1 };
-
-    if (data.object) {
-      setIsNew(false);
-    }
-
-    if (URLSearchParams.get("name")) {
-      newObject.name = URLSearchParams.get("name") || "";
-    }
-
-    if (URLSearchParams.get("category")) {
-      newObject.category = parseInt(URLSearchParams.get("category") || "");
-    }
-
-    if (URLSearchParams.get("unit")) {
-      newObject.unit = parseInt(URLSearchParams.get("unit") || "");
-    }
-
-    setObject(newObject);
-  }, [data.object]);
 
   function validate() {
     return object.name !== "";
-  }
-
-  function selfLink(): string {
-    return encodeURIComponent(`${location.pathname}?name=${object.name}&category=${object.category}&unit=${object.unit}`);
   }
 
   return (
@@ -60,9 +31,9 @@ export function IngredientsEdit() {
         object.name = object.name.toLowerCase();
 
         if (isNew) {
-          await data.store.add(object.name, object.category, object.unit);
+          await store.add(object.name, object.category, object.unit);
         } else {
-          await data.store.put({
+          await store.put({
             id: object.id,
             name: object.name,
             category: object.category,
@@ -87,22 +58,36 @@ export function IngredientsEdit() {
 
       <SelectID
         value={object.category}
-        items={data.categories}
+        items={categories}
         id="category"
         label="category"
-        link={`/categories/new?returnTo=${selfLink()}`}
+        link="/categories/new"
         toLabel={(category: Category) => category.name}
         onChange={(id: number) => setObject({ ...object, category: id })}
+        onNav={() => { forms.push({
+          to: "categories",
+          from: "ingredients",
+          link: location.pathname,
+          body: object
+        })}}
       />
 
       <SelectID
         value={object.unit}
-        items={data.units}
+        items={units}
         id="unit"
         label="unit"
-        link={`/units/new?returnTo=${selfLink()}`}
+        link="units/new"
         toLabel={(unit) => unit.name}
         onChange={(id: number) => setObject({ ...object, unit: id })}
+        onNav={() => {
+          forms.push({
+            to: "units",
+            from: "ingredients",
+            link: location.pathname,
+            body: object
+          })
+        }}
       />
     </Form>
   );

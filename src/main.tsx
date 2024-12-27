@@ -17,8 +17,10 @@ import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
 import { routes as settings } from "./ui/pages/settings/routes";
+import { FormState } from "./ui/state/form-state";
 
 const db = createDB();
+const forms = new FormState();
 
 const router = createBrowserRouter([
   {
@@ -30,9 +32,9 @@ const router = createBrowserRouter([
         element: <Home />,
       })),
       ...settings(db),
-      ...categories(db),
+      ...categories(db, forms),
       ...units(db),
-      ...ingredients(db),
+      ...ingredients(db, forms),
       {
         path: "recipies",
         element: <Recipies />,

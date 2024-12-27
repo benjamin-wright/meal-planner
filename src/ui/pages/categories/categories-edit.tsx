@@ -1,34 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TextField } from "@mui/material";
-import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { Form } from "../../components/form";
 import { CategoriesEditLoaderResult } from "./categories-edit-loader";
 import { Category } from "../../../models/categories";
 
 export function CategoriesEdit() {
-  const [isNew, setIsNew] = useState(true);
-  const data = useLoaderData() as CategoriesEditLoaderResult;
-  const [ URLSearchParams ] = useSearchParams();
-  const [object, setObject] = useState<Category>({ id: 0, name: "", order: data.categories.length });
+  const { category, isNew, store, forms } = useLoaderData() as CategoriesEditLoaderResult;
+  const [object, setObject] = useState<Category>(category);
   const navigate = useNavigate();
-  
-  function getReturnTo() {
-    const returnTo = URLSearchParams.get("returnTo");
-    if (returnTo) {
-      return decodeURIComponent(returnTo);
-    }
-    
-    return "/categories";
-  }
 
-  const returnTo = getReturnTo();
-
-  useEffect(() => {
-    if (data.object) {
-      setIsNew(false);
-      setObject(data.object);
-    }
-  }, [data.object]);
+  const returnTo = forms.getReturn("categories", "/categories");
 
   return (
     <Form
@@ -36,12 +18,15 @@ export function CategoriesEdit() {
       returnTo={returnTo}
       onSubmit={async () => {
         object.name = object.name.toLowerCase();
+        let id = object.id;
 
         if (isNew) {
-          await data.store.add(object.name, object.order);
+          id = await store.add(object.name, object.order);
         } else {
-          await data.store.put(object);
+          await store.put(object);
         }
+
+        forms.setResult("categories", { field: "category", response: id });
         navigate(returnTo);
       }}
     >

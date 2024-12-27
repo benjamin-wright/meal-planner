@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { IconLink } from "./icon-link";
 import Add from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 
 interface ISelectIDProps<T> {
   value: number;
@@ -15,9 +16,12 @@ interface ISelectIDProps<T> {
   link: string;
   toLabel: (item: T) => string;
   onChange: (value: number) => void;
+  onNav: () => void;
 }
 
-export function SelectID<T extends {id: number}>({value, items, id, label, link, toLabel, onChange}: ISelectIDProps<T>) {
+export function SelectID<T extends {id: number}>({value, items, id, label, link, toLabel, onChange, onNav}: ISelectIDProps<T>) {
+  const navigate = useNavigate();
+
   return (
     <Box display="flex" alignItems="center">
       <FormControl variant="outlined" sx={{
@@ -40,7 +44,10 @@ export function SelectID<T extends {id: number}>({value, items, id, label, link,
           ))}
         </Select>
       </FormControl>
-      <IconLink color="success" to={link}>
+      <IconLink color="success" onClick={() => {
+        onNav();
+        navigate(link);
+      }}>
         <Add />
       </IconLink>
     </Box>
