@@ -1,5 +1,4 @@
 import { Page } from "../../components/page";
-import { Unit } from "../../../database/schemas";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
 import { IconLink } from "../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
@@ -19,7 +18,7 @@ import { UnitsLoaderResult } from "./units-loader";
 import { useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { NewItemButton } from "../../components/new-item-button";
-import { Magnitude } from "../../../models/units";
+import { Magnitude, Unit } from "../../../models/units";
 
 export function Units() {
   const [isOpen, setOpen] = useState(false);
@@ -47,14 +46,14 @@ export function Units() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Singular</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Plural</TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "50%" }}>Singular</TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "50%" }}>Plural</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>{singular}</TableCell>
-              <TableCell>{plural}</TableCell>
+              <TableCell>{singular || "N/A"}</TableCell>
+              <TableCell>{plural || "N/A"}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -68,7 +67,7 @@ export function Units() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Abbreviation</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Abbr.</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Singular</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Plural</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Multiplier</TableCell>
@@ -94,7 +93,7 @@ export function Units() {
       <DetailView title={unit.name}>
         <Box display="flex" flexDirection="column">
           { unit.magnitudes.length > 0 && <MagnitudeView magnitudes={unit.magnitudes} /> }
-          { !unit.magnitudes && <CountView singular={unit.singular} plural={unit.plural} /> }
+          { unit.magnitudes.length === 0 && <CountView singular={unit.singular} plural={unit.plural} /> }
           <Box
             display="flex"
             justifyContent="space-between"

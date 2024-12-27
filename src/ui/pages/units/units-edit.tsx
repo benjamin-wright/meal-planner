@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Unit } from "../../../models/units";
-import { Card, CardActionArea, TextField } from "@mui/material";
+import { Card, CardActionArea, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsEditLoaderResult } from "./units-edit-loader";
 import { Form } from "../../components/form";
@@ -8,19 +8,12 @@ import Add from "@mui/icons-material/Add";
 import { MagnitudeEdit } from "../../components/magnitude-edit";
 
 export function UnitsEdit() {
-  const [isNew, setIsNew] = useState(true);
-  const [object, setObject] = useState<Unit>({ id: 0, name: "", magnitudes: [] });
-  const data = useLoaderData() as UnitsEditLoaderResult;
+  const { isNew, unit, store } = useLoaderData() as UnitsEditLoaderResult;
+  const [object, setObject] = useState<Unit>(unit);
+  const [isCount, setIsCount] = useState(unit.magnitudes.length === 0);
   const [URLSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const returnTo = URLSearchParams.get("returnTo") || "/units";
-
-  useEffect(() => {
-    if (data.object) {
-      setIsNew(false);
-      setObject(data.object);
-    }
-  }, [data.object]);
 
   function NewMagnitude() {
     return (
@@ -50,6 +43,47 @@ export function UnitsEdit() {
     );
   }
 
+  function countInput() {
+    return(<>
+      <TextField
+        id="singular"
+        variant="outlined"
+        label="singular"
+        value={object.singular}
+        onChange={(e) => {
+          object.singular = e.target.value;
+          setObject({ ...object });
+        }}
+      />
+      <TextField
+        id="plural"
+        variant="outlined"
+        label="plural"
+        value={object.plural}
+        onChange={(e) => {
+          object.plural = e.target.value;
+          setObject({ ...object });
+        }}
+      />
+    </>)
+  }
+
+  function magnitudesInput() {
+    return (<>
+      {object.magnitudes.map((magnitude, index) => (
+        <MagnitudeEdit key={index} magnitude={magnitude} onChange={(m) => {
+          object.magnitudes[index] = m;
+          setObject({ ...object });
+        }} onRemove={() => {
+          object.magnitudes.splice(index, 1);
+          setObject({ ...object });
+        }} />
+      ))}
+
+      <NewMagnitude />
+    </>);
+  }
+
   return (
     <Form
       title={isNew ? "Units: new" : `Units: ${object.name}`}
@@ -58,9 +92,9 @@ export function UnitsEdit() {
         object.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
 
         if (isNew) {
-          await data.store.add(object.name, object.magnitudes);
+          await store.add(object.name, object.magnitudes);
         } else {
-          await data.store.put(object);
+          await store.put(object);
         }
         navigate(returnTo);
       }}
@@ -77,18 +111,12 @@ export function UnitsEdit() {
           setObject({ ...object, name: e.target.value.toLowerCase() });
         }}
       />
-
-      {object.magnitudes.map((magnitude, index) => (
-        <MagnitudeEdit key={index} magnitude={magnitude} onChange={(m) => {
-          object.magnitudes[index] = m;
-          setObject({ ...object });
-        }} onRemove={() => {
-          object.magnitudes.splice(index, 1);
-          setObject({ ...object });
-        }} />
-      ))}
-
-      <NewMagnitude />
+      <ToggleButtonGroup aria-label="kind" value={isCount} exclusive onChange={(_, value) => setIsCount(value)}>
+        <ToggleButton value={true}>Count</ToggleButton>
+        <ToggleButton value={false}>Magnitudes</ToggleButton>
+      </ToggleButtonGroup>
+      {isCount && countInput()}
+      {!isCount && magnitudesInput()}
     </Form>
   );
 }

@@ -5,7 +5,8 @@ import { Units } from "../../../persistence/IndexedDB/units";
 import { UnitStore } from "../../../persistence/interfaces/units";
 
 export interface UnitsEditLoaderResult {
-  object?: Unit;
+  unit: Unit;
+  isNew: boolean;
   units: Unit[];
   store: UnitStore;
 }
@@ -21,10 +22,10 @@ export function unitsEditLoader({
     const units = await store.getAll();
 
     if (params.unit) {
-      const object = await store.get(Number.parseInt(params.unit, 10));
-      return { object, units, store };
+      const unit = await store.get(Number.parseInt(params.unit, 10));
+      return { unit, isNew: false, units, store };
     }
 
-    return { units, store };
+    return { unit: { id: 0, name: "", magnitudes: [] }, isNew: true, units, store };
   };
 }
