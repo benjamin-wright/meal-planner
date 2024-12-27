@@ -22,8 +22,8 @@ export class Units implements UnitStore {
     return this.db.getAll<Unit>("units");
   }
 
-  async add(name: string, magnitudes: Magnitude[]): Promise<number> {
-    return this.db.add("units", { name, magnitudes });
+  async add(name: string, magnitudes: Magnitude[], singular?: string, plural?: string): Promise<number> {
+    return this.db.add("units", { name, magnitudes, singular, plural });
   }
 
   async put(value: Unit): Promise<void> {

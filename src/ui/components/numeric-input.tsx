@@ -10,6 +10,7 @@ interface NumericInputProps {
   id?: string;
   label: string;
   value: number;
+  required?: boolean;
   onChange: (value: number) => void;
 }
 
@@ -17,6 +18,7 @@ export function NumericInput({
   id,
   value,
   label,
+  required,
   onChange,
 }: NumericInputProps) {
   const [text, setText] = useState(value.toString());
@@ -42,8 +44,11 @@ export function NumericInput({
       sx={{
         backgroundColor: theme.palette.background.paper,
       }}
+      required={required}
     >
-      <InputLabel htmlFor={id}>{label}</InputLabel>
+      <InputLabel htmlFor={id} sx={{
+        padding: "0 0",
+      }}>{label}</InputLabel>
       <OutlinedInput
         id={id}
         size="small"

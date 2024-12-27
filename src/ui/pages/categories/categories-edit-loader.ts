@@ -27,15 +27,6 @@ export function categoriesEditLoader({
     const isNew = params.category === undefined;
 
     const result = { categories, store, isNew, forms };
-  
-    const formResult = forms.pop("categories");
-    console.info(`Loading categories: ${JSON.stringify(formResult)}`);
-    if (formResult) {
-      const { form } = formResult;
-      const category = form.body as Category;
-
-      return { category, ...result };
-    }
 
     if (params.category) {
       const category = await store.get(Number.parseInt(params.category, 10));

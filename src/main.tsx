@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       })),
       ...settings(db),
       ...categories(db, forms),
-      ...units(db),
+      ...units(db, forms),
       ...ingredients(db, forms),
       {
         path: "recipies",

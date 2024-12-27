@@ -19,9 +19,11 @@ export class Unit {
   plural?: string;
   magnitudes: Magnitude[];
 
-  constructor(id: number, name: string, magnitudes: Magnitude[]) {
+  constructor(id: number, name: string, magnitudes: Magnitude[], singular?: string, plural?: string) {
     this.id = id;
     this.name = name;
     this.magnitudes = magnitudes;
+    this.singular = singular;
+    this.plural = plural;
   }
 }

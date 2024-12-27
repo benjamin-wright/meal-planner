@@ -1,11 +1,11 @@
 import { DB } from "../../../persistence/IndexedDB/db";
-import { UnitStore } from "../../../persistence/interfaces/units";
+import { FormState } from "../../state/form-state";
 import { Units } from "./units";
 import { UnitsEdit } from "./units-edit";
 import { unitsEditLoader } from "./units-edit-loader";
 import { unitsLoader } from "./units-loader";
 
-export function routes(db: Promise<DB>) {
+export function routes(db: Promise<DB>, forms: FormState) {
   return [
     {
       path: "units",
@@ -14,12 +14,12 @@ export function routes(db: Promise<DB>) {
     },
     {
       path: "units/new",
-      loader: unitsEditLoader({ database: db }),
+      loader: unitsEditLoader({ database: db, forms }),
       element: <UnitsEdit />,
     },
     {
       path: "units/:unit",
-      loader: unitsEditLoader({ database: db }),
+      loader: unitsEditLoader({ database: db, forms }),
       element: <UnitsEdit />,
     },
   ];

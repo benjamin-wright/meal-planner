@@ -13,17 +13,18 @@ interface ISelectIDProps<T> {
   id: string;
   label: string;
   link: string;
+  required?: boolean;
   toLabel: (item: T) => string;
   onChange: (value: number) => void;
   onNav: () => void;
 }
 
-export function SelectID<T extends {id: number}>({value, items, id, label, link, toLabel, onChange, onNav}: ISelectIDProps<T>) {
+export function SelectID<T extends {id: number}>({value, items, id, label, link, required, toLabel, onChange, onNav}: ISelectIDProps<T>) {
   const navigate = useNavigate();
 
   return (
     <Box display="flex" alignItems="center">
-      <FormControl variant="outlined" sx={{
+      <FormControl variant="outlined" required={required} sx={{
         flexGrow: 1,
       }} >
         <InputLabel id={id + "-label"}>{label}</InputLabel>

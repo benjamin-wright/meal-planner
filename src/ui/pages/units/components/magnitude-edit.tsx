@@ -1,18 +1,20 @@
 import Box from "@mui/material/Box";
-import { Magnitude } from "../../database/schemas/units";
 import Card from "@mui/material/Card";
-import TextField from "@mui/material/TextField";
-import { NumericInput } from "./numeric-input";
+import { NumericInput } from "../../../components/numeric-input";
 import Button from "@mui/material/Button";
 import Delete from "@mui/icons-material/Delete";
+import { Magnitude } from "../../../../models/units";
+import { TextInput } from "../../../components/text-input";
 
 interface MagnitudeEditProps {
+  index: number;
   magnitude: Magnitude;
   onChange?: (magnitude: Magnitude) => void;
   onRemove?: () => void;
 }
 
 export function MagnitudeEdit({
+  index,
   magnitude,
   onChange,
   onRemove,
@@ -31,43 +33,43 @@ export function MagnitudeEdit({
         gap="0.5em"
         overflow="unset"
       >
-        <TextField
+        <TextInput
           size="small"
+          id={`magnitude-${index}-abbrev`}
           variant="outlined"
           label="abbreviation"
+          required
           value={magnitude.abbrev}
-          onChange={(e) => {
-            magnitude.abbrev = e.target.value;
-            onChange?.(magnitude);
-          }}
+          onChange={(value) => onChange?.({...magnitude, abbrev: value})}
         />
 
         <Box display="flex" gap="0.5em">
-          <TextField
+          <TextInput
             size="small"
+            id={`magnitude-${index}-singular`}
             variant="outlined"
             label="singular"
+            required
+            lowercase
             value={magnitude.singular}
-            onChange={(e) => {
-              magnitude.singular = e.target.value;
-              onChange?.(magnitude);
-            }}
+            onChange={(value) => onChange?.({...magnitude, singular: value})}
           />
 
-          <TextField
+          <TextInput
             size="small"
+            id={`magnitude-${index}-plural`}
             variant="outlined"
             label="plural"
+            required
+            lowercase
             value={magnitude.plural}
-            onChange={(e) => {
-              magnitude.plural = e.target.value;
-              onChange?.(magnitude);
-            }}
+            onChange={(value) => onChange?.({...magnitude, plural: value})}
           />
         </Box>
 
         <NumericInput
           label="multiplier"
+          required
           value={magnitude.multiplier}
           onChange={(value) => {
             magnitude.multiplier = value;
