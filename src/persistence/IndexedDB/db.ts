@@ -1,8 +1,10 @@
 import { unitsV1 } from "./units";
 import { categoriesV1 } from "./categories";
 import { ingredientsV1 } from "./ingredients";
+import { recipiesV1 } from "./recipies";
 
 const DB_NAME = "meal-planner";
+const DB_VERSION = 2;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -10,20 +12,23 @@ const migrations = [
     categoriesV1(db);
     ingredientsV1(db);
   },
+  (db: IDBDatabase) => {
+    recipiesV1(db);
+  },
 ]
 
 export async function createDB(): Promise<DB> {
   return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
       const db = (event.target as IDBOpenDBRequest).result;
 
       let oldVersion = event.oldVersion;
-      let newVersion = event.newVersion ? event.newVersion : 1;
+      let newVersion = event.newVersion ? event.newVersion : 0;
 
       for (let v = oldVersion; v < newVersion; v++) {
-        console.info(`Migrating to version ${v}`);
+        console.info(`Migrating to version ${v+1}`);
         migrations[v](db);
       }
     };

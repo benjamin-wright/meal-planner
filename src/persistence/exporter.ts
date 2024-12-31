@@ -42,6 +42,10 @@ export async function importData(units: UnitStore, categories: CategoryStore, in
   }
 
   await recipies.clear();
+  if (!parsed.recipies) {
+    return;
+  }
+
   for (let i = 0; i < parsed.recipies.length; i++) {
     await recipies.put(parsed.recipies[i]);
   }

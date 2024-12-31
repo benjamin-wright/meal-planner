@@ -1,4 +1,4 @@
-import { Recipie } from "../../models/recipies";
+import { IngredientQuantity, Recipie } from "../../models/recipies";
 import { RecipieStore } from "../interfaces/recipies";
 import { DB } from "./db";
 
@@ -22,8 +22,8 @@ export class Recipies implements RecipieStore {
     return this.db.getAll<Recipie>("recipies");
   }
 
-  async add(name: string, order: number): Promise<number> {
-    return this.db.add("recipies", { name, order });
+  async add(name: string, description: string, serves: number, ingredients: IngredientQuantity[], steps: string[]): Promise<number> {
+    return this.db.add("recipies", { name, description, serves, ingredients, steps });
   }
 
   async put(value: Recipie): Promise<void> {

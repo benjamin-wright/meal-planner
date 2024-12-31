@@ -54,7 +54,7 @@ export function Ingredients() {
           </AccordionSummary>
           <AccordionDetails>
               { data.ingredientsMap[category.id].map((ingredient) => (
-                <DetailView title={ingredient.name} horizontal narrow>
+                <DetailView key={ingredient.id} title={ingredient.name} horizontal narrow>
                   <Box display="flex" flexGrow="1">
                     <IconLink onClick={() => onEdit(ingredient)}>
                       <Edit />

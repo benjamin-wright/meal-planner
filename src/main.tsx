@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   Home,
-  Recipies,
   Planner,
 } from "./ui/pages";
 import { ThemeProvider } from "@mui/material/styles";
@@ -17,6 +16,7 @@ import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
 import { routes as settings } from "./ui/pages/settings/routes";
+import { routes as recipies } from "./ui/pages/recipies/routes";
 import { FormState } from "./ui/state/form-state";
 
 const db = createDB();
@@ -35,10 +35,7 @@ const router = createBrowserRouter([
       ...categories(db, forms),
       ...units(db, forms),
       ...ingredients(db, forms),
-      {
-        path: "recipies",
-        element: <Recipies />,
-      },
+      ...recipies(db, forms),
       {
         path: "planner",
         element: <Planner />,

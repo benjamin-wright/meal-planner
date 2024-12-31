@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import { Page } from "../../components/page";
 import { CategoriesLoaderResult } from "./categories-loader";
-import { CategoryView } from "../../components/category-view";
+import { CategoryView } from "./components/category-view";
 import { Reorder, useDragControls } from "motion/react";
 import { DetailViewGroup } from "../../components/detail-view";
 import { NewItemButton } from "../../components/new-item-button";

@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
-import { Category } from "../../models/categories";
-import { DetailView } from "./detail-view";
-import { IconLink } from "./icon-link";
 import { DragControls } from "motion/react";
 
 import Delete from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
+import { Category } from "../../../../models/categories";
+import { DetailView } from "../../../components/detail-view";
+import { IconLink } from "../../../components/icon-link";
 
 interface CategoryViewProps {
   category: Category;
