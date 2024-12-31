@@ -1,4 +1,4 @@
-import { AppBar, Box, Stack, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Stack, SxProps, Toolbar, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLink } from "./icon-link";
 import House from "@mui/icons-material/House";
@@ -11,6 +11,7 @@ interface PageProps {
   returnTo?: string;
   hideNav?: boolean;
   noScroll?: boolean;
+  sx?: SxProps;
 }
 
 export function Page({
@@ -19,6 +20,7 @@ export function Page({
   returnTo,
   noScroll,
   hideNav,
+  sx
 }: PageProps) {
   const theme = useTheme();
 
@@ -62,6 +64,7 @@ export function Page({
           flexDirection: "column",
           gap: "1em",
           paddingBottom: "3.5em",
+          ...sx,
         }}
       >
         {children}

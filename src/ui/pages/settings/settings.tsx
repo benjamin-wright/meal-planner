@@ -12,6 +12,7 @@ import { exportData, importData } from "../../../persistence/exporter";
 import { Units } from "../../../persistence/IndexedDB/units";
 import { Categories } from "../../../persistence/IndexedDB/categories";
 import { Ingredients } from "../../../persistence/IndexedDB/ingredients";
+import { Recipies } from "../../../persistence/IndexedDB/recipies";
 
 interface CheckDialogProps {
   open: boolean;
@@ -74,7 +75,7 @@ export function Settings() {
 
     switch(mode) {
       case "backup":
-        exportData(new Units(data.db), new Categories(data.db), new Ingredients(data.db)).then((blob) => {
+        exportData(new Units(data.db), new Categories(data.db), new Ingredients(data.db), new Recipies(data.db)).then((blob) => {
           console.info(blob);
           const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
           const a = document.createElement("a");
@@ -90,7 +91,7 @@ export function Settings() {
           return;
         }
 
-        importData(new Units(data.db), new Categories(data.db), new Ingredients(data.db), backupData)
+        importData(new Units(data.db), new Categories(data.db), new Ingredients(data.db), new Recipies(data.db), backupData)
           .then(() => setMessage("Data restored successfully"))
           .catch((err) => setError(err.message));
 

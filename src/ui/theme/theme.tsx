@@ -58,6 +58,14 @@ export const theme = createTheme({
     dark: colorSchemeDark,
   },
   components: {
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "transparent",
+          boxShadow: "none",
+        },
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
