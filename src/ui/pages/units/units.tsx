@@ -1,8 +1,5 @@
 import { Page } from "../../components/page";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
-import { IconLink } from "../../components/icon-link";
-import Edit from "@mui/icons-material/Edit";
-import Box from "@mui/material/Box";
 import {
   Paper,
   Table,
@@ -12,7 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import Delete from "@mui/icons-material/Delete";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { UnitsLoaderResult } from "./units-loader";
 import { useState } from "react";
@@ -90,30 +86,16 @@ export function Units() {
 
   function UnitView({ unit }: { unit: Unit }) {
     return (
-      <DetailView title={unit.name}>
-        <Box display="flex" flexDirection="column">
-          { unit.magnitudes.length > 0 && <MagnitudeView magnitudes={unit.magnitudes} /> }
-          { unit.magnitudes.length === 0 && <CountView singular={unit.singular} plural={unit.plural} /> }
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            paddingTop="0.75em"
-          >
-            <IconLink sx={{ minWidth: "0" }} onClick={() => onEdit(unit)}>
-              <Edit />
-            </IconLink>
-            <IconLink
-              color="error"
-              sx={{ minWidth: "0" }}
-              onClick={() => {
-                setToDelete(unit);
-                setOpen(true);
-              }}
-            >
-              <Delete />
-            </IconLink>
-          </Box>
-        </Box>
+      <DetailView
+        title={unit.name}
+        onEdit={() => onEdit(unit)}
+        onDelete={() => {
+          setToDelete(unit)
+          setOpen(true)
+        }}
+      >
+        { unit.magnitudes.length > 0 && <MagnitudeView magnitudes={unit.magnitudes} /> }
+        { unit.magnitudes.length === 0 && <CountView singular={unit.singular} plural={unit.plural} /> }
       </DetailView>
     );
   }

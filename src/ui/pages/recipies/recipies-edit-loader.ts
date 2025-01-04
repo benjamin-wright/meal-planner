@@ -36,6 +36,6 @@ export function recipiesEditLoader({
       return { recipie, ...result };
     }
 
-    return { recipie: { id: 0, name: "", category: 1, unit: 1 }, ...result };
+    return { recipie: { id: 0, name: "", description: "", serves: 1, ingredients: [], steps: [] }, ...result };
   };
 }

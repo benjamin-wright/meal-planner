@@ -4,6 +4,7 @@ import { Form } from "../../components/form";
 import { RecipiesEditLoaderResult } from "./recipies-edit-loader";
 import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
+import { NumericInput } from "../../components/numeric-input";
 
 export function RecipiesEdit() {
   const { recipie, store, isNew } = useLoaderData() as RecipiesEditLoaderResult;
@@ -36,6 +37,22 @@ export function RecipiesEdit() {
         required
         lowercase
         onChange={(value) => setObject({ ...object, name: value })}
+      />
+
+      <TextInput
+        id="description"
+        variant="outlined"
+        label="description"
+        value={object.description}
+        onChange={(value) => setObject({ ...object, description: value })}
+      />
+
+      <NumericInput
+        id="serves"
+        label="serves"
+        value={object.serves}
+        required
+        onChange={(value) => setObject({ ...object, serves: value })}
       />
     </Form>
   );

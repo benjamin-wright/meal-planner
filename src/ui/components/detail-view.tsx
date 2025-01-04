@@ -10,6 +10,9 @@ import { createContext, PointerEvent, useContext, useState } from "react";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import DragHandle from "@mui/icons-material/DragHandle";
 import { DragControls } from "motion/react";
+import { IconLink } from "./icon-link";
+import Edit from "@mui/icons-material/Edit";
+import Delete from "@mui/icons-material/Delete";
 
 const DetailGroupContext = createContext({
   selected: "",
@@ -39,11 +42,14 @@ interface DetailViewProps {
   narrow?: boolean;
   dragControls?: DragControls;
   working?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function DetailView({ title, horizontal, narrow, dragControls, working, children }: DetailViewProps) {
+export function DetailView({ title, horizontal, narrow, dragControls, working, children, onEdit, onDelete }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
+  const showControls = !!onEdit || !!onDelete;
 
   function onClickHandler() {
     if (selected === title) {
@@ -124,7 +130,27 @@ export function DetailView({ title, horizontal, narrow, dragControls, working, c
         </Box>
       </CardActionArea>
       <Collapse in={selected === title} orientation={horizontal ? "horizontal" : "vertical"}>
-        <Box margin={narrow ? "0" : "1em"}>{children}</Box>
+        <Box margin={narrow ? "0" : "1em"}>
+          {children}
+          { showControls && (
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              paddingTop="0.75em"
+            >
+              <IconLink sx={{ minWidth: "0" }} onClick={onEdit}>
+                <Edit />
+              </IconLink>
+              <IconLink
+                color="error"
+                sx={{ minWidth: "0" }}
+                onClick={onDelete}
+              >
+                <Delete />
+              </IconLink>
+            </Box>
+          )}
+        </Box>
       </Collapse>
     </Card>
   );
