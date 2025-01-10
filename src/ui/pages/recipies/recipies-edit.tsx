@@ -7,7 +7,7 @@ import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 
 export function RecipiesEdit() {
-  const { recipie, store, isNew } = useLoaderData() as RecipiesEditLoaderResult;
+  const { ingredients, recipie, store, isNew } = useLoaderData() as RecipiesEditLoaderResult;
   const [object, setObject] = useState<Recipie>(recipie);
   const navigate = useNavigate();
 
