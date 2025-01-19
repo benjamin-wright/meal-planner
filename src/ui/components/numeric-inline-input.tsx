@@ -1,27 +1,25 @@
 import {
   FormControl,
   Input,
-  InputLabel,
-  OutlinedInput,
   useTheme,
 } from "@mui/material";
 import { useState } from "react";
 
-interface NumericInputProps {
+interface NumericInlineInputProps {
   id?: string;
-  label: string;
   value: number;
   required?: boolean;
+  size?: number;
   onChange: (value: number) => void;
 }
 
-export function NumericInput({
+export function NumericInlineInput({
   id,
   value,
-  label,
   required,
+  size,
   onChange,
-}: NumericInputProps) {
+}: NumericInlineInputProps) {
   const [text, setText] = useState(value.toString());
   const theme = useTheme();
 
@@ -44,20 +42,18 @@ export function NumericInput({
     <FormControl
       sx={{
         backgroundColor: theme.palette.background.paper,
+        marginTop: "0.2em"
       }}
       required={required}
+      variant="standard"
     >
-      <InputLabel htmlFor={id} sx={{
-        padding: "0 0",
-      }}>{label}</InputLabel> 
-      <OutlinedInput
+      <Input
         id={id}
         size="small"
         type="text"
-        inputProps={{ inputMode: "decimal", pattern: "[0-9.]*" }}
+        inputProps={{ inputMode: "decimal", pattern: "[0-9.]*", size: text.length * 1.5 }}
         value={text}
         onChange={handleChange}
-        label={label}
       />
     </FormControl>
   );

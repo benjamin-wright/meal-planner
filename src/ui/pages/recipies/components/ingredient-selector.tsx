@@ -10,7 +10,7 @@ interface IngredientSelectorProps {
 
 export function IngredientSelector({ingredients, selected, changed}: IngredientSelectorProps) {
   return <>
-    { selected.map((ingredient) => <IngredientControl ingredients={ingredients} ingredient={ingredient} />) }
-    <NewIngredient onNewIngredient={() => {changed([...selected, {id: 0, quantity: 0}])}} />
+    { selected.map((ingredient) => <IngredientControl ingredientNames={ingredients} ingredient={ingredient} />) }
+    <NewIngredient onNewIngredient={() => {changed([...selected, {id: 1, quantity: 1}])}} />
   </>
 }
