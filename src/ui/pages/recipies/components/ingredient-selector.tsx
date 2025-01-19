@@ -1,13 +1,16 @@
-import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
+import { IngredientControl } from "./ingredient-control";
+import { NewIngredient } from "./new-ingredient";
 
 interface IngredientSelectorProps {
-  ingredients: Ingredient[];
+  ingredients: Record<number, string>;
   selected: IngredientQuantity[];
+  changed: (selected: IngredientQuantity[]) => void;
 }
 
-export function IngredientSelector({ingredients, selected}: IngredientSelectorProps) {
-  return (<>
-    <p>hi</p>
-  </>)
+export function IngredientSelector({ingredients, selected, changed}: IngredientSelectorProps) {
+  return <>
+    { selected.map((ingredient) => <IngredientControl ingredients={ingredients} ingredient={ingredient} />) }
+    <NewIngredient onNewIngredient={() => {changed([...selected, {id: 0, quantity: 0}])}} />
+  </>
 }

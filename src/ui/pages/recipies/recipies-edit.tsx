@@ -5,6 +5,7 @@ import { RecipiesEditLoaderResult } from "./recipies-edit-loader";
 import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
+import { IngredientSelector } from "./components/ingredient-selector";
 
 export function RecipiesEdit() {
   const { ingredients, recipie, store, isNew } = useLoaderData() as RecipiesEditLoaderResult;
@@ -54,6 +55,8 @@ export function RecipiesEdit() {
         required
         onChange={(value) => setObject({ ...object, serves: value })}
       />
+
+      <IngredientSelector ingredients={ingredients} selected={object.ingredients} changed={(newIngredients) => setObject({...object, ingredients: newIngredients})} />
     </Form>
   );
 }

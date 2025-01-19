@@ -1,6 +1,5 @@
 import { LoaderFunction } from "react-router-dom";
 import { DB } from "../../../persistence/IndexedDB/db";
-import { Ingredient } from "../../../models/ingredients";
 import { Ingredients } from "../../../persistence/IndexedDB/ingredients";
 import { FormState } from "../../state/form-state";
 import { Recipie } from "../../../models/recipies";
@@ -10,7 +9,7 @@ import { Recipies } from "../../../persistence/IndexedDB/recipies";
 export interface RecipiesEditLoaderResult {
   recipie: Recipie;
   isNew: boolean;
-  ingredients: Ingredient[];
+  ingredients: Record<number, string>;
   store: RecipieStore;
   forms: FormState;
 }
@@ -26,7 +25,10 @@ export function recipiesEditLoader({
     const db = await database;
     const store = new Recipies(db);
     const ingredientStore = new Ingredients(db);
-    const ingredients = await ingredientStore.getAll();
+    const ingredients = (await ingredientStore.getAll()).reduce<Record<number, string>>((map, ingredient) => {
+      map[ingredient.id] = ingredient.name;
+      return map;
+    }, {});
 
     const isNew = params.recipie === undefined;
     const result = { ingredients, store, isNew, forms};
