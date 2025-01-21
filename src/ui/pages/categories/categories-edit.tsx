@@ -1,28 +1,50 @@
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
-import { CategoriesEditLoaderResult } from "./categories-edit-loader";
 import { Category } from "../../../models/categories";
 import { TextInput } from "../../components/text-input";
+import { DBContext } from "../../providers/database";
+import { FormContext } from "../../providers/forms";
 
 export function CategoriesEdit() {
-  const { category, isNew, store, forms } = useLoaderData() as CategoriesEditLoaderResult;
-  const [object, setObject] = useState<Category>(category);
+  const { categoryStore } = useContext(DBContext);
+  const forms = useContext(FormContext);
+  const [isNew, setIsNew] = useState(true);
+  const [category, setCategory] = useState<Category>({ id: 0, name: "", order: 0 });
   const navigate = useNavigate();
-
+  const params = useParams();
   const returnTo = forms.getReturn("categories", "/categories");
+
+  async function load() {
+    if (categoryStore === undefined) {
+      return;
+    }
+
+    if (params.category) {
+      const category = await categoryStore.get(Number.parseInt(params.category, 10));
+      setCategory(category);
+      setIsNew(false);
+    } else {
+      const categories = await categoryStore.getAll();
+      setCategory({ id: 0, name: "", order: categories.length });
+    }
+  }
+  
+  useEffect(() => {
+    load();
+  }, [categoryStore]);
 
   return (
     <Form
-      title={isNew ? "Categories: new" : `Categories: ${object.name}`}
+      title={isNew ? "Categories: new" : `Categories: ${category.name}`}
       returnTo={returnTo}
       onSubmit={async () => {
-        let id = object.id;
+        let id = category.id;
 
         if (isNew) {
-          id = await store.add(object.name, object.order);
+          id = await categoryStore?.add(category.name, category.order) || 0;
         } else {
-          await store.put(object);
+          await categoryStore?.put(category);
         }
 
         forms.setResult("categories", { field: "category", response: id });
@@ -33,11 +55,11 @@ export function CategoriesEdit() {
         id="variant"
         variant="outlined"
         label="name"
-        value={object.name}
+        value={category.name}
         lowercase
         required
         onChange={(value) =>
-          setObject({ ...object, name: value })
+          setCategory({ ...category, name: value })
         }
       />
     </Form>

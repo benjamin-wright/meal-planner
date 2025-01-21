@@ -1,7 +1,5 @@
-import { useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Page } from "../../components/page";
-import { CategoriesLoaderResult } from "./categories-loader";
 import { CategoryView } from "./components/category-view";
 import { Reorder, useDragControls } from "motion/react";
 import { DetailViewGroup } from "../../components/detail-view";
@@ -9,6 +7,7 @@ import { NewItemButton } from "../../components/new-item-button";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { Category } from "../../../models/categories";
+import { DBContext } from "../../providers/database";
 
 interface ReorderItemProps {
   category: Category;
@@ -29,11 +28,25 @@ function ReorderItem({ category, onEdit, onDelete, working }: ReorderItemProps) 
 
 
 export function Categories() {
+  const {categoryStore} = useContext(DBContext);
+  
   const navigate = useNavigate();
-  const data = useLoaderData() as CategoriesLoaderResult;
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Category | null>(null);
-  const [items, setItems] = useState(data.categories);
+  const [items, setItems] = useState<Category[]>([]);
+
+  async function load() {
+    if (!categoryStore) {
+      return;
+    }
+
+    const categories = await categoryStore.getAll();
+    setItems(categories);
+  }
+
+  useEffect(() => {
+    load();
+  }, [categoryStore]);
 
   async function onReorder(newItems: Category[]) {
     setItems(newItems);
@@ -43,7 +56,7 @@ export function Categories() {
       }
       
       newItems[i].order = i;
-      await data.store.put(newItems[i]);
+      await categoryStore?.put(newItems[i]);
     }
   }
 
@@ -56,7 +69,7 @@ export function Categories() {
       return;
     }
 
-    data.store.delete(toDelete.id);
+    categoryStore?.delete(toDelete.id);
     setOpen(false);
     setItems(items.filter((category) => category.id !== toDelete.id));
   }

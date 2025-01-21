@@ -5,14 +5,13 @@ import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { AlertContext } from "../../components/alerts";
-import { useLoaderData } from "react-router-dom";
-import { SettingsLoaderResult } from "./settings-loader";
+import { AlertContext } from "../../providers/alerts";
 import { exportData, importData } from "../../../persistence/exporter";
 import { Units } from "../../../persistence/IndexedDB/units";
 import { Categories } from "../../../persistence/IndexedDB/categories";
 import { Ingredients } from "../../../persistence/IndexedDB/ingredients";
 import { Recipies } from "../../../persistence/IndexedDB/recipies";
+import { DBContext } from "../../providers/database";
 
 interface CheckDialogProps {
   open: boolean;
@@ -56,11 +55,11 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 }
 
 export function Settings() {
+  const { db } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<"backup" | "restore" | "reset">("backup");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
-  const data = useLoaderData() as SettingsLoaderResult;
 
   function handleOpen(mode: "backup" | "restore" | "reset") {
     setMode(mode);
@@ -69,13 +68,13 @@ export function Settings() {
 
   function handleClose(ok: boolean) {
     setDialogOpen(false);
-    if (!ok) {
+    if (!ok || !db) {
       return;
     }
 
     switch(mode) {
       case "backup":
-        exportData(new Units(data.db), new Categories(data.db), new Ingredients(data.db), new Recipies(data.db)).then((blob) => {
+        exportData(new Units(db), new Categories(db), new Ingredients(db), new Recipies(db)).then((blob) => {
           console.info(blob);
           const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
           const a = document.createElement("a");
@@ -91,14 +90,14 @@ export function Settings() {
           return;
         }
 
-        importData(new Units(data.db), new Categories(data.db), new Ingredients(data.db), new Recipies(data.db), backupData)
+        importData(new Units(db), new Categories(db), new Ingredients(db), new Recipies(db), backupData)
           .then(() => setMessage("Data restored successfully"))
           .catch((err) => setError(err.message));
 
         return;
       case "reset":
         try {
-          data.db.reset();
+          db.reset();
           setMessage("Application reset successfully, reloading...");
           setTimeout(() => window.location.reload(), 1000);
         } catch (err: any) {

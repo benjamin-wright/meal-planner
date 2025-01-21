@@ -1,37 +1,60 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Unit } from "../../../models/units";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { UnitsEditLoaderResult } from "./units-edit-loader";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
 import { NewMagnitude } from "./components/new-magnitude";
 import { TextInput } from "../../components/text-input";
+import { DBContext } from "../../providers/database";
+import { FormContext } from "../../providers/forms";
 
 export function UnitsEdit() {
-  const { isNew, unit, store, forms } = useLoaderData() as UnitsEditLoaderResult;
-  const [object, setObject] = useState<Unit>(unit);
-  const [isCount, setIsCount] = useState(unit.magnitudes.length === 0);
+  const { unitStore } = useContext(DBContext);
+  const forms = useContext(FormContext);
+  const params = useParams();
+
+  const [isNew, setIsNew] = useState(true);
+  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", magnitudes: [], singular: "", plural: "" });
+  const [isCount, setIsCount] = useState(false);
+  
   const navigate = useNavigate();
   const returnTo = forms.getReturn("units", "/units");
 
+  async function load() {
+    if (unitStore === undefined) {
+      return;
+    }
+
+    if (params.unit) {
+      const unit = await unitStore.get(Number.parseInt(params.unit, 10));
+      setUnit(unit);
+      setIsCount(unit.magnitudes.length === 0);
+      setIsNew(false);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, [unitStore]);
+
   function handleNewMagnitude() {
-    object.magnitudes.push({ abbrev: "", singular: "", plural: "", multiplier: 1 });
-    setObject({ ...object });
+    unit.magnitudes.push({ abbrev: "", singular: "", plural: "", multiplier: 1 });
+    setUnit({ ...unit });
   }
 
   return (
     <Form
-      title={isNew ? "Units: new" : `Units: ${object.name}`}
+      title={isNew ? "Units: new" : `Units: ${unit.name}`}
       returnTo={returnTo}
       onSubmit={async () => {
-        object.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
-        let id = object.id;
+        unit.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
+        let id = unit.id;
 
         if (isNew) {
-          id = await store.add(object.name, object.magnitudes, object.singular, object.plural);
+          id = await unitStore?.add(unit.name, unit.magnitudes, unit.singular, unit.plural) || 0;
         } else {
-          await store.put(object);
+          await unitStore?.put(unit);
         }
 
         forms.setResult("units", { field: "unit", response: id });
@@ -43,10 +66,10 @@ export function UnitsEdit() {
         id="variant"
         variant="outlined"
         label="name"
-        value={object.name}
+        value={unit.name}
         lowercase
         required
-        onChange={(value) => setObject({ ...object, name: value })}
+        onChange={(value) => setUnit({ ...unit, name: value })}
       />
       <ToggleButtonGroup aria-label="kind" value={isCount} exclusive onChange={(_, value) => setIsCount(value)}>
         <ToggleButton value={true}>Count</ToggleButton>
@@ -58,34 +81,34 @@ export function UnitsEdit() {
             id="singular"
             variant="outlined"
             label="singular"
-            value={object.singular}
+            value={unit.singular}
             lowercase
             onChange={(value) => {
-              object.singular = value;
-              setObject({ ...object });
+              unit.singular = value;
+              setUnit({ ...unit });
             }}
           />
           <TextInput
             id="plural"
             variant="outlined"
             label="plural"
-            value={object.plural}
+            value={unit.plural}
             lowercase
             onChange={(value) => {
-              object.plural = value;
-              setObject({ ...object });
+              unit.plural = value;
+              setUnit({ ...unit });
             }}
           />
         </>)
       )}
       {!isCount && (<>
-        {object.magnitudes.map((magnitude, index) => (
+        {unit.magnitudes.map((magnitude, index) => (
           <MagnitudeEdit key={index} index={index} magnitude={magnitude} onChange={(m) => {
-            object.magnitudes[index] = m;
-            setObject({ ...object });
+            unit.magnitudes[index] = m;
+            setUnit({ ...unit });
           }} onRemove={() => {
-            object.magnitudes.splice(index, 1);
-            setObject({ ...object });
+            unit.magnitudes.splice(index, 1);
+            setUnit({ ...unit });
           }} />
         ))}
 

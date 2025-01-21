@@ -1,23 +1,50 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { NewItemButton } from "../../components/new-item-button";
 import { Page } from "../../components/page";
 import { Ingredient } from "../../../models/ingredients";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Typography } from "@mui/material";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { IngredientsLoaderResult } from "./ingredients-loader";
+import { Category } from "../../../models/categories";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
 import { IconLink } from "../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
 import { ExpandMore } from "@mui/icons-material";
+import { DBContext } from "../../providers/database";
 
 export function Ingredients() {
+  const { categoryStore, ingredientStore } = useContext(DBContext);
+  const [ingredients, setIngredients] = useState<Record<number, Ingredient[]>>({});
+  const [categories, setCategories] = useState<Category[]>([]);
   const [toDelete, setToDelete] = useState<Ingredient | null>(null);
   const [isOpen, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<number | false>(false);
-  const data = useLoaderData() as IngredientsLoaderResult;
   const navigate = useNavigate();
+
+  async function load() {
+    if (!categoryStore || !ingredientStore) {
+      return;
+    }
+
+    const ingredients = await ingredientStore.getAll();
+    setIngredients(ingredients.reduce((acc, ingredient) => {
+      if (!acc[ingredient.category]) {
+        acc[ingredient.category] = [];
+      }
+
+      acc[ingredient.category].push(ingredient);
+      return acc;
+    }, {} as Record<number, Ingredient[]>));
+
+    let categories = await categoryStore.getAll();
+    categories = categories.filter((category) => ingredients.find((ingredient) => ingredient.category === category.id)).sort((a, b) => a.order - b.order);
+    setCategories(categories);
+  }
+
+  useEffect(() => {
+    load();
+  }, [categoryStore, ingredientStore]);
 
   function onEdit(ingredient: Ingredient) {
     navigate(`/ingredients/${ingredient.id}`);
@@ -33,11 +60,11 @@ export function Ingredients() {
       return;
     }
   
-    await data.store.delete(toDelete.id);
-    // data.ingredients = data.ingredients.filter((i) => i.id !== toDelete.id);
+    await ingredientStore?.delete(toDelete.id);
 
     setToDelete(null);
     setOpen(false);
+    setIngredients({...ingredients, [toDelete.category]: ingredients[toDelete.category].filter((ingredient) => ingredient.id !== toDelete.id)});
   }
 
   function onCancel() {
@@ -47,13 +74,13 @@ export function Ingredients() {
 
   return <Page title="Ingredients" sx={{ gap: 0 }}>
     <DetailViewGroup>
-      { data.categories.map((category) => (
+      { categories.map((category) => (
         <Accordion key={category.id} expanded={expanded === category.id} onChange={() => setExpanded(expanded === category.id ? false : category.id)}>
           <AccordionSummary expandIcon={<ExpandMore/>}>
             <Typography>{category.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-              { data.ingredientsMap[category.id].map((ingredient) => (
+              { ingredients[category.id]?.map((ingredient) => (
                 <DetailView key={ingredient.id} title={ingredient.name} horizontal narrow>
                   <Box display="flex" flexGrow="1">
                     <IconLink onClick={() => onEdit(ingredient)}>

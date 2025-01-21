@@ -1,31 +1,55 @@
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
-import { RecipiesEditLoaderResult } from "./recipies-edit-loader";
 import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { IngredientSelector } from "./components/ingredient-selector";
+import { DBContext } from "../../providers/database";
+import { Ingredient } from "../../../models/ingredients";
 
 export function RecipiesEdit() {
-  const { ingredients, recipie, store, isNew } = useLoaderData() as RecipiesEditLoaderResult;
-  const [object, setObject] = useState<Recipie>(recipie);
+  const { recipieStore, ingredientStore } = useContext(DBContext);
+  const params = useParams();
+
+  const [isNew, setIsNew] = useState(true);
+  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, ingredients: [], steps: [] });
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const navigate = useNavigate();
 
+  async function load() {
+    if (!recipieStore || !ingredientStore) {
+      return;
+    }
+
+    if (params.recipie) {
+      const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
+      setRecipie(recipie);
+      setIsNew(false);
+    }
+
+    const ingredients = await ingredientStore.getAll();
+    setIngredients(ingredients);
+  }
+
+  useEffect(() => {
+    load();
+  }, [recipieStore]);
+
   function validate() {
-    return object.name !== "";
+    return recipie.name !== "";
   }
 
   return (
     <Form
-      title={isNew ? "Recipies: new" : `Recipies: ${object.name}`}
+      title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
       returnTo="/recipies"
       disabled={!validate()}
       onSubmit={async () => {
         if (isNew) {
-          await store.add(object.name, object.description, object.serves, object.ingredients, object.steps);
+          await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.ingredients, recipie.steps);
         } else {
-          await store.put(object);
+          await recipieStore?.put(recipie);
         }
         navigate("/recipies");
       }}
@@ -34,29 +58,29 @@ export function RecipiesEdit() {
         id="variant"
         variant="outlined"
         label="name"
-        value={object.name}
+        value={recipie.name}
         required
         lowercase
-        onChange={(value) => setObject({ ...object, name: value })}
+        onChange={(value) => setRecipie({ ...recipie, name: value })}
       />
 
       <TextInput
         id="description"
         variant="outlined"
         label="description"
-        value={object.description}
-        onChange={(value) => setObject({ ...object, description: value })}
+        value={recipie.description}
+        onChange={(value) => setRecipie({ ...recipie, description: value })}
       />
 
       <NumericInput
         id="serves"
         label="serves"
-        value={object.serves}
+        value={recipie.serves}
         required
-        onChange={(value) => setObject({ ...object, serves: value })}
+        onChange={(value) => setRecipie({ ...recipie, serves: value })}
       />
 
-      <IngredientSelector ingredients={ingredients} selected={object.ingredients} changed={(newIngredients) => setObject({...object, ingredients: newIngredients})} />
+      <IngredientSelector ingredients={ingredients} selected={recipie.ingredients} changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})} />
     </Form>
   );
 }

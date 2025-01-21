@@ -1,33 +1,47 @@
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Page } from "../../components/page";
-import { RecipiesLoaderResult } from "./recipies-loader";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
 import { NewItemButton } from "../../components/new-item-button";
 import { Paper, Typography } from "@mui/material";
 import { ConfirmDialog } from "../../components/confirm-dialog";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Recipie } from "../../../models/recipies";
+import { DBContext } from "../../providers/database";
 
 export function Recipies() {
+  const { recipieStore } = useContext(DBContext);
+  const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Recipie | null>(null);
-  const data = useLoaderData() as RecipiesLoaderResult;
   const navigate = useNavigate();
+
+  async function load() {
+    if (!recipieStore) {
+      return;
+    }
+
+    const recipies = await recipieStore.getAll();
+    setRecipies(recipies);
+  }
+
+  useEffect(() => {
+    load();
+  }, [recipieStore]);
 
   function onDelete() {
     if (toDelete?.id === undefined) {
       return;
     }
 
-    data.store.delete(toDelete.id);
+    recipieStore?.delete(toDelete.id);
     setOpen(false);
-    data.recipies = data.recipies.filter((recipie) => recipie.id !== toDelete.id);
+    setRecipies(recipies.filter((recipie) => recipie.id !== toDelete.id));
   }
 
   return <Page title="Recipies">
     <DetailViewGroup>
       {
-        data.recipies.map((recipie) => (
+        recipies.map((recipie) => (
           <DetailView
             key={recipie.id}
             title={recipie.name}
