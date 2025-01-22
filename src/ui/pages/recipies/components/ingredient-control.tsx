@@ -1,4 +1,4 @@
-import { Box, Card, MenuItem, Select, SelectChangeEvent, unstable_useEnhancedEffect } from "@mui/material";
+import { Box, Card, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
