@@ -54,8 +54,8 @@ export function Recipies() {
             }}
           >
             <Paper sx={{ padding: "0.75em" }}>
-              <Typography variant="body1">Description: {recipie.description}</Typography>
-              <Typography variant="body1">Serves: {recipie.serves}</Typography>
+              <Typography variant="body1">{recipie.description}</Typography>
+              <Typography variant="body2">Serves: {recipie.serves}</Typography>
             </Paper>
           </DetailView>
         ))

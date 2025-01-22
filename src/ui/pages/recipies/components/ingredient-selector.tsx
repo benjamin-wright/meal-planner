@@ -10,16 +10,27 @@ interface IngredientSelectorProps {
 }
 
 export function IngredientSelector({ingredients, selected, changed}: IngredientSelectorProps) {
+  function onChange(index: number, ingredient: IngredientQuantity) {
+    selected[index] = ingredient;
+    changed([...selected]);
+  }
+
   function onDelete(index: number) {
-    console.info(`Deleting ingredient at index ${index}`);
-    console.debug(`Selected: ${JSON.stringify(selected)}`);
     const newSelected = selected.slice(0, index).concat(selected.slice(index + 1));
     changed(newSelected);
-    console.debug(`New selected: ${JSON.stringify(newSelected)}`);
   }
 
   return <>
-    { selected.map((ingredient, index) => <IngredientControl key={index} ingredients={ingredients} value={ingredient} onDelete={() => onDelete(index)} onChange={(ingredient) => selected[index] = ingredient } />) }
-    <NewIngredient onNewIngredient={() => {changed([...selected, {id: 1, quantity: 1}])}} />
+    { 
+      selected.map((ingredient, index) => <IngredientControl
+                                            key={index}
+                                            ingredients={ingredients}
+                                            value={ingredient}
+                                            onDelete={() => onDelete(index)}
+                                            onChange={(newIngredient) => onChange(index, newIngredient)} 
+                                          />
+      )
+    }
+    <NewIngredient onNewIngredient={() => {changed([...selected, {id: ingredients[0].id, quantity: 1}])}} />
   </>
 }

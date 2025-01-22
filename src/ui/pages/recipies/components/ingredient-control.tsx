@@ -1,4 +1,4 @@
-import { Box, Card, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Box, Card, MenuItem, Select, SelectChangeEvent, unstable_useEnhancedEffect } from "@mui/material";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
@@ -14,6 +14,10 @@ interface IngredientControlProps {
 
 export function IngredientControl({ingredients, value, onChange, onDelete}: IngredientControlProps) {
   const selected = ingredients.find((ingredient) => ingredient.id === value.id);
+  let selectedName = selected?.name || "";
+  if (selectedName === "" && ingredients.length > 0) {
+    selectedName = ingredients[0].name;
+  }
 
   function ingredientSelected(ingredient: string) {
     const selected = ingredients.find((i) => i.name === ingredient);
@@ -34,13 +38,13 @@ export function IngredientControl({ingredients, value, onChange, onDelete}: Ingr
     <Box padding="0" margin="0">
       <Select
         variant="standard"
-        value={selected?.name}
+        value={selectedName}
         onChange={(e: SelectChangeEvent<string>) => ingredientSelected(e.target.value)}
       >
         {ingredients.map((ingredient) => <MenuItem key={ingredient.id} value={ingredient.name}>{ingredient.name}</MenuItem>)}
       </Select>
       :&nbsp;
-      <NumericInlineInput value={value.quantity} size={15} onChange={() => {}} /> 
+      <NumericInlineInput value={value.quantity} size={15} onChange={(quantity: number) => onChange({...value, quantity: quantity })} /> 
       &nbsp;
       ml
     </Box>
