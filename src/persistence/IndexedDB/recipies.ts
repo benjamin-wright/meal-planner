@@ -22,8 +22,8 @@ export class Recipies implements RecipieStore {
     return this.db.getAll<Recipie>("recipies");
   }
 
-  async add(name: string, description: string, serves: number, ingredients: IngredientQuantity[], steps: string[]): Promise<number> {
-    return this.db.add("recipies", { name, description, serves, ingredients, steps });
+  async add(name: string, description: string, serves: number, time: number, ingredients: IngredientQuantity[], steps: string[]): Promise<number> {
+    return this.db.add("recipies", { name, description, serves, time, ingredients, steps });
   }
 
   async put(value: Recipie): Promise<void> {

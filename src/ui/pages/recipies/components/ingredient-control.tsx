@@ -6,13 +6,14 @@ import { IconLink } from "../../../components/icon-link";
 import { Delete } from "@mui/icons-material";
 
 interface IngredientControlProps {
+  index: number;
   ingredients: Ingredient[];
   value: IngredientQuantity;
   onChange: (value: IngredientQuantity) => void;
   onDelete: () => void;
 }
 
-export function IngredientControl({ingredients, value, onChange, onDelete}: IngredientControlProps) {
+export function IngredientControl({index, ingredients, value, onChange, onDelete}: IngredientControlProps) {
   const selected = ingredients.find((ingredient) => ingredient.id === value.id);
   let selectedName = selected?.name || "";
   if (selectedName === "" && ingredients.length > 0) {
@@ -37,6 +38,7 @@ export function IngredientControl({ingredients, value, onChange, onDelete}: Ingr
   }}>
     <Box padding="0" margin="0">
       <Select
+        id={`ingredient-${index}`}
         variant="standard"
         value={selectedName}
         onChange={(e: SelectChangeEvent<string>) => ingredientSelected(e.target.value)}
@@ -44,7 +46,7 @@ export function IngredientControl({ingredients, value, onChange, onDelete}: Ingr
         {ingredients.map((ingredient) => <MenuItem key={ingredient.id} value={ingredient.name}>{ingredient.name}</MenuItem>)}
       </Select>
       :&nbsp;
-      <NumericInlineInput value={value.quantity} size={15} onChange={(quantity: number) => onChange({...value, quantity: quantity })} /> 
+      <NumericInlineInput value={value.quantity} onChange={(quantity: number) => onChange({...value, quantity: quantity })} /> 
       &nbsp;
       ml
     </Box>

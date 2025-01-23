@@ -23,6 +23,7 @@ export function IngredientSelector({ingredients, selected, changed}: IngredientS
   return <>
     { 
       selected.map((ingredient, index) => <IngredientControl
+                                            index={index}
                                             key={index}
                                             ingredients={ingredients}
                                             value={ingredient}

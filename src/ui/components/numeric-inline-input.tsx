@@ -9,7 +9,6 @@ interface NumericInlineInputProps {
   id?: string;
   value: number;
   required?: boolean;
-  size?: number;
   onChange: (value: number) => void;
 }
 
@@ -17,7 +16,6 @@ export function NumericInlineInput({
   id,
   value,
   required,
-  size,
   onChange,
 }: NumericInlineInputProps) {
   const [text, setText] = useState(value.toString());

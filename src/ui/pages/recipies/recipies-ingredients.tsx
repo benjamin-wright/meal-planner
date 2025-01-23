@@ -7,13 +7,14 @@ import { NumericInput } from "../../components/numeric-input";
 import { IngredientSelector } from "./components/ingredient-selector";
 import { DBContext } from "../../providers/database";
 import { Ingredient } from "../../../models/ingredients";
+import Typography from "@mui/material/Typography";
 
-export function RecipiesEdit() {
+export function RecipiesIngredients() {
   const { recipieStore, ingredientStore } = useContext(DBContext);
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, ingredients: [], steps: [] });
+  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const navigate = useNavigate();
 
@@ -45,9 +46,10 @@ export function RecipiesEdit() {
       title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
       returnTo="/recipies"
       disabled={!validate()}
+      morePages
       onSubmit={async () => {
         if (isNew) {
-          await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.ingredients, recipie.steps);
+          await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps);
         } else {
           await recipieStore?.put(recipie);
         }
@@ -80,6 +82,15 @@ export function RecipiesEdit() {
         onChange={(value) => setRecipie({ ...recipie, serves: value })}
       />
 
+      <NumericInput
+        id="time"
+        label="time (mins)"
+        value={recipie.time}
+        required
+        onChange={(value) => setRecipie({ ...recipie, time: value })}
+      />
+
+      <Typography variant="body1">Ingredients:</Typography>
       <IngredientSelector ingredients={ingredients} selected={recipie.ingredients} changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})} />
     </Form>
   );

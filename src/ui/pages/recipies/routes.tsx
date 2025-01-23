@@ -1,5 +1,5 @@
 import { Recipies } from "./recipies";
-import { RecipiesEdit } from "./recipies-edit";
+import { RecipiesIngredients } from "./recipies-ingredients";
 
 export const routes = [
   {
@@ -7,11 +7,11 @@ export const routes = [
     element: <Recipies />,
   },
   {
-    path: "recipies/new",
-    element: <RecipiesEdit />,
+    path: "recipies/new/ingredients",
+    element: <RecipiesIngredients />,
   },
   {
-    path: "recipies/:recipie",
-    element: <RecipiesEdit />,
+    path: "recipies/:recipie/ingredients",
+    element: <RecipiesIngredients />,
   }
 ];
