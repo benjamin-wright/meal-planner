@@ -72,7 +72,7 @@ export class DB {
     tx.commit();
     return new Promise((resolve, reject) => {
       req.onsuccess = () => {
-        resolve(req.result);
+        resolve(req.result as T[]);
       };
       req.onerror = () => {
         reject(req.error);

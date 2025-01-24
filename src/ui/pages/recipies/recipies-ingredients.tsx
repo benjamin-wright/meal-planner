@@ -4,33 +4,38 @@ import { Form } from "../../components/form";
 import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
-import { IngredientSelector } from "./components/ingredient-selector";
+import { IngredientsList } from "./components/ingredients-list";
 import { DBContext } from "../../providers/database";
 import { Ingredient } from "../../../models/ingredients";
 import Typography from "@mui/material/Typography";
+import { Unit } from "../../../models/units";
 
 export function RecipiesIngredients() {
-  const { recipieStore, ingredientStore } = useContext(DBContext);
+  const { recipieStore, ingredientStore, unitStore } = useContext(DBContext);
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
   const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [units, setUnits] = useState<Unit[]>([]);
   const navigate = useNavigate();
 
   async function load() {
-    if (!recipieStore || !ingredientStore) {
+    if (!recipieStore || !ingredientStore || !unitStore) {
       return;
     }
-
+    
+    const ingredients = await ingredientStore.getAll();
+    const units = await unitStore?.getAll();
+    
     if (params.recipie) {
       const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
       setRecipie(recipie);
       setIsNew(false);
     }
 
-    const ingredients = await ingredientStore.getAll();
     setIngredients(ingredients);
+    setUnits(units);
   }
 
   useEffect(() => {
@@ -91,7 +96,7 @@ export function RecipiesIngredients() {
       />
 
       <Typography variant="body1">Ingredients:</Typography>
-      <IngredientSelector ingredients={ingredients} selected={recipie.ingredients} changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})} />
+      <IngredientsList ingredients={ingredients} units={units} selected={recipie.ingredients} changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})} />
     </Form>
   );
 }

@@ -4,20 +4,55 @@ import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
 import { IconLink } from "../../../components/icon-link";
 import { Delete } from "@mui/icons-material";
+import { getAbbr, getNearestMagnitude, isCount, Magnitude, Unit } from "../../../../models/units";
+import { useEffect, useState } from "react";
 
 interface IngredientControlProps {
   index: number;
   ingredients: Ingredient[];
+  units: Unit[];
   value: IngredientQuantity;
   onChange: (value: IngredientQuantity) => void;
   onDelete: () => void;
 }
 
-export function IngredientControl({index, ingredients, value, onChange, onDelete}: IngredientControlProps) {
+export function IngredientControl({index, ingredients, units, value, onChange, onDelete}: IngredientControlProps) {
   const selected = ingredients.find((ingredient) => ingredient.id === value.id);
   let selectedName = selected?.name || "";
   if (selectedName === "" && ingredients.length > 0) {
     selectedName = ingredients[0].name;
+  }
+  
+  const unit = units.find((unit) => unit.id === selected?.unit);
+  const [magnitude, setMagnitude] = useState<Magnitude>(unit?.magnitudes[0] || new Magnitude("", "", "", 1));
+  const [adjustedQuantity, setAdjustedQuantity] = useState<number>(value.quantity / magnitude.multiplier);
+
+  useEffect(() => {
+    if (!unit) {
+      return;
+    }
+
+    const nearestMagnitude = getNearestMagnitude(unit, value.quantity);
+    if (!nearestMagnitude) {
+      return
+    }
+    
+    setAdjustedQuantity(adjustedQuantity / nearestMagnitude.multiplier * magnitude.multiplier);
+    setMagnitude(nearestMagnitude);
+  }, [unit])
+
+  function magnitudeChanged(newMagnitudeName: string) {
+    const newMagnitude = unit?.magnitudes.find((magnitude) => {
+      return magnitude.abbrev === newMagnitudeName}
+    ) || magnitude;
+    
+    setAdjustedQuantity(adjustedQuantity / newMagnitude.multiplier * magnitude.multiplier);
+    setMagnitude(newMagnitude);
+  }
+
+  function quantityChanged(newQuantity: number) {
+    setAdjustedQuantity(newQuantity);
+    onChange({ ...value, quantity: newQuantity * magnitude.multiplier });
   }
 
   function ingredientSelected(ingredient: string) {
@@ -46,9 +81,20 @@ export function IngredientControl({index, ingredients, value, onChange, onDelete
         {ingredients.map((ingredient) => <MenuItem key={ingredient.id} value={ingredient.name}>{ingredient.name}</MenuItem>)}
       </Select>
       :&nbsp;
-      <NumericInlineInput value={value.quantity} onChange={(quantity: number) => onChange({...value, quantity: quantity })} /> 
+      <NumericInlineInput value={adjustedQuantity} onChange={quantityChanged} />
       &nbsp;
-      ml
+      { unit && isCount(unit) && <span>{getAbbr(unit, value.quantity)}</span> }
+      { unit && !isCount(unit) && 
+      <Select
+        id={`unit-${index}`}
+        variant="standard"
+        value={magnitude.abbrev}
+        onChange={(e: SelectChangeEvent<string>) => magnitudeChanged(e.target.value)}
+      >
+        {unit?.magnitudes.map((magnitude) => <MenuItem key={magnitude.abbrev} value={magnitude.abbrev}>{magnitude.abbrev}</MenuItem>)}
+      </Select>
+    }
+      
     </Box>
     <Box margin="0" padding="0">
       <IconLink 

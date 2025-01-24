@@ -1,15 +1,17 @@
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
+import { Unit } from "../../../../models/units";
 import { IngredientControl } from "./ingredient-control";
 import { NewIngredient } from "./new-ingredient";
 
-interface IngredientSelectorProps {
+interface IngredientsListProps {
   ingredients: Ingredient[];
+  units: Unit[];
   selected: IngredientQuantity[];
   changed: (selected: IngredientQuantity[]) => void;
 }
 
-export function IngredientSelector({ingredients, selected, changed}: IngredientSelectorProps) {
+export function IngredientsList({ingredients, units, selected, changed}: IngredientsListProps) {
   function onChange(index: number, ingredient: IngredientQuantity) {
     selected[index] = ingredient;
     changed([...selected]);
@@ -26,6 +28,7 @@ export function IngredientSelector({ingredients, selected, changed}: IngredientS
                                             index={index}
                                             key={index}
                                             ingredients={ingredients}
+                                            units={units}
                                             value={ingredient}
                                             onDelete={() => onDelete(index)}
                                             onChange={(newIngredient) => onChange(index, newIngredient)} 

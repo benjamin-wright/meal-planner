@@ -3,7 +3,7 @@ import {
   Input,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface NumericInlineInputProps {
   id?: string;
@@ -20,6 +20,10 @@ export function NumericInlineInput({
 }: NumericInlineInputProps) {
   const [text, setText] = useState(value.toString());
   const theme = useTheme();
+
+  useEffect(() => {
+    setText(value.toString());
+  }, [value]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const firstDecimal = e.target.value.indexOf(".");
@@ -49,7 +53,7 @@ export function NumericInlineInput({
         id={id}
         size="small"
         type="text"
-        inputProps={{ inputMode: "decimal", pattern: "[0-9.]*", size: text.length * 1.5 }}
+        inputProps={{ inputMode: "decimal", pattern: "[0-9.]*", size: (text.length + 1) * 1.5 }}
         value={text}
         onChange={handleChange}
       />

@@ -23,10 +23,12 @@ export class Units implements UnitStore {
   }
 
   async add(name: string, magnitudes: Magnitude[], singular?: string, plural?: string): Promise<number> {
+    magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     return this.db.add("units", { name, magnitudes, singular, plural });
   }
 
   async put(value: Unit): Promise<void> {
+    value.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     return this.db.put("units", value);
   }
 
