@@ -36,9 +36,8 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
     if (!nearestMagnitude) {
       return
     }
-    
-    setAdjustedQuantity(adjustedQuantity / nearestMagnitude.multiplier * magnitude.multiplier);
-    setMagnitude(nearestMagnitude);
+
+    updateMagnitude(nearestMagnitude);
   }, [unit])
 
   function magnitudeChanged(newMagnitudeName: string) {
@@ -46,6 +45,10 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
       return magnitude.abbrev === newMagnitudeName}
     ) || magnitude;
     
+    updateMagnitude(newMagnitude);
+  }
+
+  function updateMagnitude(newMagnitude: Magnitude) {
     setAdjustedQuantity(adjustedQuantity / newMagnitude.multiplier * magnitude.multiplier);
     setMagnitude(newMagnitude);
   }
