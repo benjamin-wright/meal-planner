@@ -18,7 +18,7 @@ export function NumericInlineInput({
   required,
   onChange,
 }: NumericInlineInputProps) {
-  const [text, setText] = useState(value.toString());
+  const [text, setText] = useState("");
   const theme = useTheme();
 
   useEffect(() => {

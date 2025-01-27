@@ -40,7 +40,12 @@ export function getAbbr(unit: Unit, value: number): string {
       return unit.plural || ""
     }
   } else {
-    return ""
+    const magnitude = getNearestMagnitude(unit, value);
+    if (magnitude) {
+      return magnitude.abbrev;
+    } else {
+      return "";
+    }
   }
 }
 

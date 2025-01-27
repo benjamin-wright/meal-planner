@@ -2,11 +2,11 @@ import Add from "@mui/icons-material/Add";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 
-interface NewIngredientProps {
-  onNewIngredient: () => void;
+interface NewItemProps {
+  onNewItem: () => void;
 }
 
-export function NewIngredient({ onNewIngredient }: NewIngredientProps) {
+export function NewItem({ onNewItem }: NewItemProps) {
   return (
     <Card
       sx={{
@@ -14,7 +14,7 @@ export function NewIngredient({ onNewIngredient }: NewIngredientProps) {
       }}
     >
       <CardActionArea
-        onClick={onNewIngredient}
+        onClick={onNewItem}
         sx={{
           padding: "1.5em",
           textAlign: "center",

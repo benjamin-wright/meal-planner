@@ -2,7 +2,7 @@ import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { Unit } from "../../../../models/units";
 import { IngredientControl } from "./ingredient-control";
-import { NewIngredient } from "./new-ingredient";
+import { NewItem } from "./new-item";
 
 interface IngredientsListProps {
   ingredients: Ingredient[];
@@ -35,6 +35,6 @@ export function IngredientsList({ingredients, units, selected, changed}: Ingredi
                                           />
       )
     }
-    <NewIngredient onNewIngredient={() => {changed([...selected, {id: ingredients[0].id, quantity: 1}])}} />
+    <NewItem onNewItem={() => {changed([...selected, {id: ingredients[0].id, quantity: 1}])}} />
   </>
 }

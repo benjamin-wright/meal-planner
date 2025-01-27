@@ -5,7 +5,7 @@ import {
   OutlinedInput,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface NumericInputProps {
   id?: string;
@@ -22,8 +22,12 @@ export function NumericInput({
   required,
   onChange,
 }: NumericInputProps) {
-  const [text, setText] = useState(value.toString());
+  const [text, setText] = useState("");
   const theme = useTheme();
+
+  useEffect(() => {
+    setText(value.toString());
+  }, [value]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const firstDecimal = e.target.value.indexOf(".");

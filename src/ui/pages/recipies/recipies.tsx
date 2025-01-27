@@ -46,7 +46,7 @@ export function Recipies() {
             key={recipie.id}
             title={recipie.name}
             onEdit={() => {
-              navigate(`/recipies/${recipie.id}/ingredients`);
+              navigate(`/recipies/${recipie.id}/metadata`);
             }}
             onDelete={() => {
               setToDelete(recipie);
@@ -55,14 +55,13 @@ export function Recipies() {
           >
             <Paper sx={{ padding: "0.75em" }}>
               <Typography variant="body1">{recipie.description}</Typography>
-              <Typography variant="body2">Serves: {recipie.serves}</Typography>
               <Typography variant="body2">Time: {recipie.time || "0"} mins</Typography>
             </Paper>
           </DetailView>
         ))
       }
     </DetailViewGroup>
-    <NewItemButton to="/recipies/new/ingredients" />
+    <NewItemButton to="/recipies/new/metadata" />
     <ConfirmDialog
       message={`Deleting "${toDelete?.name}"`}
       open={isOpen}
