@@ -23,20 +23,27 @@ function SlidePanel({ children, visible, direction }: SlidePanelProps) {
 
 interface PanelsProps {
   children: React.ReactNode;
+  onSelectedChanged?: (selected: number) => void;
 }
 
-export function Panels({ children }: PanelsProps) {
+export function Panels({ children, onSelectedChanged }: PanelsProps) {
   const [selected, setSelected] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("left");
 
   function down() {
     setDirection("right");
     setSelected(selected - 1);
+    if (onSelectedChanged) {
+      onSelectedChanged(selected - 1);
+    }
   }
 
   function up() {
     setDirection("left");
     setSelected(selected + 1);
+    if (onSelectedChanged) {
+      onSelectedChanged(selected + 1);
+    }
   }
 
   return <Box height="100%" width="100%" overflow="hidden" position="relative">
