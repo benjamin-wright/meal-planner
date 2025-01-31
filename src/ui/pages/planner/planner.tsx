@@ -18,16 +18,21 @@ export function Planner() {
   const [selected, setSelected] = useState(0);
 
   return <Page title="Planner">
-    <ProgressTracker steps={planner.map((day, index) => {
-      return {
-        display: day.day.substring(0, 2),
-        completed: index < selected
-      }
-    })} />
-    <Panels onSelectedChanged={setSelected}>
+    <ProgressTracker
+      active={selected}
+      steps={planner.map((day) => {
+        return {
+          display: day.day.substring(0, 2),
+          completed: false
+        }
+      })}
+      onSelected={(selected) => setSelected(selected)}
+    />
+    <Panels selected={selected} onSelectedChanged={setSelected}>
       {
         planner.map((day) => {
-          return <Box key={day.day}>
+          return <Box key={day.day} height="100%" display="flex" alignItems="center" justifyContent="center">
+            <p>hi</p>
           </Box>
         })
       }
