@@ -11,7 +11,7 @@ interface ProgressTrackerProps {
   onSelected?: (selected: number) => void;
 }
 
-export function ProgressTracker({active, steps, onSelected}: ProgressTrackerProps) {
+export function ProgressTracker({ active, steps, onSelected }: ProgressTrackerProps) {
   return <Box display="flex" flexDirection="row" justifyContent="space-between">
     {
       steps.map((step, index) => {
@@ -24,6 +24,7 @@ export function ProgressTracker({active, steps, onSelected}: ProgressTrackerProp
             borderRadius: "50%",
             width: "2.5em",
             height: "2.5em",
+            textTransform: "capitalize",
             backgroundColor: index === active ? "primary.light" : step.completed ? "success.main" : "secondary.dark",
             color: index === active ? "primary.dark" : step.completed ? "success.contrastText" : "secondary.contrastText",
           }}

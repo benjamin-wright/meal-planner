@@ -53,10 +53,10 @@ export function Panels({ children, selected, onSelectedChanged }: PanelsProps) {
       {Children.map(children, (child, index) => <SlidePanel key={index} visible={index === selected} direction={direction}>{child}</SlidePanel>)}
     </Box>
     <Box position="absolute" top="0" right="0" bottom="0" left="0" display="flex" alignItems={"center"} justifyContent={"space-between"}>
-      <IconLink onClick={down} disabled={selected === 0}>
+      <IconLink onClick={down} disabled={selected <= 0}>
         <ArrowBack />
       </IconLink>
-      <IconLink onClick={up} disabled={selected === Children.count(children) - 1}>
+      <IconLink onClick={up} disabled={selected >= Children.count(children) - 1}>
         <ArrowForward />
       </IconLink>
     </Box>
