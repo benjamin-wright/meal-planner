@@ -1,10 +1,16 @@
 import { Box } from "@mui/material";
 import { Page } from "../../components/page";
 import { Panels } from "../../components/panels";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ProgressTracker } from "../../components/progress-tracker";
+import { DBContext } from "../../providers/database";
+import { PlanItems } from "../../../persistence/IndexedDB/plan-items";
 
 export function Planner() {
+  const { planItemStore } = useContext(DBContext);
+
+  const [planItems, setPlanItems] = useState<PlanItems[]>([]);
+
   const planner = [
     { day: "Saturday" },
     { day: "Sunday" },

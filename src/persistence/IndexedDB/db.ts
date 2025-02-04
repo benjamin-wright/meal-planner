@@ -2,9 +2,10 @@ import { unitsV1 } from "./units";
 import { categoriesV1 } from "./categories";
 import { ingredientsV1 } from "./ingredients";
 import { recipiesV1 } from "./recipies";
+import { planItemsV1 } from "./plan-items";
 
 const DB_NAME = "meal-planner";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -15,6 +16,9 @@ const migrations = [
   (db: IDBDatabase) => {
     recipiesV1(db);
   },
+  (db: IDBDatabase) => {
+    planItemsV1(db);
+  }
 ]
 
 export async function createDB(): Promise<DB> {
@@ -28,7 +32,7 @@ export async function createDB(): Promise<DB> {
       let newVersion = event.newVersion ? event.newVersion : 0;
 
       for (let v = oldVersion; v < newVersion; v++) {
-        console.info(`Migrating to version ${v+1}`);
+        console.info(`Migrating to version ${v + 1}`);
         migrations[v](db);
       }
     };
@@ -45,11 +49,11 @@ export async function createDB(): Promise<DB> {
 
 export class DB {
   private db: IDBDatabase;
-  
+
   constructor(db: IDBDatabase) {
     this.db = db;
   }
-  
+
   async get<T>(db: string, id: number): Promise<T> {
     const tx = this.db.transaction(db, "readonly");
     const store = tx.objectStore(db);
