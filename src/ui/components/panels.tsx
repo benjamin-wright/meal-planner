@@ -52,11 +52,13 @@ export function Panels({ children, selected, onSelectedChanged }: PanelsProps) {
     <Box height="100%" marginLeft="3.5em" marginRight="3.5em" position="relative">
       {Children.map(children, (child, index) => <SlidePanel key={index} visible={index === selected} direction={direction}>{child}</SlidePanel>)}
     </Box>
-    <Box position="absolute" top="0" right="0" bottom="0" left="0" display="flex" alignItems={"center"} justifyContent={"space-between"}>
-      <IconLink onClick={down} disabled={selected <= 0}>
+    <Box position="absolute" top="0" right="0" bottom="0" left="0" display="flex" alignItems={"center"} justifyContent={"space-between"} sx={{
+      pointerEvents: "none",
+    }}>
+      <IconLink onClick={down} disabled={selected <= 0} sx={{pointerEvents: "auto"}}>
         <ArrowBack />
       </IconLink>
-      <IconLink onClick={up} disabled={selected >= Children.count(children) - 1}>
+      <IconLink onClick={up} disabled={selected >= Children.count(children) - 1} sx={{pointerEvents: "auto"}}>
         <ArrowForward />
       </IconLink>
     </Box>

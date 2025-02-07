@@ -12,7 +12,7 @@ interface ProgressTrackerProps {
 }
 
 export function ProgressTracker({ active, steps, onSelected }: ProgressTrackerProps) {
-  return <Box display="flex" flexDirection="row" justifyContent="space-between">
+  return <Box display="flex" flexDirection="row" justifyContent="space-between" margin="0.5em 0">
     {
       steps.map((step, index) => {
         return <Card
@@ -25,8 +25,9 @@ export function ProgressTracker({ active, steps, onSelected }: ProgressTrackerPr
             width: "2.5em",
             height: "2.5em",
             textTransform: "capitalize",
-            backgroundColor: index === active ? "primary.light" : step.completed ? "success.main" : "secondary.dark",
-            color: index === active ? "primary.dark" : step.completed ? "success.contrastText" : "secondary.contrastText",
+            border: index === active ? "dashed 1px white" : "",
+            backgroundColor: step.completed ? "success.main" : "secondary.dark",
+            color: step.completed ? "success.contrastText" : "secondary.contrastText",
           }}
           onClick={() => onSelected && onSelected(index)}
         >{step.display}</Card>

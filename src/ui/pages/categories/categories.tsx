@@ -3,7 +3,7 @@ import { Page } from "../../components/page";
 import { CategoryView } from "./components/category-view";
 import { Reorder, useDragControls } from "motion/react";
 import { DetailViewGroup } from "../../components/detail-view";
-import { NewItemButton } from "../../components/new-item-button";
+import { FloatingAddButton } from "../../components/floating-add-button";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { Category } from "../../../models/categories";
@@ -86,7 +86,7 @@ export function Categories() {
           ))}
         </DetailViewGroup>
       </Reorder.Group>
-      <NewItemButton to="/categories/new" />
+      <FloatingAddButton to="/categories/new" />
       <ConfirmDialog      
         message={`Deleting "${toDelete?.name}"`}
         open={isOpen}

@@ -4,10 +4,10 @@ import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
-import { NewMagnitude } from "./components/new-magnitude";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
 import { FormContext } from "../../providers/forms";
+import { NewItemButton } from "../../components/new-item-button";
 
 export function UnitsEdit() {
   const { unitStore } = useContext(DBContext);
@@ -112,7 +112,7 @@ export function UnitsEdit() {
           }} />
         ))}
 
-        <NewMagnitude onNewMagnitude={handleNewMagnitude} />
+        <NewItemButton onClick={handleNewMagnitude} />
       </>)}
     </Form>
   );

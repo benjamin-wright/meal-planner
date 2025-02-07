@@ -1,21 +1,30 @@
 import Add from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
-import { useNavigate } from "react-router-dom";
+import { SxProps } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
 
 interface NewItemButtonProps {
-  to: string;
+  onClick: () => void;
+  sx?: SxProps;
 }
 
-export function NewItemButton({ to }: NewItemButtonProps) {
-  const navigate = useNavigate();
-
+export function NewItemButton({ onClick, sx }: NewItemButtonProps) {
   return (
-    <Fab color="success" sx={{
-      position: "fixed",
-      bottom: "1em",
-      right: "1em",
-    }} onClick={() => navigate(to)}>
-      <Add />
-    </Fab>
+    <Card
+      sx={{
+        overflow: "unset",
+        ...sx
+      }}
+    >
+      <CardActionArea
+        onClick={onClick}
+        sx={{
+          padding: "1.5em",
+          textAlign: "center",
+        }}
+      >
+        <Add />
+      </CardActionArea>
+    </Card>
   );
 }

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
-import { NewItemButton } from "../../components/new-item-button";
+import { FloatingAddButton } from "../../components/floating-add-button";
 import { Page } from "../../components/page";
 import { Ingredient } from "../../../models/ingredients";
 import { Category } from "../../../models/categories";
@@ -99,7 +99,7 @@ export function Ingredients() {
         </Accordion>
       )) }
     </DetailViewGroup>
-    <NewItemButton to="/ingredients/new" />
+    <FloatingAddButton to="/ingredients/new" />
     <ConfirmDialog      
       message={`Deleting "${toDelete?.name}"`}
       open={isOpen}

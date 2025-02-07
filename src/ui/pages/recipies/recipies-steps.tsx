@@ -5,10 +5,10 @@ import { Recipie } from "../../../models/recipies";
 import { DBContext } from "../../providers/database";
 import Typography from "@mui/material/Typography";
 import { Reorder, useDragControls } from "motion/react";
-import { NewItem } from "./components/new-item";
 import { Box, TextField } from "@mui/material";
 import DragHandle from "@mui/icons-material/DragHandle";
 import { Delete } from "@mui/icons-material";
+import { NewItemButton } from "../../components/new-item-button";
 
 interface ReorderItemProps {
   step: StepData;
@@ -113,7 +113,9 @@ export function RecipiesSteps() {
           />
         ))}
       </Reorder.Group>
-      <NewItem onNewItem={onNewItem} />
+      <NewItemButton onClick={onNewItem} sx={{
+        margin: "0 2.2em"
+      }} />
     </Form>
   );
 }

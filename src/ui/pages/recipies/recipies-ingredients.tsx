@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
-import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
-import { NumericInput } from "../../components/numeric-input";
 import { IngredientsList } from "./components/ingredients-list";
 import { DBContext } from "../../providers/database";
 import { Ingredient } from "../../../models/ingredients";

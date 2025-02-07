@@ -1,8 +1,8 @@
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { Unit } from "../../../../models/units";
+import { NewItemButton } from "../../../components/new-item-button";
 import { IngredientControl } from "./ingredient-control";
-import { NewItem } from "./new-item";
 
 interface IngredientsListProps {
   ingredients: Ingredient[];
@@ -35,6 +35,6 @@ export function IngredientsList({ingredients, units, selected, changed}: Ingredi
                                           />
       )
     }
-    <NewItem onNewItem={() => {changed([...selected, {id: ingredients[0].id, quantity: 1}])}} />
+    <NewItemButton onClick={() => {changed([...selected, {id: ingredients[0].id, quantity: 1}])}} />
   </>
 }

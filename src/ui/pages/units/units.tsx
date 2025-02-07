@@ -3,7 +3,7 @@ import { DetailViewGroup } from "../../components/detail-view";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
-import { NewItemButton } from "../../components/new-item-button";
+import { FloatingAddButton } from "../../components/floating-add-button";
 import { Unit } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
@@ -55,7 +55,7 @@ export function Units() {
           <UnitView key={unit.id} unit={unit} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
       </DetailViewGroup>
-      <NewItemButton to="/units/new" />
+      <FloatingAddButton to="/units/new" />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
         open={isOpen}
