@@ -77,9 +77,9 @@ export function Planner() {
       {
         planItems.map((item, index) => {
           return <Box key={item.id} height="100%" width="100%" display="flex" flexDirection="column" overflow="scroll">
-            <MealList kind="breakfast" meals={item.breakfast} recipies={recipies} onMealsChanged={(meals) => newMealHandler(index, "breakfast", meals)} />
-            <MealList kind="lunch" meals={item.lunch} recipies={recipies} onMealsChanged={(meals) => newMealHandler(index, "lunch", meals)}/>
-            <MealList kind="dinner" meals={item.dinner} recipies={recipies} onMealsChanged={(meals) => newMealHandler(index, "dinner", meals)}/>
+            <MealList kind="breakfast" meals={item.breakfast} recipies={recipies} onChange={(meals) => newMealHandler(index, "breakfast", meals)} />
+            <MealList kind="lunch" meals={item.lunch} recipies={recipies} onChange={(meals) => newMealHandler(index, "lunch", meals)}/>
+            <MealList kind="dinner" meals={item.dinner} recipies={recipies} onChange={(meals) => newMealHandler(index, "dinner", meals)}/>
           </Box>
         })
       }

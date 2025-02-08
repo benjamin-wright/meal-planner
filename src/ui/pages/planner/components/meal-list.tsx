@@ -2,45 +2,30 @@ import Typography from "@mui/material/Typography";
 import { Meal } from "../../../../models/plan-item";
 import { NewItemButton } from "../../../components/new-item-button";
 import Box from "@mui/material/Box";
-import { MenuItem, Select } from "@mui/material";
 import { Recipie } from "../../../../models/recipies";
+import { MealItem } from "./meal-item";
 
 interface MealListProps {
   kind: string;
   meals: Meal[];
   recipies: Recipie[];
-  onMealsChanged: (meals: Meal[]) => void;
+  onChange: (meals: Meal[]) => void;
 }
 
-export function MealList({ kind, meals, recipies, onMealsChanged }: MealListProps) {
+export function MealList({ kind, meals, recipies, onChange }: MealListProps) {
+
+  function onMealsChanged(index: number, meal: Meal) {
+    meals[index] = meal;
+    onChange([...meals]);
+  }
+
   return <Box display="flex" flexDirection="column" gap="0.5em">
     <Typography variant="h6" textTransform="capitalize">{kind}</Typography>
     {
-      meals.map((meal, index) =>
-        <Select key={index} value={meal.recipieId} onChange={(event) => {
-          switch (typeof event.target.value) {
-            case "number": {
-              meals[index].recipieId = event.target.value;
-              break;
-            }
-            case "string": {
-              meals[index].recipieId = Number.parseInt(event.target.value);
-              break;
-            } 
-          }
-
-          onMealsChanged([...meals])
-        }}>
-          {
-            recipies.map((recipie, index) => 
-              <MenuItem key={index} value={recipie.id}>{ recipie.name }</MenuItem>
-            )
-          }
-        </Select>
-      )
+      meals.map((meal, index) => <MealItem key={index} id={`${kind}-${index}`} meal={meal} recipies={recipies} onChange={(meal) => onMealsChanged(index, meal)}/>)
     }
     <NewItemButton onClick={() => {
-      onMealsChanged([...meals, {
+      onChange([...meals, {
         recipieId: 0,
         servings: 1
       }])
