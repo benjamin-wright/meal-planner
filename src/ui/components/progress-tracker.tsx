@@ -1,6 +1,6 @@
 import { Box, Card } from "@mui/material";
 
-interface ProgressTrackerStep {
+export interface ProgressTrackerStep {
   display: string;
   completed: boolean;
 }

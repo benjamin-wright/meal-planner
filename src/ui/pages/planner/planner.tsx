@@ -2,84 +2,77 @@ import { Box } from "@mui/material";
 import { Page } from "../../components/page";
 import { Panels } from "../../components/panels";
 import { useContext, useEffect, useState } from "react";
-import { ProgressTracker } from "../../components/progress-tracker";
+import { ProgressTracker, ProgressTrackerStep } from "../../components/progress-tracker";
 import { DBContext } from "../../providers/database";
-import { getDayReadable, makePlanItem, Meal, PlanItem } from "../../../models/plan-item";
-import { MealList } from "./components/meal-list";
+import { Meal, MealDays } from "../../../models/meals";
+import { MealItem, MealList } from "./components/meal-list";
 import { Recipie } from "../../../models/recipies";
 
+type MealDays = {
+  breakfast: MealItem[];
+  lunch: MealItem[];
+  dinner: MealItem[];
+}
+
+function mapMealToItem(meal: Meal, recipies: Recipie[]): MealItem {
+  return {
+    id: meal.id,
+    recipie: recipies.find((recipie) => recipie.id === meal.recipieId)?.name || "",
+    servings: meal.servings,
+  };
+}
+
 export function Planner() {
-  const { planItemStore, recipieStore } = useContext(DBContext);
+  const { mealStore, recipieStore } = useContext(DBContext);
 
-  const [planItems, setPlanItems] = useState<PlanItem[]>([
-    makePlanItem(1, 0),
-    makePlanItem(2, 1),
-    makePlanItem(3, 2),
-    makePlanItem(4, 3),
-    makePlanItem(5, 4),
-    makePlanItem(6, 5),
-    makePlanItem(7, 6),
-  ]);
-
+  const [plan, setPlan] = useState<ProgressTrackerStep[]>([]);
+  const [meals, setMeals] = useState<MealDays[]>([]);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
 
   async function load() {
-    if (!planItemStore || !recipieStore) {
+    if (!mealStore || !recipieStore) {
       return;
     }
 
     const recipies = await recipieStore.getAll();
     setRecipies(recipies);
 
-    const planItems = await planItemStore.getAll();
-    if (planItems.length > 0) {
-      setPlanItems(planItems);
-    }
+    const meals = await mealStore.getAll();
+    
+    const mealDays = MealDays.map((day) => {
+      return {
+        breakfast: meals.filter((meal) => meal.day === day && meal.meal === "breakfast").map((meal) => mapMealToItem(meal, recipies)),
+        lunch: meals.filter((meal) => meal.day === day && meal.meal === "lunch").map((meal) => mapMealToItem(meal, recipies)),
+        dinner: meals.filter((meal) => meal.day === day && meal.meal === "dinner").map((meal) => mapMealToItem(meal, recipies)),
+      };
+    });
+    setMeals(mealDays);
+
+    setPlan(MealDays.map((day) => ({
+      display: day.substring(0, 2),
+      completed: false,
+    })));
   }
 
   useEffect(() => {
     load();
-  }, [planItemStore]);
+  }, [mealStore, recipieStore]);
 
   const [selected, setSelected] = useState(0);
-
-  function newMealHandler(day: number, meal: "breakfast" | "lunch" | "dinner", meals: Meal[]) {
-    switch (meal) {
-      case "breakfast": {
-        planItems[day].breakfast = meals;
-        break;
-      }
-      case "lunch": {
-        planItems[day].lunch = meals;
-        break;
-      }
-      case "dinner": {
-        planItems[day].dinner = meals;
-        break;
-      }
-    }
-
-    setPlanItems([...planItems]);
-  }
 
   return <Page title="Planner">
     <ProgressTracker
       active={selected}
-      steps={planItems.map((item) => {
-        return {
-          display: getDayReadable(item.order).substring(0, 2),
-          completed: false
-        }
-      })}
+      steps={plan}
       onSelected={(selected) => setSelected(selected)}
     />
     <Panels selected={selected} onSelectedChanged={setSelected}>
       {
-        planItems.map((item, index) => {
-          return <Box key={item.id} height="100%" width="100%" display="flex" flexDirection="column" overflow="scroll">
-            <MealList kind="breakfast" meals={item.breakfast} recipies={recipies} onChange={(meals) => newMealHandler(index, "breakfast", meals)} />
-            <MealList kind="lunch" meals={item.lunch} recipies={recipies} onChange={(meals) => newMealHandler(index, "lunch", meals)}/>
-            <MealList kind="dinner" meals={item.dinner} recipies={recipies} onChange={(meals) => newMealHandler(index, "dinner", meals)}/>
+        meals.map((mealDay, index) => {
+          return <Box key={index} height="100%" width="100%" display="flex" flexDirection="column" overflow="scroll">
+            <MealList kind="breakfast" meals={mealDay.breakfast} />
+            <MealList kind="lunch" meals={mealDay.lunch} />
+            <MealList kind="dinner" meals={mealDay.dinner} />
           </Box>
         })
       }

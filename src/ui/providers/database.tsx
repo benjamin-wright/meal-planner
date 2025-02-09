@@ -8,8 +8,8 @@ import { IngredientStore } from "../../persistence/interfaces/ingredients";
 import { Ingredients } from "../../persistence/IndexedDB/ingredients";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { Recipies } from "../../persistence/IndexedDB/recipies";
-import { PlanItemStore } from "../../persistence/interfaces/plan-items";
-import { PlanItems } from "../../persistence/IndexedDB/plan-items";
+import { MealStore } from "../../persistence/interfaces/meals";
+import { Meals } from "../../persistence/IndexedDB/meals";
 
 interface DBContextProps {
   db?: DB;
@@ -17,7 +17,7 @@ interface DBContextProps {
   categoryStore?: CategoryStore;
   ingredientStore?: IngredientStore;
   recipieStore?: RecipieStore;
-  planItemStore?: PlanItemStore;
+  mealStore?: MealStore;
 }
 
 export const DBContext = createContext<DBContextProps>({});
@@ -33,7 +33,7 @@ export function DBProvider({ children, database }: DBProviderProps) {
   const [categoryStore, setCategories] = useState<CategoryStore | undefined>(undefined);
   const [ingredientStore, setIngredients] = useState<IngredientStore | undefined>(undefined);
   const [recipieStore, setRecipies] = useState<RecipieStore | undefined>(undefined);
-  const [planItemStore, setPlanItems] = useState<PlanItemStore | undefined>(undefined);
+  const [mealStore, setMeals] = useState<MealStore | undefined>(undefined);
 
   useEffect(() => {
     database.then((db: DB) => {
@@ -42,13 +42,13 @@ export function DBProvider({ children, database }: DBProviderProps) {
       setCategories(new Categories(db));
       setIngredients(new Ingredients(db));
       setRecipies(new Recipies(db));
-      setPlanItems(new PlanItems(db));
+      setMeals(new Meals(db));
     });
   }, [database])
 
   return (
     <DBContext.Provider
-      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, planItemStore }}
+      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore }}
     >
       {children}
     </DBContext.Provider>

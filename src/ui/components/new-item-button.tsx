@@ -6,9 +6,10 @@ import CardActionArea from "@mui/material/CardActionArea";
 interface NewItemButtonProps {
   onClick: () => void;
   sx?: SxProps;
+  small?: boolean;
 }
 
-export function NewItemButton({ onClick, sx }: NewItemButtonProps) {
+export function NewItemButton({ onClick, sx, small }: NewItemButtonProps) {
   return (
     <Card
       sx={{
@@ -19,7 +20,7 @@ export function NewItemButton({ onClick, sx }: NewItemButtonProps) {
       <CardActionArea
         onClick={onClick}
         sx={{
-          padding: "1.5em",
+          padding: small ? "0.5em 1.5em" : "1.5em",
           textAlign: "center",
         }}
       >

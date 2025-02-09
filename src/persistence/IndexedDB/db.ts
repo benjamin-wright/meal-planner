@@ -2,7 +2,7 @@ import { unitsV1 } from "./units";
 import { categoriesV1 } from "./categories";
 import { ingredientsV1 } from "./ingredients";
 import { recipiesV1 } from "./recipies";
-import { planItemsV1 } from "./plan-items";
+import { mealsV1 } from "./meals";
 
 const DB_NAME = "meal-planner";
 const DB_VERSION = 3;
@@ -17,7 +17,7 @@ const migrations = [
     recipiesV1(db);
   },
   (db: IDBDatabase) => {
-    planItemsV1(db);
+    mealsV1(db);
   }
 ]
 

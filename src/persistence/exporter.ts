@@ -1,11 +1,11 @@
 import { Category } from "../models/categories";
 import { Ingredient } from "../models/ingredients";
-import { PlanItem } from "../models/plan-item";
+import { Meal } from "../models/meals";
 import { Recipie } from "../models/recipies";
 import { Unit } from "../models/units";
 import { CategoryStore } from "./interfaces/categories";
 import { IngredientStore } from "./interfaces/ingredients";
-import { PlanItemStore } from "./interfaces/plan-items";
+import { MealStore } from "./interfaces/meals";
 import { RecipieStore } from "./interfaces/recipies";
 import { UnitStore } from "./interfaces/units";
 
@@ -14,20 +14,20 @@ type ExportedData = {
   categories?: Category[];
   ingredients?: Ingredient[];
   recipies?: Recipie[];
-  planItems?: PlanItem[];
+  meals?: Meal[];
 };
 
-export async function exportData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, planItems: PlanItemStore): Promise<string> {
+export async function exportData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, meals: MealStore): Promise<string> {
   return JSON.stringify({
     units: await units.getAll(),
     categories: await categories.getAll(),
     ingredients: await ingredients.getAll(),
     recipies: await recipies.getAll(),
-    planItems: await planItems.getAll(),
+    meals: await meals.getAll(),
   });
 }
 
-export async function importData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, planItems: PlanItemStore, data: string): Promise<void> {
+export async function importData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, meals: MealStore, data: string): Promise<void> {
   try {
     console.info(`JSON data: ${data}`);
     const parsed = JSON.parse(data) as ExportedData;
@@ -60,10 +60,10 @@ export async function importData(units: UnitStore, categories: CategoryStore, in
       }
     }
 
-    await planItems.clear();
-    if (parsed.planItems) {
-      for (let i = 0; i < parsed.planItems.length; i++) {
-        await planItems.put(parsed.planItems[i]);
+    await meals.clear();
+    if (parsed.meals) {
+      for (let i = 0; i < parsed.meals.length; i++) {
+        await meals.put(parsed.meals[i]);
       }
     }
   

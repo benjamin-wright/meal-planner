@@ -1,34 +1,23 @@
 import Typography from "@mui/material/Typography";
-import { Meal } from "../../../../models/plan-item";
-import { NewItemButton } from "../../../components/new-item-button";
 import Box from "@mui/material/Box";
-import { Recipie } from "../../../../models/recipies";
-import { MealItem } from "./meal-item";
+import { NoFood } from "@mui/icons-material";
+
+export type MealItem = {
+  id: number;
+  recipie: string;
+  servings: number;
+}
 
 interface MealListProps {
   kind: string;
-  meals: Meal[];
-  recipies: Recipie[];
-  onChange: (meals: Meal[]) => void;
+  meals: MealItem[];
 }
 
-export function MealList({ kind, meals, recipies, onChange }: MealListProps) {
-
-  function onMealsChanged(index: number, meal: Meal) {
-    meals[index] = meal;
-    onChange([...meals]);
-  }
-
-  return <Box display="flex" flexDirection="column" gap="0.5em">
+export function MealList({ kind, meals }: MealListProps) {
+  return <Box display="flex" flexDirection="column" gap="1em">
     <Typography variant="h6" textTransform="capitalize">{kind}</Typography>
     {
-      meals.map((meal, index) => <MealItem key={index} id={`${kind}-${index}`} meal={meal} recipies={recipies} onChange={(meal) => onMealsChanged(index, meal)}/>)
+      meals.length > 0 ? meals.map((meal, index) => <div>{meal.recipie}</div>) : <NoFood />
     }
-    <NewItemButton onClick={() => {
-      onChange([...meals, {
-        recipieId: 0,
-        servings: 1
-      }])
-    }}/>
   </Box>;
 }
