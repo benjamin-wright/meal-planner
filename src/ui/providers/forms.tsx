@@ -63,6 +63,7 @@ export function FormProvider({ children }: FormProviderProps) {
   }
 
   const pop = (from: string) => {
+    // Try moving these outside of the pop function, maybe being redeclared all the time is causing issues?
     const [ loaded, setLoaded ] = useState(false);
     const [ result, setResult ] = useState<FormResult | undefined>();
 
