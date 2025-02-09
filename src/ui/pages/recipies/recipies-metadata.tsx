@@ -5,8 +5,11 @@ import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { DBContext } from "../../providers/database";
+import { FormContext } from "../../providers/forms";
 
 export function RecipiesMetadata() {
+  const forms = useContext(FormContext);
+  const returnTo = forms.getReturn("recipies", "/recipies");
   const { recipieStore } = useContext(DBContext);
   const params = useParams();
 
@@ -38,7 +41,7 @@ export function RecipiesMetadata() {
   return (
     <Form
       title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
-      returnTo="/recipies"
+      returnTo={returnTo}
       disabled={!validate()}
       morePages
       onSubmit={async () => {

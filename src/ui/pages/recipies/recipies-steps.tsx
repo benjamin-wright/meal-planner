@@ -9,6 +9,7 @@ import { Box, TextField } from "@mui/material";
 import DragHandle from "@mui/icons-material/DragHandle";
 import { Delete } from "@mui/icons-material";
 import { NewItemButton } from "../../components/new-item-button";
+import { FormContext } from "../../providers/forms";
 
 interface ReorderItemProps {
   step: StepData;
@@ -42,6 +43,9 @@ type StepData = {
 }
 
 export function RecipiesSteps() {
+  const forms = useContext(FormContext);
+  const returnTo = forms.getReturn("recipies", "/recipies");
+
   const { recipieStore } = useContext(DBContext);
   const params = useParams();
 
@@ -99,7 +103,9 @@ export function RecipiesSteps() {
       onSubmit={async () => {
         recipie.steps = steps.map((step) => step.text);
         await recipieStore?.put(recipie);
-        navigate("/recipies");
+
+        forms.setResult("recipies", { field: "recipie", response: recipie.id });
+        navigate(returnTo);
       }}
     >
       <Typography variant="h6">Steps</Typography>

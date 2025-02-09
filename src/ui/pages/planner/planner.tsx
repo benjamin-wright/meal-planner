@@ -7,6 +7,8 @@ import { DBContext } from "../../providers/database";
 import { Meal, MealDays } from "../../../models/meals";
 import { MealItem, MealList } from "./components/meal-list";
 import { Recipie } from "../../../models/recipies";
+import { NewItemButton } from "../../components/new-item-button";
+import { FloatingAddButton } from "../../components/floating-add-button";
 
 type MealDays = {
   breakfast: MealItem[];
@@ -77,5 +79,6 @@ export function Planner() {
         })
       }
     </Panels>
+    <FloatingAddButton to="/planner/new" />
   </ Page>;
 }

@@ -11,7 +11,7 @@ export const FormContext = createContext<FormContextProps>({
   push: () => {},
   pop: () => undefined,
   getReturn: () => "",
-  setResult: () => {},
+  setResult: () => {}
 });
 
 interface FormProviderProps {
@@ -63,6 +63,17 @@ export function FormProvider({ children }: FormProviderProps) {
   }
 
   const pop = (from: string) => {
+    const [ loaded, setLoaded ] = useState(false);
+    const [ result, setResult ] = useState<FormResult | undefined>();
+
+    if (loaded) {
+      return result;
+    }
+
+    console.info('popping form state');
+    
+    setLoaded(true);
+
     if (stack.forms.length === 0) {
       return;
     }
@@ -80,10 +91,13 @@ export function FormProvider({ children }: FormProviderProps) {
     setStackAndPersist(stack);
 
     if (form) {
-      return {
+      let result = {
         form,
         response,
-      }
+      };
+      
+      setResult(result);
+      return result;
     }
   }
 

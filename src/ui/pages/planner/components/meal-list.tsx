@@ -17,7 +17,7 @@ export function MealList({ kind, meals }: MealListProps) {
   return <Box display="flex" flexDirection="column" gap="1em">
     <Typography variant="h6" textTransform="capitalize">{kind}</Typography>
     {
-      meals.length > 0 ? meals.map((meal, index) => <div>{meal.recipie}</div>) : <NoFood />
+      meals.length > 0 ? meals.map((meal, index) => <div key={index}>{meal.recipie}</div>) : <NoFood />
     }
   </Box>;
 }

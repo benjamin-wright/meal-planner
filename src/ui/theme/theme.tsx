@@ -66,6 +66,16 @@ export const theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        clearIndicator: {
+          fontSize: "1em",
+        },
+        popupIndicator: {
+          fontSize: "1em",
+        }
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -96,6 +106,13 @@ export const theme = createTheme({
         root: {
           fontSize: "1.75em",
         },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          backgroundColor: theme.palette.background.paper,
+        }),
       },
     },
     MuiTextField: {

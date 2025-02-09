@@ -12,6 +12,7 @@ import { Unit } from "../../../models/units";
 export function IngredientsEdit() {
   const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
   const forms = useContext(FormContext);
+  const formsResult = forms.pop("ingredients");
   const params = useParams();
 
   const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unit: 0 });
@@ -36,8 +37,7 @@ export function IngredientsEdit() {
 
     const units = await unitStore.getAll();
     setUnits(units);
-
-    const formsResult = forms.pop("ingredients");
+  
     if (formsResult) {
       const { form, response } = formsResult;
       const ingredient = form.body as Ingredient;
