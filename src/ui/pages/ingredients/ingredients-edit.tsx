@@ -5,14 +5,13 @@ import { SelectID } from "../../components/select-id";
 import { Category } from "../../../models/categories";
 import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
-import { FormContext } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
 import { Unit } from "../../../models/units";
 
 export function IngredientsEdit() {
+  const { formsResult, pushForm, returnTo, setFormResult } = useForms("ingredients");
   const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
-  const forms = useContext(FormContext);
-  const formsResult = forms.pop("ingredients");
   const params = useParams();
 
   const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unit: 0 });
@@ -59,7 +58,7 @@ export function IngredientsEdit() {
 
   useEffect(() => {
     load();
-  }, [ingredientStore]);
+  }, [ingredientStore, categoryStore, unitStore, formsResult]);
 
   function validate() {
     return ingredient.name !== "";
@@ -68,20 +67,21 @@ export function IngredientsEdit() {
   return (
     <Form
       title={isNew ? "Ingredients: new" : `Ingredients: ${ingredient.name}`}
-      returnTo="/ingredients"
+      returnTo={returnTo}
       disabled={!validate()}
       onSubmit={async () => {
+        let id = ingredient.id;
+        console.info("ingredient", ingredient);
         if (isNew) {
-          await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit);
+          id = await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit) || 0;
         } else {
-          await ingredientStore?.put({
-            id: ingredient.id,
-            name: ingredient.name,
-            category: ingredient.category,
-            unit: ingredient.unit,
-          });
+          await ingredientStore?.put(ingredient);
         }
-        navigate("/ingredients");
+
+        console.info("id", id);
+        
+        setFormResult("ingredients", { field: "ingredient", response: id });
+        navigate(returnTo);
       }}
     >
       <TextInput
@@ -103,7 +103,7 @@ export function IngredientsEdit() {
         required
         toLabel={(category: Category) => category.name}
         onChange={(id: number) => setIngredient({ ...ingredient, category: id })}
-        onNav={() => { forms.push({
+        onNav={() => { pushForm({
           to: "categories",
           from: "ingredients",
           link: location.pathname,
@@ -121,7 +121,7 @@ export function IngredientsEdit() {
         toLabel={(unit) => unit.name}
         onChange={(id: number) => setIngredient({ ...ingredient, unit: id })}
         onNav={() => {
-          forms.push({
+          pushForm({
             to: "units",
             from: "ingredients",
             link: location.pathname,
