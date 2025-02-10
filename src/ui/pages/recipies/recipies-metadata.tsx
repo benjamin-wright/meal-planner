@@ -5,11 +5,10 @@ import { TextInput } from "../../components/text-input";
 import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { DBContext } from "../../providers/database";
-import { FormContext } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 
 export function RecipiesMetadata() {
-  const forms = useContext(FormContext);
-  const returnTo = forms.getReturn("recipies", "/recipies");
+  const { returnTo } = useForms("recipies");
   const { recipieStore } = useContext(DBContext);
   const params = useParams();
 

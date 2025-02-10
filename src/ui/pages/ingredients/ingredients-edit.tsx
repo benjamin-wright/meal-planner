@@ -5,14 +5,13 @@ import { SelectID } from "../../components/select-id";
 import { Category } from "../../../models/categories";
 import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
-import { FormContext } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
 import { Unit } from "../../../models/units";
 
 export function IngredientsEdit() {
+  const { formsResult, pushForm } = useForms("ingredients");
   const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
-  const forms = useContext(FormContext);
-  const formsResult = forms.pop("ingredients");
   const params = useParams();
 
   const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unit: 0 });
@@ -103,7 +102,7 @@ export function IngredientsEdit() {
         required
         toLabel={(category: Category) => category.name}
         onChange={(id: number) => setIngredient({ ...ingredient, category: id })}
-        onNav={() => { forms.push({
+        onNav={() => { pushForm({
           to: "categories",
           from: "ingredients",
           link: location.pathname,
@@ -121,7 +120,7 @@ export function IngredientsEdit() {
         toLabel={(unit) => unit.name}
         onChange={(id: number) => setIngredient({ ...ingredient, unit: id })}
         onNav={() => {
-          forms.push({
+          pushForm({
             to: "units",
             from: "ingredients",
             link: location.pathname,

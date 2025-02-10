@@ -6,12 +6,12 @@ import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
-import { FormContext } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 import { NewItemButton } from "../../components/new-item-button";
 
 export function UnitsEdit() {
+  const { returnTo, setFormResult } = useForms("units");
   const { unitStore } = useContext(DBContext);
-  const forms = useContext(FormContext);
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
@@ -19,7 +19,6 @@ export function UnitsEdit() {
   const [isCount, setIsCount] = useState(false);
   
   const navigate = useNavigate();
-  const returnTo = forms.getReturn("units", "/units");
 
   async function load() {
     if (unitStore === undefined) {
@@ -57,7 +56,7 @@ export function UnitsEdit() {
           await unitStore?.put(unit);
         }
 
-        forms.setResult("units", { field: "unit", response: id });
+        setFormResult("units", { field: "unit", response: id });
 
         navigate(returnTo);
       }}

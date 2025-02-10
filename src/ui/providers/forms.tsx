@@ -132,7 +132,8 @@ export function FormProvider({ children }: FormProviderProps) {
 }
 
 export type FormState = {
-  forms: FormContextProps;
+  pushForm: (form: Form) => void;
+  setFormResult: (to: string, response: FormResponse) => void;
   returnTo: string;
   formsResult?: FormResult;
 }
@@ -147,10 +148,11 @@ export function useForms(from: string): FormState {
     }
   }, [forms]);
 
-  const returnTo = forms.getReturn("planner", "/planner");
+  const returnTo = forms.getReturn(from, "/" + from);
 
   return {
-    forms,
+    pushForm: forms.push,
+    setFormResult: forms.setResult,
     formsResult,
     returnTo
   }

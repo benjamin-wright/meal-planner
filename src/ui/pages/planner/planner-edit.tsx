@@ -11,7 +11,7 @@ import { SelectID } from "../../components/select-id";
 
 export function PlannerEdit() {
   const { mealStore, recipieStore } = useContext(DBContext);
-  const { forms, formsResult, returnTo } = useForms("planner");
+  const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
   const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", day: "saturday" });
@@ -79,7 +79,7 @@ export function PlannerEdit() {
         link="/recipies/new/metadata"
         toLabel={(recipie) => recipie.name}
         onChange={(value) => setMeal({...meal, recipieId: value})}
-        onNav={() => forms.push({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
+        onNav={() => pushForm({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
       />
 
       <NumericInput

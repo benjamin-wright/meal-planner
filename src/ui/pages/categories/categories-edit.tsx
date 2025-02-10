@@ -4,16 +4,15 @@ import { Form } from "../../components/form";
 import { Category } from "../../../models/categories";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
-import { FormContext } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 
 export function CategoriesEdit() {
   const { categoryStore } = useContext(DBContext);
-  const forms = useContext(FormContext);
+  const { returnTo, setFormResult } = useForms("categories");
   const [isNew, setIsNew] = useState(true);
   const [category, setCategory] = useState<Category>({ id: 0, name: "", order: 0 });
   const navigate = useNavigate();
   const params = useParams();
-  const returnTo = forms.getReturn("categories", "/categories");
 
   async function load() {
     if (categoryStore === undefined) {
@@ -47,7 +46,7 @@ export function CategoriesEdit() {
           await categoryStore?.put(category);
         }
 
-        forms.setResult("categories", { field: "category", response: id });
+        setFormResult("categories", { field: "category", response: id });
         navigate(returnTo);
       }}
     >
