@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
-import { FormContext, FormResult } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 import { Meal, MealDay, MealDays, MealType, MealTypes } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
@@ -11,22 +11,12 @@ import { SelectID } from "../../components/select-id";
 
 export function PlannerEdit() {
   const { mealStore, recipieStore } = useContext(DBContext);
-  
-  const forms = useContext(FormContext);
-  const [ formsResult, setFormsResult ] = useState<FormResult>();
-  useEffect(() => {
-    if (forms.has("planner")) {
-      setFormsResult(forms.pop("planner"));
-    }
-  }, [forms]);
-  const returnTo = forms.getReturn("planner", "/planner");
+  const { forms, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
   const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", day: "saturday" });
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const params = useParams();
-
-
 
   async function load() {
     if (mealStore === undefined || recipieStore === undefined) {

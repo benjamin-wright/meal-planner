@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface FormContextProps {
   has(from: string): boolean;
@@ -129,4 +129,29 @@ export function FormProvider({ children }: FormProviderProps) {
       {children}
     </FormContext.Provider>
   );
+}
+
+export type FormState = {
+  forms: FormContextProps;
+  returnTo: string;
+  formsResult?: FormResult;
+}
+
+export function useForms(from: string): FormState {
+  const forms = useContext(FormContext);
+  const [ formsResult, setFormsResult ] = useState<FormResult>();
+  
+  useEffect(() => {
+    if (forms.has(from)) {
+      setFormsResult(forms.pop(from));
+    }
+  }, [forms]);
+
+  const returnTo = forms.getReturn("planner", "/planner");
+
+  return {
+    forms,
+    formsResult,
+    returnTo
+  }
 }
