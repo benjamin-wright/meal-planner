@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 
 interface FormContextProps {
+  has(from: string): boolean;
   push(form: Form): void;
   pop(from: string): FormResult | undefined;
   getReturn(to: string, defaultReturn: string): string;
@@ -8,6 +9,7 @@ interface FormContextProps {
 }
 
 export const FormContext = createContext<FormContextProps>({
+  has: () => false,
   push: () => {},
   pop: () => undefined,
   getReturn: () => "",
@@ -62,19 +64,11 @@ export function FormProvider({ children }: FormProviderProps) {
     setStackAndPersist(stack);
   }
 
+  const has = (from: string) => {
+    return stack.forms.some(form => form.from === from);
+  }
+
   const pop = (from: string) => {
-    // Try moving these outside of the pop function, maybe being redeclared all the time is causing issues?
-    const [ loaded, setLoaded ] = useState(false);
-    const [ result, setResult ] = useState<FormResult | undefined>();
-
-    if (loaded) {
-      return result;
-    }
-
-    console.info('popping form state');
-    
-    setLoaded(true);
-
     if (stack.forms.length === 0) {
       return;
     }
@@ -92,12 +86,11 @@ export function FormProvider({ children }: FormProviderProps) {
     setStackAndPersist(stack);
 
     if (form) {
-      let result = {
+      const result = {
         form,
         response,
       };
-      
-      setResult(result);
+
       return result;
     }
   }
@@ -131,7 +124,7 @@ export function FormProvider({ children }: FormProviderProps) {
 
   return (
     <FormContext.Provider
-      value={{ push, pop, getReturn, setResult }}
+      value={{ has, push, pop, getReturn, setResult }}
     >
       {children}
     </FormContext.Provider>
