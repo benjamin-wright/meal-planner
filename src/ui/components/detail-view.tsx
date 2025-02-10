@@ -35,6 +35,7 @@ export function DetailViewGroup({ children }: DetailViewGroupProps) {
 }
 
 interface DetailViewProps {
+  id?: string;
   title: string;
   children: React.ReactNode;
   group?: string;
@@ -46,17 +47,18 @@ interface DetailViewProps {
   onDelete?: () => void;
 }
 
-export function DetailView({ title, horizontal, narrow, dragControls, working, children, onEdit, onDelete }: DetailViewProps) {
+export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, onEdit, onDelete }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
   const showControls = !!onEdit || !!onDelete;
+  const groupId = id || title;
 
   function onClickHandler() {
-    if (selected === title) {
+    if (selected === groupId) {
       setSelected("");
       return;
     }
-    setSelected(title);
+    setSelected(groupId);
     setFirstRender(false);
   }
 
@@ -129,7 +131,7 @@ export function DetailView({ title, horizontal, narrow, dragControls, working, c
           )}
         </Box>
       </CardActionArea>
-      <Collapse in={selected === title} orientation={horizontal ? "horizontal" : "vertical"}>
+      <Collapse in={selected === groupId} orientation={horizontal ? "horizontal" : "vertical"}>
         <Box margin={narrow ? "0" : "1em"}>
           {children}
           { showControls && (

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
@@ -17,6 +17,8 @@ export function PlannerEdit() {
   const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", day: "saturday" });
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const params = useParams();
+
+  const navigate = useNavigate();
 
   async function load() {
     if (mealStore === undefined || recipieStore === undefined) {
@@ -60,15 +62,13 @@ export function PlannerEdit() {
       title={isNew ? "Meals: new" : `Meals: ${meal.day} ${meal.meal}`}
       returnTo={returnTo}
       onSubmit={async () => {
-        let id = meal.id;
-
         if (isNew) {
-          id = await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.day) || 0;
+          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.day) || 0;
         } else {
           await mealStore?.put(meal);
         }
 
-
+        navigate(`/planner`);
       }}
     >
       <SelectID

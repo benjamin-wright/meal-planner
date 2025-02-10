@@ -7,8 +7,11 @@ import { DBContext } from "../../providers/database";
 import { Ingredient } from "../../../models/ingredients";
 import Typography from "@mui/material/Typography";
 import { Unit } from "../../../models/units";
+import { useForms } from "../../providers/forms";
 
 export function RecipiesIngredients() {
+  const { pushForm, formsResult } = useForms("recipies");
+
   const { recipieStore, ingredientStore, unitStore } = useContext(DBContext);
   const params = useParams();
 
@@ -35,11 +38,30 @@ export function RecipiesIngredients() {
 
     setIngredients(ingredients);
     setUnits(units);
+
+    if (formsResult) {
+      const { form, response } = formsResult;
+      const body = form.body as { recipie: Recipie, index: number };
+
+      console.info("body", body);
+
+      if (response) {
+        switch (response.field) {
+          case "ingredient":
+            body.recipie.ingredients[body.index].id = response.response;
+            break;
+        }
+      }
+
+      console.info("recipie", body.recipie);
+
+      setRecipie(body.recipie);
+    }
   }
 
   useEffect(() => {
     load();
-  }, [recipieStore]);
+  }, [recipieStore, ingredientStore, unitStore, formsResult]);
 
   function validate() {
     return recipie.name !== "";
@@ -61,7 +83,16 @@ export function RecipiesIngredients() {
       }}
     >
       <Typography variant="h6">Ingredients:</Typography>
-      <IngredientsList ingredients={ingredients} units={units} selected={recipie.ingredients} changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})} />
+      <IngredientsList
+        ingredients={ingredients}
+        units={units}
+        selected={recipie.ingredients}
+        changed={(newIngredients) => setRecipie({...recipie, ingredients: newIngredients})}
+        onNewIngredient={(index) => {
+          pushForm({ to: "ingredients", from: "recipies", link: location.pathname, body: { recipie, index } });
+          navigate("/ingredients/new");
+        }}
+      />
     </Form>
   );
 }

@@ -10,7 +10,7 @@ import { DBContext } from "../../providers/database";
 import { Unit } from "../../../models/units";
 
 export function IngredientsEdit() {
-  const { formsResult, pushForm } = useForms("ingredients");
+  const { formsResult, pushForm, returnTo, setFormResult } = useForms("ingredients");
   const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
   const params = useParams();
 
@@ -58,7 +58,7 @@ export function IngredientsEdit() {
 
   useEffect(() => {
     load();
-  }, [ingredientStore]);
+  }, [ingredientStore, categoryStore, unitStore, formsResult]);
 
   function validate() {
     return ingredient.name !== "";
@@ -67,20 +67,21 @@ export function IngredientsEdit() {
   return (
     <Form
       title={isNew ? "Ingredients: new" : `Ingredients: ${ingredient.name}`}
-      returnTo="/ingredients"
+      returnTo={returnTo}
       disabled={!validate()}
       onSubmit={async () => {
+        let id = ingredient.id;
+        console.info("ingredient", ingredient);
         if (isNew) {
-          await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit);
+          id = await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit) || 0;
         } else {
-          await ingredientStore?.put({
-            id: ingredient.id,
-            name: ingredient.name,
-            category: ingredient.category,
-            unit: ingredient.unit,
-          });
+          await ingredientStore?.put(ingredient);
         }
-        navigate("/ingredients");
+
+        console.info("id", id);
+        
+        setFormResult("ingredients", { field: "ingredient", response: id });
+        navigate(returnTo);
       }}
     >
       <TextInput

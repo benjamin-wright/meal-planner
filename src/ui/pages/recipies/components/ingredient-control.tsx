@@ -1,9 +1,9 @@
-import { Box, Card, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Box, Card, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
 import { IconLink } from "../../../components/icon-link";
-import { Delete } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import { getAbbr, getNearestMagnitude, isCount, Magnitude, Unit } from "../../../../models/units";
 import { useEffect, useState } from "react";
 
@@ -14,9 +14,10 @@ interface IngredientControlProps {
   value: IngredientQuantity;
   onChange: (value: IngredientQuantity) => void;
   onDelete: () => void;
+  onNewIngredient: () => void;
 }
 
-export function IngredientControl({index, ingredients, units, value, onChange, onDelete}: IngredientControlProps) {
+export function IngredientControl({index, ingredients, units, value, onChange, onDelete, onNewIngredient}: IngredientControlProps) {
   const selected = ingredients.find((ingredient) => ingredient.id === value.id);
   let selectedName = selected?.name || "";
   if (selectedName === "" && ingredients.length > 0) {
@@ -75,6 +76,9 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
     justifyContent: "space-between",
   }}>
     <Box padding="0" margin="0">
+      <IconButton size="small" sx={{ fontSize: "0.75em"}} color="success" onClick={() => onNewIngredient()}>
+        <Add />
+      </IconButton>
       <Select
         id={`ingredient-${index}`}
         variant="standard"

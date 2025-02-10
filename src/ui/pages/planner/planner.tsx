@@ -7,8 +7,9 @@ import { DBContext } from "../../providers/database";
 import { Meal, MealDays } from "../../../models/meals";
 import { MealItem, MealList } from "./components/meal-list";
 import { Recipie } from "../../../models/recipies";
-import { NewItemButton } from "../../components/new-item-button";
 import { FloatingAddButton } from "../../components/floating-add-button";
+import { DetailViewGroup } from "../../components/detail-view";
+import { useNavigate } from "react-router-dom";
 
 type MealDays = {
   breakfast: MealItem[];
@@ -29,7 +30,8 @@ export function Planner() {
 
   const [plan, setPlan] = useState<ProgressTrackerStep[]>([]);
   const [meals, setMeals] = useState<MealDays[]>([]);
-  const [recipies, setRecipies] = useState<Recipie[]>([]);
+
+  const navigate = useNavigate();
 
   async function load() {
     if (!mealStore || !recipieStore) {
@@ -37,10 +39,8 @@ export function Planner() {
     }
 
     const recipies = await recipieStore.getAll();
-    setRecipies(recipies);
-
     const meals = await mealStore.getAll();
-    
+  
     const mealDays = MealDays.map((day) => {
       return {
         breakfast: meals.filter((meal) => meal.day === day && meal.meal === "breakfast").map((meal) => mapMealToItem(meal, recipies)),
@@ -62,6 +62,19 @@ export function Planner() {
 
   const [selected, setSelected] = useState(0);
 
+  function onEdit(id: number) {
+    navigate(`/planner/${id}`);
+  }
+
+  async function onDelete(id: number) {
+    if (!mealStore) {
+      return;
+    }
+
+    await mealStore.delete(id);
+    await load();
+  }
+
   return <Page title="Planner">
     <ProgressTracker
       active={selected}
@@ -72,9 +85,11 @@ export function Planner() {
       {
         meals.map((mealDay, index) => {
           return <Box key={index} height="100%" width="100%" display="flex" flexDirection="column" overflow="scroll">
-            <MealList kind="breakfast" meals={mealDay.breakfast} />
-            <MealList kind="lunch" meals={mealDay.lunch} />
-            <MealList kind="dinner" meals={mealDay.dinner} />
+            <DetailViewGroup>
+              <MealList kind="breakfast" meals={mealDay.breakfast} onEdit={onEdit} onDelete={onDelete} />
+              <MealList kind="lunch" meals={mealDay.lunch} onEdit={onEdit} onDelete={onDelete} />
+              <MealList kind="dinner" meals={mealDay.dinner} onEdit={onEdit} onDelete={onDelete} />
+            </DetailViewGroup>
           </Box>
         })
       }

@@ -9,5 +9,9 @@ export const routes = [
   {
     path: "planner/new",
     element: <PlannerEdit />,
+  },
+  {
+    path: "planner/:meal",
+    element: <PlannerEdit />,
   }
 ];

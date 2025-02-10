@@ -9,9 +9,10 @@ interface IngredientsListProps {
   units: Unit[];
   selected: IngredientQuantity[];
   changed: (selected: IngredientQuantity[]) => void;
+  onNewIngredient: (index: number) => void;
 }
 
-export function IngredientsList({ingredients, units, selected, changed}: IngredientsListProps) {
+export function IngredientsList({ingredients, units, selected, changed, onNewIngredient}: IngredientsListProps) {
   function onChange(index: number, ingredient: IngredientQuantity) {
     selected[index] = ingredient;
     changed([...selected]);
@@ -31,7 +32,8 @@ export function IngredientsList({ingredients, units, selected, changed}: Ingredi
                                             units={units}
                                             value={ingredient}
                                             onDelete={() => onDelete(index)}
-                                            onChange={(newIngredient) => onChange(index, newIngredient)} 
+                                            onChange={(newIngredient) => onChange(index, newIngredient)}
+                                            onNewIngredient={() => onNewIngredient(index)}
                                           />
       )
     }
