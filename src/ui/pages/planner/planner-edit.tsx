@@ -9,7 +9,7 @@ import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
 import { getAbbr } from "../../../models/units";
-import { Card, List, ListItem, Table, Typography } from "@mui/material";
+import { Card, List, ListItem, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
 type IngredientItem = {
   name: string;
@@ -156,17 +156,25 @@ export function PlannerEdit() {
       />
 
       { !loading && 
-        <Card>
-          <Typography variant="h6" sx={{margin: "0 0.5em"}}>Ingredients</Typography>
-          <List>
-            {
-              ingredients.map((ingredient, index) => (
-                <ListItem key={index}>
-                  {ingredient.name} {ingredient.quantity} {ingredient.units}
-                </ListItem>
-              ))
-            }
-          </List>
+        <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "secondary.main" }}>
+          <Table size="small" padding="none">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>Ingredient</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Quantity</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                ingredients.map((ingredient, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{ingredient.name}</TableCell>
+                    <TableCell>{ingredient.quantity}{ingredient.units}</TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
         </Card>
       }
     </Form>

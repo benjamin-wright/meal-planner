@@ -35,9 +35,9 @@ export function isCount(unit: Unit): boolean {
 export function getAbbr(unit: Unit, value: number): string {
   if (isCount(unit)) {
     if (value === 1) {
-      return unit.singular || ""
+      return unit.singular ? ` ${unit.singular}` : "";
     } else {
-      return unit.plural || ""
+      return unit.plural ? ` ${unit.plural}` : "";
     }
   } else {
     const magnitude = getNearestMagnitude(unit, value);
