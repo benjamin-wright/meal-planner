@@ -94,11 +94,13 @@ export function PlannerEdit() {
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
       const ingredientDefinition = await ingredientStore.get(ingredient.id); 
       const unit = await unitStore.get(ingredientDefinition.unit);
+
+      const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
       
       return {
         name: ingredientDefinition.name,
-        quantity: ingredient.quantity * meal.servings,
-        units: getAbbr(unit, ingredient.quantity * meal.servings),
+        quantity: finalQuantity,
+        units: getAbbr(unit, finalQuantity),
       };
     })));
 

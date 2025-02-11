@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardActionArea,
+  Chip,
   Collapse,
   keyframes,
   Typography,
@@ -43,11 +44,12 @@ interface DetailViewProps {
   narrow?: boolean;
   dragControls?: DragControls;
   working?: boolean;
+  chip?: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, onEdit, onDelete }: DetailViewProps) {
+export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, chip, onEdit, onDelete }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
   const showControls = !!onEdit || !!onDelete;
@@ -111,8 +113,11 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
           { dragControls && (
             <DragHandle onPointerDown={onDragStart} style={{ touchAction: "none" }} sx={{boxSizing: "content-box", padding: "0.4em 0", opacity: working ? 0.4 : 1}} />
           ) }
-          <Typography variant="h2" flexGrow="1" fontSize="1.5em">
+          <Typography position="relative" variant="h2" flexGrow="1" noWrap fontSize="1.5em">
             {title}
+            { chip && 
+              <Chip label={chip} size="small" sx={{position: "absolute", right: "0.5em", top: "0.4em"}} />
+            }
           </Typography>
           { !horizontal && (
             <KeyboardArrowDown

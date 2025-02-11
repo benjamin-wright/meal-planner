@@ -26,7 +26,7 @@ export function MealList({ kind, meals, onEdit, onDelete }: MealListProps) {
       meals.length > 0
       ?
       meals.map((meal, index) =>
-        <DetailView id={`${kind}-${meal.id.toString()}`} key={index} title={meal.recipie} narrow horizontal>
+        <DetailView id={`${kind}-${meal.id.toString()}`} key={index} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal>
           <Box display="flex" flexGrow="1">
             <IconLink onClick={() => onEdit(meal.id)}>
               <Edit />
