@@ -18,11 +18,11 @@ import Delete from "@mui/icons-material/Delete";
 const DetailGroupContext = createContext({
   selected: "",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setSelected: (_selected: string) => {},
+  setSelected: (_selected: string) => { },
 });
 
 interface DetailViewGroupProps {
-  children: React.ReactNode; 
+  children: React.ReactNode;
 }
 
 export function DetailViewGroup({ children }: DetailViewGroupProps) {
@@ -68,7 +68,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
     if (working) {
       return;
     }
-  
+
     dragControls?.start(e);
   }
 
@@ -96,11 +96,12 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
         padding: "0",
         display: "flex",
         flexDirection: horizontal ? "row" : "column",
-        alignItems: horizontal ? "center" : "stretch"
+        alignItems: horizontal ? "center" : "stretch",
+        overflowX: "hidden",
       }}
     >
       <CardActionArea onClick={onClickHandler} sx={{
-        width: "auto"
+        width: horizontal ? "min-content" : "auto"
       }}>
         <Box
           margin="1em"
@@ -110,16 +111,18 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
           justifyContent="space-between"
           gap="1em"
         >
-          { dragControls && (
-            <DragHandle onPointerDown={onDragStart} style={{ touchAction: "none" }} sx={{boxSizing: "content-box", padding: "0.4em 0", opacity: working ? 0.4 : 1}} />
-          ) }
-          <Typography position="relative" variant="h2" flexGrow="1" noWrap fontSize="1.5em">
+          {dragControls && (
+            <DragHandle onPointerDown={onDragStart} style={{ touchAction: "none" }} sx={{ boxSizing: "content-box", padding: "0.4em 0", opacity: working ? 0.4 : 1 }} />
+          )}
+          <Typography position="relative" variant="h2" flexGrow="1" fontSize="1.5em">
             {title}
-            { chip && 
-              <Chip label={chip} size="small" sx={{position: "absolute", right: "0.5em", top: "0.4em"}} />
+            {chip &&
+              <Box position="absolute" right="0" top="0" bottom="0" display="flex" alignItems="center" paddingRight="0.5em">
+                <Chip label={chip} size="small" />
+              </Box>
             }
           </Typography>
-          { !horizontal && (
+          {!horizontal && (
             <KeyboardArrowDown
               sx={{
                 transform: "rotate(0deg)",
@@ -127,9 +130,9 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
                 ...(firstRender ? { animation: "none" } : {}),
                 ...(selected === title
                   ? {
-                      animation: `${spinIn} 0.3s ease-in-out`,
-                      transform: "rotate(180deg)",
-                    }
+                    animation: `${spinIn} 0.3s ease-in-out`,
+                    transform: "rotate(180deg)",
+                  }
                   : {}),
               }}
             />
@@ -139,7 +142,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
       <Collapse in={selected === groupId} orientation={horizontal ? "horizontal" : "vertical"}>
         <Box margin={narrow ? "0" : "1em"}>
           {children}
-          { showControls && (
+          {showControls && (
             <Box
               display="flex"
               justifyContent="space-between"

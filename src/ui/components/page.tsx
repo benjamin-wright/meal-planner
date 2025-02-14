@@ -45,6 +45,9 @@ export function Page({
             component="div"
             marginLeft="1em"
             flexGrow="1"
+            noWrap
+            paddingRight="1em"
+            textOverflow="ellipsis"
           >
             {title}
           </Typography>
@@ -59,7 +62,7 @@ export function Page({
           flexGrow: 1,
           height: "100%",
           maxHeight: "100%",
-          overflow: noScroll ? "hidden" : "scroll",
+          overflowY: noScroll ? "hidden" : "scroll",
           display: "flex",
           flexDirection: "column",
           gap: "1em",

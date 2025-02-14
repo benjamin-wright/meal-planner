@@ -31,7 +31,9 @@ export function Form({ title, returnTo, children, disabled, morePages, onSubmit 
           flexDirection="column"
           flexGrow="1"
           gap="1em"
-          overflow="scroll"
+          sx={{
+            overflowY: "scroll",
+          }}
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit?.();
