@@ -109,11 +109,11 @@ export function PlannerEdit() {
 
   return (
     <Form
-      title={isNew ? "Meals: new" : `Meals: ${meal.day} ${meal.meal}`}
+      title={isNew ? "Meals: new" : `Meals: ${meal.days} ${meal.meal}`}
       returnTo={returnTo}
       onSubmit={async () => {
         if (isNew) {
-          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.day) || 0;
+          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.days) || 0;
         } else {
           await mealStore?.put(meal);
         }
@@ -146,7 +146,10 @@ export function PlannerEdit() {
         multiple
         value={meal.days}
         options={MealDays}
-        onChange={(value) => setMeal({ ...meal, days: value.split(",").map((value) => value as MealDay) })}
+        onChange={(value: any) => {
+          console.info(value);
+          setMeal({ ...meal, days: value as MealDay[] });
+        }}
       />
 
       <SelectString

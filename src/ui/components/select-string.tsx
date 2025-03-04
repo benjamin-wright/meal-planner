@@ -20,7 +20,7 @@ export function SelectString({ id, label, value, options, onChange, capitalise, 
       labelId={`${id}-label`}
       label={label}
       sx={{
-        textTransform: capitalise ? "capitalize" : "none",
+        textTransform: capitalise ? "capitalize" : "none"
       }}
       value={value}
       multiple={multiple}

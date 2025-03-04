@@ -1,10 +1,5 @@
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import { NoFood } from "@mui/icons-material";
-import { DetailView } from "../../../components/detail-view";
-import { IconLink } from "../../../components/icon-link";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
+import { SortableMeal } from "./sortable-meal";
 
 export type MealItem = {
   id: number;
@@ -20,27 +15,9 @@ interface MealListProps {
 }
 
 export function MealList({ kind, meals, onEdit, onDelete }: MealListProps) {
-  return <Box display="flex" flexDirection="column" gap="1em" paddingBottom="1em">
-    {
-      meals.length > 0
-        ?
-        meals.map((meal, index) =>
-          <DetailView id={`${kind}-${meal.id.toString()}`} key={index} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal>
-            <Box display="flex" flexGrow="1">
-              <IconLink onClick={() => onEdit(meal.id)}>
-                <Edit />
-              </IconLink>
-              <IconLink
-                color="error"
-                onClick={() => onDelete(meal.id)}
-              >
-                <Delete />
-              </IconLink>
-            </Box>
-          </DetailView>
-        )
-        :
-        <NoFood color="disabled" />
-    }
-  </Box>;
+  return meals.length > 0
+    ?
+    meals.map((meal, index) => <SortableMeal meal={meal} kind={kind} onEdit={(meal) => onEdit(meal.id)} onDelete={(meal) => onDelete(meal.id)} key={index} />)
+    :
+    <NoFood color="disabled" />
 }

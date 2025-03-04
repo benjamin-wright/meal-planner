@@ -91,6 +91,14 @@ export const theme = createTheme({
         }
       }
     },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          gap: 0,
+        },
+      },
+    },
     MuiLink: {
       defaultProps: {
         component: LinkBehavior,
