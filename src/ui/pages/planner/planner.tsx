@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import { Page } from "../../components/page";
 import { Panels } from "../../components/panels";
 import { useContext, useEffect, useState } from "react";
@@ -28,8 +28,8 @@ function mapMealToItem(meal: Meal, recipies: Recipie[]): MealItem {
 export function Planner() {
   const { mealStore, recipieStore } = useContext(DBContext);
 
-  const [plan, setPlan] = useState<ProgressTrackerStep[]>([]);
-  const [meals, setMeals] = useState<MealDays[]>([]);
+  const [dinners, setDinners] = useState<MealItem[]>([]);
+  const [tab, setTab] = useState("dinners");
 
   const navigate = useNavigate();
 
@@ -40,27 +40,12 @@ export function Planner() {
 
     const recipies = await recipieStore.getAll();
     const meals = await mealStore.getAll();
-  
-    const mealDays = MealDays.map((day) => {
-      return {
-        breakfast: meals.filter((meal) => meal.day === day && meal.meal === "breakfast").map((meal) => mapMealToItem(meal, recipies)),
-        lunch: meals.filter((meal) => meal.day === day && meal.meal === "lunch").map((meal) => mapMealToItem(meal, recipies)),
-        dinner: meals.filter((meal) => meal.day === day && meal.meal === "dinner").map((meal) => mapMealToItem(meal, recipies)),
-      };
-    });
-    setMeals(mealDays);
-
-    setPlan(MealDays.map((day) => ({
-      display: day.substring(0, 2),
-      completed: false,
-    })));
+    setDinners(meals.filter((meal) => meal.meal === "dinner").map((meal) => mapMealToItem(meal, recipies)));
   }
 
   useEffect(() => {
     load();
   }, [mealStore, recipieStore]);
-
-  const [selected, setSelected] = useState(0);
 
   function onEdit(id: number) {
     navigate(`/planner/${id}`);
@@ -76,24 +61,15 @@ export function Planner() {
   }
 
   return <Page title="Planner">
-    <ProgressTracker
-      active={selected}
-      steps={plan}
-      onSelected={(selected) => setSelected(selected)}
-    />
-    <Panels selected={selected} onSelectedChanged={setSelected}>
-      {
-        meals.map((mealDay, index) => {
-          return <Box key={index} height="100%" width="100%" display="flex" flexDirection="column" overflow="scroll">
-            <DetailViewGroup>
-              <MealList kind="breakfast" meals={mealDay.breakfast} onEdit={onEdit} onDelete={onDelete} />
-              <MealList kind="lunch" meals={mealDay.lunch} onEdit={onEdit} onDelete={onDelete} />
-              <MealList kind="dinner" meals={mealDay.dinner} onEdit={onEdit} onDelete={onDelete} />
-            </DetailViewGroup>
-          </Box>
-        })
-      }
-    </Panels>
+    <Tabs value={tab} onChange={(_event, value) => setTab(value)} variant="fullWidth">
+      <Tab label="Dinner" value="dinners" />
+      <Tab label="Lunch" value="lunches" />
+      <Tab label="Breakfast" value="breakfasts" />
+    </Tabs>
+
+    <DetailViewGroup>
+      {tab === "dinners" && <MealList kind="dinner" meals={dinners} onEdit={onEdit} onDelete={onDelete} />}
+    </DetailViewGroup>
     <FloatingAddButton to="/planner/new" />
   </ Page>;
 }

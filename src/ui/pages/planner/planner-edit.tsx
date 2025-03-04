@@ -9,7 +9,7 @@ import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
 import { getAbbr } from "../../../models/units";
-import { Card, List, ListItem, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
   name: string;
@@ -22,7 +22,7 @@ export function PlannerEdit() {
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
-  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", day: "saturday" });
+  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: ["saturday"] });
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
@@ -46,7 +46,7 @@ export function PlannerEdit() {
       const recipies = await recipieStore.getAll();
       setMeal({ ...meal, recipieId: recipies[0].id });
     }
-    
+
     if (formsResult) {
       const { form, response } = formsResult;
       const meal = form.body as Meal;
@@ -59,27 +59,27 @@ export function PlannerEdit() {
         }
       }
 
-      setMeal({...meal});
+      setMeal({ ...meal });
     }
   }
-  
+
   useEffect(() => {
     load();
   }, [mealStore, recipieStore, formsResult]);
 
   async function recipieChangeHandler(recipieId: number) {
-    setMeal({...meal, recipieId});
+    setMeal({ ...meal, recipieId });
   };
 
   async function servingsChangeHandler(servings: number) {
-    setMeal({...meal, servings});
+    setMeal({ ...meal, servings });
   }
 
   useEffect(() => {
     calculateIngredients();
     setIngredients([]);
     setLoading(true);
-  }, [ ingredientStore, unitStore, meal.recipieId, meal.servings ]);
+  }, [ingredientStore, unitStore, meal.recipieId, meal.servings]);
 
   async function calculateIngredients() {
     if (ingredientStore === undefined || unitStore === undefined) {
@@ -92,11 +92,11 @@ export function PlannerEdit() {
     }
 
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
-      const ingredientDefinition = await ingredientStore.get(ingredient.id); 
+      const ingredientDefinition = await ingredientStore.get(ingredient.id);
       const unit = await unitStore.get(ingredientDefinition.unit);
 
       const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
-      
+
       return {
         name: ingredientDefinition.name,
         quantity: finalQuantity,
@@ -136,28 +136,29 @@ export function PlannerEdit() {
         id="servings"
         label="Servings"
         value={meal.servings}
-        onChange={servingsChangeHandler} 
+        onChange={servingsChangeHandler}
       />
 
       <SelectString
         id="day"
         label="Day"
         capitalise
-        value={meal.day}
+        multiple
+        value={meal.days}
         options={MealDays}
-        onChange={(value) => setMeal({...meal, day: value as MealDay})}
+        onChange={(value) => setMeal({ ...meal, days: value.split(",").map((value) => value as MealDay) })}
       />
-      
+
       <SelectString
         id="meal"
         label="Meal"
         capitalise
         value={meal.meal}
         options={MealTypes}
-        onChange={(value) => setMeal({...meal, meal: value as MealType})}
+        onChange={(value) => setMeal({ ...meal, meal: value as MealType })}
       />
 
-      { !loading && 
+      {!loading &&
         <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "secondary.main" }}>
           <Table size="small" padding="none">
             <TableHead>

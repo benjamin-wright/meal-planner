@@ -6,13 +6,14 @@ import Select from "@mui/material/Select";
 interface SelectStringProps {
   id: string;
   label: string;
-  value: string;
+  value: string | string[];
   options: string[];
   onChange: (value: string) => void;
   capitalise?: boolean;
+  multiple?: boolean;
 }
 
-export function SelectString({id, label, value, options, onChange, capitalise}: SelectStringProps) {
+export function SelectString({ id, label, value, options, onChange, capitalise, multiple }: SelectStringProps) {
   return <FormControl>
     <InputLabel id={`${id}-label`}>{label}</InputLabel>
     <Select
@@ -22,17 +23,18 @@ export function SelectString({id, label, value, options, onChange, capitalise}: 
         textTransform: capitalise ? "capitalize" : "none",
       }}
       value={value}
+      multiple={multiple}
       onChange={(event) => onChange(event.target.value as string)}
     >
       {
-        options.map((option) => 
+        options.map((option) =>
           <MenuItem
             key={option}
             value={option}
             sx={{
               textTransform: capitalise ? "capitalize" : "none",
             }}>
-              {option}
+            {option}
           </MenuItem>
         )
       }

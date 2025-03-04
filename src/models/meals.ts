@@ -9,5 +9,5 @@ export type Meal = {
   recipieId: number;
   servings: number;
   meal: MealType;
-  day: MealDay;
+  days: MealDay[];
 };

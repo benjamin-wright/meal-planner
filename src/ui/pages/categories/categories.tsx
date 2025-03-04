@@ -1,35 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { Page } from "../../components/page";
-import { CategoryView } from "./components/category-view";
-import { Reorder, useDragControls } from "motion/react";
 import { DetailViewGroup } from "../../components/detail-view";
 import { FloatingAddButton } from "../../components/floating-add-button";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { Category } from "../../../models/categories";
 import { DBContext } from "../../providers/database";
-
-interface ReorderItemProps {
-  category: Category;
-  onEdit: (category: Category) => void;
-  onDelete: (category: Category) => void;
-  working?: boolean;
-}
-
-function ReorderItem({ category, onEdit, onDelete, working }: ReorderItemProps) {
-  const dragControls = useDragControls();
-
-  return (
-    <Reorder.Item key={category.id} value={category} dragListener={false} dragControls={dragControls}>
-      <CategoryView category={category} onEdit={onEdit} onDelete={onDelete} dragControls={dragControls} working={working} />
-    </Reorder.Item>
-  );
-}
-
+import { SortableCategory } from "./components/sortable-category";
+import { Reorder } from "motion/react";
 
 export function Categories() {
-  const {categoryStore} = useContext(DBContext);
-  
+  const { categoryStore } = useContext(DBContext);
+
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Category | null>(null);
@@ -54,7 +36,7 @@ export function Categories() {
       if (newItems[i].order === i) {
         continue;
       }
-      
+
       newItems[i].order = i;
       await categoryStore?.put(newItems[i]);
     }
@@ -79,7 +61,7 @@ export function Categories() {
       <Reorder.Group axis="y" values={items} onReorder={onReorder}>
         <DetailViewGroup>
           {items.map((category: Category) => (
-            <ReorderItem key={category.id} category={category} onDelete={() => {
+            <SortableCategory key={category.id} category={category} onDelete={() => {
               setToDelete(category);
               setOpen(true);
             }} onEdit={onEdit} />
@@ -87,7 +69,7 @@ export function Categories() {
         </DetailViewGroup>
       </Reorder.Group>
       <FloatingAddButton to="/categories/new" />
-      <ConfirmDialog      
+      <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
         open={isOpen}
         onConfirm={onDelete}

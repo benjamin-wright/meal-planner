@@ -22,12 +22,8 @@ export class Meals implements MealStore {
     return this.db.getAll<Meal>("meals");
   }
 
-  async getByDay(day: MealDay): Promise<Meal[]> {
-    return this.db.getByIndex<Meal, "day">("meals", "day", day);
-  }
-
-  async add(recipieId: number, servings: number, meal: MealType, day: MealDay): Promise<number> {
-    return this.db.add("meals", { recipieId, servings, meal, day });
+  async add(recipieId: number, servings: number, meal: MealType, days: MealDay[]): Promise<number> {
+    return this.db.add("meals", { recipieId, servings, meal, days });
   }
 
   async put(value: Meal): Promise<void> {

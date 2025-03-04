@@ -21,27 +21,26 @@ interface MealListProps {
 
 export function MealList({ kind, meals, onEdit, onDelete }: MealListProps) {
   return <Box display="flex" flexDirection="column" gap="1em" paddingBottom="1em">
-    <Typography variant="h6" textTransform="capitalize">{kind}</Typography>
     {
       meals.length > 0
-      ?
-      meals.map((meal, index) =>
-        <DetailView id={`${kind}-${meal.id.toString()}`} key={index} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal>
-          <Box display="flex" flexGrow="1">
-            <IconLink onClick={() => onEdit(meal.id)}>
-              <Edit />
-            </IconLink>
-            <IconLink
-              color="error"
-              onClick={() => onDelete(meal.id)}
-            >
-              <Delete />
-            </IconLink>
-          </Box>
-        </DetailView>
-      )
-      :
-      <NoFood color="disabled" />
+        ?
+        meals.map((meal, index) =>
+          <DetailView id={`${kind}-${meal.id.toString()}`} key={index} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal>
+            <Box display="flex" flexGrow="1">
+              <IconLink onClick={() => onEdit(meal.id)}>
+                <Edit />
+              </IconLink>
+              <IconLink
+                color="error"
+                onClick={() => onDelete(meal.id)}
+              >
+                <Delete />
+              </IconLink>
+            </Box>
+          </DetailView>
+        )
+        :
+        <NoFood color="disabled" />
     }
   </Box>;
 }
