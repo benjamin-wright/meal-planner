@@ -1,6 +1,6 @@
 import { Reorder, useDragControls } from "motion/react";
 import { DetailView } from "../../../components/detail-view";
-import { MealItem } from "./meal-list";
+import { MealItem } from "./types";
 import Box from "@mui/material/Box";
 import { IconLink } from "../../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
@@ -18,7 +18,7 @@ export function SortableMeal({ meal, kind, onEdit, onDelete, working }: Sortable
   const dragControls = useDragControls();
 
   return (
-    <Reorder.Item key={meal.id} value={meal} dragListener={false} dragControls={dragControls}>
+    <Reorder.Item key={meal.id} value={meal} dragListener={false} dragControls={dragControls} style={{ flexGrow: 1 }}>
       <DetailView id={`${kind}-${meal.id.toString()}`} key={meal.id} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal dragControls={dragControls} working={working}>
         <Box display="flex" flexGrow="1">
           <IconLink onClick={() => onEdit(meal)}>

@@ -11,10 +11,11 @@ interface SelectStringProps {
   onChange: (value: string) => void;
   capitalise?: boolean;
   multiple?: boolean;
+  required?: boolean;
 }
 
-export function SelectString({ id, label, value, options, onChange, capitalise, multiple }: SelectStringProps) {
-  return <FormControl>
+export function SelectString({ id, label, value, options, onChange, capitalise, multiple, required }: SelectStringProps) {
+  return <FormControl required={required}>
     <InputLabel id={`${id}-label`}>{label}</InputLabel>
     <Select
       labelId={`${id}-label`}

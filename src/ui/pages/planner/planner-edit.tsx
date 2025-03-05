@@ -22,7 +22,8 @@ export function PlannerEdit() {
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
-  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: ["saturday"] });
+  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
+  const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
@@ -34,6 +35,10 @@ export function PlannerEdit() {
     if (mealStore === undefined || recipieStore === undefined) {
       return;
     }
+
+    const meals = await mealStore.getAll();
+    const days = meals.filter((meal) => meal.id.toString() !== params.meal).map((meal) => meal.days).flat();
+    setAvailable(MealDays.filter((day) => !days.includes(day)));
 
     const recipies = await recipieStore.getAll();
     setRecipies(recipies);
@@ -142,13 +147,14 @@ export function PlannerEdit() {
       <SelectString
         id="day"
         label="Day"
+        required
         capitalise
         multiple
         value={meal.days}
-        options={MealDays}
+        options={available}
         onChange={(value: any) => {
           console.info(value);
-          setMeal({ ...meal, days: value as MealDay[] });
+          setMeal({ ...meal, days: typeof value === "string" ? [value as MealDay] : value as MealDay[] });
         }}
       />
 
