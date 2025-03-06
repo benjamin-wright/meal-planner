@@ -13,6 +13,7 @@ import { MealItem } from "./components/types";
 import { ArrayEquals } from "../../../utils/compare";
 import { StaticMeal } from "./components/static-meal";
 import { ConfirmDialog } from "../../components/confirm-dialog";
+import { FloatingClearButton } from "../../components/floating-clear-button";
 
 function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, recipies: Recipie[]): MealItem {
   return {
@@ -120,6 +121,7 @@ export function Planner() {
       <Tab label="Dinner" value="dinner" />
       <Tab label="Lunch" value="lunch" />
       <Tab label="Breakfast" value="breakfast" />
+      <Tab label="Other" value="other" />
     </Tabs>
 
     <DetailViewGroup>
@@ -162,6 +164,7 @@ export function Planner() {
       )}
     </DetailViewGroup>
     <FloatingAddButton to="/planner/new" />
+    <FloatingClearButton />
     <ConfirmDialog
       message={`Deleting "${toDelete?.recipie}"`}
       open={isOpen}

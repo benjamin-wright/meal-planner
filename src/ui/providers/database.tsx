@@ -10,6 +10,10 @@ import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { Recipies } from "../../persistence/IndexedDB/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
 import { Meals } from "../../persistence/IndexedDB/meals";
+import { InedibleStore } from "../../persistence/interfaces/inedibles";
+import { Inedibles } from "../../persistence/IndexedDB/inedibles";
+import { ShoppingStore } from "../../persistence/interfaces/shopping";
+import { Shopping } from "../../persistence/IndexedDB/shopping";
 
 interface DBContextProps {
   db?: DB;
@@ -18,6 +22,8 @@ interface DBContextProps {
   ingredientStore?: IngredientStore;
   recipieStore?: RecipieStore;
   mealStore?: MealStore;
+  inedibleStore?: InedibleStore;
+  shoppingStore?: ShoppingStore;
 }
 
 export const DBContext = createContext<DBContextProps>({});
@@ -34,6 +40,8 @@ export function DBProvider({ children, database }: DBProviderProps) {
   const [ingredientStore, setIngredients] = useState<IngredientStore | undefined>(undefined);
   const [recipieStore, setRecipies] = useState<RecipieStore | undefined>(undefined);
   const [mealStore, setMeals] = useState<MealStore | undefined>(undefined);
+  const [inedibleStore, setInedibles] = useState<InedibleStore | undefined>(undefined);
+  const [shoppingStore, setShopping] = useState<ShoppingStore | undefined>(undefined);
 
   useEffect(() => {
     database.then((db: DB) => {
@@ -43,12 +51,14 @@ export function DBProvider({ children, database }: DBProviderProps) {
       setIngredients(new Ingredients(db));
       setRecipies(new Recipies(db));
       setMeals(new Meals(db));
+      setInedibles(new Inedibles(db));
+      setShopping(new Shopping(db));
     });
   }, [database])
 
   return (
     <DBContext.Provider
-      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore }}
+      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, inedibleStore, shoppingStore }}
     >
       {children}
     </DBContext.Provider>

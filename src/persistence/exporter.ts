@@ -66,7 +66,7 @@ export async function importData(units: UnitStore, categories: CategoryStore, in
         await meals.put(parsed.meals[i]);
       }
     }
-  
+
   } catch (err) {
     console.info(err);
     throw err;

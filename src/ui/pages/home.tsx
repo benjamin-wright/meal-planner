@@ -6,7 +6,7 @@ import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import { Page } from "../components/page";
 import { Box } from "@mui/material";
-import { Settings } from "@mui/icons-material";
+import { Checklist, Settings } from "@mui/icons-material";
 
 export function Home() {
   return (
@@ -19,6 +19,7 @@ export function Home() {
         justifyContent="center"
       >
         {[
+          { name: "list", icon: Checklist },
           { name: "planner", icon: CalendarMonth },
           { name: "recipies", icon: RestaurantRounded },
           { name: "ingredients", icon: Egg },

@@ -15,6 +15,7 @@ import { routes as ingredients } from "./ui/pages/ingredients/routes";
 import { routes as settings } from "./ui/pages/settings/routes";
 import { routes as recipies } from "./ui/pages/recipies/routes";
 import { routes as planner } from "./ui/pages/planner/routes";
+import { routes as list } from "./ui/pages/list/routes";
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
 
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       ...ingredients,
       ...recipies,
       ...planner,
+      ...list
     ],
   },
 ]);

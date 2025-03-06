@@ -3,9 +3,11 @@ import { categoriesV1 } from "./categories";
 import { ingredientsV1 } from "./ingredients";
 import { recipiesV1 } from "./recipies";
 import { mealsV1 } from "./meals";
+import { inediblesV1 } from "./inedibles";
+import { shoppingV1 } from "./shopping";
 
 const DB_NAME = "meal-planner";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -18,6 +20,10 @@ const migrations = [
   },
   (db: IDBDatabase) => {
     mealsV1(db);
+  },
+  (db: IDBDatabase) => {
+    inediblesV1(db);
+    shoppingV1(db);
   }
 ]
 
