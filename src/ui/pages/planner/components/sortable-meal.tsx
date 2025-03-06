@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import { IconLink } from "../../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
+import { Typography } from "@mui/material";
+import { NoFood } from "@mui/icons-material";
 
 interface SortableMealProps {
   meal: MealItem;
@@ -18,20 +20,25 @@ export function SortableMeal({ meal, kind, onEdit, onDelete, working }: Sortable
   const dragControls = useDragControls();
 
   return (
-    <Reorder.Item key={meal.id} value={meal} dragListener={false} dragControls={dragControls} style={{ flexGrow: 1 }}>
-      <DetailView id={`${kind}-${meal.id.toString()}`} key={meal.id} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal dragControls={dragControls} working={working}>
-        <Box display="flex" flexGrow="1">
-          <IconLink onClick={() => onEdit(meal)}>
-            <Edit />
-          </IconLink>
-          <IconLink
-            color="error"
-            onClick={() => onDelete(meal)}
-          >
-            <Delete />
-          </IconLink>
-        </Box>
-      </DetailView>
+    <Reorder.Item key={meal.index} value={meal} dragListener={false} dragControls={dragControls} style={{ flexGrow: 1 }}>
+      {
+        meal.id === undefined ?
+          <NoFood />
+          :
+          <DetailView id={`${kind}-${meal.id?.toString()}`} key={meal.id} title={meal.recipie} chip={meal.servings.toString()} narrow horizontal dragControls={dragControls} working={working}>
+            <Box display="flex" flexGrow="1">
+              <IconLink onClick={() => onEdit(meal)}>
+                <Edit />
+              </IconLink>
+              <IconLink
+                color="error"
+                onClick={() => onDelete(meal)}
+              >
+                <Delete />
+              </IconLink>
+            </Box>
+          </DetailView>
+      }
     </Reorder.Item>
   );
 }
