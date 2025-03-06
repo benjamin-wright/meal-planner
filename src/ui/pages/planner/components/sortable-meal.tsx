@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import { IconLink } from "../../../components/icon-link";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
-import { Typography } from "@mui/material";
 import { NoFood } from "@mui/icons-material";
 
 interface SortableMealProps {

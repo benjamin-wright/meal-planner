@@ -117,13 +117,17 @@ export function PlannerEdit() {
       title={isNew ? "Meals: new" : `Meals: ${meal.days} ${meal.meal}`}
       returnTo={returnTo}
       onSubmit={async () => {
+        if (meal.meal !== "dinner") {
+          meal.days = [];
+        }
+
         if (isNew) {
           await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.days) || 0;
         } else {
           await mealStore?.put(meal);
         }
 
-        navigate(`/planner`);
+        navigate(`/planner?tab=${meal.meal}`);
       }}
     >
       <SelectID
@@ -144,19 +148,22 @@ export function PlannerEdit() {
         onChange={servingsChangeHandler}
       />
 
-      <SelectString
-        id="day"
-        label="Day"
-        required
-        capitalise
-        multiple
-        value={meal.days}
-        options={available}
-        onChange={(value: any) => {
-          console.info(value);
-          setMeal({ ...meal, days: typeof value === "string" ? [value as MealDay] : value as MealDay[] });
-        }}
-      />
+      {
+        meal.meal === "dinner" &&
+        <SelectString
+          id="day"
+          label="Day"
+          required
+          capitalise
+          multiple
+          value={meal.days}
+          options={available}
+          onChange={(value: any) => {
+            console.info(value);
+            setMeal({ ...meal, days: typeof value === "string" ? [value as MealDay] : value as MealDay[] });
+          }}
+        />
+      }
 
       <SelectString
         id="meal"
