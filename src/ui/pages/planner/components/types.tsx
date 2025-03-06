@@ -1,6 +1,7 @@
 
 export type MealItem = {
   id: number;
+  index: number;
   recipie: string;
   servings: number;
   day: string;
