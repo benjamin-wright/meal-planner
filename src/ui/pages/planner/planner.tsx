@@ -31,6 +31,7 @@ export function Planner() {
 
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<MealItem | null>(null);
+  const [toClear, setToClear] = useState<boolean>(false);
 
   const [dinners, setDinners] = useState<MealItem[]>([]);
   const [lunches, setLunches] = useState<MealItem[]>([]);
@@ -108,11 +109,21 @@ export function Planner() {
   async function runDelete() {
     setOpen(false);
 
-    if (!mealStore || !toDelete?.id) {
+    if (!mealStore) {
       return;
     }
 
-    await mealStore.delete(toDelete.id);
+    if (toClear) {
+      await mealStore.clear();
+    }
+
+    if (toDelete?.id !== undefined) {
+      await mealStore.delete(toDelete.id);
+    }
+
+    setToDelete(null);
+    setToClear(false);
+
     await load();
   }
 
@@ -164,9 +175,13 @@ export function Planner() {
       )}
     </DetailViewGroup>
     <FloatingAddButton to="/planner/new" />
-    <FloatingClearButton />
+    <FloatingClearButton onClick={() => {
+      setToClear(true);
+      setToDelete(null);
+      setOpen(true);
+    }} />
     <ConfirmDialog
-      message={`Deleting "${toDelete?.recipie}"`}
+      message={toDelete ? `Deleting "${toDelete.recipie}"` : "Clearing all meals"}
       open={isOpen}
       onConfirm={runDelete}
       onCancel={() => setOpen(false)}

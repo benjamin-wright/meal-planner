@@ -148,6 +148,17 @@ export function PlannerEdit() {
         onChange={servingsChangeHandler}
       />
 
+
+
+      <SelectString
+        id="meal"
+        label="Meal"
+        capitalise
+        value={meal.meal}
+        options={MealTypes}
+        onChange={(value) => setMeal({ ...meal, meal: value as MealType })}
+      />
+
       {
         meal.meal === "dinner" &&
         <SelectString
@@ -164,15 +175,6 @@ export function PlannerEdit() {
           }}
         />
       }
-
-      <SelectString
-        id="meal"
-        label="Meal"
-        capitalise
-        value={meal.meal}
-        options={MealTypes}
-        onChange={(value) => setMeal({ ...meal, meal: value as MealType })}
-      />
 
       {!loading &&
         <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "secondary.main" }}>
