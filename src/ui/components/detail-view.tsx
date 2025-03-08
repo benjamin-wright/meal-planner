@@ -104,7 +104,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
         width: horizontal ? "min-content" : "auto"
       }}>
         <Box
-          margin="1em"
+          margin={ horizontal ? "0.1em 0.5em"  : "1em"}
           display="flex"
           flexDirection="row"
           alignItems="center"
@@ -114,7 +114,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
           {dragControls && (
             <DragHandle onPointerDown={onDragStart} style={{ touchAction: "none" }} sx={{ boxSizing: "content-box", padding: "0.4em 0", opacity: working ? 0.4 : 1 }} />
           )}
-          <Typography position="relative" variant="h2" flexGrow="1" fontSize="1.5em">
+          <Typography position="relative" variant="h2" flexGrow="1" fontSize="1.5em" paddingRight={chip ? "2em" : "0"} textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap" width="0px">
             {title}
             {chip &&
               <Box position="absolute" right="0" top="0" bottom="0" display="flex" alignItems="center" paddingRight="0.5em">

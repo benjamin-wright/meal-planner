@@ -135,45 +135,47 @@ export function Planner() {
       <Tab label="Other" value="other" />
     </Tabs>
 
-    <DetailViewGroup>
-      {tab === "dinner" &&
-        <Reorder.Group axis="y" values={dinners} onReorder={onReorder}>
-          {dinners.map((meal) => <Box key={meal.id + "-" + meal.index} display="flex" alignItems="center" justifyContent="space-between" gap="1em">
-            <Card
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "50%",
-                width: "2.5em",
-                height: "2.5em",
-                margin: "1em 0",
-                textTransform: "capitalize"
-              }}
-            >{meal.day.substring(0, 2)}</Card>
-            <SortableMeal meal={meal} kind="dinner" onEdit={(meal) => onEdit(meal.id || 0)} onDelete={(meal) => onDelete(meal)} />
-          </Box>)}
-        </Reorder.Group>
-      }
-      {tab === "lunch" && lunches.map((meal) =>
-        <StaticMeal
-          key={meal.id}
-          meal={meal}
-          kind="lunch"
-          onEdit={(meal) => onEdit(meal.id || 0)}
-          onDelete={(meal) => onDelete(meal)}
-        />
-      )}
-      {tab === "breakfast" && breakfasts.map((meal) =>
-        <StaticMeal
-          key={meal.id}
-          meal={meal}
-          kind="breakfast"
-          onEdit={(meal) => onEdit(meal.id || 0)}
-          onDelete={(meal) => onDelete(meal)}
-        />
-      )}
-    </DetailViewGroup>
+    <Box paddingBottom="4em" overflow="scroll">
+      <DetailViewGroup>
+        {tab === "dinner" &&
+          <Reorder.Group axis="y" values={dinners} onReorder={onReorder}>
+            {dinners.map((meal) => <Box key={meal.id + "-" + meal.index} display="flex" alignItems="center" justifyContent="space-between" gap="1em">
+              <Card
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "50%",
+                  width: "2.5em",
+                  height: "2.5em",
+                  margin: "0.5em 0",
+                  textTransform: "capitalize"
+                }}
+              >{meal.day.substring(0, 2)}</Card>
+              <SortableMeal meal={meal} kind="dinner" onEdit={(meal) => onEdit(meal.id || 0)} onDelete={(meal) => onDelete(meal)} />
+            </Box>)}
+          </Reorder.Group>
+        }
+        {tab === "lunch" && lunches.map((meal) =>
+          <StaticMeal
+            key={meal.id}
+            meal={meal}
+            kind="lunch"
+            onEdit={(meal) => onEdit(meal.id || 0)}
+            onDelete={(meal) => onDelete(meal)}
+          />
+        )}
+        {tab === "breakfast" && breakfasts.map((meal) =>
+          <StaticMeal
+            key={meal.id}
+            meal={meal}
+            kind="breakfast"
+            onEdit={(meal) => onEdit(meal.id || 0)}
+            onDelete={(meal) => onDelete(meal)}
+          />
+        )}
+      </DetailViewGroup>
+    </Box>
     <FloatingAddButton to="/planner/new" />
     <FloatingClearButton onClick={() => {
       setToClear(true);
