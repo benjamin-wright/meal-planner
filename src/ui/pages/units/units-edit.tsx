@@ -81,6 +81,7 @@ export function UnitsEdit() {
         value={unit.type}
         items={Object.values(UnitType)}
         toLabel={(item) => item}
+        required
         onChange={(value) => setUnit({ ...unit, type: value })}
       />
       {unit.type === UnitType.Count && (
