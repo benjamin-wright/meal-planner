@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { DetailView } from "../../../components/detail-view";
-import { Magnitude, Unit } from "../../../../models/units";
+import { Magnitude, Unit, UnitType } from "../../../../models/units";
 
 function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
   return (
@@ -69,8 +69,8 @@ export function UnitView({ unit, onEdit, onDelete }: UnitViewProps) {
       onEdit={() => onEdit(unit)}
       onDelete={() => onDelete(unit)}
     >
-      { unit.magnitudes.length > 0 && <MagnitudeView magnitudes={unit.magnitudes} /> }
-      { unit.magnitudes.length === 0 && <CountView singular={unit.singular} plural={unit.plural} /> }
+      { unit.type !== UnitType.Count && <MagnitudeView magnitudes={unit.magnitudes} /> }
+      { unit.type === UnitType.Count && <CountView singular={unit.singular} plural={unit.plural} /> }
     </DetailView>
   );
 }

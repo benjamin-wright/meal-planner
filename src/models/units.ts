@@ -1,3 +1,22 @@
+export enum UnitType {
+  Count = "count",
+  Weight = "weight",
+  Volume = "volume",
+}
+
+export function parseUnitType(type: string): UnitType | undefined {
+  switch (type) {
+    case "count":
+      return UnitType.Count;
+    case "weight":
+      return UnitType.Weight;
+    case "volume":
+      return UnitType.Volume;
+    default:
+      return undefined;
+  }
+}
+
 export class Magnitude {
   singular: string;
   plural: string;
@@ -15,25 +34,23 @@ export class Magnitude {
 export class Unit {
   id: number;
   name: string;
+  type: UnitType;
   singular?: string;
   plural?: string;
   magnitudes: Magnitude[];
 
-  constructor(id: number, name: string, magnitudes: Magnitude[], singular?: string, plural?: string) {
+  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], singular?: string, plural?: string) {
     this.id = id;
     this.name = name;
+    this.type = type;
     this.magnitudes = magnitudes;
     this.singular = singular;
     this.plural = plural;
   }
 }
 
-export function isCount(unit: Unit): boolean {
-  return unit.magnitudes.length === 0;
-}
-
 export function getAbbr(unit: Unit, value: number): string {
-  if (isCount(unit)) {
+  if (unit.type === UnitType.Count) {
     if (value === 1) {
       return unit.singular ? ` ${unit.singular}` : "";
     } else {

@@ -1,23 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { Unit } from "../../../models/units";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { parseUnitType, Unit, UnitType } from "../../../models/units";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
 import { NewItemButton } from "../../components/new-item-button";
+import { SelectObject } from "../../components/select-object";
 
 export function UnitsEdit() {
   const { returnTo, setFormResult } = useForms("units");
   const { unitStore } = useContext(DBContext);
   const params = useParams();
+  const [ search ] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", magnitudes: [], singular: "", plural: "" });
-  const [isCount, setIsCount] = useState(false);
-  
+  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], singular: "", plural: "" });
   const navigate = useNavigate();
 
   async function load() {
@@ -28,8 +27,14 @@ export function UnitsEdit() {
     if (params.unit) {
       const unit = await unitStore.get(Number.parseInt(params.unit, 10));
       setUnit(unit);
-      setIsCount(unit.magnitudes.length === 0);
       setIsNew(false);
+      return;
+    }
+
+    const type = parseUnitType(search.get("type") || "");
+    if (type) {
+      console.log(`changing unit to ${type}`);
+      setUnit({ ...unit, type });
     }
   }
 
@@ -51,7 +56,7 @@ export function UnitsEdit() {
         let id = unit.id;
 
         if (isNew) {
-          id = await unitStore?.add(unit.name, unit.magnitudes, unit.singular, unit.plural) || 0;
+          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.singular, unit.plural) || 0;
         } else {
           await unitStore?.put(unit);
         }
@@ -70,11 +75,15 @@ export function UnitsEdit() {
         required
         onChange={(value) => setUnit({ ...unit, name: value })}
       />
-      <ToggleButtonGroup aria-label="kind" value={isCount} exclusive onChange={(_, value) => setIsCount(value)}>
-        <ToggleButton value={true}>Count</ToggleButton>
-        <ToggleButton value={false}>Magnitudes</ToggleButton>
-      </ToggleButtonGroup>
-      {isCount && (
+      <SelectObject
+        id="unit-type"
+        label="type"
+        value={unit.type}
+        items={Object.values(UnitType)}
+        toLabel={(item) => item}
+        onChange={(value) => setUnit({ ...unit, type: value })}
+      />
+      {unit.type === UnitType.Count && (
         (<>
           <TextInput
             id="singular"
@@ -100,7 +109,7 @@ export function UnitsEdit() {
           />
         </>)
       )}
-      {!isCount && (<>
+      {unit.type !== UnitType.Count && (<>
         {unit.magnitudes.map((magnitude, index) => (
           <MagnitudeEdit key={index} index={index} magnitude={magnitude} onChange={(m) => {
             unit.magnitudes[index] = m;

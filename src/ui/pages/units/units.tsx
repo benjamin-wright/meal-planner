@@ -7,10 +7,13 @@ import { FloatingAddButton } from "../../components/floating-add-button";
 import { Unit } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 export function Units() {
   const { unitStore } = useContext(DBContext);
 
+  const [tab, setTab] = useState("count");
   const [units, setUnits] = useState<Unit[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Unit | null>(null);
@@ -50,12 +53,18 @@ export function Units() {
 
   return (
     <Page title="Units">
+      <Tabs value={tab} onChange={(_event, value) => setTab(value)} variant="fullWidth">
+        <Tab label="Count" value="count" />
+        <Tab label="Weight" value="weight" />
+        <Tab label="Volume" value="volume" />
+      </Tabs>
+
       <DetailViewGroup>
-        {units.map((unit) => (
+        {units.filter(unit => unit.type === tab).map((unit) => (
           <UnitView key={unit.id} unit={unit} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
       </DetailViewGroup>
-      <FloatingAddButton to="/units/new" />
+      <FloatingAddButton to={`/units/new?type=${tab}`} />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
         open={isOpen}

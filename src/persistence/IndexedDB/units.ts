@@ -1,4 +1,4 @@
-import { Magnitude, Unit } from "../../models/units";
+import { Magnitude, Unit, UnitType } from "../../models/units";
 import { UnitStore } from "../interfaces/units";
 import { DB } from "./db";
 
@@ -22,9 +22,9 @@ export class Units implements UnitStore {
     return this.db.getAll<Unit>("units");
   }
 
-  async add(name: string, magnitudes: Magnitude[], singular?: string, plural?: string): Promise<number> {
+  async add(name: string, type: UnitType, magnitudes: Magnitude[], singular?: string, plural?: string): Promise<number> {
     magnitudes.sort((a, b) => a.multiplier - b.multiplier);
-    return this.db.add("units", { name, magnitudes, singular, plural });
+    return this.db.add("units", { name, type, magnitudes, singular, plural });
   }
 
   async put(value: Unit): Promise<void> {
