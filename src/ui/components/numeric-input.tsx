@@ -1,6 +1,5 @@
 import {
   FormControl,
-  Input,
   InputLabel,
   OutlinedInput,
   useTheme,

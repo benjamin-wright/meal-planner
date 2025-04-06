@@ -4,7 +4,7 @@ import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
 import { IconLink } from "../../../components/icon-link";
 import { Add, Delete } from "@mui/icons-material";
-import { getAbbr, getNearestMagnitude, isCount, Magnitude, Unit } from "../../../../models/units";
+import { getAbbr, getNearestMagnitude, Magnitude, Unit, UnitType } from "../../../../models/units";
 import { useEffect, useState } from "react";
 
 interface IngredientControlProps {
@@ -90,8 +90,8 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
       :&nbsp;
       <NumericInlineInput value={adjustedQuantity} onChange={quantityChanged} />
       &nbsp;
-      { unit && isCount(unit) && <span>{getAbbr(unit, value.quantity)}</span> }
-      { unit && !isCount(unit) && 
+      { unit && unit.type === UnitType.Count && <span>{getAbbr(unit, value.quantity)}</span> }
+      { unit && unit.type !== UnitType.Count && 
       <Select
         id={`unit-${index}`}
         variant="standard"

@@ -10,22 +10,6 @@ interface IntegerInputProps {
 }
 
 export function IntegerInput({value, sx, min, max, onChange}: IntegerInputProps) {
-  function handleUp() {
-    if (max && value >= max) {
-      return;
-    }
-
-    onChange(value + 1);
-  }
-
-  function handleDown() {
-    if (min && value <= min) {
-      return;
-    }
-
-    onChange(value - 1);
-  }
-
   return <Box sx={sx} position="relative" border={1} borderRadius="0.25em" borderColor="secondary.light" padding="0.35em">
     <InputLabel sx={{
       position: "absolute",
@@ -37,7 +21,7 @@ export function IntegerInput({value, sx, min, max, onChange}: IntegerInputProps)
       <ArrowLeft />
     </IconButton>
     {value}
-    <IconButton onClick={() => onChange(value + 1)} sx={{padding: 0}}>
+    <IconButton onClick={() => onChange(value + 1)} sx={{padding: 0}} disabled={max !== undefined && value >= max}>
       <ArrowRight />
     </IconButton>
   </Box>

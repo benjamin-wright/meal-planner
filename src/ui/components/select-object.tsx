@@ -24,7 +24,7 @@ export function SelectObject<T>({value, items, id, label, required, toLabel, onC
         onChange={(event: SelectChangeEvent<T>) => onChange(event.target.value as T)}
       >
         {
-          items.map((item, index) => 
+          items.map(item => 
             <MenuItem key={toLabel(item)} value={toLabel(item)}>
               {toLabel(item)}
             </MenuItem>

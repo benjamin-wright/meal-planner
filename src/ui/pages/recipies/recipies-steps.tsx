@@ -9,7 +9,7 @@ import { Box, TextField } from "@mui/material";
 import DragHandle from "@mui/icons-material/DragHandle";
 import { Delete } from "@mui/icons-material";
 import { NewItemButton } from "../../components/new-item-button";
-import { FormContext, useForms } from "../../providers/forms";
+import { useForms } from "../../providers/forms";
 
 interface ReorderItemProps {
   step: StepData;

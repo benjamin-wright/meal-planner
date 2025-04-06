@@ -34,8 +34,8 @@ export async function createDB(): Promise<DB> {
     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
       const db = (event.target as IDBOpenDBRequest).result;
 
-      let oldVersion = event.oldVersion;
-      let newVersion = event.newVersion ? event.newVersion : 0;
+      const oldVersion = event.oldVersion;
+      const newVersion = event.newVersion ? event.newVersion : 0;
 
       for (let v = oldVersion; v < newVersion; v++) {
         console.info(`Migrating to version ${v + 1}`);
