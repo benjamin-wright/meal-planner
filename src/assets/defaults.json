@@ -1,70 +1,79 @@
 {
   "units": [
     {
+      "id": 1,
       "name": "gram",
+      "type": "weight",
       "magnitudes": [
         {
-          "abbreviation": "mg",
+          "abbrev": "mg",
           "singular": "milligram",
           "plural": "milligrams",
-          "factor": 0.001
+          "multiplier": 0.001
         },
         {
-          "abbreviation": "g",
+          "abbrev": "g",
           "singular": "gram",
           "plural": "grams",
-          "factor": 1
+          "multiplier": 1
         },
         {
-          "abbreviation": "kg",
+          "abbrev": "kg",
           "singular": "kilogram",
           "plural": "kilograms",
-          "factor": 1000
+          "multiplier": 1000
         }
       ]
     },
     {
+      "id": 2,
       "name": "litre",
+      "type": "volume",
       "magnitudes": [
         {
-          "abbreviation": "ml",
+          "abbrev": "ml",
           "singular": "millilitre",
           "plural": "millilitres",
-          "factor": 0.001
+          "multiplier": 0.001
         },
         {
-          "abbreviation": "l",
+          "abbrev": "l",
           "singular": "litre",
           "plural": "litres",
-          "factor": 1
+          "multiplier": 1
         }
       ]
+    },
+    {
+      "id": 3,
+      "name": "count",
+      "type": "count"
     }
   ],
   "categories": [
     {
       "name": "fruit",
-      "order": 0
-    },
-    {
-      "name": "vegetable",
       "order": 1
     },
     {
-      "name": "meat",
+      "name": "vegetable",
       "order": 2
     },
     {
-      "name": "fish",
+      "name": "meat",
       "order": 3
     },
     {
-      "name": "dairy",
+      "name": "fish",
       "order": 4
     },
     {
-      "name": "cupboard",
+      "name": "dairy",
       "order": 5
+    },
+    {
+      "name": "cupboard",
+      "order": 6
     }
   ]
 }

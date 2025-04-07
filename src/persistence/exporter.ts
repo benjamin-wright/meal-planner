@@ -8,6 +8,7 @@ import { IngredientStore } from "./interfaces/ingredients";
 import { MealStore } from "./interfaces/meals";
 import { RecipieStore } from "./interfaces/recipies";
 import { UnitStore } from "./interfaces/units";
+import defaultData from "../assets/defaults.json";
 
 type ExportedData = {
   units?: Unit[];
@@ -29,46 +30,70 @@ export async function exportData(units: UnitStore, categories: CategoryStore, in
 
 export async function importData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, meals: MealStore, data: string): Promise<void> {
   try {
-    console.info(`JSON data: ${data}`);
     const parsed = JSON.parse(data) as ExportedData;
+    await loadDataFile(parsed, units, categories, ingredients, recipies, meals);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 
-    await units.clear();
-    if (parsed.units) {
-      for (let i = 0; i < parsed.units.length; i++) {
-        await units.put(parsed.units[i]);
+export async function initData(
+  units: UnitStore,
+  categories: CategoryStore,
+  ingredients: IngredientStore,
+  recipies: RecipieStore,
+  meals: MealStore
+): Promise<void> {
+  try {
+    const data = defaultData as ExportedData;
+    await loadDataFile(data, units, categories, ingredients, recipies, meals);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+async function loadDataFile(
+  data: ExportedData,
+  units: UnitStore,
+  categories: CategoryStore,
+  ingredients: IngredientStore,
+  recipies: RecipieStore,
+  meals: MealStore
+): Promise<void> {
+  await units.clear();
+    if (data.units) {
+      for (let i = 0; i < data.units.length; i++) {
+        await units.put(data.units[i]);
       }
     }
 
     await categories.clear();
-    if (parsed.categories) {
-      for (let i = 0; i < parsed.categories.length; i++) {
-        await categories.put(parsed.categories[i]);
+    if (data.categories) {
+      for (let i = 0; i < data.categories.length; i++) {
+        await categories.put(data.categories[i]);
       }
     }
 
     await ingredients.clear();
-    if (parsed.ingredients) {
-      for (let i = 0; i < parsed.ingredients.length; i++) {
-        await ingredients.put(parsed.ingredients[i]);
+    if (data.ingredients) {
+      for (let i = 0; i < data.ingredients.length; i++) {
+        await ingredients.put(data.ingredients[i]);
       }
     }
 
     await recipies.clear();
-    if (parsed.recipies) {
-      for (let i = 0; i < parsed.recipies.length; i++) {
-        await recipies.put(parsed.recipies[i]);
+    if (data.recipies) {
+      for (let i = 0; i < data.recipies.length; i++) {
+        await recipies.put(data.recipies[i]);
       }
     }
 
     await meals.clear();
-    if (parsed.meals) {
-      for (let i = 0; i < parsed.meals.length; i++) {
-        await meals.put(parsed.meals[i]);
+    if (data.meals) {
+      for (let i = 0; i < data.meals.length; i++) {
+        await meals.put(data.meals[i]);
       }
     }
-
-  } catch (err) {
-    console.info(err);
-    throw err;
-  }
 }

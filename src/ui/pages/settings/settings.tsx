@@ -7,20 +7,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { AlertContext } from "../../providers/alerts";
 import { exportData, importData } from "../../../persistence/exporter";
-import { Units } from "../../../persistence/IndexedDB/units";
-import { Categories } from "../../../persistence/IndexedDB/categories";
-import { Ingredients } from "../../../persistence/IndexedDB/ingredients";
-import { Recipies } from "../../../persistence/IndexedDB/recipies";
 import { DBContext } from "../../providers/database";
-import { Meals } from "../../../persistence/IndexedDB/meals";
+import { DescriptionButton } from "../../components/description-button";
 
 interface CheckDialogProps {
   open: boolean;
-  mode: "backup" | "restore" | "reset";
+  mode: "restore" | "reset" | "nuke";
   onClose: (ok: boolean) => void;
 }
 
-const BackupMessage = <>Are you sure you want to backup the entire application state? This will download a JSON file with all the data.</>;
 const RestoreMessage = <>Are you sure you want to restore the entire application state? This will overwrite the current data with the data from the file.</>;
 const ResetMessage = <>Are you sure you want to reset the entire application state? Lost data <em>cannot</em> be recovered!</>;
 
@@ -39,12 +34,11 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
         textTransform: "capitalize",
       }} >{mode} Application</DialogTitle>
       <DialogContent>
-        {mode === "backup" && BackupMessage}
         {mode === "restore" && RestoreMessage}
         {mode === "reset" && ResetMessage}
       </DialogContent>
       <Stack direction="row" spacing={4}>
-        <Button variant="contained" color={mode === "backup" ? "success" : "error"} onClick={() => onClose(true)}>
+        <Button variant="contained" color="error" onClick={() => onClose(true)}>
           {mode}
         </Button>
         <Button variant="contained" onClick={() => onClose(false)}>
@@ -56,13 +50,29 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 }
 
 export function Settings() {
-  const { db } = useContext(DBContext);
+  const { db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mode, setMode] = useState<"backup" | "restore" | "reset">("backup");
+  const [mode, setMode] = useState<"restore" | "reset" | "nuke">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
 
-  function handleOpen(mode: "backup" | "restore" | "reset") {
+  function backup() {
+    if (!unitStore || !categoryStore || !ingredientStore || !recipieStore || !mealStore) {
+      setError("Unable to access database");
+      return;
+    }
+  
+    exportData(unitStore, categoryStore, ingredientStore, recipieStore, mealStore).then((blob) => {
+      const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "meal-planner-backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  function handleOpen(mode: "restore" | "reset" | "nuke") {
     setMode(mode);
     setDialogOpen(true);
   }
@@ -74,24 +84,17 @@ export function Settings() {
     }
 
     switch(mode) {
-      case "backup":
-        exportData(new Units(db), new Categories(db), new Ingredients(db), new Recipies(db), new Meals(db)).then((blob) => {
-          console.info(blob);
-          const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "meal-planner-backup.json";
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-
-        return;
       case "restore":
         if (!backupData) {
           return;
         }
 
-        importData(new Units(db), new Categories(db), new Ingredients(db), new Recipies(db), new Meals(db), backupData)
+        if (!unitStore || !categoryStore || !ingredientStore || !recipieStore || !mealStore) {
+          setError("Unable to access database");
+          return;
+        }
+
+        importData(unitStore, categoryStore, ingredientStore, recipieStore, mealStore, backupData)
           .then(() => setMessage("Data restored successfully"))
           .catch((err) => setError(err.message));
 
@@ -109,9 +112,9 @@ export function Settings() {
 
   return (
     <Page title="Settings">
-      <Button variant="contained" color="success" onClick={()=>handleOpen("backup")}>
-        Backup
-      </Button>
+      <DescriptionButton text="Backup" onClick={backup}>
+        Save the current application state to a JSON file on your device.
+      </DescriptionButton>
       <Button variant="contained" component="label" color="error">
         Restore
         <input type="file" hidden onChange={(event: ChangeEvent<HTMLInputElement>)=>{
