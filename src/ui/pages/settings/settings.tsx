@@ -52,7 +52,7 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 export function Settings() {
   const { db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mode, setMode] = useState<"restore" | "reset" | "nuke">("restore");
+  const [mode, setMode] = useState<"restore" | "reset">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
 
@@ -61,7 +61,7 @@ export function Settings() {
       setError("Unable to access database");
       return;
     }
-  
+
     exportData(unitStore, categoryStore, ingredientStore, recipieStore, mealStore).then((blob) => {
       const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
       const a = document.createElement("a");
@@ -72,7 +72,7 @@ export function Settings() {
     });
   }
 
-  function handleOpen(mode: "restore" | "reset" | "nuke") {
+  function handleOpen(mode: "restore" | "reset") {
     setMode(mode);
     setDialogOpen(true);
   }
@@ -83,7 +83,7 @@ export function Settings() {
       return;
     }
 
-    switch(mode) {
+    switch (mode) {
       case "restore":
         if (!backupData) {
           return;
@@ -112,29 +112,19 @@ export function Settings() {
 
   return (
     <Page title="Settings">
-      <DescriptionButton text="Backup" onClick={backup}>
+      <DescriptionButton text="backup" onClick={backup}>
         Save the current application state to a JSON file on your device.
       </DescriptionButton>
-      <Button variant="contained" component="label" color="error">
-        Restore
-        <input type="file" hidden onChange={(event: ChangeEvent<HTMLInputElement>)=>{
-          const file = event.target.files?.item(0);
-          if (!file) {
-            return;
-          }
-
-          file.text().then((text) => {
-            setBackupData(text);
-            handleOpen("restore");
-          }).catch((err) => {
-            setError(err.message);
-          });
-        }} />
-      </Button>
-      <Button variant="contained" color="error" onClick={()=>handleOpen("reset")}>
-        Reset
-      </Button>
+      <DescriptionButton text="restore" color="error" onFileLoad={(contents) => {
+        setBackupData(contents);
+        handleOpen("restore");
+      }}>
+        Load a previous application state from a JSON file.
+      </DescriptionButton>
+      <DescriptionButton text="reset" color="error" onClick={() => handleOpen("reset")}>
+        Drop all data and reset the application to its initial state.
+      </DescriptionButton>
       <CheckDialog open={dialogOpen} mode={mode} onClose={handleClose} />
-    </Page>
+    </Page >
   );
 }
