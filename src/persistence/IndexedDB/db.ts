@@ -1,10 +1,11 @@
-import { unitsV1 } from "./units";
-import { categoriesV1 } from "./categories";
-import { ingredientsV1 } from "./ingredients";
-import { recipiesV1 } from "./recipies";
-import { mealsV1 } from "./meals";
+import { Units, unitsV1 } from "./units";
+import { Categories, categoriesV1 } from "./categories";
+import { Ingredients, ingredientsV1 } from "./ingredients";
+import { Recipies, recipiesV1 } from "./recipies";
+import { Meals, mealsV1 } from "./meals";
 import { inediblesV1 } from "./inedibles";
 import { shoppingV1 } from "./shopping";
+import { initData } from "../exporter";
 
 const DB_NAME = "meal-planner";
 const DB_VERSION = 4;
@@ -28,11 +29,16 @@ const migrations = [
 ]
 
 export async function createDB(): Promise<DB> {
+  let isNew = false;
+
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
       const db = (event.target as IDBOpenDBRequest).result;
+      if (event.oldVersion === 0) {
+        isNew = true;
+      }
 
       const oldVersion = event.oldVersion;
       const newVersion = event.newVersion ? event.newVersion : 0;
@@ -50,7 +56,22 @@ export async function createDB(): Promise<DB> {
     request.onerror = (error) => {
       reject(error);
     };
-  }).then((db: IDBDatabase) => new DB(db));
+  }).then((idb: IDBDatabase) => {
+    const db = new DB(idb);
+
+    if (isNew) {
+      console.info("New database, creating default data");
+      return initData(
+        new Units(db),
+        new Categories(db),
+        new Ingredients(db),
+        new Recipies(db),
+        new Meals(db)
+      ).then(() => db);
+    }
+
+    return db;
+  });
 }
 
 export class DB {

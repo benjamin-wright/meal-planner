@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Page } from "../../components/page";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -118,7 +118,7 @@ export function Settings() {
       <DescriptionButton text="restore" color="error" onFileLoad={(contents) => {
         setBackupData(contents);
         handleOpen("restore");
-      }}>
+      }} onFileError={(err: any) => setError(err.message)}>
         Load a previous application state from a JSON file.
       </DescriptionButton>
       <DescriptionButton text="reset" color="error" onClick={() => handleOpen("reset")}>

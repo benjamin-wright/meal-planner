@@ -10,7 +10,7 @@ import { RecipieStore } from "./interfaces/recipies";
 import { UnitStore } from "./interfaces/units";
 import defaultData from "../assets/defaults.json";
 
-type ExportedData = {
+export type ExportedData = {
   units?: Unit[];
   categories?: Category[];
   ingredients?: Ingredient[];
@@ -49,7 +49,6 @@ export async function initData(
     const data = defaultData as ExportedData;
     await loadDataFile(data, units, categories, ingredients, recipies, meals);
   } catch (err) {
-    console.error(err);
     throw err;
   }
 }
@@ -62,38 +61,45 @@ async function loadDataFile(
   recipies: RecipieStore,
   meals: MealStore
 ): Promise<void> {
+  console.info("Loading units...");
   await units.clear();
-    if (data.units) {
-      for (let i = 0; i < data.units.length; i++) {
-        await units.put(data.units[i]);
-      }
+  if (data.units) {
+    for (let i = 0; i < data.units.length; i++) {
+      await units.put(data.units[i]);
     }
+  }
 
-    await categories.clear();
-    if (data.categories) {
-      for (let i = 0; i < data.categories.length; i++) {
-        await categories.put(data.categories[i]);
-      }
+  console.info("Loading categories...");
+  await categories.clear();
+  if (data.categories) {
+    for (let i = 0; i < data.categories.length; i++) {
+      await categories.put(data.categories[i]);
     }
+  }
 
-    await ingredients.clear();
-    if (data.ingredients) {
-      for (let i = 0; i < data.ingredients.length; i++) {
-        await ingredients.put(data.ingredients[i]);
-      }
+  console.info("Loading ingredients...");
+  await ingredients.clear();
+  if (data.ingredients) {
+    for (let i = 0; i < data.ingredients.length; i++) {
+      await ingredients.put(data.ingredients[i]);
     }
+  }
 
-    await recipies.clear();
-    if (data.recipies) {
-      for (let i = 0; i < data.recipies.length; i++) {
-        await recipies.put(data.recipies[i]);
-      }
+  console.info("Loading recipies...");
+  await recipies.clear();
+  if (data.recipies) {
+    for (let i = 0; i < data.recipies.length; i++) {
+      await recipies.put(data.recipies[i]);
     }
+  }
 
-    await meals.clear();
-    if (data.meals) {
-      for (let i = 0; i < data.meals.length; i++) {
-        await meals.put(data.meals[i]);
-      }
+  console.info("Loading meals...");
+  await meals.clear();
+  if (data.meals) {
+    for (let i = 0; i < data.meals.length; i++) {
+      await meals.put(data.meals[i]);
     }
+  }
+
+  console.info("Data loaded successfully");
 }

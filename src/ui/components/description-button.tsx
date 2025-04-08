@@ -1,5 +1,5 @@
 import { Button, Card, Typography } from "@mui/material";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useRef } from "react";
 
 interface DescriptionButtonProps {
   children: React.ReactNode;
@@ -11,6 +11,14 @@ interface DescriptionButtonProps {
 }
 
 export function DescriptionButton({ children, text, color, onClick, onFileLoad, onFileError }: DescriptionButtonProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function onFileInputClick() {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }
+
   return <Card variant="outlined" sx={{
     padding: "0.25em",
     display: "flex",
@@ -18,16 +26,16 @@ export function DescriptionButton({ children, text, color, onClick, onFileLoad, 
     gap: "0.5em",
   }}>
     <Typography>{children}</Typography>
-    <Button variant="contained" color={color || "success"} onClick={onClick}>
+    <Button variant="contained" color={color || "success"} onClick={onFileLoad ? onFileInputClick : onClick}>
       {text}
       {
-        onFileLoad && <input type="file" hidden onChange={(event: ChangeEvent<HTMLInputElement>) => {
+        onFileLoad && <input type="file" ref={fileInputRef} hidden onChange={(event: ChangeEvent<HTMLInputElement>) => {
           const file = event.target.files?.item(0);
           if (!file) {
             return;
           }
 
-          file.text().then(onFileLoad).catch(onFileError || (() => { }));
+          file.text().then((contents: string) => onFileLoad(contents)).catch(onFileError || (() => { }));
         }} />
       }
     </Button>
