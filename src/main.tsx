@@ -8,7 +8,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "./ui/theme";
 
 import { AlertProvider } from "./ui/providers/alerts";
-import { createDB } from "./persistence/IndexedDB/db";
 import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
@@ -18,8 +17,16 @@ import { routes as planner } from "./ui/pages/planner/routes";
 import { routes as list } from "./ui/pages/list/routes";
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
+import { IndexedDB } from "./persistence/IndexedDB/db";
+import { initData } from "./persistence/exporter";
 
-const db = createDB();
+const db = IndexedDB.create({
+  dbName: "meal-planner",
+  initFunc: async (db) => {
+    console.info("New database, loading initial data...");
+    await initData(db);
+  },
+});
 
 const router = createBrowserRouter([
   {

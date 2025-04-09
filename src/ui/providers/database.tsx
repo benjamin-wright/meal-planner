@@ -1,19 +1,12 @@
 import { createContext, useEffect, useState } from "react";
-import { DB } from "../../persistence/IndexedDB/db";
+import { DB } from "../../persistence/interfaces/db";
 import { UnitStore } from "../../persistence/interfaces/units";
-import { Units } from "../../persistence/IndexedDB/units";
 import { CategoryStore } from "../../persistence/interfaces/categories";
-import { Categories } from "../../persistence/IndexedDB/categories";
 import { IngredientStore } from "../../persistence/interfaces/ingredients";
-import { Ingredients } from "../../persistence/IndexedDB/ingredients";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
-import { Recipies } from "../../persistence/IndexedDB/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
-import { Meals } from "../../persistence/IndexedDB/meals";
 import { InedibleStore } from "../../persistence/interfaces/inedibles";
-import { Inedibles } from "../../persistence/IndexedDB/inedibles";
 import { ShoppingStore } from "../../persistence/interfaces/shopping";
-import { Shopping } from "../../persistence/IndexedDB/shopping";
 
 interface DBContextProps {
   db?: DB;
@@ -46,13 +39,13 @@ export function DBProvider({ children, database }: DBProviderProps) {
   useEffect(() => {
     database.then((db: DB) => {
       setDB(db);
-      setUnits(new Units(db));
-      setCategories(new Categories(db));
-      setIngredients(new Ingredients(db));
-      setRecipies(new Recipies(db));
-      setMeals(new Meals(db));
-      setInedibles(new Inedibles(db));
-      setShopping(new Shopping(db));
+      setUnits(db.units());
+      setCategories(db.categories());
+      setIngredients(db.ingredients());
+      setRecipies(db.recipies());
+      setMeals(db.meals());
+      setInedibles(db.inedibles());
+      setShopping(db.shopping());
     });
   }, [database])
 

@@ -1,46 +1,48 @@
 import { Magnitude, Unit, UnitType } from "../../models/units";
 import { UnitStore } from "../interfaces/units";
-import { DB } from "./db";
+import { TypedDB } from "./typed-db";
+
+const TABLE_NAME = "units";
 
 export function unitsV1(db: IDBDatabase) {
-  const store = db.createObjectStore("units", { keyPath: "id", autoIncrement: true });
+  const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
 }
 
 export class Units implements UnitStore {
-  private db: DB;
+  private db: TypedDB;
 
-  constructor(db: DB) {
+  constructor(db: TypedDB) {
     this.db = db;
   }
 
   async get(id: number): Promise<Unit> {
-    return this.db.get<Unit>("units", id);
+    return this.db.get<Unit>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Unit[]> {
-    return this.db.getAll<Unit>("units");
+    return this.db.getAll<Unit>(TABLE_NAME);
   }
 
   async add(name: string, type: UnitType, magnitudes?: Magnitude[], singular?: string, plural?: string): Promise<number> {
     if (magnitudes) {
       magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
-    return this.db.add("units", { name, type, magnitudes, singular, plural });
+    return this.db.add(TABLE_NAME, { name, type, magnitudes, singular, plural });
   }
 
   async put(value: Unit): Promise<void> {
     if (value.magnitudes) {
       value.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
-    return this.db.put("units", value);
+    return this.db.put(TABLE_NAME, value);
   }
 
   async delete(id: number): Promise<void> {
-    return this.db.delete("units", id);
+    return this.db.delete(TABLE_NAME, id);
   }
 
   async clear(): Promise<void> {
-    return this.db.clear("units");
+    return this.db.clear(TABLE_NAME);
   }
 }

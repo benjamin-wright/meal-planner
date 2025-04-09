@@ -9,6 +9,7 @@ import { MealStore } from "./interfaces/meals";
 import { RecipieStore } from "./interfaces/recipies";
 import { UnitStore } from "./interfaces/units";
 import defaultData from "../assets/defaults.json";
+import { DB } from "./interfaces/db";
 
 export type ExportedData = {
   units?: Unit[];
@@ -18,36 +19,30 @@ export type ExportedData = {
   meals?: Meal[];
 };
 
-export async function exportData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, meals: MealStore): Promise<string> {
+export async function exportData(db: DB): Promise<string> {
   return JSON.stringify({
-    units: await units.getAll(),
-    categories: await categories.getAll(),
-    ingredients: await ingredients.getAll(),
-    recipies: await recipies.getAll(),
-    meals: await meals.getAll(),
+    units: await db.units().getAll(),
+    categories: await db.categories().getAll(),
+    ingredients: await db.ingredients().getAll(),
+    recipies: await db.recipies().getAll(),
+    meals: await db.meals().getAll(),
   });
 }
 
-export async function importData(units: UnitStore, categories: CategoryStore, ingredients: IngredientStore, recipies: RecipieStore, meals: MealStore, data: string): Promise<void> {
+export async function importData(db: DB, data: string): Promise<void> {
   try {
     const parsed = JSON.parse(data) as ExportedData;
-    await loadDataFile(parsed, units, categories, ingredients, recipies, meals);
+    await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
   } catch (err) {
     console.error(err);
     throw err;
   }
 }
 
-export async function initData(
-  units: UnitStore,
-  categories: CategoryStore,
-  ingredients: IngredientStore,
-  recipies: RecipieStore,
-  meals: MealStore
-): Promise<void> {
+export async function initData(db: DB): Promise<void> {
   try {
     const data = defaultData as ExportedData;
-    await loadDataFile(data, units, categories, ingredients, recipies, meals);
+    await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
   } catch (err) {
     throw err;
   }

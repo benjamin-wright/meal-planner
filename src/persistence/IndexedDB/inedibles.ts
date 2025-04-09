@@ -1,39 +1,41 @@
 import { Inedible } from "../../models/inedible";
 import { InedibleStore } from "../interfaces/inedibles";
-import { DB } from "./db";
+import { TypedDB } from "./typed-db";
+
+const TABLE_NAME = "inedibles";
 
 export function inediblesV1(db: IDBDatabase) {
-  db.createObjectStore("inedibles", { keyPath: "id", autoIncrement: true });
+  db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
 }
 
 export class Inedibles implements InedibleStore {
-  private db: DB;
+  private db: TypedDB;
 
-  constructor(db: DB) {
+  constructor(db: TypedDB) {
     this.db = db;
   }
 
   async get(id: number): Promise<Inedible> {
-    return this.db.get<Inedible>("inedibles", id);
+    return this.db.get<Inedible>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Inedible[]> {
-    return this.db.getAll<Inedible>("inedibles");
+    return this.db.getAll<Inedible>(TABLE_NAME);
   }
 
   async add(name: string, ingredientId: number, quantity: number): Promise<number> {
-    return this.db.add("inedibles", { name, ingredientId, quantity });
+    return this.db.add(TABLE_NAME, { name, ingredientId, quantity });
   }
 
   async put(value: Inedible): Promise<void> {
-    return this.db.put("inedibles", value);
+    return this.db.put(TABLE_NAME, value);
   }
 
   async delete(id: number): Promise<void> {
-    return this.db.delete("inedibles", id);
+    return this.db.delete(TABLE_NAME, id);
   }
 
   async clear(): Promise<void> {
-    return this.db.clear("inedibles");
+    return this.db.clear(TABLE_NAME);
   }
 }

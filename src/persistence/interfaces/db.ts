@@ -14,5 +14,5 @@ export interface DB {
   meals(): MealStore;
   inedibles(): InedibleStore;
   shopping(): ShoppingStore;
-  clear(): Promise<void>;
+  reset(): Promise<void>;
 }

@@ -50,19 +50,19 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 }
 
 export function Settings() {
-  const { db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore } = useContext(DBContext);
+  const { db } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<"restore" | "reset">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
 
   function backup() {
-    if (!unitStore || !categoryStore || !ingredientStore || !recipieStore || !mealStore) {
+    if (!db) {
       setError("Unable to access database");
       return;
     }
 
-    exportData(unitStore, categoryStore, ingredientStore, recipieStore, mealStore).then((blob) => {
+    exportData(db).then((blob) => {
       const url = URL.createObjectURL(new Blob([blob], { type: "application/json" }));
       const a = document.createElement("a");
       a.href = url;
@@ -89,12 +89,12 @@ export function Settings() {
           return;
         }
 
-        if (!unitStore || !categoryStore || !ingredientStore || !recipieStore || !mealStore) {
+        if (!db) {
           setError("Unable to access database");
           return;
         }
 
-        importData(unitStore, categoryStore, ingredientStore, recipieStore, mealStore, backupData)
+        importData(db, backupData)
           .then(() => setMessage("Data restored successfully"))
           .catch((err) => setError(err.message));
 
