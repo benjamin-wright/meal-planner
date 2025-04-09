@@ -1,12 +1,13 @@
-import { unitsV1 } from "./units";
-import { categoriesV1 } from "./categories";
-import { ingredientsV1 } from "./ingredients";
-import { recipiesV1 } from "./recipies";
-import { mealsV1 } from "./meals";
-import { inediblesV1 } from "./inedibles";
-import { shoppingV1 } from "./shopping";
+import { Units, unitsV1 } from "./units";
+import { Categories, categoriesV1 } from "./categories";
+import { Ingredients, ingredientsV1 } from "./ingredients";
+import { Recipies, recipiesV1 } from "./recipies";
+import { Meals, mealsV1 } from "./meals";
+import { Inedibles, inediblesV1 } from "./inedibles";
+import { Shopping, shoppingV1 } from "./shopping";
+import { TypedDB } from "./typed-db";
+import { DB } from "../interfaces/db";
 
-const DB_NAME = "meal-planner";
 const DB_VERSION = 4;
 
 const migrations = [
@@ -27,152 +28,85 @@ const migrations = [
   }
 ]
 
-export async function createDB(): Promise<DB> {
-  return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-
-      const oldVersion = event.oldVersion;
-      const newVersion = event.newVersion ? event.newVersion : 0;
-
-      for (let v = oldVersion; v < newVersion; v++) {
-        console.info(`Migrating to version ${v + 1}`);
-        migrations[v](db);
-      }
-    };
-
-    request.onsuccess = () => {
-      resolve(request.result);
-    };
-
-    request.onerror = (error) => {
-      reject(error);
-    };
-  }).then((db: IDBDatabase) => new DB(db));
+interface ICreateProps {
+  dbName: string;
+  initFunc?: (db: IndexedDB) => Promise<void>;
 }
 
-export class DB {
-  private db: IDBDatabase;
+export class IndexedDB implements DB {
+  static async create({ dbName, initFunc }: ICreateProps): Promise<IndexedDB> {
+    let isNew = false;
 
-  constructor(db: IDBDatabase) {
-    this.db = db;
-  }
+    return new Promise<IndexedDB>((resolve, reject) => {
+      const request = indexedDB.open(dbName, DB_VERSION);
 
-  async get<T>(db: string, id: number): Promise<T> {
-    const tx = this.db.transaction(db, "readonly");
-    const store = tx.objectStore(db);
-    const req = store.get(id);
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result);
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (event.oldVersion === 0) {
+          isNew = true;
+        }
+
+        const oldVersion = event.oldVersion;
+        const newVersion = event.newVersion ? event.newVersion : 0;
+
+        for (let v = oldVersion; v < newVersion; v++) {
+          console.info(`Migrating to version ${v + 1}`);
+          migrations[v](db);
+        }
       };
-      req.onerror = () => {
-        reject(req.error);
+
+      request.onsuccess = () => {
+        const db = new IndexedDB(request.result, dbName);
+        if (isNew && initFunc) {
+          return initFunc(db).then(() => resolve(db)).catch(reject);
+        } else {
+          resolve(db);
+        }
+      };
+
+      request.onerror = (error) => {
+        reject(error);
       };
     });
   }
 
-  async getAll<T>(db: string): Promise<T[]> {
-    const tx = this.db.transaction(db, "readonly");
-    const store = tx.objectStore(db);
-    const req = store.getAll();
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result as T[]);
-      };
-      req.onerror = () => {
-        reject(req.error);
-      };
-    });
+  private db: TypedDB;
+  private name: string;
+
+  private constructor(db: IDBDatabase, name: string) {
+    this.db = new TypedDB(db);
+    this.name = name;
   }
 
-  async getByIndex<T, K extends keyof T>(
-    db: string,
-    key: K,
-    value: T[K] & IDBValidKey
-  ): Promise<T[]> {
-    const tx = this.db.transaction(db, "readonly");
-    const store = tx.objectStore(db);
-    const index = store.index(key as string);
-    const req = index.getAll(value);
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result);
-      };
-      req.onerror = () => {
-        reject(req.error);
-      };
-    });
+  units() {
+    return new Units(this.db);
   }
 
-  async add<T>(db: string, value: T & { id?: number }): Promise<number> {
-    const tx = this.db.transaction(db, "readwrite");
-    const store = tx.objectStore(db);
-    delete value.id;
-    const req = store.add(value);
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      req.onsuccess = () => {
-        resolve(req.result as number);
-      };
-      req.onerror = () => {
-        reject(req.error);
-      };
-    });
+  categories() {
+    return new Categories(this.db);
   }
 
-  async put<T>(db: string, value: T): Promise<void> {
-    const tx = this.db.transaction(db, "readwrite");
-    const store = tx.objectStore(db);
-    store.put(value);
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      tx.oncomplete = () => {
-        resolve();
-      };
-      tx.onerror = () => {
-        reject(tx.error);
-      };
-    });
+  ingredients() {
+    return new Ingredients(this.db);
   }
 
-  async delete(db: string, id: number): Promise<void> {
-    const tx = this.db.transaction(db, "readwrite");
-    const store = tx.objectStore(db);
-    store.delete(id);
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      tx.oncomplete = () => {
-        resolve();
-      };
-      tx.onerror = () => {
-        reject(tx.error);
-      };
-    });
+  recipies() {
+    return new Recipies(this.db);
   }
 
-  async clear(db: string): Promise<void> {
-    const tx = this.db.transaction(db, "readwrite");
-    const store = tx.objectStore(db);
-    store.clear();
-    tx.commit();
-    return new Promise((resolve, reject) => {
-      tx.oncomplete = () => {
-        resolve();
-      };
-      tx.onerror = () => {
-        reject(tx.error);
-      };
-    });
+  meals() {
+    return new Meals(this.db);
   }
 
-  reset() {
-    this.db.close();
-    indexedDB.deleteDatabase(DB_NAME);
+  inedibles() {
+    return new Inedibles(this.db);
+  }
+
+  shopping() {
+    return new Shopping(this.db);
+  }
+
+  async reset() {
+    await this.db.reset(this.name);
   }
 }
