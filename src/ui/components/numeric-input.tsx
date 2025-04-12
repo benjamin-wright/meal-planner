@@ -1,16 +1,20 @@
+import { Info } from "@mui/icons-material";
 import {
+  Chip,
   FormControl,
   InputLabel,
   OutlinedInput,
+  Tooltip,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface NumericInputProps {
   id?: string;
   label: string;
   value: number;
   required?: boolean;
+  info?: string;
   onChange: (value: number) => void;
 }
 
@@ -19,6 +23,7 @@ export function NumericInput({
   value,
   label,
   required,
+  info,
   onChange,
 }: NumericInputProps) {
   const [text, setText] = useState("");
@@ -28,7 +33,7 @@ export function NumericInput({
     setText(value.toString());
   }, [value]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) {
     const firstDecimal = e.target.value.indexOf(".");
     const secondDecimal = e.target.value.indexOf(".", firstDecimal + 1);
     if (secondDecimal !== -1) {
@@ -52,7 +57,7 @@ export function NumericInput({
     >
       <InputLabel htmlFor={id} sx={{
         padding: "0 0",
-      }}>{label}</InputLabel> 
+      }}>{label}</InputLabel>
       <OutlinedInput
         id={id}
         size="small"
@@ -60,7 +65,13 @@ export function NumericInput({
         inputProps={{ inputMode: "decimal", pattern: "[0-9.]*" }}
         value={text}
         onChange={handleChange}
+        onBlur={handleChange}
         label={label}
+        endAdornment={info ?
+          <Tooltip title={info} enterTouchDelay={0} leaveTouchDelay={2000} onContextMenu={(e) => e.preventDefault()}>
+            <Info />
+          </Tooltip> : undefined
+        }
       />
     </FormControl>
   );

@@ -24,11 +24,11 @@ export class Units implements UnitStore {
     return this.db.getAll<Unit>(TABLE_NAME);
   }
 
-  async add(name: string, type: UnitType, magnitudes?: Magnitude[], singular?: string, plural?: string): Promise<number> {
+  async add(name: string, type: UnitType, magnitudes?: Magnitude[], base?: number, singular?: string, plural?: string): Promise<number> {
     if (magnitudes) {
       magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
-    return this.db.add(TABLE_NAME, { name, type, magnitudes, singular, plural });
+    return this.db.add(TABLE_NAME, { name, type, magnitudes, base, singular, plural });
   }
 
   async put(value: Unit): Promise<void> {

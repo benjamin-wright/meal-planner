@@ -37,15 +37,17 @@ export class Unit {
   type: UnitType;
   singular?: string;
   plural?: string;
+  base?: number;
   magnitudes: Magnitude[];
 
-  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], singular?: string, plural?: string) {
+  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], base?: number, singular?: string, plural?: string) {
     this.id = id;
     this.name = name;
     this.type = type;
     this.magnitudes = magnitudes;
     this.singular = singular;
     this.plural = plural;
+    this.base = base;
   }
 }
 

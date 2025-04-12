@@ -8,15 +8,17 @@ import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
 import { NewItemButton } from "../../components/new-item-button";
 import { SelectObject } from "../../components/select-object";
+import { NumericInput } from "../../components/numeric-input";
+import { Tooltip } from "@mui/material";
 
 export function UnitsEdit() {
   const { returnTo, setFormResult } = useForms("units");
   const { unitStore } = useContext(DBContext);
   const params = useParams();
-  const [ search ] = useSearchParams();
+  const [search] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], singular: "", plural: "" });
+  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], base: 1, singular: "", plural: "" });
   const navigate = useNavigate();
 
   async function load() {
@@ -56,7 +58,7 @@ export function UnitsEdit() {
         let id = unit.id;
 
         if (isNew) {
-          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.singular, unit.plural) || 0;
+          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.base, unit.singular, unit.plural) || 0;
         } else {
           await unitStore?.put(unit);
         }
@@ -111,6 +113,20 @@ export function UnitsEdit() {
         </>)
       )}
       {unit.type !== UnitType.Count && (<>
+        <NumericInput
+          label="base"
+          required
+          info="How many of this unit type's base units (e.g. grams for weight, litres of volume) go into 1 of this unit."
+          value={unit.base || 1}
+          onChange={(value) => {
+            console.log(value);
+            unit.base = value;
+            if (value <= 0) {
+              unit.base = 1;
+            }
+            setUnit({ ...unit });
+          }}
+        />
         {unit.magnitudes.map((magnitude, index) => (
           <MagnitudeEdit key={index} index={index} magnitude={magnitude} onChange={(m) => {
             unit.magnitudes[index] = m;
