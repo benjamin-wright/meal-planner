@@ -9,10 +9,8 @@ import { useForms } from "../../providers/forms";
 import { NewItemButton } from "../../components/new-item-button";
 import { SelectObject } from "../../components/select-object";
 import { NumericInput } from "../../components/numeric-input";
-import { Tooltip } from "@mui/material";
 
 export function UnitsEdit() {
-  const { returnTo, setFormResult } = useForms("units");
   const { unitStore } = useContext(DBContext);
   const params = useParams();
   const [search] = useSearchParams();
@@ -20,6 +18,8 @@ export function UnitsEdit() {
   const [isNew, setIsNew] = useState(true);
   const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], base: 1, singular: "", plural: "" });
   const navigate = useNavigate();
+
+  const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
 
   async function load() {
     if (unitStore === undefined) {

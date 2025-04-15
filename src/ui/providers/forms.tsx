@@ -10,10 +10,10 @@ interface FormContextProps {
 
 export const FormContext = createContext<FormContextProps>({
   has: () => false,
-  push: () => {},
+  push: () => { },
   pop: () => undefined,
   getReturn: () => "",
-  setResult: () => {}
+  setResult: () => { }
 });
 
 interface FormProviderProps {
@@ -140,8 +140,8 @@ export type FormState = {
 
 export function useForms(from: string): FormState {
   const forms = useContext(FormContext);
-  const [ formsResult, setFormsResult ] = useState<FormResult>();
-  
+  const [formsResult, setFormsResult] = useState<FormResult>();
+
   useEffect(() => {
     if (forms.has(from)) {
       setFormsResult(forms.pop(from));

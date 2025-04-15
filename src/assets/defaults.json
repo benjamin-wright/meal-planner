@@ -4,6 +4,7 @@
       "id": 1,
       "name": "gram",
       "type": "weight",
+      "base": 1,
       "magnitudes": [
         {
           "abbrev": "mg",
@@ -29,6 +30,7 @@
       "id": 2,
       "name": "litre",
       "type": "volume",
+      "base": 1,
       "magnitudes": [
         {
           "abbrev": "ml",
@@ -72,8 +74,12 @@
       "order": 5
     },
     {
-      "name": "cupboard",
+      "name": "home",
       "order": 6
+    },
+    {
+      "name": "cupboard",
+      "order": 7
     }
   ]
 }
