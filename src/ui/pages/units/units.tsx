@@ -1,6 +1,6 @@
 import { Page } from "../../components/page";
 import { DetailViewGroup } from "../../components/detail-view";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
@@ -12,6 +12,7 @@ import Tab from "@mui/material/Tab";
 
 export function Units() {
   const { unitStore } = useContext(DBContext);
+  const [search] = useSearchParams();
 
   const [tab, setTab] = useState("count");
   const [units, setUnits] = useState<Unit[]>([]);
@@ -26,6 +27,11 @@ export function Units() {
 
     const units = await unitStore.getAll();
     setUnits(units);
+
+    const type = search.get("type");
+    if (type) {
+      setTab(type);
+    }
   }
 
   useEffect(() => {

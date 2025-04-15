@@ -30,22 +30,13 @@ export async function exportData(db: DB): Promise<string> {
 }
 
 export async function importData(db: DB, data: string): Promise<void> {
-  try {
-    const parsed = JSON.parse(data) as ExportedData;
-    await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const parsed = JSON.parse(data) as ExportedData;
+  await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
 }
 
 export async function initData(db: DB): Promise<void> {
-  try {
-    const data = defaultData as ExportedData;
-    await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
-  } catch (err) {
-    throw err;
-  }
+  const data = defaultData as ExportedData;
+  await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals());
 }
 
 async function loadDataFile(
