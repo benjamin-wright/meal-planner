@@ -72,7 +72,7 @@ export function Ingredients() {
     setOpen(false);
   }
 
-  return <Page title="Ingredients" sx={{ gap: 0 }}>
+  return <Page title="Ingredients" returnTo="/data" showNav sx={{ gap: 0 }}>
     <DetailViewGroup>
       { categories.map((category) => (
         <Accordion key={category.id} expanded={expanded === category.id} onChange={() => setExpanded(expanded === category.id ? false : category.id)}>

@@ -9,7 +9,7 @@ interface PageProps {
   title: string;
   children?: React.ReactNode;
   returnTo?: string;
-  hideNav?: boolean;
+  showNav?: boolean;
   noScroll?: boolean;
   sx?: SxProps;
 }
@@ -19,7 +19,7 @@ export function Page({
   children,
   returnTo,
   noScroll,
-  hideNav,
+  showNav,
   sx
 }: PageProps) {
   const theme = useTheme();
@@ -51,7 +51,7 @@ export function Page({
           >
             {title}
           </Typography>
-          {!returnTo && !hideNav && (
+          {showNav && (
             <Nav />
           )}
         </Toolbar>

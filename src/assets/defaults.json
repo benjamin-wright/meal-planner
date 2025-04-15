@@ -54,32 +54,73 @@
   ],
   "categories": [
     {
+      "id": 1,
       "name": "fruit",
       "order": 1
     },
     {
+      "id": 2,
       "name": "vegetable",
       "order": 2
     },
     {
+      "id": 3,
       "name": "meat",
       "order": 3
     },
     {
+      "id": 4,
       "name": "fish",
       "order": 4
     },
     {
+      "id": 5,
       "name": "dairy",
       "order": 5
     },
     {
+      "id": 6,
       "name": "home",
       "order": 6
     },
     {
+      "id": 7,
       "name": "cupboard",
       "order": 7
+    }
+  ],
+  "ingredients": [
+    {
+      "id": 1,
+      "name": "onions",
+      "category": 2,
+      "unit": 1
+    },
+    {
+      "id": 2,
+      "name": "potatoes",
+      "category": 2,
+      "unit": 1
+    }
+  ],
+  "recipies": [
+    {
+      "id": 1,
+      "name": "potato salad",
+      "description": "A simple potato salad recipe.",
+      "serves": 4,
+      "time": 30,
+      "ingredients": [
+        {
+          "id": 2,
+          "quantity": 500
+        },
+        {
+          "id": 1,
+          "quantity": 200
+        }
+      ],
+      "steps": []
     }
   ]
 }

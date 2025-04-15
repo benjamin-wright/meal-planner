@@ -127,12 +127,11 @@ export function Planner() {
     await load();
   }
 
-  return <Page title="Planner">
+  return <Page title="Planner" showNav>
     <Tabs value={tab} onChange={(_event, value) => setTab(value)} variant="fullWidth">
       <Tab label="Dinner" value="dinner" />
       <Tab label="Lunch" value="lunch" />
       <Tab label="Breakfast" value="breakfast" />
-      <Tab label="Other" value="other" />
     </Tabs>
 
     <Box paddingBottom="4em" overflow="scroll">

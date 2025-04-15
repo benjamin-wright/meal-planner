@@ -1,10 +1,9 @@
 import { CategoryStore } from "./categories";
-import { InedibleStore } from "./inedibles";
 import { IngredientStore } from "./ingredients";
 import { MealStore } from "./meals";
 import { RecipieStore } from "./recipies";
-import { ShoppingStore } from "./shopping";
 import { UnitStore } from "./units";
+import { MiscStore } from "./misc";
 
 export interface DB {
   units(): UnitStore;
@@ -12,7 +11,6 @@ export interface DB {
   ingredients(): IngredientStore;
   recipies(): RecipieStore;
   meals(): MealStore;
-  inedibles(): InedibleStore;
-  shopping(): ShoppingStore;
+  misc(): MiscStore;
   reset(): Promise<void>;
 }

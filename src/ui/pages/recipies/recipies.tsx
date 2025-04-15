@@ -38,7 +38,7 @@ export function Recipies() {
     setRecipies(recipies.filter((recipie) => recipie.id !== toDelete.id));
   }
 
-  return <Page title="Recipies">
+  return <Page title="Recipies" returnTo="/data" showNav>
     <DetailViewGroup>
       {
         recipies.map((recipie) => (

@@ -57,7 +57,7 @@ export function Categories() {
   }
 
   return (
-    <Page title="Categories">
+    <Page title="Categories" returnTo="/data" showNav>
       <Reorder.Group axis="y" values={items} onReorder={onReorder}>
         <DetailViewGroup>
           {items.map((category: Category) => (

@@ -58,7 +58,7 @@ export function Units() {
   }
 
   return (
-    <Page title="Units">
+    <Page title="Units" returnTo="/data" showNav>
       <Tabs value={tab} onChange={(_event, value) => setTab(value)} variant="fullWidth">
         <Tab label="Count" value="count" />
         <Tab label="Weight" value="weight" />

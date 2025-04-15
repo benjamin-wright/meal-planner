@@ -15,6 +15,8 @@ import { routes as settings } from "./ui/pages/settings/routes";
 import { routes as recipies } from "./ui/pages/recipies/routes";
 import { routes as planner } from "./ui/pages/planner/routes";
 import { routes as list } from "./ui/pages/list/routes";
+import { routes as data } from "./ui/pages/data/routes";
+import { routes as misc } from "./ui/pages/misc/routes";
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
       ...units,
       ...ingredients,
       ...recipies,
+      ...misc,
+      ...data,
       ...planner,
       ...list
     ],

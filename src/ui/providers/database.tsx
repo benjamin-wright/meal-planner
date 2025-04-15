@@ -5,8 +5,7 @@ import { CategoryStore } from "../../persistence/interfaces/categories";
 import { IngredientStore } from "../../persistence/interfaces/ingredients";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
-import { InedibleStore } from "../../persistence/interfaces/inedibles";
-import { ShoppingStore } from "../../persistence/interfaces/shopping";
+import { MiscStore } from "../../persistence/interfaces/misc";
 
 interface DBContextProps {
   db?: DB;
@@ -15,8 +14,7 @@ interface DBContextProps {
   ingredientStore?: IngredientStore;
   recipieStore?: RecipieStore;
   mealStore?: MealStore;
-  inedibleStore?: InedibleStore;
-  shoppingStore?: ShoppingStore;
+  miscStore?: MiscStore;
 }
 
 export const DBContext = createContext<DBContextProps>({});
@@ -33,8 +31,7 @@ export function DBProvider({ children, database }: DBProviderProps) {
   const [ingredientStore, setIngredients] = useState<IngredientStore | undefined>(undefined);
   const [recipieStore, setRecipies] = useState<RecipieStore | undefined>(undefined);
   const [mealStore, setMeals] = useState<MealStore | undefined>(undefined);
-  const [inedibleStore, setInedibles] = useState<InedibleStore | undefined>(undefined);
-  const [shoppingStore, setShopping] = useState<ShoppingStore | undefined>(undefined);
+  const [miscStore, setMisc] = useState<MiscStore | undefined>(undefined);
 
   useEffect(() => {
     database.then((db: DB) => {
@@ -44,14 +41,13 @@ export function DBProvider({ children, database }: DBProviderProps) {
       setIngredients(db.ingredients());
       setRecipies(db.recipies());
       setMeals(db.meals());
-      setInedibles(db.inedibles());
-      setShopping(db.shopping());
+      setMisc(db.misc());
     });
   }, [database])
 
   return (
     <DBContext.Provider
-      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, inedibleStore, shoppingStore }}
+      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, miscStore }}
     >
       {children}
     </DBContext.Provider>

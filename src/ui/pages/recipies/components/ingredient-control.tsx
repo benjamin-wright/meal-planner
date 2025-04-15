@@ -68,6 +68,10 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
     onChange({ ...value, id: selected.id });
   }
 
+  console.info(value);
+  console.info(selected);
+  console.info(unit);
+
   return <Card sx={{
     padding: "0.25em",
     paddingLeft: "1em",

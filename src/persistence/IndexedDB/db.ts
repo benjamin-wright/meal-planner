@@ -3,8 +3,7 @@ import { Categories, categoriesV1 } from "./categories";
 import { Ingredients, ingredientsV1 } from "./ingredients";
 import { Recipies, recipiesV1 } from "./recipies";
 import { Meals, mealsV1 } from "./meals";
-import { Inedibles, inediblesV1 } from "./inedibles";
-import { Shopping, shoppingV1 } from "./shopping";
+import { Misc, miscV1 } from "./misc";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 
@@ -23,9 +22,8 @@ const migrations = [
     mealsV1(db);
   },
   (db: IDBDatabase) => {
-    inediblesV1(db);
-    shoppingV1(db);
-  }
+    miscV1(db);
+  },
 ]
 
 interface ICreateProps {
@@ -98,12 +96,8 @@ export class IndexedDB implements DB {
     return new Meals(this.db);
   }
 
-  inedibles() {
-    return new Inedibles(this.db);
-  }
-
-  shopping() {
-    return new Shopping(this.db);
+  misc() {
+    return new Misc(this.db);
   }
 
   async reset() {

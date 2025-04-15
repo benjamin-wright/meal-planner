@@ -111,7 +111,7 @@ export function Settings() {
   }
 
   return (
-    <Page title="Settings">
+    <Page title="Settings" showNav>
       <DescriptionButton text="backup" onClick={backup}>
         Save the current application state to a JSON file on your device.
       </DescriptionButton>
