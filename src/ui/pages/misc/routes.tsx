@@ -9,5 +9,9 @@ export const routes = [
   {
     path: "misc/new",
     element: <MiscEdit />,
+  },
+  {
+    path: "misc/:misc",
+    element: <MiscEdit />,
   }
 ];

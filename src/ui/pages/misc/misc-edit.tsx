@@ -49,7 +49,7 @@ export function MiscEdit() {
       setMisc(misc);
     }
   }
-  
+
   useEffect(() => {
     load();
   }, [miscStore, categoryStore, formsResult]);
@@ -92,12 +92,14 @@ export function MiscEdit() {
         required
         toLabel={(category: Category) => category.name}
         onChange={(id: number) => setMisc({ ...misc, category: id })}
-        onNav={() => { pushForm({
-          to: "categories",
-          from: "misc",
-          link: location.pathname,
-          body: misc
-        })}}
+        onNav={() => {
+          pushForm({
+            to: "categories",
+            from: "misc",
+            link: location.pathname,
+            body: misc
+          })
+        }}
       />
 
     </Form>
