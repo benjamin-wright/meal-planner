@@ -97,13 +97,13 @@
       "id": 1,
       "name": "onions",
       "category": 2,
-      "unit": 1
+      "unitType": "weight"
     },
     {
       "id": 2,
       "name": "potatoes",
       "category": 2,
-      "unit": 1
+      "unitType": "weight"
     }
   ],
   "recipies": [

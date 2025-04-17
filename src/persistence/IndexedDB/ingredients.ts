@@ -1,4 +1,5 @@
 import { Ingredient } from "../../models/ingredients";
+import { UnitType } from "../../models/units";
 import { IngredientStore } from "../interfaces/ingredients";
 import { TypedDB } from "./typed-db";
 
@@ -34,8 +35,8 @@ export class Ingredients implements IngredientStore {
     return this.db.getAll<Ingredient>(TABLE_NAME);
   }
 
-  async add(name: string, category: number, unit: number): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category, unit });
+  async add(name: string, category: number, unitType: UnitType, unit?: number): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category, unitType, unit });
   }
 
   async put(value: Ingredient): Promise<void> {

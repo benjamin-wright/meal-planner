@@ -7,14 +7,14 @@ import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
 import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
-import { Unit } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 
 export function IngredientsEdit() {
   const { formsResult, pushForm, returnTo, setFormResult } = useForms("ingredients");
   const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
   const params = useParams();
 
-  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unit: 0 });
+  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unitType: UnitType.Weight, unit: 0 });
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const [isNew, setIsNew] = useState(true);
@@ -73,12 +73,10 @@ export function IngredientsEdit() {
         let id = ingredient.id;
         console.info("ingredient", ingredient);
         if (isNew) {
-          id = await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit) || 0;
+          id = await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unitType, ingredient.unit) || 0;
         } else {
           await ingredientStore?.put(ingredient);
         }
-
-        console.info("id", id);
         
         setFormResult("ingredients", { field: "ingredient", response: id });
         navigate(returnTo);
