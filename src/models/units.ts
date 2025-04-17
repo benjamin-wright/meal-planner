@@ -31,32 +31,56 @@ export class Magnitude {
   }
 }
 
+export class Collective {
+  singular?: string;
+  plural?: string;
+  multiplier?: number;
+
+  constructor(multiplier?: number, singular?: string, plural?: string) {
+    this.singular = singular;
+    this.plural = plural;
+    this.multiplier = multiplier;
+  }
+}
+
 export class Unit {
   id: number;
   name: string;
   type: UnitType;
-  singular?: string;
-  plural?: string;
   base?: number;
   magnitudes: Magnitude[];
+  collectives: Collective[];
 
-  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], base?: number, singular?: string, plural?: string) {
+  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], collectives: Collective[], base?: number) {
     this.id = id;
     this.name = name;
     this.type = type;
     this.magnitudes = magnitudes;
-    this.singular = singular;
-    this.plural = plural;
+    this.collectives = collectives;
     this.base = base;
   }
 }
 
-export function getAbbr(unit: Unit, value: number): string {
+export function getAbbr(unit: Unit, value: number, collective?: number): string {
   if (unit.type === UnitType.Count) {
+    if (collective === undefined) {
+      throw new Error("Collective is required for count units");
+    }
+
+    if (unit.collectives.length === 0) {
+      throw new Error(`No collectives defined for unit '${unit.name}'`);
+    }
+
+    if (collective < 0 || collective >= unit.collectives.length) {
+      throw new Error(`Invalid collective index, got ${collective}, expected 0-${unit.collectives.length - 1}`);
+    }
+
+    const unitCollective = unit.collectives[collective];
+
     if (value === 1) {
-      return unit.singular ? ` ${unit.singular}` : "";
+      return unitCollective.singular ? ` ${unitCollective.singular}` : "";
     } else {
-      return unit.plural ? ` ${unit.plural}` : "";
+      return unitCollective.plural ? ` ${unitCollective.plural}` : "";
     }
   } else {
     const magnitude = getNearestMagnitude(unit, value);

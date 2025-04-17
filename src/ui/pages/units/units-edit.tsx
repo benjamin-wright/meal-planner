@@ -9,6 +9,7 @@ import { useForms } from "../../providers/forms";
 import { NewItemButton } from "../../components/new-item-button";
 import { SelectObject } from "../../components/select-object";
 import { NumericInput } from "../../components/numeric-input";
+import { CollectiveEdit } from "./components/collective-edit";
 
 export function UnitsEdit() {
   const { unitStore } = useContext(DBContext);
@@ -16,7 +17,7 @@ export function UnitsEdit() {
   const [search] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], base: 1, singular: "", plural: "" });
+  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], collectives: [], base: 1 });
   const navigate = useNavigate();
 
   const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
@@ -49,6 +50,11 @@ export function UnitsEdit() {
     setUnit({ ...unit });
   }
 
+  function handleNewCollective() {
+    unit.collectives.push({ singular: "", plural: "", multiplier: 1 });
+    setUnit({ ...unit });
+  }
+
   return (
     <Form
       title={isNew ? "Units: new" : `Units: ${unit.name}`}
@@ -58,7 +64,7 @@ export function UnitsEdit() {
         let id = unit.id;
 
         if (isNew) {
-          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.base, unit.singular, unit.plural) || 0;
+          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.collectives, unit.base) || 0;
         } else {
           await unitStore?.put(unit);
         }
@@ -88,28 +94,21 @@ export function UnitsEdit() {
       />
       {unit.type === UnitType.Count && (
         (<>
-          <TextInput
-            id="singular"
-            variant="outlined"
-            label="singular"
-            value={unit.singular}
-            lowercase
-            onChange={(value) => {
-              unit.singular = value;
+          {unit.collectives.map((collective, index) => <CollectiveEdit
+            key={index}
+            index={index}
+            collective={collective}
+            multiple={unit.collectives.length > 1}
+            onChange={(c) => {
+              unit.collectives[index] = c;
               setUnit({ ...unit });
             }}
-          />
-          <TextInput
-            id="plural"
-            variant="outlined"
-            label="plural"
-            value={unit.plural}
-            lowercase
-            onChange={(value) => {
-              unit.plural = value;
+            onRemove={() => {
+              unit.collectives.splice(index, 1);
               setUnit({ ...unit });
             }}
-          />
+          />)}
+          <NewItemButton onClick={handleNewCollective} />
         </>)
       )}
       {unit.type !== UnitType.Count && (<>
@@ -119,7 +118,6 @@ export function UnitsEdit() {
           info="How many of this unit type's base units (e.g. grams for weight, litres of volume) go into 1 of this unit."
           value={unit.base || 1}
           onChange={(value) => {
-            console.log(value);
             unit.base = value;
             if (value <= 0) {
               unit.base = 1;

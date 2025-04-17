@@ -14,24 +14,22 @@ export function CategoriesEdit() {
   const navigate = useNavigate();
   const params = useParams();
 
-  async function load() {
-    if (categoryStore === undefined) {
-      return;
-    }
-
-    if (params.category) {
-      const category = await categoryStore.get(Number.parseInt(params.category, 10));
-      setCategory(category);
-      setIsNew(false);
-    } else {
-      const categories = await categoryStore.getAll();
-      setCategory({ id: 0, name: "", order: categories.length });
-    }
-  }
-  
   useEffect(() => {
-    load();
-  }, [categoryStore]);
+    (async () => {
+      if (categoryStore === undefined) {
+        return;
+      }
+
+      if (params.category) {
+        const category = await categoryStore.get(Number.parseInt(params.category, 10));
+        setCategory(category);
+        setIsNew(false);
+      } else {
+        const categories = await categoryStore.getAll();
+        setCategory({ id: 0, name: "", order: categories.length });
+      }
+    })();
+  }, [categoryStore, params.category]);
 
   return (
     <Form

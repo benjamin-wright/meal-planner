@@ -1,6 +1,5 @@
 import { Info } from "@mui/icons-material";
 import {
-  Chip,
   FormControl,
   InputLabel,
   OutlinedInput,
@@ -33,7 +32,7 @@ export function NumericInput({
     setText(value.toString());
   }, [value]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const firstDecimal = e.target.value.indexOf(".");
     const secondDecimal = e.target.value.indexOf(".", firstDecimal + 1);
     if (secondDecimal !== -1) {
