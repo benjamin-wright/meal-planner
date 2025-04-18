@@ -8,7 +8,7 @@ import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
-import { getAbbr } from "../../../models/units";
+import { getAbbr, Unit } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
@@ -105,7 +105,7 @@ export function PlannerEdit() {
       return {
         name: ingredientDefinition.name,
         quantity: finalQuantity,
-        units: getAbbr(unit, finalQuantity),
+        units: Unit.abbr(unit, finalQuantity),
       };
     })));
 

@@ -17,50 +17,41 @@ export function parseUnitType(type: string): UnitType | undefined {
   }
 }
 
-export class Magnitude {
+export type magnitude = {
   singular: string;
   plural: string;
   abbrev: string;
   multiplier: number;
-
-  constructor(singular: string, plural: string, abbrev: string, multiplier: number) {
-    this.singular = singular;
-    this.plural = plural;
-    this.abbrev = abbrev;
-    this.multiplier = multiplier;
-  }
 }
 
-export class Collective {
+export type collective = {
   singular?: string;
   plural?: string;
   multiplier?: number;
-
-  constructor(multiplier?: number, singular?: string, plural?: string) {
-    this.singular = singular;
-    this.plural = plural;
-    this.multiplier = multiplier;
-  }
 }
 
-export class Unit {
+export type unit = {
   id: number;
   name: string;
   type: UnitType;
   base?: number;
-  magnitudes: Magnitude[];
-  collectives: Collective[];
+  magnitudes: magnitude[];
+  collectives: collective[];
+}
 
-  constructor(id: number, name: string, type: UnitType, magnitudes: Magnitude[], collectives: Collective[], base?: number) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-    this.magnitudes = magnitudes;
-    this.collectives = collectives;
-    this.base = base;
+export class Unit {
+  static default(): unit {
+    return {
+      id: 0,
+      name: "",
+      type: UnitType.Count,
+      base: 1,
+      magnitudes: [],
+      collectives: [],
+    };
   }
 
-  static validate(unit: Unit): boolean {
+  static validate(unit: unit): boolean {
     if (!unit.name) {
       return false;
     }
@@ -82,7 +73,7 @@ export class Unit {
       }
 
       for (const collective of unit.collectives) {
-        if (!collective.singular && !collective.plural) {
+        if (!collective.singular || !collective.plural) {
           return false;
         }
 
@@ -100,7 +91,7 @@ export class Unit {
       }
 
       for (const magnitude of unit.magnitudes) {
-        if (!magnitude.singular && !magnitude.plural) {
+        if (!magnitude.singular || !magnitude.plural) {
           return false;
         }
 
@@ -116,10 +107,40 @@ export class Unit {
 
     return true;
   }
-}
 
-export function getAbbr(unit: Unit, value: number, collective?: number): string {
-  if (unit.type === UnitType.Count) {
+  static abbr(unit: unit, value: number, collective?: number): string {
+    if (unit.type === UnitType.Count) {
+      return Unit.string(unit, value, collective);
+    } else {
+      const magnitude = Unit.magnitude(unit, value);
+      if (magnitude) {
+        return magnitude.abbrev;
+      } else {
+        return "";
+      }
+    }
+  }
+
+  static string(unit: unit, value: number, collective?: number): string {
+    if (unit.type === UnitType.Count) {
+      const unitCollective = Unit.collective(unit, collective);
+  
+      if (value === 1) {
+        return unitCollective.singular ? ` ${unitCollective.singular}` : "";
+      } else {
+        return unitCollective.plural ? ` ${unitCollective.plural}` : "";
+      }
+    } else {
+      const magnitude = Unit.magnitude(unit, value);
+      if (magnitude) {
+        return " " + (value === 1 ? magnitude.singular : magnitude.plural);
+      } else {
+        return "";
+      }
+    }
+  }
+
+  static collective(unit: unit, collective?: number): collective {
     if (collective === undefined) {
       throw new Error("Collective is required for count units");
     }
@@ -132,38 +153,25 @@ export function getAbbr(unit: Unit, value: number, collective?: number): string 
       throw new Error(`Invalid collective index, got ${collective}, expected 0-${unit.collectives.length - 1}`);
     }
 
-    const unitCollective = unit.collectives[collective];
-
-    if (value === 1) {
-      return unitCollective.singular ? ` ${unitCollective.singular}` : "";
-    } else {
-      return unitCollective.plural ? ` ${unitCollective.plural}` : "";
-    }
-  } else {
-    const magnitude = getNearestMagnitude(unit, value);
-    if (magnitude) {
-      return magnitude.abbrev;
-    } else {
-      return "";
-    }
-  }
-}
-
-export function getNearestMagnitude(unit: Unit, value: number): Magnitude | undefined {
-  if (unit.magnitudes.length === 0) {
-    return undefined;
+    return unit.collectives[collective];
   }
 
-  let selected = unit.magnitudes[0];
-  let closest = Number.MAX_VALUE;
-
-  unit.magnitudes.forEach((magnitude) => {
-    const diff = Math.abs(value / magnitude.multiplier);
-    if (diff >= 1 && diff < closest) {
-      closest = diff;
-      selected = magnitude;
+  static magnitude(unit: unit, value: number): magnitude | undefined {
+    if (unit.magnitudes.length === 0) {
+      return undefined;
     }
-  });
-
-  return selected;
+  
+    let selected = unit.magnitudes[0];
+    let closest = Number.MAX_VALUE;
+  
+    unit.magnitudes.forEach((magnitude) => {
+      const diff = Math.abs(value / magnitude.multiplier);
+      if (diff >= 1 && diff < closest) {
+        closest = diff;
+        selected = magnitude;
+      }
+    });
+  
+    return selected;
+  }
 }

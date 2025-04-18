@@ -24,7 +24,8 @@
           "plural": "kilograms",
           "multiplier": 1000
         }
-      ]
+      ],
+      "collectives": []
     },
     {
       "id": 2,
@@ -44,12 +45,14 @@
           "plural": "litres",
           "multiplier": 1
         }
-      ]
+      ],
+      "collectives": []
     },
     {
       "id": 3,
       "name": "count",
       "type": "count",
+      "magnitudes": [],
       "collectives": [
         {}
       ]

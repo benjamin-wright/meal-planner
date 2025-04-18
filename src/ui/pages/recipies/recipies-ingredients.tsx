@@ -6,7 +6,7 @@ import { IngredientsList } from "./components/ingredients-list";
 import { DBContext } from "../../providers/database";
 import { Ingredient } from "../../../models/ingredients";
 import Typography from "@mui/material/Typography";
-import { Unit } from "../../../models/units";
+import { unit } from "../../../models/units";
 import { useForms } from "../../providers/forms";
 
 export function RecipiesIngredients() {
@@ -18,7 +18,7 @@ export function RecipiesIngredients() {
   const [isNew, setIsNew] = useState(true);
   const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
-  const [units, setUnits] = useState<Unit[]>([]);
+  const [units, setUnits] = useState<unit[]>([]);
   const navigate = useNavigate();
 
   async function load() {

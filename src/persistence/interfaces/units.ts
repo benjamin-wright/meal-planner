@@ -1,11 +1,11 @@
-import { Collective, Magnitude, Unit, UnitType } from "../../models/units";
+import { collective, magnitude, unit, UnitType } from "../../models/units";
 
 export interface UnitStore {
-  get(id: number): Promise<Unit>;
-  getAll(): Promise<Unit[]>;
-  getAllByType(type: UnitType): Promise<Unit[]>;
-  add(name: string, type: UnitType, magnitudes: Magnitude[], collectives: Collective[], base?: number): Promise<number>;
-  put(value: Unit): Promise<void>;
+  get(id: number): Promise<unit>;
+  getAll(): Promise<unit[]>;
+  getAllByType(type: UnitType): Promise<unit[]>;
+  add(name: string, type: UnitType, magnitudes: magnitude[], collectives: collective[], base?: number): Promise<number>;
+  put(value: unit): Promise<void>;
   delete(id: number): Promise<void>;
   clear(): Promise<void>;
 }

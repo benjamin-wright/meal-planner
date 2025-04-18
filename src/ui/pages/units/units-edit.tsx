@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { parseUnitType, Unit, UnitType } from "../../../models/units";
+import { parseUnitType, Unit, unit, UnitType } from "../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
@@ -17,7 +17,7 @@ export function UnitsEdit() {
   const [search] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], collectives: [], base: 1 });
+  const [unit, setUnit] = useState<unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], collectives: [], base: 1 });
   const navigate = useNavigate();
 
   const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));

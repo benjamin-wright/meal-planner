@@ -2,7 +2,7 @@ import { Category } from "../models/categories";
 import { Ingredient } from "../models/ingredients";
 import { Meal } from "../models/meals";
 import { Recipie } from "../models/recipies";
-import { Unit } from "../models/units";
+import { unit } from "../models/units";
 import { CategoryStore } from "./interfaces/categories";
 import { IngredientStore } from "./interfaces/ingredients";
 import { MealStore } from "./interfaces/meals";
@@ -12,7 +12,7 @@ import defaultData from "../assets/defaults.json";
 import { DB } from "./interfaces/db";
 
 export type ExportedData = {
-  units?: Unit[];
+  units?: unit[];
   categories?: Category[];
   ingredients?: Ingredient[];
   recipies?: Recipie[];

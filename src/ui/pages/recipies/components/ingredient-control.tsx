@@ -4,13 +4,13 @@ import { NumericInlineInput } from "../../../components/numeric-inline-input";
 import { Ingredient } from "../../../../models/ingredients";
 import { IconLink } from "../../../components/icon-link";
 import { Add, Delete } from "@mui/icons-material";
-import { getAbbr, getNearestMagnitude, Magnitude, Unit, UnitType } from "../../../../models/units";
+import { magnitude, Unit, unit, UnitType } from "../../../../models/units";
 import { useEffect, useState } from "react";
 
 interface IngredientControlProps {
   index: number;
   ingredients: Ingredient[];
-  units: Unit[];
+  units: unit[];
   value: IngredientQuantity;
   onChange: (value: IngredientQuantity) => void;
   onDelete: () => void;
@@ -25,7 +25,7 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
   }
   
   const unit = units.find((unit) => unit.id === selected?.unit);
-  const [magnitude, setMagnitude] = useState<Magnitude>(unit?.magnitudes[0] || new Magnitude("", "", "", 1));
+  const [magnitude, setMagnitude] = useState<magnitude>(unit?.magnitudes[0] || { singular: "", plural: "", abbrev: "", multiplier: 1 });
   const [adjustedQuantity, setAdjustedQuantity] = useState<number>(value.quantity / magnitude.multiplier);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
       return;
     }
 
-    const nearestMagnitude = getNearestMagnitude(unit, value.quantity);
+    const nearestMagnitude = Unit.magnitude(unit, value.quantity);
     if (!nearestMagnitude) {
       return
     }
@@ -49,7 +49,7 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
     updateMagnitude(newMagnitude);
   }
 
-  function updateMagnitude(newMagnitude: Magnitude) {
+  function updateMagnitude(newMagnitude: magnitude) {
     setAdjustedQuantity(adjustedQuantity / newMagnitude.multiplier * magnitude.multiplier);
     setMagnitude(newMagnitude);
   }
@@ -94,7 +94,7 @@ export function IngredientControl({index, ingredients, units, value, onChange, o
       :&nbsp;
       <NumericInlineInput value={adjustedQuantity} onChange={quantityChanged} />
       &nbsp;
-      { unit && unit.type === UnitType.Count && <span>{getAbbr(unit, value.quantity)}</span> }
+      { unit && unit.type === UnitType.Count && <span>{Unit.abbr(unit, value.quantity)}</span> }
       { unit && unit.type !== UnitType.Count && 
       <Select
         id={`unit-${index}`}

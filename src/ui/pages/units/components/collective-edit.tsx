@@ -3,14 +3,14 @@ import Card from "@mui/material/Card";
 import { NumericInput } from "../../../components/numeric-input";
 import Button from "@mui/material/Button";
 import Delete from "@mui/icons-material/Delete";
-import { Collective } from "../../../../models/units";
+import { collective } from "../../../../models/units";
 import { TextInput } from "../../../components/text-input";
 
 interface CollectiveEditProps {
   index: number;
-  collective: Collective;
+  collective: collective;
   multiple?: boolean;
-  onChange?: (collective: Collective) => void;
+  onChange?: (collective: collective) => void;
   onRemove?: () => void;
 }
 

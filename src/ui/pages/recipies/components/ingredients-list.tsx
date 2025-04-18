@@ -1,12 +1,12 @@
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
-import { Unit } from "../../../../models/units";
+import { unit } from "../../../../models/units";
 import { NewItemButton } from "../../../components/new-item-button";
 import { IngredientControl } from "./ingredient-control";
 
 interface IngredientsListProps {
   ingredients: Ingredient[];
-  units: Unit[];
+  units: unit[];
   selected: IngredientQuantity[];
   changed: (selected: IngredientQuantity[]) => void;
   onNewIngredient: (index: number) => void;

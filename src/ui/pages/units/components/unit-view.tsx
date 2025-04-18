@@ -6,10 +6,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { DetailView } from "../../../components/detail-view";
-import { Collective, Magnitude, Unit, UnitType } from "../../../../models/units";
+import { collective, magnitude, unit, UnitType } from "../../../../models/units";
 import { Typography } from "@mui/material";
 
-function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
+function MagnitudeView({ magnitudes }: { magnitudes: magnitude[] }) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -22,7 +22,7 @@ function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {magnitudes.map((m: Magnitude) => (
+          {magnitudes.map((m: magnitude) => (
             <TableRow key={m.abbrev}>
               <TableCell>{m.abbrev}</TableCell>
               <TableCell>{m.singular}</TableCell>
@@ -36,7 +36,7 @@ function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
   );
 }
 
-function CountView({ collectives }: { collectives: Collective[] }) {
+function CountView({ collectives }: { collectives: collective[] }) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -50,7 +50,7 @@ function CountView({ collectives }: { collectives: Collective[] }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {collectives.map((c: Collective, index: number) => (
+          {collectives.map((c: collective, index: number) => (
             <TableRow key={index}>
               <TableCell>{c.singular || "N/A"}</TableCell>
               <TableCell>{c.plural || "N/A"}</TableCell>
@@ -66,9 +66,9 @@ function CountView({ collectives }: { collectives: Collective[] }) {
 }
 
 interface UnitViewProps {
-  unit: Unit;
-  onEdit: (unit: Unit) => void;
-  onDelete: (unit: Unit) => void;
+  unit: unit;
+  onEdit: (unit: unit) => void;
+  onDelete: (unit: unit) => void;
 }
 
 export function UnitView({ unit, onEdit, onDelete }: UnitViewProps) {

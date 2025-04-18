@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { Unit, UnitType } from "../../../models/units";
+import { unit, UnitType } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
@@ -15,9 +15,9 @@ export function Units() {
   const [search] = useSearchParams();
 
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
-  const [units, setUnits] = useState<Unit[]>([]);
+  const [units, setUnits] = useState<unit[]>([]);
   const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<Unit | null>(null);
+  const [toDelete, setToDelete] = useState<unit | null>(null);
   const navigate = useNavigate();
 
   async function load() {
@@ -38,11 +38,11 @@ export function Units() {
     load();
   }, [unitStore, tab]);
 
-  function handleEdit(unit: Unit) {
+  function handleEdit(unit: unit) {
     navigate(`/units/${unit.id}`);
   }
 
-  function handleDelete(unit: Unit) {
+  function handleDelete(unit: unit) {
     setToDelete(unit);
     setOpen(true);
   }

@@ -7,7 +7,7 @@ import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
 import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
-import { Unit, UnitType } from "../../../models/units";
+import { unit, UnitType } from "../../../models/units";
 import { SelectObject } from "../../components/select-object";
 
 export function IngredientsEdit() {
@@ -17,7 +17,7 @@ export function IngredientsEdit() {
 
   const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unitType: UnitType.Weight, unit: 0 });
   const [categories, setCategories] = useState<Category[]>([]);
-  const [units, setUnits] = useState<Unit[]>([]);
+  const [units, setUnits] = useState<unit[]>([]);
   const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
 
