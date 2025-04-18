@@ -8,6 +8,7 @@ import { TextInput } from "../../components/text-input";
 import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
 import { Unit, UnitType } from "../../../models/units";
+import { SelectObject } from "../../components/select-object";
 
 export function IngredientsEdit() {
   const { formsResult, pushForm, returnTo, setFormResult } = useForms("ingredients");
@@ -34,7 +35,7 @@ export function IngredientsEdit() {
     const categories = await categoryStore.getAll();
     setCategories(categories);
 
-    const units = await unitStore.getAll();
+    const units = await unitStore.getAllByType(UnitType.Count);
     setUnits(units);
   
     if (formsResult) {
@@ -61,7 +62,7 @@ export function IngredientsEdit() {
   }, [ingredientStore, categoryStore, unitStore, formsResult]);
 
   function validate() {
-    return ingredient.name !== "";
+    return ingredient.name !== "" && ingredient.category !== 0 && (ingredient.unitType !== UnitType.Count || ingredient.unit);
   }
 
   return (
@@ -109,24 +110,36 @@ export function IngredientsEdit() {
         })}}
       />
 
-      <SelectID
-        value={ingredient.unit}
-        items={units}
-        id="unit"
-        label="unit"
-        link="/units/new"
+      <SelectObject
+        value={ingredient.unitType}
+        items={Object.values(UnitType)}
+        id="unitType"
+        label="unit type"
         required
-        toLabel={(unit) => unit.name}
-        onChange={(id: number) => setIngredient({ ...ingredient, unit: id })}
-        onNav={() => {
-          pushForm({
-            to: "units",
-            from: "ingredients",
-            link: location.pathname,
-            body: ingredient
-          })
-        }}
+        toLabel={(unitType: UnitType) => unitType}
+        onChange={(unitType: UnitType) => setIngredient({ ...ingredient, unitType, ...(unitType === UnitType.Count ? { unit: ingredient.unit } : {}) })}
       />
+
+      { ingredient.unitType === UnitType.Count && (
+        <SelectID
+          value={ingredient.unit || 0}
+          items={units}
+          id="unit"
+          label="unit"
+          link="/units/new"
+          required
+          toLabel={(unit) => unit.name}
+          onChange={(id: number) => setIngredient({ ...ingredient, unit: id })}
+          onNav={() => {
+            pushForm({
+              to: "units",
+              from: "ingredients",
+              link: location.pathname,
+              body: ingredient
+            })
+          }}
+        />
+      )}
     </Form>
   );
 }

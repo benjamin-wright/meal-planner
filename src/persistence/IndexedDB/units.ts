@@ -7,6 +7,7 @@ const TABLE_NAME = "units";
 export function unitsV1(db: IDBDatabase) {
   const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
+  store.createIndex("type", "type", {});
 }
 
 export class Units implements UnitStore {
@@ -22,6 +23,10 @@ export class Units implements UnitStore {
 
   async getAll(): Promise<Unit[]> {
     return this.db.getAll<Unit>(TABLE_NAME);
+  }
+
+  async getAllByType(type: UnitType): Promise<Unit[]> {
+    return this.db.getByIndex<Unit, "type">(TABLE_NAME, "type", type);
   }
 
   async add(name: string, type: UnitType, magnitudes?: Magnitude[], collectives?: Collective[], base?: number): Promise<number> {

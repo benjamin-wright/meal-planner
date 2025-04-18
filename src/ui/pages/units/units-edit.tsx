@@ -59,6 +59,7 @@ export function UnitsEdit() {
     <Form
       title={isNew ? "Units: new" : `Units: ${unit.name}`}
       returnTo={returnTo}
+      disabled={!Unit.validate(unit)}
       onSubmit={async () => {
         unit.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
         let id = unit.id;

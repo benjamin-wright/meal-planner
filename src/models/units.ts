@@ -59,6 +59,63 @@ export class Unit {
     this.collectives = collectives;
     this.base = base;
   }
+
+  static validate(unit: Unit): boolean {
+    if (!unit.name) {
+      return false;
+    }
+
+    if (unit.type === UnitType.Count) {
+      if (unit.collectives.length === 0) {
+        return false;
+      }
+
+      if (unit.collectives.length === 1) {
+        if (unit.collectives[0].singular && !unit.collectives[0].plural) {
+          return false;
+        }
+        if (!unit.collectives[0].singular && unit.collectives[0].plural) {
+          return false;
+        }
+
+        return true;
+      }
+
+      for (const collective of unit.collectives) {
+        if (!collective.singular && !collective.plural) {
+          return false;
+        }
+
+        if (!collective.multiplier || collective.multiplier <= 0) {
+          return false;
+        }
+      }
+    } else {
+      if (!unit.base || unit.base <= 0) {
+        return false;
+      }
+
+      if (unit.magnitudes.length === 0) {
+        return false;
+      }
+
+      for (const magnitude of unit.magnitudes) {
+        if (!magnitude.singular && !magnitude.plural) {
+          return false;
+        }
+
+        if (!magnitude.multiplier || magnitude.multiplier <= 0) {
+          return false;
+        }
+
+        if (!magnitude.abbrev) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 }
 
 export function getAbbr(unit: Unit, value: number, collective?: number): string {

@@ -44,7 +44,7 @@ export function TextInput({
       }}
       onBlur={(e: FocusEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         if (lowercase) {
-          return onChange(e.target.value.toLowerCase());
+          return onChange(e.target.value.toLowerCase().trim());
         }
       }}
       onKeyDown={onKeyDown}

@@ -44,7 +44,7 @@ export function SelectID<T extends {id: number}>({value, items, id, label, link,
             }}
           />
         ) : (
-          <FormControl sx={{flexGrow: 1}}>
+          <FormControl sx={{flexGrow: 1}} required={required}>
             <InputLabel id={`${id}-label`}>{label}</InputLabel>
             <Select
               labelId={`${id}-label`}
