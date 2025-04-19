@@ -4,12 +4,9 @@ import { FloatingAddButton } from "../../components/floating-add-button";
 import { Page } from "../../components/page";
 import { Ingredient } from "../../../models/ingredients";
 import { Category } from "../../../models/categories";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
-import { IconLink } from "../../components/icon-link";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
 import { ExpandMore } from "@mui/icons-material";
 import { DBContext } from "../../providers/database";
 
@@ -81,18 +78,12 @@ export function Ingredients() {
           </AccordionSummary>
           <AccordionDetails>
               { ingredients[category.id]?.map((ingredient) => (
-                <DetailView key={ingredient.id} title={ingredient.name} horizontal narrow>
-                  <Box display="flex" flexGrow="1">
-                    <IconLink onClick={() => onEdit(ingredient)}>
-                      <Edit />
-                    </IconLink>
-                    <IconLink
-                      color="error"
-                      onClick={() => onDelete(ingredient)}
-                    >
-                      <Delete />
-                    </IconLink>
-                  </Box>
+                <DetailView horizontal narrow
+                  key={ingredient.id}
+                  title={ingredient.name}
+                  onEdit={() => onEdit(ingredient)}
+                  onDelete={() => onDelete(ingredient)}
+                >
                 </DetailView>
               )) }
           </AccordionDetails>

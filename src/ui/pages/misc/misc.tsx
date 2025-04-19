@@ -89,18 +89,12 @@ export function Misc() {
             </AccordionSummary>
             <AccordionDetails>
               {misc[category.id]?.map(item => (
-                <DetailView key={item.id} title={item.name} horizontal narrow>
-                  <Box display="flex" flexGrow="1">
-                    <IconLink onClick={() => onEdit(item)}>
-                      <Edit />
-                    </IconLink>
-                    <IconLink
-                      color="error"
-                      onClick={() => onDelete(item)}
-                    >
-                      <Delete />
-                    </IconLink>
-                  </Box>
+                <DetailView horizontal narrow
+                  key={item.id}
+                  title={item.name}
+                  onEdit={() => onEdit(item)}
+                  onDelete={() => onDelete(item)} 
+                >
                 </DetailView>
               ))}
             </AccordionDetails>

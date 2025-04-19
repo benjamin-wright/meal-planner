@@ -9,6 +9,7 @@ import { useForms } from "../../providers/forms";
 import FormControl from "@mui/material/FormControl";
 import { Box, Input, InputLabel, Paper } from "@mui/material";
 import { OutlinedContainer } from "../../components/outlined-container";
+import { DetailView, DetailViewGroup } from "../../components/detail-view";
 
 export function RecipiesMetadata() {
   const { returnTo } = useForms("recipies");
@@ -90,9 +91,12 @@ export function RecipiesMetadata() {
       />
 
       <OutlinedContainer label="ingredients">
-        {recipie.ingredients.map((ingredient) => 
-          <p style={{padding: "0", margin: "0"}} key={ingredient.id}>{ingredient.id}</p>
-        )}
+        <DetailViewGroup>
+          {recipie.ingredients.map((ingredient) =>
+            <DetailView title={ingredient.id.toString()} key={ingredient.id} narrow horizontal onEdit={() => {}}>
+            </DetailView>
+          )}
+        </DetailViewGroup>
       </OutlinedContainer>
     </Form>
   );

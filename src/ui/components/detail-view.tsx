@@ -38,7 +38,7 @@ export function DetailViewGroup({ children }: DetailViewGroupProps) {
 interface DetailViewProps {
   id?: string;
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   group?: string;
   horizontal?: boolean;
   narrow?: boolean;
@@ -147,7 +147,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
             <Box
               display="flex"
               justifyContent="space-between"
-              paddingTop="0.75em"
+              paddingTop={horizontal ? "0" : "0.75em"}
             >
               <IconLink sx={{ minWidth: "0" }} onClick={onEdit}>
                 <Edit />
