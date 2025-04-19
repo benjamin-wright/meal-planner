@@ -21,9 +21,13 @@ import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
 import { initData } from "./persistence/exporter";
+import { DBFlags } from "./persistence/db-flags";
+
+const dbName = "meal-planner";
 
 const db = IndexedDB.create({
-  dbName: "meal-planner",
+  dbName: dbName,
+  reset: DBFlags.getReset(dbName),
   initFunc: async (db) => {
     console.info("New database, loading initial data...");
     await initData(db);
@@ -56,7 +60,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <AlertProvider>
-        <DBProvider database={db}>
+        <DBProvider database={db} dbName={dbName}>
           <FormProvider>
             <CssBaseline enableColorScheme />
             <RouterProvider router={router} />

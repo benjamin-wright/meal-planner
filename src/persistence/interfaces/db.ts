@@ -14,5 +14,4 @@ export interface DB {
   meals(): MealStore;
   misc(): MiscStore;
   settings(): SettingsStore;
-  reset(): Promise<void>;
 }

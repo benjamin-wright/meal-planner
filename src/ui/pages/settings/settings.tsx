@@ -16,6 +16,7 @@ import { unit, UnitType } from "../../../models/units";
 import { settings } from "../../../models/settings";
 import { SelectID } from "../../components/select-id";
 import { useForms } from "../../providers/forms";
+import { DBFlags } from "../../../persistence/db-flags";
 
 interface CheckDialogProps {
   open: boolean;
@@ -57,7 +58,7 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 }
 
 export function Settings() {
-  const { db, unitStore, settingStore } = useContext(DBContext);
+  const { db, dbName, unitStore, settingStore } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<"restore" | "reset">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
@@ -129,7 +130,7 @@ export function Settings() {
 
   function handleClose(ok: boolean) {
     setDialogOpen(false);
-    if (!ok || !db) {
+    if (!ok) {
       return;
     }
 
@@ -151,8 +152,8 @@ export function Settings() {
         return;
       case "reset":
         try {
-          db.reset();
-          setMessage("Application reset successfully, reloading...");
+          DBFlags.setReset(dbName);
+          setMessage("Resetting application database...");
           setTimeout(() => window.location.reload(), 1000);
         } catch (err: any) {
           setError(err.message);

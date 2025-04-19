@@ -24,12 +24,45 @@ const migrations = [
 
 interface ICreateProps {
   dbName: string;
+  reset?: boolean;
   initFunc?: (db: IndexedDB) => Promise<void>;
 }
 
 export class IndexedDB implements DB {
-  static async create({ dbName, initFunc }: ICreateProps): Promise<IndexedDB> {
+  private static async reset(dbName: string) {
+    return new Promise<void>((resolve, reject) => {
+      const request = indexedDB.deleteDatabase(dbName);
+      request.onsuccess = () => {
+        console.info(`Database ${dbName} deleted successfully`);
+        resolve();
+      };
+
+      request.onerror = (event: Event) => {
+        if (!event.target) {
+          return reject(new Error("Unknown error deleting database"));
+        }
+
+        const request = event.target as IDBOpenDBRequest;
+        if (!request.error) {
+          return reject(new Error("Unknown error deleting database"));
+        }
+
+        return reject(new Error(`Error deleting database: ${request.error}`));
+      };
+
+      request.onblocked = () => {
+        reject(new Error("Database deletion blocked"));
+      };
+    });
+  }
+
+  static async create({ dbName, reset, initFunc }: ICreateProps): Promise<IndexedDB> {
     let isNew = false;
+
+    if (reset) {
+      console.info(`Resetting database ${dbName}`);
+      await IndexedDB.reset(dbName);
+    }
 
     return new Promise<IndexedDB>((resolve, reject) => {
       const request = indexedDB.open(dbName, DB_VERSION);
@@ -50,7 +83,7 @@ export class IndexedDB implements DB {
       };
 
       request.onsuccess = () => {
-        const db = new IndexedDB(request.result, dbName);
+        const db = new IndexedDB(request.result);
         if (isNew && initFunc) {
           return initFunc(db).then(() => resolve(db)).catch(reject);
         } else {
@@ -58,18 +91,25 @@ export class IndexedDB implements DB {
         }
       };
 
-      request.onerror = (error) => {
-        reject(error);
+      request.onerror = (event: Event) => {
+        if (!event.target) {
+          return reject(new Error("Unknown error opening database"));
+        }
+
+        const request = event.target as IDBOpenDBRequest;
+        if (!request.error) {
+          return reject(new Error("Unknown error opening database"));
+        }
+
+        return reject(new Error(`Error opening database: ${request.error}`));
       };
     });
   }
 
   private db: TypedDB;
-  private name: string;
 
-  private constructor(db: IDBDatabase, name: string) {
+  private constructor(db: IDBDatabase) {
     this.db = new TypedDB(db);
-    this.name = name;
   }
 
   units() {
@@ -98,9 +138,5 @@ export class IndexedDB implements DB {
   
   settings() {
     return new Settings(this.db);
-  }
-
-  async reset() {
-    await this.db.reset(this.name);
   }
 }
