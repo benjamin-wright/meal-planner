@@ -18,10 +18,11 @@ type IngredientItem = {
 }
 
 export function PlannerEdit() {
-  const { mealStore, recipieStore, ingredientStore, unitStore } = useContext(DBContext);
+  const { mealStore, recipieStore, ingredientStore, unitStore, settingStore } = useContext(DBContext);
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
+  const [settings, setSettings] = useState({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
@@ -72,6 +73,17 @@ export function PlannerEdit() {
     load();
   }, [mealStore, recipieStore, formsResult]);
 
+  useEffect(() => {
+    (async () => {
+      if (!settingStore) {
+        return;
+      }
+
+      const settings = await settingStore.get();
+      setSettings(settings);
+    })();
+  }, [settingStore]);
+
   async function recipieChangeHandler(recipieId: number) {
     setMeal({ ...meal, recipieId });
   };
@@ -99,8 +111,17 @@ export function PlannerEdit() {
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
       const ingredientDefinition = await ingredientStore.get(ingredient.id);
 
-      const unit = await unitStore.get(ingredientDefinition.unit);
+      let unitId = ingredientDefinition.unit ?? 0;
+      switch (ingredientDefinition.unitType) {
+        case UnitType.Weight:
+          unitId = settings.preferredWeightUnit;
+          break;
+        case UnitType.Volume:
+          unitId = settings.preferredVolumeUnit;
+          break;
+      }
 
+      const unit = await unitStore.get(unitId);
       const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
 
       return {
