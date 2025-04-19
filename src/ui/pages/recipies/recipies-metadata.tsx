@@ -6,36 +6,65 @@ import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import FormControl from "@mui/material/FormControl";
-import { Box, Input, InputLabel, Paper } from "@mui/material";
-import { OutlinedContainer } from "../../components/outlined-container";
-import { DetailView, DetailViewGroup } from "../../components/detail-view";
+import { IngredientsView } from "./components/ingredients-view";
+import { Unit } from "../../../models/units";
+import Box from "@mui/material/Box";
+import { StepsView } from "./components/steps-view";
+
+export type IngredientData = {
+  id: number;
+  name: string;
+  amount: number;
+  unit: Unit;
+}
 
 export function RecipiesMetadata() {
   const { returnTo } = useForms("recipies");
-  const { recipieStore } = useContext(DBContext);
+  const { recipieStore, unitStore, ingredientStore } = useContext(DBContext);
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
   const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
+  const [ingredients, setIngredients] = useState<IngredientData[]>([]);
   const navigate = useNavigate();
 
-  async function load() {
-    if (!recipieStore) {
-      return;
-    }
-    
-    if (params.recipie) {
-      const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
+  useEffect(() => {
+    (async () => {
+      if (!recipieStore) {
+        return;
+      }
       
-      setRecipie(recipie);
-      setIsNew(false);
-    }
-  }
+      if (params.recipie) {
+        const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
+        
+        setRecipie(recipie);
+        setIsNew(false);
+      }
+    })();
+  }, [recipieStore, params.recipie]);
 
   useEffect(() => {
-    load();
-  }, [recipieStore]);
+    (async () => {
+      if (!ingredientStore || !unitStore) {
+        return;
+      }
+     
+      const ingredients = [];
+      for (const quantity of recipie.ingredients) {
+        const ingredient = await ingredientStore.get(quantity.id);
+        const unit = await unitStore.get(quantity.unit);
+        
+        ingredients.push({
+          id: ingredient.id,
+          name: ingredient.name,
+          amount: quantity.quantity,
+          unit: unit,
+        });
+      }
+
+      setIngredients(ingredients); 
+    })();
+  }, [ingredientStore, unitStore, recipie]);
 
   function validate() {
     return recipie.name !== "";
@@ -70,34 +99,32 @@ export function RecipiesMetadata() {
         id="description"
         variant="outlined"
         label="description"
+        multiline
         value={recipie.description}
         onChange={(value) => setRecipie({ ...recipie, description: value })}
       />
 
-      <NumericInput
-        id="serves"
-        label="serves"
-        value={recipie.serves}
-        required
-        onChange={(value) => setRecipie({ ...recipie, serves: value })}
-      />
+      <Box display="flex" flexDirection="row" gap="1em">
+        <NumericInput
+          id="serves"
+          label="serves"
+          value={recipie.serves}
+          required
+          onChange={(value) => setRecipie({ ...recipie, serves: value })}
+        />
 
-      <NumericInput
-        id="time"
-        label="time (mins)"
-        value={recipie.time}
-        required
-        onChange={(value) => setRecipie({ ...recipie, time: value })}
-      />
+        <NumericInput
+          id="time"
+          label="time (mins)"
+          value={recipie.time}
+          required
+          onChange={(value) => setRecipie({ ...recipie, time: value })}
+        />
+      </Box>
 
-      <OutlinedContainer label="ingredients">
-        <DetailViewGroup>
-          {recipie.ingredients.map((ingredient) =>
-            <DetailView title={ingredient.id.toString()} key={ingredient.id} narrow horizontal onEdit={() => {}}>
-            </DetailView>
-          )}
-        </DetailViewGroup>
-      </OutlinedContainer>
+      <IngredientsView ingredients={ingredients} onEdit={() => {}} onDelete={() => {}} />
+
+      <StepsView steps={recipie.steps} onChange={() => {}} />
     </Form>
   );
 }

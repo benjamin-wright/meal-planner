@@ -15,7 +15,7 @@ export function OutlinedContainer({children, label}: OutlinedContainerProps) {
       <legend style={{ margin: "0 1em", padding: "0 0.25em", fontSize: "0.75em"}}>
         <span>{label}</span>
       </legend>
-      <Box padding="0.5em 1em 0.75em">
+      <Box padding="0.5em 1em 0.75em" display="flex" flexDirection="column" gap="0.5em">
         {children}
       </Box>
     </fieldset>

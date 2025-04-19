@@ -100,14 +100,12 @@
     {
       "id": 1,
       "name": "onions",
-      "category": 2,
-      "unitType": "weight"
+      "category": 2
     },
     {
       "id": 2,
       "name": "potatoes",
-      "category": 2,
-      "unitType": "weight"
+      "category": 2
     }
   ],
   "recipies": [
@@ -120,10 +118,12 @@
       "ingredients": [
         {
           "id": 2,
+          "unit": 1,
           "quantity": 500
         },
         {
           "id": 1,
+          "unit": 1,
           "quantity": 200
         }
       ],

@@ -10,6 +10,7 @@ interface TextInputProps {
   label: string;
   lowercase?: boolean;
   required?: boolean;
+  multiline?: boolean;
 }
 
 export function TextInput({
@@ -21,6 +22,7 @@ export function TextInput({
   label,
   lowercase,
   required,
+  multiline,
 }: TextInputProps) {
   const inputRef = createRef<HTMLTextAreaElement | HTMLInputElement>();
 
@@ -39,6 +41,7 @@ export function TextInput({
       label={label}
       value={value}
       required={required}
+      multiline={multiline}
       onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         onChange(e.target.value);
       }}
