@@ -4,6 +4,7 @@ import { MealStore } from "./meals";
 import { RecipieStore } from "./recipies";
 import { UnitStore } from "./units";
 import { MiscStore } from "./misc";
+import { SettingsStore } from "./settings";
 
 export interface DB {
   units(): UnitStore;
@@ -12,5 +13,6 @@ export interface DB {
   recipies(): RecipieStore;
   meals(): MealStore;
   misc(): MiscStore;
+  settings(): SettingsStore;
   reset(): Promise<void>;
 }

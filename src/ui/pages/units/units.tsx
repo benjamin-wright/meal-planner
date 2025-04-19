@@ -9,13 +9,15 @@ import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import { settings } from "../../../models/settings";
 
 export function Units() {
-  const { unitStore } = useContext(DBContext);
+  const { unitStore, settingStore } = useContext(DBContext);
   const [search] = useSearchParams();
 
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
   const [units, setUnits] = useState<unit[]>([]);
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<unit | null>(null);
   const navigate = useNavigate();
@@ -38,6 +40,16 @@ export function Units() {
     load();
   }, [unitStore, tab]);
 
+  useEffect(() => {
+    if (!settingStore) {
+      return;
+    }
+
+    settingStore.get().then((settings) => {
+      setSettings(settings);
+    });
+  }, [settingStore]);
+
   function handleEdit(unit: unit) {
     navigate(`/units/${unit.id}`);
   }
@@ -57,6 +69,19 @@ export function Units() {
     setUnits(units.filter((unit) => unit.id !== toDelete.id));
   }
 
+  function isDefault(unit: unit): boolean {
+    switch (unit.type) {
+      case UnitType.Count:
+        return false;
+      case UnitType.Weight:
+        return unit.id === settings.preferredWeightUnit;
+      case UnitType.Volume:
+        return unit.id === settings.preferredVolumeUnit;
+      default:
+        return false;
+    }
+  }
+
   return (
     <Page title="Units" returnTo="/data" showNav>
       <Tabs value={tab} onChange={(_event, value: UnitType) => setTab(value)} variant="fullWidth">
@@ -67,7 +92,7 @@ export function Units() {
 
       <DetailViewGroup>
         {units.filter(unit => unit.type === tab).map((unit) => (
-          <UnitView key={unit.id} unit={unit} onEdit={handleEdit} onDelete={handleDelete} />
+          <UnitView key={unit.id} unit={unit} isDefault={isDefault(unit)} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
       </DetailViewGroup>
       <FloatingAddButton to={`/units/new?type=${tab}`} />

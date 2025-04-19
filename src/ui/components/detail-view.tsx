@@ -45,11 +45,12 @@ interface DetailViewProps {
   dragControls?: DragControls;
   working?: boolean;
   chip?: string;
+  noDelete?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, chip, onEdit, onDelete }: DetailViewProps) {
+export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, chip, noDelete, onEdit, onDelete }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
   const showControls = !!onEdit || !!onDelete;
@@ -155,6 +156,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
                 color="error"
                 sx={{ minWidth: "0" }}
                 onClick={onDelete}
+                disabled={noDelete}
               >
                 <Delete />
               </IconLink>

@@ -8,7 +8,7 @@ import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
-import { getAbbr, Unit } from "../../../models/units";
+import { Unit, unit, UnitType } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
@@ -98,6 +98,7 @@ export function PlannerEdit() {
 
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
       const ingredientDefinition = await ingredientStore.get(ingredient.id);
+
       const unit = await unitStore.get(ingredientDefinition.unit);
 
       const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;

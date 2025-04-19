@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Page } from "../../components/page";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -9,6 +9,13 @@ import { AlertContext } from "../../providers/alerts";
 import { exportData, importData } from "../../../persistence/exporter";
 import { DBContext } from "../../providers/database";
 import { DescriptionButton } from "../../components/description-button";
+import Accordion from "@mui/material/Accordion";
+import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { unit, UnitType } from "../../../models/units";
+import { settings } from "../../../models/settings";
+import { SelectID } from "../../components/select-id";
+import { useForms } from "../../providers/forms";
 
 interface CheckDialogProps {
   open: boolean;
@@ -50,11 +57,54 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
 }
 
 export function Settings() {
-  const { db } = useContext(DBContext);
+  const { db, unitStore, settingStore } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<"restore" | "reset">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
+  const [weightUnits, setWeightUnits] = useState<unit[]>([]);
+  const [volumeUnits, setVolumeUnits] = useState<unit[]>([]);
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
+  const { formsResult, pushForm } = useForms("settings");
+
+  useEffect(() => {
+    (async () => {
+      if (!unitStore) {
+        return;
+      }
+
+      setWeightUnits(await unitStore.getAllByType(UnitType.Weight));
+      setVolumeUnits(await unitStore.getAllByType(UnitType.Volume));
+    })();
+  }, [unitStore]);
+
+  useEffect(() => {
+    (async () => {
+      if (!settingStore) {
+        return;
+      }
+
+      const settings = await settingStore.get();
+
+      if (formsResult) {
+        const { form, response } = formsResult;
+        const type = form.body as UnitType;
+
+        if (response) {
+          switch (type) {
+            case UnitType.Volume:
+              settings.preferredVolumeUnit = response.response as number;
+              break;
+              case UnitType.Weight:
+              settings.preferredWeightUnit = response.response as number;
+              break;
+          }
+        }
+      }
+
+      setSettings(settings);
+    })();
+  }, [settingStore, formsResult]);
 
   function backup() {
     if (!db) {
@@ -112,18 +162,72 @@ export function Settings() {
 
   return (
     <Page title="Settings" showNav>
-      <DescriptionButton text="backup" onClick={backup}>
-        Save the current application state to a JSON file on your device.
-      </DescriptionButton>
-      <DescriptionButton text="restore" color="error" onFileLoad={(contents) => {
-        setBackupData(contents);
-        handleOpen("restore");
-      }} onFileError={(err: any) => setError(err.message)}>
-        Load a previous application state from a JSON file.
-      </DescriptionButton>
-      <DescriptionButton text="reset" color="error" onClick={() => handleOpen("reset")}>
-        Drop all data and reset the application to its initial state.
-      </DescriptionButton>
+      <Accordion title="Settings" defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMore/>}>
+          <Typography variant="h6">Settings</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
+          <SelectID
+            id="volume-unit"
+            label="Default volume unit"
+            value={settings.preferredVolumeUnit}
+            items={volumeUnits}
+            toLabel={(unit: unit) => unit.name}
+            onChange={async (unitId: number) => {
+              setSettings({ ...settings, preferredVolumeUnit: unitId });
+              await settingStore?.put({ ...settings, preferredVolumeUnit: unitId });
+            }}
+            link="/units/new?type=volume"
+            onNav={() => {
+              pushForm({
+                to: "units",
+                from: "settings",
+                link: location.pathname,
+                body: UnitType.Volume,
+              })
+            }}
+          />
+          <SelectID
+            id="weight-unit"
+            label="Default weight unit"
+            value={settings.preferredWeightUnit}
+            items={weightUnits}
+            toLabel={(unit: unit) => unit.name}
+            onChange={async (unitId: number) => {
+              setSettings({ ...settings, preferredWeightUnit: unitId });
+              await settingStore?.put({ ...settings, preferredWeightUnit: unitId });
+            }}
+            link="/units/new?type=weight"
+            onNav={() => {
+              pushForm({
+                to: "units",
+                from: "settings",
+                link: location.pathname,
+                body: UnitType.Weight,
+              })
+            }}
+          />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion title="Backup">
+        <AccordionSummary expandIcon={<ExpandMore/>}>
+          <Typography variant="h6">Backup</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <DescriptionButton text="backup" onClick={backup}>
+            Save the current application state to a JSON file on your device.
+          </DescriptionButton>
+          <DescriptionButton text="restore" color="error" onFileLoad={(contents) => {
+            setBackupData(contents);
+            handleOpen("restore");
+          }} onFileError={(err: any) => setError(err.message)}>
+            Load a previous application state from a JSON file.
+          </DescriptionButton>
+          <DescriptionButton text="reset" color="error" onClick={() => handleOpen("reset")}>
+            Drop all data and reset the application to its initial state.
+          </DescriptionButton>
+        </AccordionDetails>
+      </Accordion>
       <CheckDialog open={dialogOpen} mode={mode} onClose={handleClose} />
     </Page >
   );

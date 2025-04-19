@@ -4,25 +4,21 @@ import { Ingredients, ingredientsV1 } from "./ingredients";
 import { Recipies, recipiesV1 } from "./recipies";
 import { Meals, mealsV1 } from "./meals";
 import { Misc, miscV1 } from "./misc";
+import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 
-const DB_VERSION = 4;
+const DB_VERSION = 1;
 
 const migrations = [
   (db: IDBDatabase) => {
     unitsV1(db);
     categoriesV1(db);
     ingredientsV1(db);
-  },
-  (db: IDBDatabase) => {
     recipiesV1(db);
-  },
-  (db: IDBDatabase) => {
     mealsV1(db);
-  },
-  (db: IDBDatabase) => {
     miscV1(db);
+    settingsV1(db);
   },
 ]
 
@@ -98,6 +94,10 @@ export class IndexedDB implements DB {
 
   misc() {
     return new Misc(this.db);
+  }
+  
+  settings() {
+    return new Settings(this.db);
   }
 
   async reset() {

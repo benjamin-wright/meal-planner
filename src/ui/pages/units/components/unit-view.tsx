@@ -67,14 +67,16 @@ function CountView({ collectives }: { collectives: collective[] }) {
 
 interface UnitViewProps {
   unit: unit;
+  isDefault?: boolean;
   onEdit: (unit: unit) => void;
   onDelete: (unit: unit) => void;
 }
 
-export function UnitView({ unit, onEdit, onDelete }: UnitViewProps) {
+export function UnitView({ unit, isDefault, onEdit, onDelete }: UnitViewProps) {
   return (
     <DetailView
-      title={unit.name}
+      title={`${unit.name}${isDefault ? " (default)" : ""}`}
+      noDelete={isDefault}
       onEdit={() => onEdit(unit)}
       onDelete={() => onDelete(unit)}
     >

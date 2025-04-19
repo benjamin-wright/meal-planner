@@ -6,6 +6,7 @@ import { IngredientStore } from "../../persistence/interfaces/ingredients";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
 import { MiscStore } from "../../persistence/interfaces/misc";
+import { SettingsStore } from "../../persistence/interfaces/settings";
 
 interface DBContextProps {
   db?: DB;
@@ -15,6 +16,7 @@ interface DBContextProps {
   recipieStore?: RecipieStore;
   mealStore?: MealStore;
   miscStore?: MiscStore;
+  settingStore?: SettingsStore;
 }
 
 export const DBContext = createContext<DBContextProps>({});
@@ -32,6 +34,7 @@ export function DBProvider({ children, database }: DBProviderProps) {
   const [recipieStore, setRecipies] = useState<RecipieStore | undefined>(undefined);
   const [mealStore, setMeals] = useState<MealStore | undefined>(undefined);
   const [miscStore, setMisc] = useState<MiscStore | undefined>(undefined);
+  const [settingStore, setSettings] = useState<SettingsStore | undefined>(undefined);
 
   useEffect(() => {
     database.then((db: DB) => {
@@ -42,12 +45,13 @@ export function DBProvider({ children, database }: DBProviderProps) {
       setRecipies(db.recipies());
       setMeals(db.meals());
       setMisc(db.misc());
+      setSettings(db.settings());
     });
   }, [database])
 
   return (
     <DBContext.Provider
-      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, miscStore }}
+      value={{ db, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, miscStore, settingStore }}
     >
       {children}
     </DBContext.Provider>

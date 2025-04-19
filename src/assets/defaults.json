@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "units": [
     {
       "id": 1,
@@ -128,5 +129,9 @@
       ],
       "steps": []
     }
-  ]
+  ],
+  "settings": {
+    "preferredWeightUnit": 1,
+    "preferredVolumeUnit": 2
+  }
 }
