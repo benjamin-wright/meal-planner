@@ -255,7 +255,7 @@ describe('units', () => {
     describe('valid counts', () => {
       validCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(true);
+          expect(Unit.from(unit).validate()).toBe(true);
         });
       });
     });
@@ -263,7 +263,7 @@ describe('units', () => {
     describe('invalid counts', () => {
       invalidCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(false);
+          expect(Unit.from(unit).validate()).toBe(false);
         });
       });
     });
@@ -271,7 +271,7 @@ describe('units', () => {
     describe('valid magnitudes', () => {
       validMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(true);
+          expect(Unit.from(unit).validate()).toBe(true);
         });
       });
     });
@@ -279,7 +279,7 @@ describe('units', () => {
     describe('invalid magnitudes', () => {
       invalidMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(false);
+          expect(Unit.from(unit).validate()).toBe(false);
         });
       });
     });

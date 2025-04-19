@@ -12,7 +12,7 @@ import { DescriptionButton } from "../../components/description-button";
 import Accordion from "@mui/material/Accordion";
 import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { unit, UnitType } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 import { settings } from "../../../models/settings";
 import { SelectID } from "../../components/select-id";
 import { useForms } from "../../providers/forms";
@@ -63,8 +63,8 @@ export function Settings() {
   const [mode, setMode] = useState<"restore" | "reset">("restore");
   const [backupData, setBackupData] = useState<string | null>(null);
   const { setMessage, setError } = useContext(AlertContext);
-  const [weightUnits, setWeightUnits] = useState<unit[]>([]);
-  const [volumeUnits, setVolumeUnits] = useState<unit[]>([]);
+  const [weightUnits, setWeightUnits] = useState<Unit[]>([]);
+  const [volumeUnits, setVolumeUnits] = useState<Unit[]>([]);
   const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const { formsResult, pushForm } = useForms("settings");
 
@@ -173,7 +173,7 @@ export function Settings() {
             label="Default volume unit"
             value={settings.preferredVolumeUnit}
             items={volumeUnits}
-            toLabel={(unit: unit) => unit.name}
+            toLabel={(unit: Unit) => unit.name}
             onChange={async (unitId: number) => {
               setSettings({ ...settings, preferredVolumeUnit: unitId });
               await settingStore?.put({ ...settings, preferredVolumeUnit: unitId });
@@ -193,7 +193,7 @@ export function Settings() {
             label="Default weight unit"
             value={settings.preferredWeightUnit}
             items={weightUnits}
-            toLabel={(unit: unit) => unit.name}
+            toLabel={(unit: Unit) => unit.name}
             onChange={async (unitId: number) => {
               setSettings({ ...settings, preferredWeightUnit: unitId });
               await settingStore?.put({ ...settings, preferredWeightUnit: unitId });

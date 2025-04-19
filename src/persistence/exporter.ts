@@ -2,7 +2,7 @@ import { Category } from "../models/categories";
 import { Ingredient } from "../models/ingredients";
 import { Meal } from "../models/meals";
 import { Recipie } from "../models/recipies";
-import { unit } from "../models/units";
+import { UnitProps } from "../models/units";
 import { CategoryStore } from "./interfaces/categories";
 import { IngredientStore } from "./interfaces/ingredients";
 import { MealStore } from "./interfaces/meals";
@@ -15,7 +15,7 @@ import { SettingsStore } from "./interfaces/settings";
 
 export type ExportedData = {
   version: number;
-  units?: unit[];
+  units?: UnitProps[];
   categories?: Category[];
   ingredients?: Ingredient[];
   recipies?: Recipie[];

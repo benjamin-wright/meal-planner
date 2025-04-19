@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { parseUnitType, Unit, unit, UnitType } from "../../../models/units";
+import { Unit, UnitProps, UnitType } from "../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
@@ -17,7 +17,7 @@ export function UnitsEdit() {
   const [search] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<unit>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], collectives: [], base: 1 });
+  const [unit, setUnit] = useState<UnitProps>({ id: 0, name: "", type: UnitType.Weight, magnitudes: [], collectives: [], base: 1 });
   const navigate = useNavigate();
 
   const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
@@ -34,7 +34,7 @@ export function UnitsEdit() {
       return;
     }
 
-    const type = parseUnitType(search.get("type") || "");
+    const type = Unit.parseType(search.get("type") || "");
     if (type) {
       console.log(`changing unit to ${type}`);
       setUnit({ ...unit, type });
@@ -59,7 +59,7 @@ export function UnitsEdit() {
     <Form
       title={isNew ? "Units: new" : `Units: ${unit.name}`}
       returnTo={returnTo}
-      disabled={!Unit.validate(unit)}
+      disabled={!Unit.from(unit).validate()}
       onSubmit={async () => {
         unit.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
         let id = unit.id;
