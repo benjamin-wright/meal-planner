@@ -6,6 +6,9 @@ import { Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
+import FormControl from "@mui/material/FormControl";
+import { Box, Input, InputLabel, Paper } from "@mui/material";
+import { OutlinedContainer } from "../../components/outlined-container";
 
 export function RecipiesMetadata() {
   const { returnTo } = useForms("recipies");
@@ -85,6 +88,12 @@ export function RecipiesMetadata() {
         required
         onChange={(value) => setRecipie({ ...recipie, time: value })}
       />
+
+      <OutlinedContainer label="ingredients">
+        {recipie.ingredients.map((ingredient) => 
+          <p style={{padding: "0", margin: "0"}} key={ingredient.id}>{ingredient.id}</p>
+        )}
+      </OutlinedContainer>
     </Form>
   );
 }

@@ -1,5 +1,6 @@
 export type IngredientQuantity = {
   id: number;
+  unit?: number;
   quantity: number;
 }
 
