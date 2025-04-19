@@ -3,13 +3,13 @@ import Card from "@mui/material/Card";
 import { NumericInput } from "../../../components/numeric-input";
 import Button from "@mui/material/Button";
 import Delete from "@mui/icons-material/Delete";
-import { magnitude } from "../../../../models/units";
+import { Magnitude } from "../../../../models/units";
 import { TextInput } from "../../../components/text-input";
 
 interface MagnitudeEditProps {
   index: number;
-  magnitude: magnitude;
-  onChange?: (magnitude: magnitude) => void;
+  magnitude: Magnitude;
+  onChange?: (magnitude: Magnitude) => void;
   onRemove?: () => void;
 }
 

@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { unit, UnitType } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
@@ -16,10 +16,10 @@ export function Units() {
   const [search] = useSearchParams();
 
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
-  const [units, setUnits] = useState<unit[]>([]);
+  const [units, setUnits] = useState<Unit[]>([]);
   const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<unit | null>(null);
+  const [toDelete, setToDelete] = useState<Unit | null>(null);
   const navigate = useNavigate();
 
   async function load() {
@@ -50,11 +50,11 @@ export function Units() {
     });
   }, [settingStore]);
 
-  function handleEdit(unit: unit) {
+  function handleEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
   }
 
-  function handleDelete(unit: unit) {
+  function handleDelete(unit: Unit) {
     setToDelete(unit);
     setOpen(true);
   }
@@ -69,7 +69,7 @@ export function Units() {
     setUnits(units.filter((unit) => unit.id !== toDelete.id));
   }
 
-  function isDefault(unit: unit): boolean {
+  function isDefault(unit: Unit): boolean {
     switch (unit.type) {
       case UnitType.Count:
         return false;
