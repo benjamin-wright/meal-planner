@@ -1,7 +1,6 @@
 import { Recipies } from "./recipies";
+import { RecipiesEdit } from "./recipies-edit";
 import { RecipiesIngredients } from "./recipies-ingredients";
-import { RecipiesMetadata } from "./recipies-metadata";
-import { RecipiesSteps } from "./recipies-steps";
 
 export const routes = [
   {
@@ -9,19 +8,19 @@ export const routes = [
     element: <Recipies />,
   },
   {
-    path: "recipies/new/metadata",
-    element: <RecipiesMetadata />,
+    path: "recipies/new",
+    element: <RecipiesEdit />,
   },
   {
-    path: "recipies/:recipie/metadata",
-    element: <RecipiesMetadata />,
+    path: "recipies/:recipie",
+    element: <RecipiesEdit />,
   },
   {
-    path: "recipies/:recipie/ingredients",
+    path: "recipies/:recipie/ingredients/new",
     element: <RecipiesIngredients />,
   },
   {
-    path: "recipies/:recipie/steps",
-    element: <RecipiesSteps />,
-  }
+    path: "recipies/:recipie/ingredients/:ingredient",
+    element: <RecipiesIngredients />,
+  },
 ];

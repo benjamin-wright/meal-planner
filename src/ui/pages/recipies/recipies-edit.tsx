@@ -18,7 +18,7 @@ export type IngredientData = {
   unit: Unit;
 }
 
-export function RecipiesMetadata() {
+export function RecipiesEdit() {
   const { returnTo } = useForms("recipies");
   const { recipieStore, unitStore, ingredientStore } = useContext(DBContext);
   const params = useParams();
@@ -70,19 +70,22 @@ export function RecipiesMetadata() {
     return recipie.name !== "";
   }
 
+  function handleNewIngredient() {
+    navigate(`/recipies/${recipie.id}/ingredients/new`);
+  }
+
   return (
     <Form
       title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
       returnTo={returnTo}
       disabled={!validate()}
-      morePages
       onSubmit={async () => {
         if (isNew) {
           recipie.id = await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps) || 0;
         } else {
           await recipieStore?.put(recipie);
         }
-        navigate(`/recipies/${recipie.id}/ingredients`);
+        navigate(returnTo);
       }}
     >
       <TextInput
@@ -122,9 +125,9 @@ export function RecipiesMetadata() {
         />
       </Box>
 
-      <IngredientsView ingredients={ingredients} onEdit={() => {}} onDelete={() => {}} />
+      <IngredientsView ingredients={ingredients} onEdit={() => {}} onDelete={() => {}} onAdd={handleNewIngredient} disabled={!validate()} />
 
-      <StepsView steps={recipie.steps} onChange={() => {}} />
+      <StepsView steps={recipie.steps} onChange={steps => setRecipie({...recipie, steps })} />
     </Form>
   );
 }

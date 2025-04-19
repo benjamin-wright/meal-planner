@@ -13,11 +13,13 @@ export type IngredientData = {
 
 interface IngredientsViewProps {
   ingredients: IngredientData[];
+  disabled?: boolean;
   onEdit: () => void;
   onDelete: () => void;
+  onAdd: () => void;
 }
 
-export function IngredientsView({ ingredients, onEdit, onDelete }: IngredientsViewProps) {
+export function IngredientsView({ ingredients, disabled, onEdit, onDelete, onAdd }: IngredientsViewProps) {
   const [selected, setSelected] = useState<number | undefined>(undefined);
   function select(index: number) {
     if (selected === index) {
@@ -29,14 +31,14 @@ export function IngredientsView({ ingredients, onEdit, onDelete }: IngredientsVi
 
   return <OutlinedContainer label="ingredients">
     {ingredients.map((ingredient, index) =>
-      <Card key={index} sx={{ padding: "0.25em 0.75em", display: "flex", flexDirection: "row", overflowX: "hidden" }}>
-        <CardActionArea onClick={() => select(index)} sx={{ width: "min-content" }}>
+      <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
+        <CardActionArea onClick={() => select(index)} sx={{ width: "min-content", padding: "0.5em 1em" }}>
           <Typography variant="body1">
             {ingredient.name}: {ingredient.amount}{ ingredient.unit.getAbbr(ingredient.amount) }
           </Typography>
         </CardActionArea>
       </Card>
     )}
-    <NewItemButton small onClick={() => {}} />
+    <NewItemButton small onClick={onAdd} disabled={disabled} />
   </OutlinedContainer>
 }
