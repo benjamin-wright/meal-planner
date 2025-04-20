@@ -3,6 +3,7 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
+  SxProps,
   Tooltip,
   useTheme,
 } from "@mui/material";
@@ -14,6 +15,7 @@ interface NumericInputProps {
   value: number;
   required?: boolean;
   info?: string;
+  sx?: SxProps;
   onChange: (value: number) => void;
 }
 
@@ -23,6 +25,7 @@ export function NumericInput({
   label,
   required,
   info,
+  sx,
   onChange,
 }: NumericInputProps) {
   const [text, setText] = useState("");
@@ -51,6 +54,7 @@ export function NumericInput({
     <FormControl
       sx={{
         backgroundColor: theme.palette.background.paper,
+        ...sx
       }}
       required={required}
     >

@@ -2,14 +2,14 @@ import { useParams } from "react-router-dom";
 import { Form } from "../../components/form"
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
-import { Magnitude, Unit, UnitProps, UnitType } from "../../../models/units";
+import { Magnitude, Unit, UnitType } from "../../../models/units";
 import { Recipie } from "../../../models/recipies";
 import { Ingredient } from "../../../models/ingredients";
 import { SelectID } from "../../components/select-id";
 import { SelectObject } from "../../components/select-object";
-import { NumericInput } from "../../components/numeric-input";
 import Box from "@mui/material/Box";
 import { useForms } from "../../providers/forms";
+import { UnitInput } from "./components/unit-input";
 
 export function RecipiesIngredients() {
   const params = useParams();
@@ -112,15 +112,13 @@ export function RecipiesIngredients() {
         />
       </Box>
 
-      <Box>
-        <NumericInput
-          id="amount"
-          label="amount"
-          value={quantity}
-          required
-          onChange={setQuantity}
-        />
-      </Box>
+      <UnitInput
+        id="quantity"
+        label="quantity"
+        value={quantity}
+        unit={units.find(u => u.id === unitId)}
+        onChange={value => setQuantity(value)}
+      />
     </Form>
   );
 }
