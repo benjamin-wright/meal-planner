@@ -70,10 +70,6 @@ export function RecipiesEdit() {
     return recipie.name !== "";
   }
 
-  function handleNewIngredient() {
-    navigate(`/recipies/${recipie.id}/ingredients/new`);
-  }
-
   return (
     <Form
       title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
@@ -107,7 +103,7 @@ export function RecipiesEdit() {
         onChange={(value) => setRecipie({ ...recipie, description: value })}
       />
 
-      <Box display="flex" flexDirection="row" gap="1em">
+      <Box display="flex" flexDirection="row" gap="1em" justifyContent={"space-between"}>
         <NumericInput
           id="serves"
           label="serves"
@@ -125,9 +121,17 @@ export function RecipiesEdit() {
         />
       </Box>
 
-      <IngredientsView ingredients={ingredients} onEdit={() => {}} onDelete={() => {}} onAdd={handleNewIngredient} disabled={!validate()} />
+      <IngredientsView
+        ingredients={ingredients}
+        onEdit={index => navigate(`/recipies/${recipie.id}/ingredients/${index}`)}
+        onAdd={() => navigate(`/recipies/${recipie.id}/ingredients/new`)}
+        disabled={!validate()}
+      />
 
-      <StepsView steps={recipie.steps} onChange={steps => setRecipie({...recipie, steps })} />
+      <StepsView
+        steps={recipie.steps}
+        onChange={steps => setRecipie({...recipie, steps })}
+      />
     </Form>
   );
 }

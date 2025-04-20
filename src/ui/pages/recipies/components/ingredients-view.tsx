@@ -14,25 +14,15 @@ export type IngredientData = {
 interface IngredientsViewProps {
   ingredients: IngredientData[];
   disabled?: boolean;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (index: number) => void;
   onAdd: () => void;
 }
 
-export function IngredientsView({ ingredients, disabled, onEdit, onDelete, onAdd }: IngredientsViewProps) {
-  const [selected, setSelected] = useState<number | undefined>(undefined);
-  function select(index: number) {
-    if (selected === index) {
-      setSelected(undefined);
-    } else {
-      setSelected(index);
-    }
-  }
-
+export function IngredientsView({ ingredients, disabled, onEdit, onAdd }: IngredientsViewProps) {
   return <OutlinedContainer label="ingredients">
     {ingredients.map((ingredient, index) =>
       <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
-        <CardActionArea onClick={() => select(index)} sx={{ width: "min-content", padding: "0.5em 1em" }}>
+        <CardActionArea onClick={() => onEdit(index)} sx={{ width: "min-content", padding: "0.5em 1em" }}>
           <Typography variant="body1">
             {ingredient.name}: {ingredient.amount}{ ingredient.unit.getAbbr(ingredient.amount) }
           </Typography>
