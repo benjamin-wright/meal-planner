@@ -127,7 +127,7 @@ export function PlannerEdit() {
       return {
         name: ingredientDefinition.name,
         quantity: finalQuantity,
-        units: unit.getAbbr(finalQuantity),
+        units: unit.toAbbr(finalQuantity),
       };
     })));
 

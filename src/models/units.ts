@@ -135,7 +135,7 @@ export class Unit {
     return true;
   }
 
-  getAbbr(value: number): string {
+  toAbbr(value: number): string {
     if (this.type === UnitType.Count) {
       return this.toString(value);
     } else {
@@ -168,20 +168,27 @@ export class Unit {
     }
   }
   
-  pickCollective(collective?: number): Collective {
-    if (collective === undefined) {
-      throw new Error("Collective is required for count units");
-    }
-  
+  pickCollective(value: number): Collective {
     if (this.collectives.length === 0) {
       throw new Error(`No collectives defined for unit '${this.name}'`);
     }
-  
-    if (collective < 0 || collective >= this.collectives.length) {
-      throw new Error(`Invalid collective index, got ${collective}, expected 0-${this.collectives.length - 1}`);
+
+    if (this.collectives.length === 1) {
+      return this.collectives[0];
     }
+
+    let selected = this.collectives[0];
+    let closest = Number.MAX_VALUE;
   
-    return this.collectives[collective];
+    this.collectives.forEach((collective) => {
+      const diff = Math.abs(value / (collective.multiplier ?? 1));
+      if (diff >= 1 && diff < closest) {
+        closest = diff;
+        selected = collective;
+      }
+    });
+  
+    return selected;
   }
   
   pickMagnitude(value: number): Magnitude {

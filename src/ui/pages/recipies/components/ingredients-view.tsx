@@ -29,7 +29,7 @@ export function IngredientsView({ ingredients, units, quantities, disabled, onEd
       <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
         <CardActionArea onClick={() => onEdit(index)} sx={{ width: "min-content", padding: "0.5em 1em" }}>
           <Typography variant="body1">
-            {quantity.name}: {quantity.amount}{ quantity.unit?.getAbbr(quantity.amount) || "" }
+            {quantity.name}: {quantity.amount}{ quantity.unit?.toAbbr(quantity.amount) || "" }
           </Typography>
         </CardActionArea>
       </Card>
