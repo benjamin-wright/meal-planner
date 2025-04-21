@@ -10,13 +10,8 @@ import { IngredientsView } from "./components/ingredients-view";
 import { Unit } from "../../../models/units";
 import Box from "@mui/material/Box";
 import { StepsView } from "./components/steps-view";
-
-export type IngredientData = {
-  id: number;
-  name: string;
-  amount: number;
-  unit: Unit;
-}
+import { IngredientDialog } from "./components/ingredient-dialog";
+import { Ingredient } from "../../../models/ingredients";
 
 export function RecipiesEdit() {
   const { returnTo } = useForms("recipies");
@@ -25,8 +20,12 @@ export function RecipiesEdit() {
 
   const [isNew, setIsNew] = useState(true);
   const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
-  const [ingredients, setIngredients] = useState<IngredientData[]>([]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [units, setUnits] = useState<Unit[]>([]);
   const navigate = useNavigate();
+
+  const [editIngredient, setEditIngredient] = useState<boolean>(false);
+  const [selectedIngredient, setSelectedIngredient] = useState<number | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -48,21 +47,12 @@ export function RecipiesEdit() {
       if (!ingredientStore || !unitStore) {
         return;
       }
-     
-      const ingredients = [];
-      for (const quantity of recipie.ingredients) {
-        const ingredient = await ingredientStore.get(quantity.id);
-        const unit = await unitStore.get(quantity.unit);
-        
-        ingredients.push({
-          id: ingredient.id,
-          name: ingredient.name,
-          amount: quantity.quantity,
-          unit: unit,
-        });
-      }
 
-      setIngredients(ingredients); 
+      const ingredients = await ingredientStore.getAll();
+      setIngredients(ingredients);
+
+      const units = await unitStore.getAll();
+      setUnits(units);
     })();
   }, [ingredientStore, unitStore, recipie]);
 
@@ -122,9 +112,18 @@ export function RecipiesEdit() {
       </Box>
 
       <IngredientsView
+        units={units}
         ingredients={ingredients}
-        onEdit={index => navigate(`/recipies/${recipie.id}/ingredients/${index}`)}
-        onAdd={() => navigate(`/recipies/${recipie.id}/ingredients/new`)}
+        quantities={recipie.ingredients}
+        onEdit={index => {
+          setSelectedIngredient(index);
+          setEditIngredient(true);
+        }}
+        onAdd={() => {
+          setRecipie({ ...recipie, ingredients: [...recipie.ingredients, { id: 0, quantity: 1, unit: 0 }] });
+          setSelectedIngredient(recipie.ingredients.length);
+          setEditIngredient(true);
+        }}
         disabled={!validate()}
       />
 
@@ -132,6 +131,28 @@ export function RecipiesEdit() {
         steps={recipie.steps}
         onChange={steps => setRecipie({...recipie, steps })}
       />
+
+      {
+        editIngredient && (
+          <IngredientDialog
+            open={editIngredient}
+            onClose={() => setEditIngredient(false)}
+            ingredient={recipie.ingredients[selectedIngredient || 0]}
+            onChange={(ingredient) => {
+              if (selectedIngredient === undefined) {
+                return;
+              }
+
+              const newIngredients = [...recipie.ingredients];
+              newIngredients[selectedIngredient] = ingredient;
+              setRecipie({ ...recipie, ingredients: newIngredients });
+              setEditIngredient(false);
+            }}
+            units={units}
+            ingredients={ingredients}
+          />
+        )
+      }
     </Form>
   );
 }

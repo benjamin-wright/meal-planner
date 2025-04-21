@@ -135,30 +135,40 @@ export class Unit {
     return true;
   }
 
-  getAbbr(value: number, collective?: number): string {
+  getAbbr(value: number): string {
     if (this.type === UnitType.Count) {
-      return this.toString(value, collective);
+      return this.toString(value);
     } else {
       return this.pickMagnitude(value).abbrev;
     }
   }
-  
-  toString(value: number, collective?: number): string {
+
+  multiplier(value: number): number {
     if (this.type === UnitType.Count) {
-      const unitCollective = this.getCollective(collective);
+      const unitCollective = this.pickCollective(value);
+      return (unitCollective.multiplier ?? 1);
+    } else {
+      const magnitude = this.pickMagnitude(value);
+      return (magnitude.multiplier ?? 1) * (this.base ?? 1);
+    }
+  }
   
-      if (value === 1) {
+  toString(value: number): string {
+    if (this.type === UnitType.Count) {
+      const unitCollective = this.pickCollective(value);
+  
+      if (value * (unitCollective.multiplier ?? 1) === 1) {
         return unitCollective.singular ? ` ${unitCollective.singular}` : "";
       } else {
         return unitCollective.plural ? ` ${unitCollective.plural}` : "";
       }
     } else {
       const magnitude = this.pickMagnitude(value);
-      return " " + (value === 1 ? magnitude.singular : magnitude.plural);
+      return " " + (value * (magnitude.multiplier ?? 1) * (this.base ?? 1) === 1 ? magnitude.singular : magnitude.plural);
     }
   }
   
-  getCollective(collective?: number): Collective {
+  pickCollective(collective?: number): Collective {
     if (collective === undefined) {
       throw new Error("Collective is required for count units");
     }
@@ -183,7 +193,7 @@ export class Unit {
     let closest = Number.MAX_VALUE;
   
     this.magnitudes.forEach((magnitude) => {
-      const diff = Math.abs(value / magnitude.multiplier);
+      const diff = Math.abs(value / (magnitude.multiplier * (this.base ?? 1)));
       if (diff >= 1 && diff < closest) {
         closest = diff;
         selected = magnitude;

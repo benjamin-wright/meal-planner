@@ -9,7 +9,8 @@ import { SelectID } from "../../components/select-id";
 import { SelectObject } from "../../components/select-object";
 import Box from "@mui/material/Box";
 import { useForms } from "../../providers/forms";
-import { UnitInput } from "./components/unit-input";
+import { CollectiveInput } from "./components/collective-input";
+import { MagnitudeInput } from "./components/magnitude-input";
 
 export function RecipiesIngredients() {
   const params = useParams();
@@ -112,13 +113,23 @@ export function RecipiesIngredients() {
         />
       </Box>
 
-      <UnitInput
-        id="quantity"
-        label="quantity"
-        value={quantity}
-        unit={units.find(u => u.id === unitId)}
-        onChange={value => setQuantity(value)}
-      />
+      {unitType === UnitType.Count ? (
+        <CollectiveInput
+          id="quantity"
+          label="quantity"
+          value={quantity}
+          unit={units.find(u => u.id === unitId)}
+          onChange={setQuantity}
+        />
+      ) : (
+        <MagnitudeInput
+          id="quantity"
+          label="quantity"
+          value={quantity}
+          unit={units.find(u => u.id === unitId)}
+          onChange={setQuantity}
+        />
+      )}
     </Form>
   );
 }
