@@ -13,8 +13,7 @@ import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/mat
 
 type IngredientItem = {
   name: string;
-  quantity: number;
-  units: string;
+  quantity: string;
 }
 
 export function PlannerEdit() {
@@ -109,10 +108,11 @@ export function PlannerEdit() {
     }
 
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
-      const ingredientDefinition = await ingredientStore.get(ingredient.id);
+      const ingredientData = await ingredientStore.get(ingredient.id);
+      const originalUnit = await unitStore.get(ingredient.unit);
 
-      let unitId = ingredientDefinition.unit ?? 0;
-      switch (ingredientDefinition.unitType) {
+      let unitId = originalUnit.id;
+      switch (originalUnit.type) {
         case UnitType.Weight:
           unitId = settings.preferredWeightUnit;
           break;
@@ -125,9 +125,8 @@ export function PlannerEdit() {
       const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
 
       return {
-        name: ingredientDefinition.name,
-        quantity: finalQuantity,
-        units: unit.toAbbr(finalQuantity),
+        name: ingredientData.name,
+        quantity: unit.format(finalQuantity)
       };
     })));
 
@@ -210,7 +209,7 @@ export function PlannerEdit() {
                 ingredients.map((ingredient, index) => (
                   <TableRow key={index}>
                     <TableCell>{ingredient.name}</TableCell>
-                    <TableCell>{ingredient.quantity}{ingredient.units}</TableCell>
+                    <TableCell>{ingredient.quantity}</TableCell>
                   </TableRow>
                 ))
               }

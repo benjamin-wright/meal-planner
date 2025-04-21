@@ -135,37 +135,43 @@ export class Unit {
     return true;
   }
 
-  toAbbr(value: number): string {
-    if (this.type === UnitType.Count) {
-      return this.toString(value);
-    } else {
-      return this.pickMagnitude(value).abbrev;
+  format(value: number): string {
+    switch(this.type) {
+      case UnitType.Count:
+        return this.formatCollective(value);
+      case UnitType.Weight:
+      case UnitType.Volume:
+        return this.formatMagnitude(value);
+      default:
+        throw new Error(`Unknown unit type: ${this.type}`);
     }
   }
 
-  multiplier(value: number): number {
-    if (this.type === UnitType.Count) {
-      const unitCollective = this.pickCollective(value);
-      return (unitCollective.multiplier ?? 1);
-    } else {
-      const magnitude = this.pickMagnitude(value);
-      return (magnitude.multiplier ?? 1) * (this.base ?? 1);
+  private formatCollective(value: number): string {
+    const collective = this.pickCollective(value);
+    const adjustedValue = value / (collective.multiplier ?? 1);
+    let suffix = "";
+    if (adjustedValue === 1 && collective.singular) {
+      suffix = ` ${collective.singular}`;
+    } else if (collective.plural) {
+      suffix = ` ${collective.plural}`;
     }
+
+    return `${adjustedValue}${suffix}`;
   }
-  
-  toString(value: number): string {
-    if (this.type === UnitType.Count) {
-      const unitCollective = this.pickCollective(value);
-  
-      if (value * (unitCollective.multiplier ?? 1) === 1) {
-        return unitCollective.singular ? ` ${unitCollective.singular}` : "";
-      } else {
-        return unitCollective.plural ? ` ${unitCollective.plural}` : "";
-      }
-    } else {
-      const magnitude = this.pickMagnitude(value);
-      return " " + (value * (magnitude.multiplier ?? 1) * (this.base ?? 1) === 1 ? magnitude.singular : magnitude.plural);
+
+  private formatMagnitude(value: number): string {
+    console.info(`formatting ${value} for unit ${this.name}`);
+    const magnitude = this.pickMagnitude(value);
+    console.info(`magnitude: ${JSON.stringify(magnitude)}`);
+    const adjustedValue = value / (magnitude.multiplier * (this.base ?? 1));
+    let unitSuffix = "";
+    if (adjustedValue === 1 && magnitude.singular) {
+      unitSuffix = ` ${magnitude.singular}`;
+    } else if (magnitude.plural) {
+      unitSuffix = ` ${magnitude.plural}`;
     }
+    return `${adjustedValue}${unitSuffix}`;
   }
   
   pickCollective(value: number): Collective {

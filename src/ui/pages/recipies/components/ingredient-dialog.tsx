@@ -101,7 +101,10 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             label="quantity"
             value={ingredient.quantity}
             unit={unit}
-            onChange={value => onChange({...ingredient, quantity: value})}
+            onChange={value => {
+              onChange({...ingredient, quantity: value});
+              console.info(`Quantity changed to ${value}`);
+            }}
           />
         )}
 

@@ -20,16 +20,16 @@ export function IngredientsView({ ingredients, units, quantities, disabled, onEd
       const ingredient = ingredients.find(i => i.id === quantity.id);
       const unit = units.find(u => u.id === quantity.unit);
       if (!ingredient || !unit) {
-        return { name: "unknown", amount: 1, unit: undefined };
+        return { name: "unknown", amount: `${quantity.quantity}` };
       }
 
-      const amount = quantity.quantity * unit.multiplier(quantity.quantity);
+      const amount = unit.format(quantity.quantity);
       return { name: ingredient.name, amount, unit };
     }).map((quantity, index) =>
       <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
         <CardActionArea onClick={() => onEdit(index)} sx={{ width: "min-content", padding: "0.5em 1em" }}>
           <Typography variant="body1">
-            {quantity.name}: {quantity.amount}{ quantity.unit?.toAbbr(quantity.amount) || "" }
+            {quantity.name}: { quantity.amount }
           </Typography>
         </CardActionArea>
       </Card>
