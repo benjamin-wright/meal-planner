@@ -1,4 +1,4 @@
-import { Box, Dialog, Paper } from "@mui/material";
+import { Box, Dialog, IconButton, Paper, Typography } from "@mui/material";
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { Unit, UnitType } from "../../../../models/units";
@@ -7,8 +7,10 @@ import { MagnitudeInput } from "./magnitude-input";
 import { SelectID } from "../../../components/select-id";
 import { SelectObject } from "../../../components/select-object";
 import { useEffect, useState } from "react";
+import { Cancel, CancelOutlined, CancelRounded, Check, Close } from "@mui/icons-material";
 
 interface IngredientDialogProps {
+  index: number;
   open: boolean;
   onClose: () => void;
   ingredient: IngredientQuantity;
@@ -17,7 +19,7 @@ interface IngredientDialogProps {
   units: Unit[];
 }
 
-export function IngredientDialog({ open, ingredient, ingredients, units, onChange, onClose }: IngredientDialogProps) {
+export function IngredientDialog({ index, open, ingredient, ingredients, units, onChange, onClose }: IngredientDialogProps) {
   const [ unitType, setUnitType ] = useState<UnitType>(UnitType.Count);
   const [ unit, setUnit ] = useState<Unit>(units[0]);
 
@@ -41,8 +43,15 @@ export function IngredientDialog({ open, ingredient, ingredients, units, onChang
   }, [ingredient.unit])
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open}>
       <Paper sx={{padding: "1em", display: "flex", flexDirection: "column", gap: "1em"}}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="1em">
+          <Typography variant="h6">Ingredient {index+1}</Typography>
+          <IconButton size="small" onClick={onClose}>
+            <Close />
+          </IconButton>
+        </Box>
+
         <SelectID
           id="ingredient"
           label="ingredient"

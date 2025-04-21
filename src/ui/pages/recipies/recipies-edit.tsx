@@ -27,6 +27,8 @@ export function RecipiesEdit() {
   const [editIngredient, setEditIngredient] = useState<boolean>(false);
   const [selectedIngredient, setSelectedIngredient] = useState<number | undefined>();
 
+  console.info(`editing: ${editIngredient}, selected: ${selectedIngredient}`);
+
   useEffect(() => {
     (async () => {
       if (!recipieStore) {
@@ -135,6 +137,7 @@ export function RecipiesEdit() {
       {
         editIngredient && (
           <IngredientDialog
+            index={selectedIngredient || 0}
             open={editIngredient}
             onClose={() => setEditIngredient(false)}
             ingredient={recipie.ingredients[selectedIngredient || 0]}
@@ -146,7 +149,6 @@ export function RecipiesEdit() {
               const newIngredients = [...recipie.ingredients];
               newIngredients[selectedIngredient] = ingredient;
               setRecipie({ ...recipie, ingredients: newIngredients });
-              setEditIngredient(false);
             }}
             units={units}
             ingredients={ingredients}
