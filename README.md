@@ -10,3 +10,6 @@
 - Add validation logic into each model, and reference from forms
 - Finish ingredient editing
 - Add unit tests for unit conversion logic
+
+## WIP
+- Finish refactoring to use unit class for all unit-based conversions

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 interface MagnitudeInputProps {
   id: string;
   label: string;
-  unit?: Unit;
+  unit: Unit;
   value: number;
   onChange: (value: number) => void;
 }
@@ -18,7 +18,7 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
     );
   }
 
-  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude | undefined>();
+  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.magnitudes[0]);
 
   useEffect(() => {
     setSelectedMagnitude(unit.pickMagnitude(value));
@@ -29,8 +29,8 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
       <NumericInput
         id={id}
         label={label}
-        value={value / (selectedMagnitude?.multiplier ?? 1)}
-        onChange={(value) => onChange(value * (selectedMagnitude?.multiplier ?? 1))}
+        value={unit.toMagnitude(value, selectedMagnitude)}
+        onChange={(value) => onChange(unit.fromMagnitude(value, selectedMagnitude))}
       />
       {unit.magnitudes.length > 1 && (
         <Select
