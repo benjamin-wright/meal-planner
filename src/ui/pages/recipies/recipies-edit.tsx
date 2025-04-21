@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { TextInput } from "../../components/text-input";
-import { Recipie } from "../../../models/recipies";
+import { IngredientQuantity, Recipie } from "../../../models/recipies";
 import { NumericInput } from "../../components/numeric-input";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
@@ -13,8 +13,13 @@ import { StepsView } from "./components/steps-view";
 import { IngredientDialog } from "./components/ingredient-dialog";
 import { Ingredient } from "../../../models/ingredients";
 
+type FormsData = {
+  recipie: Recipie,
+  selectedIngredient: number,
+}
+
 export function RecipiesEdit() {
-  const { returnTo } = useForms("recipies");
+  const { returnTo, formsResult, setFormResult, pushForm } = useForms("recipies");
   const { recipieStore, unitStore, ingredientStore } = useContext(DBContext);
   const params = useParams();
 
@@ -31,22 +36,7 @@ export function RecipiesEdit() {
 
   useEffect(() => {
     (async () => {
-      if (!recipieStore) {
-        return;
-      }
-      
-      if (params.recipie) {
-        const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
-        
-        setRecipie(recipie);
-        setIsNew(false);
-      }
-    })();
-  }, [recipieStore, params.recipie]);
-
-  useEffect(() => {
-    (async () => {
-      if (!ingredientStore || !unitStore) {
+      if (!recipieStore || !ingredientStore || !unitStore) {
         return;
       }
 
@@ -55,11 +45,86 @@ export function RecipiesEdit() {
 
       const units = await unitStore.getAll();
       setUnits(units);
+      
+      if (params.recipie) {
+        const recipie = await recipieStore.get(Number.parseInt(params.recipie, 10));
+        
+        setRecipie(recipie);
+        setIsNew(false);
+      }
+
+      if (formsResult) {
+        const { form, response } = formsResult;
+        const data = form.body as FormsData;
+        const recipie = data.recipie;
+
+        if (data.selectedIngredient === undefined || data.selectedIngredient < 0 || data.selectedIngredient >= recipie.ingredients.length) {
+          return;
+        }
+
+        if (response) {
+          switch (response.field) {
+            case "ingredient":
+              recipie.ingredients[data.selectedIngredient].id = response.response;
+              break;
+            case "unit":
+              recipie.ingredients[data.selectedIngredient].unit = response.response;
+              break;
+          }
+
+          setRecipie(recipie);
+          setIsNew(recipie.id === 0);
+          setSelectedIngredient(data.selectedIngredient);
+          setEditIngredient(true);
+        }
+      }
     })();
-  }, [ingredientStore, unitStore, recipie]);
+  }, [recipieStore, unitStore, ingredientStore, params.recipie, formsResult]);
 
   function validate() {
     return recipie.name !== "";
+  }
+
+  function onIngredientEdit(index: number) {
+    setSelectedIngredient(index);
+    setEditIngredient(true);
+  }
+
+  function onIngredientAdd() {
+    setRecipie({ ...recipie, ingredients: [...recipie.ingredients, { id: 1, quantity: 1, unit: 1 }] });
+    setSelectedIngredient(recipie.ingredients.length);
+    setEditIngredient(true);
+  }
+
+  function onIngredientChange(ingredient: IngredientQuantity) {
+    if (selectedIngredient === undefined) {
+      return;
+    }
+
+    const newIngredients = [...recipie.ingredients];
+    newIngredients[selectedIngredient] = ingredient;
+    setRecipie({ ...recipie, ingredients: newIngredients });
+  }
+
+  function onIngredientDelete() {
+    if (selectedIngredient === undefined) {
+      return;
+    }
+
+    const newIngredients = [...recipie.ingredients];
+    newIngredients.splice(selectedIngredient, 1);
+    setRecipie({ ...recipie, ingredients: newIngredients });
+    setEditIngredient(false);
+  }
+
+  async function onSubmit() {
+    if (isNew) {
+      recipie.id = await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps) || 0;
+    } else {
+      await recipieStore?.put(recipie);
+    }
+    setFormResult("recipies", { field: "recipie", response: recipie.id });
+    navigate(returnTo);
   }
 
   return (
@@ -67,14 +132,7 @@ export function RecipiesEdit() {
       title={isNew ? "Recipies: new" : `Recipies: ${recipie.name}`}
       returnTo={returnTo}
       disabled={!validate()}
-      onSubmit={async () => {
-        if (isNew) {
-          recipie.id = await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps) || 0;
-        } else {
-          await recipieStore?.put(recipie);
-        }
-        navigate(returnTo);
-      }}
+      onSubmit={onSubmit}
     >
       <TextInput
         id="variant"
@@ -117,16 +175,8 @@ export function RecipiesEdit() {
         units={units}
         ingredients={ingredients}
         quantities={recipie.ingredients}
-        onEdit={index => {
-          setSelectedIngredient(index);
-          setEditIngredient(true);
-        }}
-        onAdd={() => {
-          setRecipie({ ...recipie, ingredients: [...recipie.ingredients, { id: 0, quantity: 1, unit: 0 }] });
-          setSelectedIngredient(recipie.ingredients.length);
-          setEditIngredient(true);
-        }}
-        disabled={!validate()}
+        onEdit={onIngredientEdit}
+        onAdd={onIngredientAdd}
       />
 
       <StepsView
@@ -141,17 +191,18 @@ export function RecipiesEdit() {
             open={editIngredient}
             onClose={() => setEditIngredient(false)}
             ingredient={recipie.ingredients[selectedIngredient || 0]}
-            onChange={(ingredient) => {
-              if (selectedIngredient === undefined) {
-                return;
-              }
-
-              const newIngredients = [...recipie.ingredients];
-              newIngredients[selectedIngredient] = ingredient;
-              setRecipie({ ...recipie, ingredients: newIngredients });
-            }}
             units={units}
             ingredients={ingredients}
+            onChange={onIngredientChange}
+            onDelete={onIngredientDelete}
+            onNewIngredient={() => pushForm({ to: "ingredients", from: "recipies", link: location.pathname, body: {
+              recipie,
+              selectedIngredient: selectedIngredient,
+            }})}
+            onNewUnit={() => pushForm({ to: "units", from: "recipies", link: location.pathname, body: {
+              recipie,
+              selectedIngredient: selectedIngredient,
+            }})}
           />
         )
       }

@@ -61,7 +61,15 @@ export function Ingredients() {
 
     setToDelete(null);
     setOpen(false);
-    setIngredients({...ingredients, [toDelete.category]: ingredients[toDelete.category].filter((ingredient) => ingredient.id !== toDelete.id)});
+
+    const newIngredients = {...ingredients}
+    newIngredients[toDelete.category] = newIngredients[toDelete.category].filter((ingredient) => ingredient.id !== toDelete.id);
+    setIngredients(newIngredients);
+
+    if (newIngredients[toDelete.category].length === 0) {
+      const newCategories = categories.filter((category) => category.id !== toDelete.category);
+      setCategories(newCategories);
+    }
   }
 
   function onCancel() {

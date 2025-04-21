@@ -157,7 +157,7 @@ export function PlannerEdit() {
         label="Recipie"
         value={meal.recipieId}
         items={recipies}
-        link="/recipies/new/metadata"
+        link="/recipies/new"
         toLabel={(recipie) => recipie.name}
         onChange={recipieChangeHandler}
         onNav={() => pushForm({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
@@ -169,8 +169,6 @@ export function PlannerEdit() {
         value={meal.servings}
         onChange={servingsChangeHandler}
       />
-
-
 
       <SelectString
         id="meal"
