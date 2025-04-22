@@ -132,6 +132,7 @@ export function Planner() {
       <Tab label="Dinner" value="dinner" />
       <Tab label="Lunch" value="lunch" />
       <Tab label="Breakfast" value="breakfast" />
+      <Tab label="Misc" value="misc" />
     </Tabs>
 
     <Box paddingBottom="4em" overflow="scroll">

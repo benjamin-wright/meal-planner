@@ -95,7 +95,7 @@ export function PlannerEdit() {
     calculateIngredients();
     setIngredients([]);
     setLoading(true);
-  }, [ingredientStore, unitStore, meal.recipieId, meal.servings, meal.days]);
+  }, [ingredientStore, unitStore, meal]);
 
   async function calculateIngredients() {
     if (ingredientStore === undefined || unitStore === undefined) {
@@ -122,11 +122,11 @@ export function PlannerEdit() {
       }
 
       const unit = await unitStore.get(unitId);
-      const finalQuantity = meal.days.length * ingredient.quantity * meal.servings / recipie.serves;
+      const finalQuantity = (meal.meal == "dinner" ? meal.days.length : 1) * ingredient.quantity * meal.servings / recipie.serves;
 
       return {
         name: ingredientData.name,
-        quantity: unit.format(finalQuantity)
+        quantity: unit.format(finalQuantity, {abbr: true})
       };
     })));
 

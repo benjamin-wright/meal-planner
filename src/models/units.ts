@@ -135,26 +135,6 @@ export class Unit {
     return true;
   }
 
-  format(value: number): string {
-    switch(this.type) {
-      case UnitType.Count:
-        return this.formatCollective(value);
-      case UnitType.Weight:
-      case UnitType.Volume:
-        return this.formatMagnitude(value);
-      default:
-        throw new Error(`Unknown unit type: ${this.type}`);
-    }
-  }
-
-  toMagnitude(value: number, magnitude: Magnitude): number {
-    if (this.type === UnitType.Count) {
-      throw new Error(`Cannot convert to magnitude for unit type ${this.type}`);
-    }
-
-    return value / ((this.base ?? 1) * magnitude.multiplier);
-  }
-
   fromMagnitude(value: number, magnitude: Magnitude): number {
     if (this.type === UnitType.Count) {
       throw new Error(`Cannot convert from magnitude for unit type ${this.type}`);
@@ -177,6 +157,18 @@ export class Unit {
     return value * (collective.multiplier ?? 1);
   }
 
+  format(value: number, options?: {abbr?: boolean}): string {
+    switch(this.type) {
+      case UnitType.Count:
+        return this.formatCollective(value);
+      case UnitType.Weight:
+      case UnitType.Volume:
+        return this.formatMagnitude(value, options?.abbr);
+      default:
+        throw new Error(`Unknown unit type: ${this.type}`);
+    }
+  }
+
   private formatCollective(value: number): string {
     const collective = this.pickCollective(value);
     const adjustedValue = value / (collective.multiplier ?? 1);
@@ -190,11 +182,16 @@ export class Unit {
     return `${this.round(adjustedValue, 3)}${suffix}`;
   }
 
-  private formatMagnitude(value: number): string {
+  private formatMagnitude(value: number, abbr?: boolean): string {
     console.info(`formatting ${value} for unit ${this.name}`);
     const magnitude = this.pickMagnitude(value);
     console.info(`magnitude: ${JSON.stringify(magnitude)}`);
     const adjustedValue = value / (magnitude.multiplier * (this.base ?? 1));
+
+    if (abbr) {
+      return `${this.round(adjustedValue, 3)}${magnitude.abbrev}`;
+    }
+
     let unitSuffix = "";
     if (adjustedValue === 1 && magnitude.singular) {
       unitSuffix = ` ${magnitude.singular}`;
@@ -207,6 +204,14 @@ export class Unit {
   private round(value: number, precision: number): number {
     const factor = Math.pow(10, precision);
     return Math.round(value * factor) / factor;
+  }
+
+  toMagnitude(value: number, magnitude: Magnitude): number {
+    if (this.type === UnitType.Count) {
+      throw new Error(`Cannot convert to magnitude for unit type ${this.type}`);
+    }
+
+    return value / ((this.base ?? 1) * magnitude.multiplier);
   }
   
   pickCollective(value: number): Collective {

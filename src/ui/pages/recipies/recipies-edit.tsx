@@ -32,8 +32,6 @@ export function RecipiesEdit() {
   const [editIngredient, setEditIngredient] = useState<boolean>(false);
   const [selectedIngredient, setSelectedIngredient] = useState<number | undefined>();
 
-  console.info(`editing: ${editIngredient}, selected: ${selectedIngredient}`);
-
   useEffect(() => {
     (async () => {
       if (!recipieStore || !ingredientStore || !unitStore) {

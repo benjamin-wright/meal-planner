@@ -50,7 +50,7 @@ export class Meal {
       return false;
     }
 
-    if (this.days.length === 0) {
+    if (this.meal === "dinner" && this.days.length === 0) {
       return false;
     }
 

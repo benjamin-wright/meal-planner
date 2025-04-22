@@ -23,7 +23,7 @@ export function IngredientsView({ ingredients, units, quantities, disabled, onEd
         return { name: "unknown", amount: `${quantity.quantity}` };
       }
 
-      const amount = unit.format(quantity.quantity);
+      const amount = unit.format(quantity.quantity, {abbr: true});
       return { name: ingredient.name, amount, unit };
     }).map((quantity, index) =>
       <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
