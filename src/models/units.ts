@@ -187,7 +187,7 @@ export class Unit {
       suffix = ` ${collective.plural}`;
     }
 
-    return `${adjustedValue}${suffix}`;
+    return `${this.round(adjustedValue, 3)}${suffix}`;
   }
 
   private formatMagnitude(value: number): string {
@@ -201,7 +201,12 @@ export class Unit {
     } else if (magnitude.plural) {
       unitSuffix = ` ${magnitude.plural}`;
     }
-    return `${adjustedValue}${unitSuffix}`;
+    return `${this.round(adjustedValue, 3)}${unitSuffix}`;
+  }
+
+  private round(value: number, precision: number): number {
+    const factor = Math.pow(10, precision);
+    return Math.round(value * factor) / factor;
   }
   
   pickCollective(value: number): Collective {

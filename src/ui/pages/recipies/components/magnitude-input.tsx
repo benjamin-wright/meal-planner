@@ -49,7 +49,7 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
         >
           {unit.magnitudes.map((magnitude) => (
             <MenuItem key={magnitude.singular} value={magnitude.singular}>
-              {value / (magnitude.multiplier || 1) === 1 ? magnitude.singular : magnitude.plural}
+              {unit.toMagnitude(value, magnitude) === 1 ? magnitude.singular : magnitude.plural}
             </MenuItem>
           ))}
         </Select>

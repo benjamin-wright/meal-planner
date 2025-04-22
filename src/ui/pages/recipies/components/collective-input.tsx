@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 interface CollectiveInputProps {
   id: string;
   label: string;
-  unit?: Unit;
+  unit: Unit;
   value: number;
   onChange: (value: number) => void;
 }
@@ -16,7 +16,7 @@ export function CollectiveInput({id, label, unit, value, onChange}: CollectiveIn
     return (<Typography variant="body2" color="text.secondary">Wrong unit type</Typography>);
   }
 
-  const [ selectedCollective, setSelectedCollective ] = useState<Collective | undefined>();
+  const [ selectedCollective, setSelectedCollective ] = useState<Collective>(unit.collectives[0]);
 
   useEffect(() => {
     setSelectedCollective(unit.pickCollective(value));
@@ -26,8 +26,8 @@ export function CollectiveInput({id, label, unit, value, onChange}: CollectiveIn
     <NumericInput
       id={id}
       label={label}
-      value={value / (selectedCollective?.multiplier ?? 1)}
-      onChange={(value) => onChange(value * (selectedCollective?.multiplier ?? 1))}
+      value={unit.toCollective(value, selectedCollective)}
+      onChange={(value) => onChange(unit.fromCollective(value, selectedCollective))}
     />
     { 
       unit.collectives.length > 1 && 
@@ -48,7 +48,7 @@ export function CollectiveInput({id, label, unit, value, onChange}: CollectiveIn
         {
           unit.collectives.map((collective) => 
             <MenuItem key={collective.singular} value={collective.singular}>
-              { value / (collective.multiplier || 1) === 1 ? collective.singular : collective.plural }
+              { unit.toCollective(value, collective) === 1 ? collective.singular : collective.plural }
             </MenuItem>
           )
         }

@@ -61,7 +61,6 @@ export function UnitsEdit() {
       returnTo={returnTo}
       disabled={!Unit.from(unit).validate()}
       onSubmit={async () => {
-        unit.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
         let id = unit.id;
 
         if (isNew) {
