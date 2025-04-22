@@ -46,7 +46,7 @@ export function Recipies() {
             key={recipie.id}
             title={recipie.name}
             onEdit={() => {
-              navigate(`/recipies/${recipie.id}/metadata`);
+              navigate(`/recipies/${recipie.id}`);
             }}
             onDelete={() => {
               setToDelete(recipie);
@@ -61,7 +61,7 @@ export function Recipies() {
         ))
       }
     </DetailViewGroup>
-    <FloatingAddButton to="/recipies/new/metadata" />
+    <FloatingAddButton to="/recipies/new" />
     <ConfirmDialog
       message={`Deleting "${toDelete?.name}"`}
       open={isOpen}

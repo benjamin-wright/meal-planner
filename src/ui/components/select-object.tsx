@@ -1,3 +1,4 @@
+import { SxProps } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -9,13 +10,14 @@ interface SelectObjectProps<T> {
   id: string;
   label: string;
   required?: boolean;
+  sx?: SxProps;
   toLabel: (item: T) => string;
   onChange: (value: T) => void;
 }
 
-export function SelectObject<T>({value, items, id, label, required, toLabel, onChange}: SelectObjectProps<T>) {
+export function SelectObject<T>({value, items, id, label, required, sx, toLabel, onChange}: SelectObjectProps<T>) {
   return (
-    <FormControl required={required}>
+    <FormControl required={required} sx={sx}>
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
         labelId={`${id}-label`}

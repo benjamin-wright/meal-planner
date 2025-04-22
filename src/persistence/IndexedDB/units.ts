@@ -1,4 +1,4 @@
-import { Magnitude, Unit, UnitType } from "../../models/units";
+import { Collective, UnitProps, Magnitude, Unit, UnitType } from "../../models/units";
 import { UnitStore } from "../interfaces/units";
 import { TypedDB } from "./typed-db";
 
@@ -7,6 +7,7 @@ const TABLE_NAME = "units";
 export function unitsV1(db: IDBDatabase) {
   const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
+  store.createIndex("type", "type", {});
 }
 
 export class Units implements UnitStore {
@@ -17,18 +18,25 @@ export class Units implements UnitStore {
   }
 
   async get(id: number): Promise<Unit> {
-    return this.db.get<Unit>(TABLE_NAME, id);
+    const data = await this.db.get<UnitProps>(TABLE_NAME, id);
+    return Unit.from(data);
   }
 
   async getAll(): Promise<Unit[]> {
-    return this.db.getAll<Unit>(TABLE_NAME);
+    const data = await this.db.getAll<UnitProps>(TABLE_NAME);
+    return data.map((item) => Unit.from(item));
   }
 
-  async add(name: string, type: UnitType, magnitudes?: Magnitude[], base?: number, singular?: string, plural?: string): Promise<number> {
+  async getAllByType(type: UnitType): Promise<Unit[]> {
+    const data = await this.db.getByIndex<UnitProps, "type">(TABLE_NAME, "type", type);
+    return data.map((item) => Unit.from(item));
+  }
+
+  async add(name: string, type: UnitType, magnitudes?: Magnitude[], collectives?: Collective[], base?: number): Promise<number> {
     if (magnitudes) {
       magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
-    return this.db.add(TABLE_NAME, { name, type, magnitudes, base, singular, plural });
+    return this.db.add(TABLE_NAME, { name, type, magnitudes, collectives, base });
   }
 
   async put(value: Unit): Promise<void> {

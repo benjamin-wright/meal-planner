@@ -3,26 +3,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import { Meal, MealDay, MealDays, MealType, MealTypes } from "../../../models/meals";
+import { Meal, MealDay, MealDays, MealProps, MealType, MealTypes } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
-import { getAbbr } from "../../../models/units";
+import { UnitType } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
   name: string;
-  quantity: number;
-  units: string;
+  quantity: string;
 }
 
 export function PlannerEdit() {
-  const { mealStore, recipieStore, ingredientStore, unitStore } = useContext(DBContext);
+  const { mealStore, recipieStore, ingredientStore, unitStore, settingStore } = useContext(DBContext);
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
-  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
+  const [settings, setSettings] = useState({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
+  const [meal, setMeal] = useState<MealProps>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
@@ -72,6 +72,17 @@ export function PlannerEdit() {
     load();
   }, [mealStore, recipieStore, formsResult]);
 
+  useEffect(() => {
+    (async () => {
+      if (!settingStore) {
+        return;
+      }
+
+      const settings = await settingStore.get();
+      setSettings(settings);
+    })();
+  }, [settingStore]);
+
   async function recipieChangeHandler(recipieId: number) {
     setMeal({ ...meal, recipieId });
   };
@@ -84,7 +95,7 @@ export function PlannerEdit() {
     calculateIngredients();
     setIngredients([]);
     setLoading(true);
-  }, [ingredientStore, unitStore, meal.recipieId, meal.servings]);
+  }, [ingredientStore, unitStore, meal.recipieId, meal.servings, meal.days]);
 
   async function calculateIngredients() {
     if (ingredientStore === undefined || unitStore === undefined) {
@@ -97,15 +108,25 @@ export function PlannerEdit() {
     }
 
     setIngredients(await Promise.all(recipie.ingredients.map(async (ingredient) => {
-      const ingredientDefinition = await ingredientStore.get(ingredient.id);
-      const unit = await unitStore.get(ingredientDefinition.unit);
+      const ingredientData = await ingredientStore.get(ingredient.id);
+      const originalUnit = await unitStore.get(ingredient.unit);
 
-      const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
+      let unitId = originalUnit.id;
+      switch (originalUnit.type) {
+        case UnitType.Weight:
+          unitId = settings.preferredWeightUnit;
+          break;
+        case UnitType.Volume:
+          unitId = settings.preferredVolumeUnit;
+          break;
+      }
+
+      const unit = await unitStore.get(unitId);
+      const finalQuantity = meal.days.length * ingredient.quantity * meal.servings / recipie.serves;
 
       return {
-        name: ingredientDefinition.name,
-        quantity: finalQuantity,
-        units: getAbbr(unit, finalQuantity),
+        name: ingredientData.name,
+        quantity: unit.format(finalQuantity)
       };
     })));
 
@@ -129,13 +150,14 @@ export function PlannerEdit() {
 
         navigate(`/planner?tab=${meal.meal}`);
       }}
+      disabled={!Meal.from(meal).validate()}
     >
       <SelectID
         id="recipie"
         label="Recipie"
         value={meal.recipieId}
         items={recipies}
-        link="/recipies/new/metadata"
+        link="/recipies/new"
         toLabel={(recipie) => recipie.name}
         onChange={recipieChangeHandler}
         onNav={() => pushForm({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
@@ -147,8 +169,6 @@ export function PlannerEdit() {
         value={meal.servings}
         onChange={servingsChangeHandler}
       />
-
-
 
       <SelectString
         id="meal"
@@ -190,7 +210,7 @@ export function PlannerEdit() {
                 ingredients.map((ingredient, index) => (
                   <TableRow key={index}>
                     <TableCell>{ingredient.name}</TableCell>
-                    <TableCell>{ingredient.quantity}{ingredient.units}</TableCell>
+                    <TableCell>{ingredient.quantity}</TableCell>
                   </TableRow>
                 ))
               }

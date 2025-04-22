@@ -38,18 +38,19 @@ export function DetailViewGroup({ children }: DetailViewGroupProps) {
 interface DetailViewProps {
   id?: string;
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   group?: string;
   horizontal?: boolean;
   narrow?: boolean;
   dragControls?: DragControls;
   working?: boolean;
   chip?: string;
+  noDelete?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, chip, onEdit, onDelete }: DetailViewProps) {
+export function DetailView({ id, title, horizontal, narrow, dragControls, working, children, chip, noDelete, onEdit, onDelete }: DetailViewProps) {
   const [firstRender, setFirstRender] = useState(true);
   const { selected, setSelected } = useContext(DetailGroupContext);
   const showControls = !!onEdit || !!onDelete;
@@ -146,7 +147,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
             <Box
               display="flex"
               justifyContent="space-between"
-              paddingTop="0.75em"
+              paddingTop={horizontal ? "0" : "0.75em"}
             >
               <IconLink sx={{ minWidth: "0" }} onClick={onEdit}>
                 <Edit />
@@ -155,6 +156,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
                 color="error"
                 sx={{ minWidth: "0" }}
                 onClick={onDelete}
+                disabled={noDelete}
               >
                 <Delete />
               </IconLink>

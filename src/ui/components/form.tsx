@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Page } from "./page";
 import { IconLink } from "./icon-link";
 import Save from "@mui/icons-material/Save";
-import { ArrowForward } from "@mui/icons-material";
+import { ArrowForward, Check } from "@mui/icons-material";
 
 interface FormProps {
   title: string;
@@ -10,10 +10,18 @@ interface FormProps {
   children?: React.ReactNode;
   disabled?: boolean;
   morePages?: boolean;
+  okButton?: boolean;
   onSubmit?: () => void;
 }
 
-export function Form({ title, returnTo, children, disabled, morePages, onSubmit }: FormProps) {
+export function Form({ title, returnTo, children, disabled, morePages, okButton, onSubmit }: FormProps) {
+  let icon = <Save />;
+  if (morePages) {
+    icon = <ArrowForward />;
+  } else if (okButton) {
+    icon = <Check />;
+  }
+
   return (
     <Page title={title} returnTo={returnTo} noScroll>
       <Box
@@ -43,7 +51,7 @@ export function Form({ title, returnTo, children, disabled, morePages, onSubmit 
         </Box>
         <Box display="flex" width="100%" justifyContent="center">
           <IconLink color="success" onClick={onSubmit} big disabled={disabled}>
-            {morePages ? <ArrowForward /> : <Save />}
+            {icon}
           </IconLink>
         </Box>
       </Box>

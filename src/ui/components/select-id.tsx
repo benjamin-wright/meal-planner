@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Clear from "@mui/icons-material/Clear";
+import { SxProps } from "@mui/material";
 
 interface ISelectIDProps<T> {
   value: number;
@@ -18,16 +19,17 @@ interface ISelectIDProps<T> {
   link: string;
   required?: boolean;
   filter?: boolean;
+  sx?: SxProps;
   toLabel: (item: T) => string;
   onChange: (value: number) => void;
   onNav: () => void;
 }
 
-export function SelectID<T extends {id: number}>({value, items, id, label, link, required, filter, toLabel, onChange, onNav}: ISelectIDProps<T>) {
+export function SelectID<T extends {id: number}>({value, items, id, label, link, required, filter, sx, toLabel, onChange, onNav}: ISelectIDProps<T>) {
   const navigate = useNavigate();
 
   return (
-    <Box display="flex" alignItems="center">
+    <Box display="flex" alignItems="center" sx={sx}>
       {
         filter || items.length > 10 ? (
           <Autocomplete
@@ -44,7 +46,7 @@ export function SelectID<T extends {id: number}>({value, items, id, label, link,
             }}
           />
         ) : (
-          <FormControl sx={{flexGrow: 1}}>
+          <FormControl sx={{flexGrow: 1}} required={required}>
             <InputLabel id={`${id}-label`}>{label}</InputLabel>
             <Select
               labelId={`${id}-label`}

@@ -7,21 +7,19 @@ import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
 import { useForms } from "../../providers/forms";
 import { DBContext } from "../../providers/database";
-import { Unit } from "../../../models/units";
 
 export function IngredientsEdit() {
   const { formsResult, pushForm, returnTo, setFormResult } = useForms("ingredients");
-  const { ingredientStore, categoryStore, unitStore } = useContext(DBContext);
+  const { ingredientStore, categoryStore } = useContext(DBContext);
   const params = useParams();
 
-  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, unit: 0 });
+  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0 });
   const [categories, setCategories] = useState<Category[]>([]);
-  const [units, setUnits] = useState<Unit[]>([]);
   const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
 
   async function load() {
-    if (!ingredientStore || !categoryStore || !unitStore) {
+    if (!ingredientStore || !categoryStore) {
       return;
     }
     
@@ -33,9 +31,6 @@ export function IngredientsEdit() {
 
     const categories = await categoryStore.getAll();
     setCategories(categories);
-
-    const units = await unitStore.getAll();
-    setUnits(units);
   
     if (formsResult) {
       const { form, response } = formsResult;
@@ -46,9 +41,6 @@ export function IngredientsEdit() {
           case "category":
             ingredient.category = response.response as number;
             break;
-          case "unit":
-            ingredient.unit = response.response as number;
-            break;
         }
       }
 
@@ -58,10 +50,10 @@ export function IngredientsEdit() {
 
   useEffect(() => {
     load();
-  }, [ingredientStore, categoryStore, unitStore, formsResult]);
+  }, [ingredientStore, categoryStore, formsResult]);
 
   function validate() {
-    return ingredient.name !== "";
+    return ingredient.name !== "" && ingredient.category !== 0;
   }
 
   return (
@@ -73,12 +65,10 @@ export function IngredientsEdit() {
         let id = ingredient.id;
         console.info("ingredient", ingredient);
         if (isNew) {
-          id = await ingredientStore?.add(ingredient.name, ingredient.category, ingredient.unit) || 0;
+          id = await ingredientStore?.add(ingredient.name, ingredient.category) || 0;
         } else {
           await ingredientStore?.put(ingredient);
         }
-
-        console.info("id", id);
         
         setFormResult("ingredients", { field: "ingredient", response: id });
         navigate(returnTo);
@@ -109,25 +99,6 @@ export function IngredientsEdit() {
           link: location.pathname,
           body: ingredient
         })}}
-      />
-
-      <SelectID
-        value={ingredient.unit}
-        items={units}
-        id="unit"
-        label="unit"
-        link="/units/new"
-        required
-        toLabel={(unit) => unit.name}
-        onChange={(id: number) => setIngredient({ ...ingredient, unit: id })}
-        onNav={() => {
-          pushForm({
-            to: "units",
-            from: "ingredients",
-            link: location.pathname,
-            body: ingredient
-          })
-        }}
       />
     </Form>
   );

@@ -6,8 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { DetailView } from "../../../components/detail-view";
-import { Magnitude, Unit, UnitType } from "../../../../models/units";
-import { Card, Typography } from "@mui/material";
+import { Collective, Magnitude, Unit, UnitType } from "../../../../models/units";
+import { Typography } from "@mui/material";
 
 function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
   return (
@@ -36,7 +36,7 @@ function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
   );
 }
 
-function CountView({ singular, plural }: { singular?: string; plural?: string }) {
+function CountView({ collectives }: { collectives: Collective[] }) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -44,13 +44,21 @@ function CountView({ singular, plural }: { singular?: string; plural?: string })
           <TableRow>
             <TableCell sx={{ fontWeight: "bold", width: "50%" }}>Singular</TableCell>
             <TableCell sx={{ fontWeight: "bold", width: "50%" }}>Plural</TableCell>
+            {collectives.length > 1 && (
+              <TableCell sx={{ fontWeight: "bold", width: "50%" }}>Multiplier</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell>{singular || "N/A"}</TableCell>
-            <TableCell>{plural || "N/A"}</TableCell>
-          </TableRow>
+          {collectives.map((c: Collective, index: number) => (
+            <TableRow key={index}>
+              <TableCell>{c.singular || "N/A"}</TableCell>
+              <TableCell>{c.plural || "N/A"}</TableCell>
+              {collectives.length > 1 && (
+                <TableCell>{c.multiplier}</TableCell>
+              )}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>
@@ -59,14 +67,16 @@ function CountView({ singular, plural }: { singular?: string; plural?: string })
 
 interface UnitViewProps {
   unit: Unit;
+  isDefault?: boolean;
   onEdit: (unit: Unit) => void;
   onDelete: (unit: Unit) => void;
 }
 
-export function UnitView({ unit, onEdit, onDelete }: UnitViewProps) {
+export function UnitView({ unit, isDefault, onEdit, onDelete }: UnitViewProps) {
   return (
     <DetailView
-      title={unit.name}
+      title={`${unit.name}${isDefault ? " (default)" : ""}`}
+      noDelete={isDefault}
       onEdit={() => onEdit(unit)}
       onDelete={() => onDelete(unit)}
     >
@@ -78,7 +88,7 @@ export function UnitView({ unit, onEdit, onDelete }: UnitViewProps) {
         </Paper>
       )}
       {unit.type !== UnitType.Count && <MagnitudeView magnitudes={unit.magnitudes} />}
-      {unit.type === UnitType.Count && <CountView singular={unit.singular} plural={unit.plural} />}
+      {unit.type === UnitType.Count && <CountView collectives={unit.collectives} />}
     </DetailView>
   );
 }

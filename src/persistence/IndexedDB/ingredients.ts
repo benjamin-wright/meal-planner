@@ -8,7 +8,6 @@ export function ingredientsV1(db: IDBDatabase) {
   const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
   store.createIndex("category", "category");
-  store.createIndex("unit", "unit");
 }
 
 export class Ingredients implements IngredientStore {
@@ -26,16 +25,12 @@ export class Ingredients implements IngredientStore {
     return this.db.getByIndex<Ingredient, "category">(TABLE_NAME, "category", category);
   }
 
-  async getByUnit(unit: number): Promise<Ingredient[]> {
-    return this.db.getByIndex<Ingredient, "unit">(TABLE_NAME, "unit", unit);
-  }
-
   async getAll(): Promise<Ingredient[]> {
     return this.db.getAll<Ingredient>(TABLE_NAME);
   }
 
-  async add(name: string, category: number, unit: number): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category, unit });
+  async add(name: string, category: number): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category });
   }
 
   async put(value: Ingredient): Promise<void> {

@@ -4,18 +4,20 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { Unit } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import { settings } from "../../../models/settings";
 
 export function Units() {
-  const { unitStore } = useContext(DBContext);
+  const { unitStore, settingStore } = useContext(DBContext);
   const [search] = useSearchParams();
 
-  const [tab, setTab] = useState("count");
+  const [tab, setTab] = useState<UnitType>(UnitType.Count);
   const [units, setUnits] = useState<Unit[]>([]);
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Unit | null>(null);
   const navigate = useNavigate();
@@ -25,10 +27,10 @@ export function Units() {
       return;
     }
 
-    const units = await unitStore.getAll();
+    const units = await unitStore.getAllByType(tab);
     setUnits(units);
 
-    const type = search.get("type");
+    const type = UnitType[search.get("type") as keyof typeof UnitType];
     if (type) {
       setTab(type);
     }
@@ -36,7 +38,17 @@ export function Units() {
 
   useEffect(() => {
     load();
-  }, [unitStore])
+  }, [unitStore, tab]);
+
+  useEffect(() => {
+    if (!settingStore) {
+      return;
+    }
+
+    settingStore.get().then((settings) => {
+      setSettings(settings);
+    });
+  }, [settingStore]);
 
   function handleEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
@@ -57,17 +69,30 @@ export function Units() {
     setUnits(units.filter((unit) => unit.id !== toDelete.id));
   }
 
+  function isDefault(unit: Unit): boolean {
+    switch (unit.type) {
+      case UnitType.Count:
+        return false;
+      case UnitType.Weight:
+        return unit.id === settings.preferredWeightUnit;
+      case UnitType.Volume:
+        return unit.id === settings.preferredVolumeUnit;
+      default:
+        return false;
+    }
+  }
+
   return (
     <Page title="Units" returnTo="/data" showNav>
-      <Tabs value={tab} onChange={(_event, value) => setTab(value)} variant="fullWidth">
-        <Tab label="Count" value="count" />
-        <Tab label="Weight" value="weight" />
-        <Tab label="Volume" value="volume" />
+      <Tabs value={tab} onChange={(_event, value: UnitType) => setTab(value)} variant="fullWidth">
+        <Tab label={UnitType.Count} value={UnitType.Count} />
+        <Tab label={UnitType.Weight} value={UnitType.Weight} />
+        <Tab label={UnitType.Volume} value={UnitType.Volume} />
       </Tabs>
 
       <DetailViewGroup>
         {units.filter(unit => unit.type === tab).map((unit) => (
-          <UnitView key={unit.id} unit={unit} onEdit={handleEdit} onDelete={handleDelete} />
+          <UnitView key={unit.id} unit={unit} isDefault={isDefault(unit)} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
       </DetailViewGroup>
       <FloatingAddButton to={`/units/new?type=${tab}`} />

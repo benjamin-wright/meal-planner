@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "units": [
     {
       "id": 1,
@@ -24,7 +25,8 @@
           "plural": "kilograms",
           "multiplier": 1000
         }
-      ]
+      ],
+      "collectives": []
     },
     {
       "id": 2,
@@ -44,12 +46,17 @@
           "plural": "litres",
           "multiplier": 1
         }
-      ]
+      ],
+      "collectives": []
     },
     {
       "id": 3,
       "name": "count",
-      "type": "count"
+      "type": "count",
+      "magnitudes": [],
+      "collectives": [
+        {}
+      ]
     }
   ],
   "categories": [
@@ -93,14 +100,12 @@
     {
       "id": 1,
       "name": "onions",
-      "category": 2,
-      "unit": 1
+      "category": 2
     },
     {
       "id": 2,
       "name": "potatoes",
-      "category": 2,
-      "unit": 1
+      "category": 2
     }
   ],
   "recipies": [
@@ -113,14 +118,20 @@
       "ingredients": [
         {
           "id": 2,
+          "unit": 1,
           "quantity": 500
         },
         {
           "id": 1,
+          "unit": 1,
           "quantity": 200
         }
       ],
       "steps": []
     }
-  ]
+  ],
+  "settings": {
+    "preferredWeightUnit": 1,
+    "preferredVolumeUnit": 2
+  }
 }
