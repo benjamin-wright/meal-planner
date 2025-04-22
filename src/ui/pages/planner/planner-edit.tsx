@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import { Meal, MealDay, MealDays, MealType, MealTypes } from "../../../models/meals";
+import { Meal, MealDay, MealDays, MealProps, MealType, MealTypes } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
@@ -22,7 +22,7 @@ export function PlannerEdit() {
 
   const [isNew, setIsNew] = useState(true);
   const [settings, setSettings] = useState({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const [meal, setMeal] = useState<Meal>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
+  const [meal, setMeal] = useState<MealProps>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
@@ -95,7 +95,7 @@ export function PlannerEdit() {
     calculateIngredients();
     setIngredients([]);
     setLoading(true);
-  }, [ingredientStore, unitStore, meal.recipieId, meal.servings]);
+  }, [ingredientStore, unitStore, meal.recipieId, meal.servings, meal.days]);
 
   async function calculateIngredients() {
     if (ingredientStore === undefined || unitStore === undefined) {
@@ -122,7 +122,7 @@ export function PlannerEdit() {
       }
 
       const unit = await unitStore.get(unitId);
-      const finalQuantity = ingredient.quantity * meal.servings / recipie.serves;
+      const finalQuantity = meal.days.length * ingredient.quantity * meal.servings / recipie.serves;
 
       return {
         name: ingredientData.name,
@@ -150,6 +150,7 @@ export function PlannerEdit() {
 
         navigate(`/planner?tab=${meal.meal}`);
       }}
+      disabled={!Meal.from(meal).validate()}
     >
       <SelectID
         id="recipie"
