@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
@@ -16,18 +16,20 @@ type IngredientItem = {
   quantity: string;
 }
 
-export function PlannerEdit() {
+export function MealsEdit() {
+  const [search] = useSearchParams();
+  const params = useParams();
+
   const { mealStore, recipieStore, ingredientStore, unitStore, settingStore } = useContext(DBContext);
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
   const [settings, setSettings] = useState({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const [meal, setMeal] = useState<MealProps>({ id: 0, recipieId: 0, servings: 2, meal: "dinner", days: [] });
+  const [meal, setMeal] = useState<MealProps>({ id: 0, recipieId: 0, servings: 2, meal: search.get("type") as MealType || "dinner", days: [] });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
-  const params = useParams();
 
   const navigate = useNavigate();
 
@@ -135,8 +137,8 @@ export function PlannerEdit() {
 
   return (
     <Form
-      title={isNew ? "Meals: new" : `Meals: ${meal.days} ${meal.meal}`}
-      returnTo={returnTo}
+      title={isNew ? "Planner - Meal: new" : `Planner - Meal: edit`}
+      returnTo={returnTo + "?tab=" + meal.meal}
       onSubmit={async () => {
         if (meal.meal !== "dinner") {
           meal.days = [];

@@ -63,7 +63,7 @@ export function Planner() {
   }, [mealStore, recipieStore]);
 
   function onEdit(id: number) {
-    navigate(`/planner/${id}`);
+    navigate(`/planner/meals/${id}`);
   }
 
   async function onReorder(newDinners: MealItem[]) {
@@ -174,9 +174,10 @@ export function Planner() {
             onDelete={(meal) => onDelete(meal)}
           />
         )}
+        {tab === "misc" && <p>Static</p>}
       </DetailViewGroup>
     </Box>
-    <FloatingAddButton to="/planner/new" />
+    <FloatingAddButton to={ tab === "misc" ? "/planner/misc/new" : `/planner/meals/new?type=${tab}`} />
     <FloatingClearButton onClick={() => {
       setToClear(true);
       setToDelete(null);
