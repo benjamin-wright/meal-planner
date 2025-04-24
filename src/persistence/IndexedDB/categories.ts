@@ -21,7 +21,11 @@ export class Categories implements CategoryStore {
   }
 
   async getAll(): Promise<Category[]> {
-    return this.db.getAll<Category>(TABLE_NAME);
+    const data = this.db.getAll<Category>(TABLE_NAME);
+    return data.then((categories) => {
+      categories.sort((a, b) => a.order - b.order);
+      return categories;
+    });
   }
 
   async add(name: string, order: number): Promise<number> {
