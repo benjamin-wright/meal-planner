@@ -1,25 +1,25 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
-import { Misc as model } from "../../../models/misc";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
 import { Category } from "../../../models/categories";
 import { SelectID } from "../../components/select-id";
+import { Ingredient } from "../../../models/ingredients";
 
 export function MiscEdit() {
-  const { miscStore, categoryStore } = useContext(DBContext);
+  const { ingredientStore, categoryStore } = useContext(DBContext);
   const { formsResult, returnTo, setFormResult, pushForm } = useForms("misc");
   const [isNew, setIsNew] = useState(true);
-  const [misc, setMisc] = useState<model>({ id: 0, name: "", category: 0 });
+  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, edible: false });
   const [categories, setCategories] = useState<Category[]>([]);
 
   const navigate = useNavigate();
   const params = useParams();
 
   async function load() {
-    if (!miscStore || !categoryStore) {
+    if (!ingredientStore || !categoryStore) {
       return;
     }
 
@@ -27,44 +27,44 @@ export function MiscEdit() {
     setCategories(categories);
 
     if (params.misc) {
-      const misc = await miscStore.get(Number.parseInt(params.misc, 10));
-      setMisc(misc);
+      const ingredient = await ingredientStore.get(Number.parseInt(params.misc, 10));
+      setIngredient(ingredient);
       setIsNew(false);
     } else {
-      setMisc({ id: 0, name: "", category: categories[0].id });
+      setIngredient({ id: 0, name: "", category: categories[0].id, edible: false });
     }
 
     if (formsResult) {
       const { form, response } = formsResult;
-      const misc = form.body as model;
+      const ingredient = form.body as Ingredient;
 
       if (response) {
         switch (response.field) {
           case "category":
-            misc.category = response.response as number;
+            ingredient.category = response.response as number;
             break;
         }
       }
 
-      setMisc(misc);
+      setIngredient(ingredient);
     }
   }
 
   useEffect(() => {
     load();
-  }, [miscStore, categoryStore, formsResult]);
+  }, [ingredientStore, categoryStore, formsResult]);
 
   return (
     <Form
-      title={isNew ? "Misc: new" : `Misc: ${misc.name}`}
+      title={isNew ? "Misc: new" : `Misc: ${ingredient.name}`}
       returnTo={returnTo}
       onSubmit={async () => {
-        let id = misc.id;
+        let id = ingredient.id;
 
         if (isNew) {
-          id = await miscStore?.add(misc.name, misc.category) || 0;
+          id = await ingredientStore?.add(ingredient.name, ingredient.category, false) || 0;
         } else {
-          await miscStore?.put(misc);
+          await ingredientStore?.put(ingredient);
         }
 
         setFormResult("misc", { field: "misc", response: id });
@@ -75,29 +75,29 @@ export function MiscEdit() {
         id="variant"
         variant="outlined"
         label="name"
-        value={misc.name}
+        value={ingredient.name}
         lowercase
         required
         onChange={(value) =>
-          setMisc({ ...misc, name: value })
+          setIngredient({ ...ingredient, name: value })
         }
       />
 
       <SelectID
-        value={misc.category}
+        value={ingredient.category}
         items={categories}
         id="category"
         label="category"
         link="/categories/new"
         required
         toLabel={(category: Category) => category.name}
-        onChange={(id: number) => setMisc({ ...misc, category: id })}
+        onChange={(id: number) => setIngredient({ ...ingredient, category: id })}
         onNav={() => {
           pushForm({
             to: "categories",
             from: "misc",
             link: location.pathname,
-            body: misc
+            body: ingredient
           })
         }}
       />

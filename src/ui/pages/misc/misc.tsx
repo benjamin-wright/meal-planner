@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Page } from "../../components/page";
 import { DBContext } from "../../providers/database";
-import { Misc as model } from "../../../models/misc";
 import { FloatingAddButton } from "../../components/floating-add-button";
 import { Category } from "../../../models/categories";
 import Accordion from "@mui/material/Accordion";
@@ -10,29 +9,26 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
-import { IconLink } from "../../components/icon-link";
-import Box from "@mui/material/Box";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../components/confirm-dialog";
+import { Ingredient } from "../../../models/ingredients";
 
 export function Misc() {
-  const { miscStore, categoryStore } = useContext(DBContext);
-  const [misc, setMisc] = useState<Record<number, model[]>>({});
+  const { ingredientStore, categoryStore } = useContext(DBContext);
+  const [ingredients, setIngredients] = useState<Record<number, Ingredient[]>>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [expanded, setExpanded] = useState<number | false>(false);
   const navigate = useNavigate();
-  const [toDelete, setToDelete] = useState<model | null>(null);
+  const [toDelete, setToDelete] = useState<Ingredient | null>(null);
   const [isOpen, setOpen] = useState(false);
 
   async function load() {
-    if (!miscStore || !categoryStore) return;
+    if (!ingredientStore || !categoryStore) return;
 
-    const misc = await miscStore.getAll();
+    const ingredients = await ingredientStore.getInedible();
     const categories = await categoryStore.getAll();
 
-    const grouped = misc.reduce((acc: { [key: number]: model[] }, item: model) => {
+    const grouped = ingredients.reduce((acc: { [key: number]: Ingredient[] }, item: Ingredient) => {
       if (!acc[item.category]) {
         acc[item.category] = [];
       }
@@ -40,34 +36,34 @@ export function Misc() {
       return acc;
     }, {});
 
-    setMisc(grouped);
-    setCategories(categories.filter((category) => misc.find((item) => item.category === category.id)).sort((a, b) => a.order - b.order));
+    setIngredients(grouped);
+    setCategories(categories.filter((category) => ingredients.find((item) => item.category === category.id)).sort((a, b) => a.order - b.order));
   }
 
-  function onEdit(item: model) {
+  function onEdit(item: Ingredient) {
     navigate(`/misc/${item.id}`);
   };
 
-  function onDelete(item: model) {
+  function onDelete(item: Ingredient) {
     setToDelete(item);
     setOpen(true);
   }
 
   function onConfirm() {
     if (toDelete?.id === undefined) return;
-    miscStore?.delete(toDelete.id);
+    ingredientStore?.delete(toDelete.id);
     setOpen(false);
     setToDelete(null);
 
-    const newMisc = { ...misc };
+    const newIngredients = { ...ingredients };
     const categoryId = toDelete.category;
-    newMisc[categoryId] = newMisc[categoryId].filter((item) => item.id !== toDelete.id);
-    if (newMisc[categoryId].length === 0) {
-      delete newMisc[categoryId];
+    newIngredients[categoryId] = newIngredients[categoryId].filter((item) => item.id !== toDelete.id);
+    if (newIngredients[categoryId].length === 0) {
+      delete newIngredients[categoryId];
       setCategories(categories.filter((category) => category.id !== categoryId));
     }
 
-    setMisc(newMisc);
+    setIngredients(newIngredients);
   }
 
   function onCancel() {
@@ -77,7 +73,7 @@ export function Misc() {
 
   useEffect(() => {
     load();
-  }, [miscStore, categoryStore]);
+  }, [ingredientStore, categoryStore]);
 
   return <Page title="Misc" returnTo="/data" showNav sx={{ gap: 0 }}>
     <DetailViewGroup>
@@ -88,7 +84,7 @@ export function Misc() {
               <Typography>{category.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {misc[category.id]?.map(item => (
+              {ingredients[category.id]?.map(item => (
                 <DetailView horizontal narrow
                   key={item.id}
                   title={item.name}

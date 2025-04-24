@@ -13,7 +13,7 @@ export function IngredientsEdit() {
   const { ingredientStore, categoryStore } = useContext(DBContext);
   const params = useParams();
 
-  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0 });
+  const [ingredient, setIngredient] = useState<Ingredient>({ id: 0, name: "", category: 0, edible: true });
   const [categories, setCategories] = useState<Category[]>([]);
   const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ export function IngredientsEdit() {
         let id = ingredient.id;
         console.info("ingredient", ingredient);
         if (isNew) {
-          id = await ingredientStore?.add(ingredient.name, ingredient.category) || 0;
+          id = await ingredientStore?.add(ingredient.name, ingredient.category, true) || 0;
         } else {
           await ingredientStore?.put(ingredient);
         }

@@ -24,7 +24,7 @@ export function Ingredients() {
       return;
     }
 
-    const ingredients = await ingredientStore.getAll();
+    const ingredients = await ingredientStore.getEdible();
     setIngredients(ingredients.reduce((acc, ingredient) => {
       if (!acc[ingredient.category]) {
         acc[ingredient.category] = [];

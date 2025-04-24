@@ -71,41 +71,89 @@
       "order": 2
     },
     {
+      "id": 8,
+      "name": "bakery",
+      "order": 3
+    },
+    {
       "id": 3,
       "name": "meat",
-      "order": 3
+      "order": 4
     },
     {
       "id": 4,
       "name": "fish",
-      "order": 4
+      "order": 5
     },
     {
       "id": 5,
       "name": "dairy",
-      "order": 5
+      "order": 6
     },
     {
       "id": 6,
       "name": "home",
-      "order": 6
+      "order": 7
     },
     {
       "id": 7,
       "name": "cupboard",
-      "order": 7
+      "order": 8
+    },
+    {
+      "id": 9,
+      "name": "drugs",
+      "order": 9
     }
   ],
   "ingredients": [
     {
       "id": 1,
       "name": "onions",
-      "category": 2
+      "category": 2,
+      "edible": true
     },
     {
       "id": 2,
       "name": "potatoes",
-      "category": 2
+      "category": 2,
+      "edible": true
+    },
+    {
+      "id": 3,
+      "name": "bread",
+      "category": 8,
+      "edible": true
+    },
+    {
+      "id": 4,
+      "name": "chicken",
+      "category": 3,
+      "edible": true
+    },
+    {
+      "id": 5,
+      "name": "salmon",
+      "category": 4,
+      "edible": true
+    },
+    {
+      "id": 6,
+      "name": "milk",
+      "category": 5,
+      "edible": true
+    },
+    {
+      "id": 7,
+      "name": "eggs",
+      "category": 8,
+      "edible": true
+    },
+    {
+      "id": 8,
+      "name": "shampoo",
+      "category": 9,
+      "edible": false
     }
   ],
   "recipies": [

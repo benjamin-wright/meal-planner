@@ -8,6 +8,18 @@ export function ingredientsV1(db: IDBDatabase) {
   const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
   store.createIndex("name", "name", { unique: true });
   store.createIndex("category", "category");
+  store.createIndex("edible", "edible");
+}
+
+type IndexedIngredient = {
+  id: number;
+  name: string;
+  category: number;
+  edible: number;
+}
+
+function toIngredient(data: IndexedIngredient): Ingredient {
+  return new Ingredient(data.id, data.name, data.category, data.edible === 1);
 }
 
 export class Ingredients implements IngredientStore {
@@ -18,23 +30,36 @@ export class Ingredients implements IngredientStore {
   }
 
   async get(id: number): Promise<Ingredient> {
-    return this.db.get<Ingredient>(TABLE_NAME, id);
-  }
-
-  async getByCategory(category: number): Promise<Ingredient[]> {
-    return this.db.getByIndex<Ingredient, "category">(TABLE_NAME, "category", category);
+    const data = await this.db.get<IndexedIngredient>(TABLE_NAME, id);
+    return toIngredient(data);
   }
 
   async getAll(): Promise<Ingredient[]> {
-    return this.db.getAll<Ingredient>(TABLE_NAME);
+    const data = await this.db.getAll<IndexedIngredient>(TABLE_NAME);
+    return data.map(toIngredient);
   }
 
-  async add(name: string, category: number): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category });
+  async getEdible(): Promise<Ingredient[]> {
+    const data = await this.db.getByIndex<IndexedIngredient, "edible">(TABLE_NAME, "edible", 1);
+    return data.map(toIngredient);
+  }
+
+  async getInedible(): Promise<Ingredient[]> {
+    const data = await this.db.getByIndex<IndexedIngredient, "edible">(TABLE_NAME, "edible", 0);
+    return data.map(toIngredient);
+  }
+
+  async add(name: string, category: number, edible: boolean): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category, edible: edible ? 1 : 0 });
   }
 
   async put(value: Ingredient): Promise<void> {
-    return this.db.put(TABLE_NAME, value);
+    return this.db.put(TABLE_NAME, {
+      id: value.id,
+      name: value.name,
+      category: value.category,
+      edible: value.edible ? 1 : 0,
+    });
   }
 
   async delete(id: number): Promise<void> {
