@@ -1,6 +1,6 @@
 import { Planner } from "./planner";
 import { MealsEdit } from "./meals-edit";
-import { MiscEdit } from "./misc-edit";
+import { ExtrasEdit } from "./extras-edit";
 
 export const routes = [
   {
@@ -16,11 +16,11 @@ export const routes = [
     element: <MealsEdit />,
   },
   {
-    path: "planner/misc/new",
-    element: <MiscEdit />
+    path: "planner/extras/new",
+    element: <ExtrasEdit />
   },
   {
-    path: "planner/misc/:id",
-    element: <MiscEdit />
+    path: "planner/extras/:id",
+    element: <ExtrasEdit />
   }
 ];

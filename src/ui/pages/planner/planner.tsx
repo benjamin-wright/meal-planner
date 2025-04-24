@@ -132,7 +132,7 @@ export function Planner() {
       <Tab label="Dinner" value="dinner" />
       <Tab label="Lunch" value="lunch" />
       <Tab label="Breakfast" value="breakfast" />
-      <Tab label="Misc" value="misc" />
+      <Tab label="Extras" value="extras" />
     </Tabs>
 
     <Box paddingBottom="4em" overflow="scroll">
@@ -174,10 +174,10 @@ export function Planner() {
             onDelete={(meal) => onDelete(meal)}
           />
         )}
-        {tab === "misc" && <p>Static</p>}
+        {tab === "extras" && <p>Static</p>}
       </DetailViewGroup>
     </Box>
-    <FloatingAddButton to={ tab === "misc" ? "/planner/misc/new" : `/planner/meals/new?type=${tab}`} />
+    <FloatingAddButton to={ tab === "extras" ? "/planner/extras/new" : `/planner/meals/new?type=${tab}`} />
     <FloatingClearButton onClick={() => {
       setToClear(true);
       setToDelete(null);

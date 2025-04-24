@@ -3,7 +3,7 @@ import { Categories, categoriesV1 } from "./categories";
 import { Ingredients, ingredientsV1 } from "./ingredients";
 import { Recipies, recipiesV1 } from "./recipies";
 import { Meals, mealsV1 } from "./meals";
-import { Misc, miscV1 } from "./misc";
+import { Extras, extraV1 } from "./extras";
 import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
@@ -17,7 +17,7 @@ const migrations = [
     ingredientsV1(db);
     recipiesV1(db);
     mealsV1(db);
-    miscV1(db);
+    extraV1(db);
     settingsV1(db);
   },
 ]
@@ -132,8 +132,8 @@ export class IndexedDB implements DB {
     return new Meals(this.db);
   }
 
-  misc() {
-    return new Misc(this.db);
+  extra() {
+    return new Extras(this.db);
   }
   
   settings() {
