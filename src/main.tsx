@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import { theme } from "./ui/theme";
 
-import { AlertProvider } from "./ui/providers/alerts";
 import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
@@ -17,6 +16,7 @@ import { routes as planner } from "./ui/pages/planner/routes";
 import { routes as list } from "./ui/pages/list/routes";
 import { routes as data } from "./ui/pages/data/routes";
 import { routes as misc } from "./ui/pages/misc/routes";
+import { AlertProvider } from "./ui/providers/alerts";
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
