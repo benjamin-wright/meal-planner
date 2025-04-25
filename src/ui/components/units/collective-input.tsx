@@ -1,6 +1,6 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material";
-import { Collective, Unit } from "../../../../models/units";
-import { NumericInput } from "../../../components/numeric-input";
+import { Collective, Unit } from "../../../models/units";
+import { NumericInput } from "../numeric-input";
 import { useEffect, useState } from "react";
 
 interface CollectiveInputProps {

@@ -1,6 +1,6 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material";
-import { Magnitude, Unit } from "../../../../models/units";
-import { NumericInput } from "../../../components/numeric-input";
+import { Magnitude, Unit } from "../../../models/units";
+import { NumericInput } from "../numeric-input";
 import { useEffect, useState } from "react";
 
 interface MagnitudeInputProps {

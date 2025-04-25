@@ -9,11 +9,15 @@ import { DetailViewGroup } from "../../components/detail-view";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Reorder } from "motion/react";
 import { SortableMeal } from "./components/sortable-meal";
-import { MealItem } from "./components/types";
+import { ExtraItem, MealItem } from "./components/types";
 import { ArrayEquals } from "../../../utils/compare";
 import { StaticMeal } from "./components/static-meal";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingClearButton } from "../../components/floating-clear-button";
+import { Extra } from "../../../models/extras";
+import { Ingredient } from "../../../models/ingredients";
+import { Unit } from "../../../models/units";
+import { ExtraItemView } from "./components/extra-item-view";
 
 function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, recipies: Recipie[]): MealItem {
   return {
@@ -25,28 +29,50 @@ function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, reci
   };
 }
 
+function mapExtraToItem(extra: Extra | undefined, index: number, ingredients: Ingredient[], units: Unit[]): ExtraItem {
+  if (!extra) {
+    return {
+      id: undefined,
+      index: index,
+      name: "",
+      quantity: "",
+    };
+  }
+
+  return {
+    id: extra.id,
+    index: index,
+    name: ingredients.find((ingredient) => ingredient.id === extra.ingredient)?.name || "",
+    quantity: units.find((unit) => unit.id === extra.unit)?.format(extra.quantity, { abbr: true }) || "",
+  };
+}
+
 export function Planner() {
-  const { mealStore, recipieStore } = useContext(DBContext);
+  const { ingredientStore, unitStore, mealStore, recipieStore, extraStore } = useContext(DBContext);
   const [params] = useSearchParams();
 
   const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<MealItem | null>(null);
+  const [toDelete, setToDelete] = useState<MealItem | ExtraItem | null>(null);
   const [toClear, setToClear] = useState<boolean>(false);
 
   const [dinners, setDinners] = useState<MealItem[]>([]);
   const [lunches, setLunches] = useState<MealItem[]>([]);
   const [breakfasts, setBreakfasts] = useState<MealItem[]>([]);
+  const [extras, setExtras] = useState<ExtraItem[]>([]);
   const [tab, setTab] = useState(params.get("tab") || "dinner");
 
   const navigate = useNavigate();
 
   async function load() {
-    if (!mealStore || !recipieStore) {
+    if (!unitStore || !ingredientStore || !mealStore || !recipieStore || !extraStore) {
       return;
     }
 
+    const units = await unitStore.getAll();
+    const ingredients = await ingredientStore.getAll();
     const recipies = await recipieStore.getAll();
     const meals = await mealStore.getAll();
+    const extras = await extraStore.getAll();
 
     const dinners = MealDays.map((day, index) => {
       const meal = meals.find((meal) => meal.meal === "dinner" && meal.days.includes(day))
@@ -56,14 +82,23 @@ export function Planner() {
 
     setLunches(meals.filter((meal) => meal.meal === "lunch").map((meal, index) => mapMealToItem(meal, index, "saturday", recipies)));
     setBreakfasts(meals.filter((meal) => meal.meal === "breakfast").map((meal, index) => mapMealToItem(meal, index, "saturday", recipies)));
+    setExtras(extras.map((extra, index) => mapExtraToItem(extra, index, ingredients, units)));
   }
 
   useEffect(() => {
     load();
-  }, [mealStore, recipieStore]);
+  }, [unitStore, ingredientStore, mealStore, recipieStore, extraStore]);
 
-  function onEdit(id: number) {
-    navigate(`/planner/meals/${id}`);
+  function onEdit(item: MealItem | ExtraItem) {
+    if (item.id === undefined) {
+      return;
+    }
+
+    if ("recipie" in item) {
+      navigate(`/planner/meals/${item.id}`);
+    } else {
+      navigate(`/planner/extras/${item.id}`);
+    }
   }
 
   async function onReorder(newDinners: MealItem[]) {
@@ -101,15 +136,15 @@ export function Planner() {
     }
   }
 
-  function onDelete(meal: MealItem) {
-    setToDelete(meal);
+  function onDelete(item: MealItem | ExtraItem) {
+    setToDelete(item);
     setOpen(true);
   }
 
   async function runDelete() {
     setOpen(false);
 
-    if (!mealStore) {
+    if (!mealStore || !extraStore) {
       return;
     }
 
@@ -118,7 +153,11 @@ export function Planner() {
     }
 
     if (toDelete?.id !== undefined) {
-      await mealStore.delete(toDelete.id);
+      if ("recipie" in toDelete) {
+        await mealStore.delete(toDelete.id);
+      } else {
+        await extraStore.delete(toDelete.id);
+      }
     }
 
     setToDelete(null);
@@ -152,7 +191,7 @@ export function Planner() {
                   textTransform: "capitalize"
                 }}
               >{meal.day.substring(0, 2)}</Card>
-              <SortableMeal meal={meal} kind="dinner" onEdit={(meal) => onEdit(meal.id || 0)} onDelete={(meal) => onDelete(meal)} />
+              <SortableMeal meal={meal} kind="dinner" onEdit={onEdit} onDelete={onDelete} />
             </Box>)}
           </Reorder.Group>
         }
@@ -161,8 +200,8 @@ export function Planner() {
             key={meal.id}
             meal={meal}
             kind="lunch"
-            onEdit={(meal) => onEdit(meal.id || 0)}
-            onDelete={(meal) => onDelete(meal)}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         )}
         {tab === "breakfast" && breakfasts.map((meal) =>
@@ -170,11 +209,18 @@ export function Planner() {
             key={meal.id}
             meal={meal}
             kind="breakfast"
-            onEdit={(meal) => onEdit(meal.id || 0)}
-            onDelete={(meal) => onDelete(meal)}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         )}
-        {tab === "extras" && <p>Static</p>}
+        {tab === "extras" && extras.map((extra) =>
+          <ExtraItemView
+            key={extra.id}
+            extra={extra}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        )}
       </DetailViewGroup>
     </Box>
     <FloatingAddButton to={ tab === "extras" ? "/planner/extras/new" : `/planner/meals/new?type=${tab}`} />
@@ -184,7 +230,7 @@ export function Planner() {
       setOpen(true);
     }} />
     <ConfirmDialog
-      message={toDelete ? `Deleting "${toDelete.recipie}"` : "Clearing all meals"}
+      message={toDelete ? `Deleting "${"recipie" in toDelete ? toDelete.recipie : toDelete.name}"` : "Clearing all meals"}
       open={isOpen}
       onConfirm={runDelete}
       onCancel={() => setOpen(false)}

@@ -2,12 +2,12 @@ import { Box, Dialog, IconButton, Paper, Typography } from "@mui/material";
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
 import { Unit, UnitType } from "../../../../models/units";
-import { CollectiveInput } from "./collective-input";
-import { MagnitudeInput } from "./magnitude-input";
 import { SelectID } from "../../../components/select-id";
 import { SelectObject } from "../../../components/select-object";
 import { useEffect, useState } from "react";
 import { Check, Delete } from "@mui/icons-material";
+import { CollectiveInput } from "../../../components/units/collective-input";
+import { MagnitudeInput } from "../../../components/units/magnitude-input";
 
 interface IngredientDialogProps {
   index: number;

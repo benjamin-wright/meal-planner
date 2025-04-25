@@ -7,4 +7,11 @@ export type MealItem = {
   day: string;
 }
 
+export type ExtraItem = {
+  id?: number;
+  index: number;
+  name: string;
+  quantity: string;
+}
+
 export const Days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"] as const;

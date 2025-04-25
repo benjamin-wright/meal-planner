@@ -138,7 +138,7 @@ export function MealsEdit() {
   return (
     <Form
       title={isNew ? "Planner - Meal: new" : `Planner - Meal: edit`}
-      returnTo={returnTo + "?tab=" + meal.meal}
+      returnTo={`${returnTo}?tab=${meal.meal}`}
       onSubmit={async () => {
         if (meal.meal !== "dinner") {
           meal.days = [];
@@ -150,7 +150,7 @@ export function MealsEdit() {
           await mealStore?.put(meal);
         }
 
-        navigate(`/planner?tab=${meal.meal}`);
+        navigate(`${returnTo}?tab=${meal.meal}`);
       }}
       disabled={!Meal.from(meal).validate()}
     >
