@@ -9,8 +9,8 @@ export function FloatingClearButton({ onClick }: FloatingClearButtonProps) {
   return (
     <Fab color="error" sx={{
       position: "fixed",
-      bottom: "1em",
-      left: "1em",
+      bottom: "2em",
+      left: "2em",
     }} onClick={onClick}>
       <Clear />
     </Fab>

@@ -1,8 +1,10 @@
+import { UnitType } from "./units";
+
 export type Shopping = {
   id: number;
   name: string;
   category: number;
-  unit?: number;
-  quantity?: number;
+  unitType: UnitType;
+  quantity: number;
   got: boolean;
 }

@@ -12,8 +12,8 @@ export function FloatingAddButton({ to }: FloatingAddButtonProps) {
   return (
     <Fab color="success" sx={{
       position: "fixed",
-      bottom: "1em",
-      right: "1em",
+      bottom: "2em",
+      right: "2em",
     }} onClick={() => navigate(to)}>
       <Add />
     </Fab>
