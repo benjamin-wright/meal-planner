@@ -12,6 +12,8 @@ import defaultData from "../assets/defaults.json";
 import { DB } from "./interfaces/db";
 import { settings } from "../models/settings";
 import { SettingsStore } from "./interfaces/settings";
+import { Extra } from "../models/extras";
+import { ExtraStore } from "./interfaces/extras";
 
 export type ExportedData = {
   version: number;
@@ -20,6 +22,7 @@ export type ExportedData = {
   ingredients?: Ingredient[];
   recipies?: Recipie[];
   meals?: Meal[];
+  extra?: Extra[];
   settings?: settings;
 };
 
@@ -30,18 +33,19 @@ export async function exportData(db: DB): Promise<string> {
     ingredients: await db.ingredients().getAll(),
     recipies: await db.recipies().getAll(),
     meals: await db.meals().getAll(),
+    extra: await db.extra().getAll(),
     settings: await db.settings().get(),
   });
 }
 
 export async function importData(db: DB, data: string): Promise<void> {
   const parsed = JSON.parse(data) as ExportedData;
-  await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.settings());
+  await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.extra(), db.settings());
 }
 
 export async function initData(db: DB): Promise<void> {
   const data = defaultData as ExportedData;
-  await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.settings());
+  await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.extra(), db.settings());
 }
 
 async function loadDataFile(
@@ -51,6 +55,7 @@ async function loadDataFile(
   ingredients: IngredientStore,
   recipies: RecipieStore,
   meals: MealStore,
+  extra: ExtraStore,
   settings: SettingsStore
 ): Promise<void> {
   console.info("Loading units...");
@@ -90,6 +95,14 @@ async function loadDataFile(
   if (data.meals) {
     for (let i = 0; i < data.meals.length; i++) {
       await meals.put(data.meals[i]);
+    }
+  }
+
+  console.info("Loading extras...");
+  await extra.clear();
+  if (data.extra) {
+    for (let i = 0; i < data.extra.length; i++) {
+      await extra.put(data.extra[i]);
     }
   }
 

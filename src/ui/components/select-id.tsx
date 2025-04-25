@@ -19,13 +19,14 @@ interface ISelectIDProps<T> {
   link: string;
   required?: boolean;
   filter?: boolean;
+  bypass?: boolean;
   sx?: SxProps;
   toLabel: (item: T) => string;
   onChange: (value: number) => void;
   onNav: () => void;
 }
 
-export function SelectID<T extends {id: number}>({value, items, id, label, link, required, filter, sx, toLabel, onChange, onNav}: ISelectIDProps<T>) {
+export function SelectID<T extends {id: number}>({value, items, id, label, link, required, filter, bypass = false, sx, toLabel, onChange, onNav}: ISelectIDProps<T>) {
   const navigate = useNavigate();
 
   return (
@@ -68,7 +69,10 @@ export function SelectID<T extends {id: number}>({value, items, id, label, link,
       
       <IconLink color="success" onClick={() => {
         onNav();
-        navigate(link);
+
+        if (!bypass) {
+          navigate(link);
+        }
       }}>
         <Add />
       </IconLink>
