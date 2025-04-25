@@ -150,6 +150,7 @@ export function Planner() {
 
     if (toClear) {
       await mealStore.clear();
+      await extraStore.clear();
     }
 
     if (toDelete?.id !== undefined) {
