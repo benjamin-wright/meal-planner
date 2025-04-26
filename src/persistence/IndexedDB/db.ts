@@ -7,6 +7,7 @@ import { Extras, extraV1 } from "./extras";
 import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
+import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
 
 const DB_VERSION = 1;
 
@@ -18,6 +19,7 @@ const migrations = [
     recipiesV1(db);
     mealsV1(db);
     extraV1(db);
+    shoppingItemsV1(db);
     settingsV1(db);
   },
 ]
@@ -134,6 +136,10 @@ export class IndexedDB implements DB {
 
   extra() {
     return new Extras(this.db);
+  }
+
+  shopping() {
+    return new ShoppingItems(this.db);
   }
   
   settings() {

@@ -6,6 +6,7 @@ import { IngredientStore } from "../../persistence/interfaces/ingredients";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
 import { ExtraStore } from "../../persistence/interfaces/extras";
+import { ShoppingItemStore } from "../../persistence/interfaces/shopping-item";
 import { SettingsStore } from "../../persistence/interfaces/settings";
 import { AlertContext } from "./alerts";
 
@@ -18,6 +19,7 @@ interface DBContextProps {
   recipieStore?: RecipieStore;
   mealStore?: MealStore;
   extraStore?: ExtraStore;
+  shoppingStore?: ShoppingItemStore;
   settingStore?: SettingsStore;
 }
 
@@ -39,6 +41,7 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
   const [recipieStore, setRecipies] = useState<RecipieStore | undefined>(undefined);
   const [mealStore, setMeals] = useState<MealStore | undefined>(undefined);
   const [extraStore, setExtra] = useState<ExtraStore | undefined>(undefined);
+  const [shoppingStore, setShopping] = useState<ShoppingItemStore | undefined>(undefined);
   const [settingStore, setSettings] = useState<SettingsStore | undefined>(undefined);
 
   useEffect(() => {
@@ -50,6 +53,7 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
       setRecipies(db.recipies());
       setMeals(db.meals());
       setExtra(db.extra());
+      setShopping(db.shopping());
       setSettings(db.settings());
     }).catch((error: Error) => {
       setError(error.message);
@@ -59,7 +63,7 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
 
   return (
     <DBContext.Provider
-      value={{ db, dbName, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, extraStore, settingStore }}
+      value={{ db, dbName, unitStore, categoryStore, ingredientStore, recipieStore, mealStore, extraStore, shoppingStore, settingStore }}
     >
       {children}
     </DBContext.Provider>

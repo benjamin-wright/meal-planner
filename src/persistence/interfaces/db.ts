@@ -5,6 +5,7 @@ import { RecipieStore } from "./recipies";
 import { UnitStore } from "./units";
 import { ExtraStore } from "./extras";
 import { SettingsStore } from "./settings";
+import { ShoppingItemStore } from "./shopping-item";
 
 export interface DB {
   units(): UnitStore;
@@ -13,5 +14,6 @@ export interface DB {
   recipies(): RecipieStore;
   meals(): MealStore;
   extra(): ExtraStore;
+  shopping(): ShoppingItemStore;
   settings(): SettingsStore;
 }
