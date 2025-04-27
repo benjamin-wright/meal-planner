@@ -214,7 +214,13 @@ export function Settings() {
         <AccordionSummary expandIcon={<ExpandMore/>}>
           <Typography variant="h6">Backup</Typography>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1em"
+          }}
+        >
           <DescriptionButton text="backup" onClick={backup}>
             Save the current application state to a JSON file on your device.
           </DescriptionButton>

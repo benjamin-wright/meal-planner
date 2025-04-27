@@ -24,6 +24,7 @@ export function DescriptionButton({ children, text, color, onClick, onFileLoad, 
     display: "flex",
     flexDirection: "column",
     gap: "0.5em",
+    backgroundColor: "background.paper"
   }}>
     <Typography>{children}</Typography>
     <Button variant="contained" color={color || "success"} onClick={onFileLoad ? onFileInputClick : onClick}>

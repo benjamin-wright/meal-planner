@@ -13,7 +13,7 @@ export function Data() {
   }
 
   return <Page title="Data" showNav>
-    <Box display="grid" gap="1em" justifyContent="center" overflow="hidden" gridTemplateColumns="50% 50%">
+    <Box display="grid" gap="1em" justifyContent="center" overflow="hidden" gridTemplateColumns="50% 50%" padding="0.2em">
       {
         [
           { name: "misc", icon: ShoppingBag},

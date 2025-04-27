@@ -206,7 +206,7 @@ export function List() {
     <Fab color="primary" sx={{
       position: "fixed",
       bottom: "2em",
-      right: "2em",
+      left: "2em",
     }} onClick={() => setOpen(true)}>
       <Replay />
     </Fab>

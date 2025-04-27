@@ -34,7 +34,7 @@ export function CheckItem({ item, onCheck }: CheckItemProps) {
           flexDirection: "row",
           justifyContent: "start",
           overflowX: "hidden",
-          opacity: item.got ? "50%" : "100%"
+          opacity: item.got ? "40%" : "100%"
         }}
         onClick={clickHandler}
         disableTouchRipple
