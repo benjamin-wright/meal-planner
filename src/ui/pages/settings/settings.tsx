@@ -235,6 +235,14 @@ export function Settings() {
           </DescriptionButton>
         </AccordionDetails>
       </Accordion>
+      <Accordion title="Info">
+        <AccordionSummary expandIcon={<ExpandMore/>}>
+          <Typography variant="h6">Info</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>Application Version: 1.0.0</Typography>
+        </AccordionDetails>
+      </Accordion>
       <CheckDialog open={dialogOpen} mode={mode} onClose={handleClose} />
     </Page >
   );
