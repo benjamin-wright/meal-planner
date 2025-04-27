@@ -6,25 +6,65 @@ import { DBContext } from "../../providers/database";
 import { ShoppingItem } from "../../../models/shopping-item";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { AlertContext } from "../../providers/alerts";
+import { ListView } from "./components/list-view";
+import { ShoppingViewItem } from "./components/types";
 
 export function List() {
-  const { ingredientStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
+  const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
   const { setError, setMessage } = useContext(AlertContext);
   const [ open, setOpen ] = useState(false);
-  const [ items, setItems ] = useState<ShoppingItem[]>([]);
+  const [ items, setItems ] = useState<ShoppingViewItem[]>([]);
+  const [ categories, setCategories ] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchItems() {
-      if (!shoppingStore) {
+      if (!settingStore || !shoppingStore || !categoryStore || !unitStore) {
         return;
       }
 
-      const items = await shoppingStore.getAll();
+      const settings = await settingStore.get();
+      const units = await unitStore.getAll();
+      const categories = await categoryStore.getAll();
+
+      const weightUnit = units.find((unit) => unit.id === settings.preferredWeightUnit);
+      const volumeUnit = units.find((unit) => unit.id === settings.preferredVolumeUnit);
+      if (!weightUnit || !volumeUnit) {
+        setError("Weight or volume unit not found in settings");
+        return;
+      }
+
+      const shoppingItems = await shoppingStore.getAll();
+      const items = [];
+      const usedCategories: string[] = [];
+
+      for (const item of shoppingItems) {
+        const unit = units.find((unit) => unit.type === item.unitType);
+        const category = categories.find((category) => category.id === item.category);
+
+        if (!unit || !category) {
+          setError(`Unit or category not found for item ${item.id}`);
+          continue;
+        }
+
+        items.push({
+          id: item.id,
+          name: item.name,
+          category: category.name,
+          quantity: unit.format(item.quantity, { abbr: true }),
+          got: item.got
+        });
+
+        if (!usedCategories.includes(category.name)) {
+          usedCategories.push(category.name);
+        }
+      }
+
       setItems(items);
+      setCategories(usedCategories);
     }
 
     fetchItems();
-  }, [ shoppingStore ]);
+  }, [ settingStore, shoppingStore, categoryStore, unitStore ]);
 
   async function reset() {
     if (!ingredientStore || !unitStore || !recipieStore || !mealStore || !extraStore || !shoppingStore) {
@@ -40,20 +80,20 @@ export function List() {
     for (const meal of meals) {
       const recipie = await recipieStore.get(meal.recipieId);
       if (!recipie) {
-        console.warn(`Recipie ${meal.recipieId} not found for meal ${meal.id}`);
+        setError(`Recipie ${meal.recipieId} not found for meal ${meal.id}`);
         continue;
       }
 
       for (const recipieIngredient of recipie.ingredients) {
         const ingredient = await ingredientStore.get(recipieIngredient.id);
         if (!ingredient) {
-          console.warn(`Ingredient ${recipieIngredient.id} not found for recipie ${recipie.id}`);
+          setError(`Ingredient ${recipieIngredient.id} not found for recipie ${recipie.id}`);
           continue;
         }
 
         const unit = await unitStore.get(recipieIngredient.unit);
         if (!unit) {
-          console.warn(`Unit ${recipieIngredient.unit} not found for recipie ${recipie.id}`);
+          setError(`Unit ${recipieIngredient.unit} not found for recipie ${recipie.id}`);
           continue;
         }
 
@@ -84,13 +124,13 @@ export function List() {
     for (const extra of extras) {
       const ingredient = await ingredientStore.get(extra.ingredient);
       if (!ingredient) {
-        console.warn(`Ingredient ${extra.ingredient} not found for extra ${extra.id}`);
+        setError(`Ingredient ${extra.ingredient} not found for extra ${extra.id}`);
         continue;
       }
 
       const unit = await unitStore.get(extra.unit);
       if (!unit) {
-        console.warn(`Unit ${extra.unit} not found for extra ${extra.id}`);
+        setError(`Unit ${extra.unit} not found for extra ${extra.id}`);
         continue;
       }
 
@@ -117,28 +157,14 @@ export function List() {
       });
     }
 
-    setItems(Array.from(shoppingMap.values()));
+    const items = Array.from(shoppingMap.values());
+    for (const item of items) {
+      await shoppingStore.add(item.name, item.category, item.unitType, item.quantity, item.got);
+    }
   }
 
   return <Page title="List" showNav>
-    {
-      items.map((item) => {
-        return <div key={item.id} style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "1em",
-          borderBottom: "1px solid #ccc"
-        }}>
-          <div>
-            {item.name}
-          </div>
-          <div>
-            {item.quantity} {item.unitType}
-          </div>
-        </div>;
-      })
-    }
-
+    <ListView items={items} categories={categories} onCheck={() => {}} />
     <Fab color="primary" sx={{
       position: "fixed",
       bottom: "2em",
