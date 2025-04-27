@@ -8,6 +8,7 @@ import { ConfirmDialog } from "../../components/confirm-dialog";
 import { AlertContext } from "../../providers/alerts";
 import { ListView } from "./components/list-view";
 import { ShoppingViewItem } from "./components/types";
+import { Unit, UnitType } from "../../../models/units";
 
 export function List() {
   const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
@@ -16,53 +17,71 @@ export function List() {
   const [ items, setItems ] = useState<ShoppingViewItem[]>([]);
   const [ categories, setCategories ] = useState<string[]>([]);
 
-  useEffect(() => {
-    async function fetchItems() {
-      if (!settingStore || !shoppingStore || !categoryStore || !unitStore) {
-        return;
-      }
-
-      const settings = await settingStore.get();
-      const units = await unitStore.getAll();
-      const categories = await categoryStore.getAll();
-
-      const weightUnit = units.find((unit) => unit.id === settings.preferredWeightUnit);
-      const volumeUnit = units.find((unit) => unit.id === settings.preferredVolumeUnit);
-      if (!weightUnit || !volumeUnit) {
-        setError("Weight or volume unit not found in settings");
-        return;
-      }
-
-      const shoppingItems = await shoppingStore.getAll();
-      const items = [];
-      const usedCategories: string[] = [];
-
-      for (const item of shoppingItems) {
-        const unit = units.find((unit) => unit.type === item.unitType);
-        const category = categories.find((category) => category.id === item.category);
-
-        if (!unit || !category) {
-          setError(`Unit or category not found for item ${item.id}`);
-          continue;
-        }
-
-        items.push({
-          id: item.id,
-          name: item.name,
-          category: category.name,
-          quantity: unit.format(item.quantity, { abbr: true }),
-          got: item.got
-        });
-
-        if (!usedCategories.includes(category.name)) {
-          usedCategories.push(category.name);
-        }
-      }
-
-      setItems(items);
-      setCategories(usedCategories);
+  async function fetchItems() {
+    if (!settingStore || !shoppingStore || !categoryStore || !unitStore) {
+      return;
     }
 
+    const settings = await settingStore.get();
+    const units = await unitStore.getAll();
+    const categories = await categoryStore.getAll();
+
+    const weightUnit = units.find((unit) => unit.id === settings.preferredWeightUnit);
+    const volumeUnit = units.find((unit) => unit.id === settings.preferredVolumeUnit);
+    if (!weightUnit || !volumeUnit) {
+      setError("Weight or volume unit not found in settings");
+      return;
+    }
+
+    const shoppingItems = await shoppingStore.getAll();
+    const items = [];
+    const usedCategories: string[] = [];
+
+    for (const item of shoppingItems) {
+      let unit: Unit;
+
+      switch (item.unitType) {
+        case UnitType.Weight:
+          unit = weightUnit;
+          break;
+        case UnitType.Volume:
+          unit = volumeUnit;
+          break;
+        case UnitType.Count:
+          const countUnit = units.find(unit => unit.id === item.unit)
+          if (!countUnit) {
+            setError(`Failed to find count unit for ${item.name} (${item.id})`);
+            continue;
+          }
+
+          unit = countUnit;
+          break;
+      }
+      const category = categories.find((category) => category.id === item.category);
+
+      if (!category) {
+        setError(`Category not found for item ${item.id}`);
+        continue;
+      }
+
+      items.push({
+        id: item.id,
+        name: item.name,
+        category: category.name,
+        quantity: unit.format(item.quantity, { abbr: true }),
+        got: item.got
+      });
+
+      if (!usedCategories.includes(category.name)) {
+        usedCategories.push(category.name);
+      }
+    }
+
+    setItems(items);
+    setCategories(usedCategories);
+  }
+
+  useEffect(() => {
     fetchItems();
   }, [ settingStore, shoppingStore, categoryStore, unitStore ]);
 
@@ -115,6 +134,7 @@ export function List() {
           name: ingredient.name,
           category: ingredient.category,
           unitType: unit.type,
+          unit: unit.type === UnitType.Count ? unit.id : undefined,
           quantity: recipieIngredient.quantity * meal.servings,
           got: false
         });
@@ -152,6 +172,7 @@ export function List() {
         name: ingredient.name,
         category: ingredient.category,
         unitType: unit.type,
+        unit: unit.type === UnitType.Count ? unit.id : undefined,
         quantity: extra.quantity,
         got: false
       });
@@ -159,12 +180,29 @@ export function List() {
 
     const items = Array.from(shoppingMap.values());
     for (const item of items) {
-      await shoppingStore.add(item.name, item.category, item.unitType, item.quantity, item.got);
+      await shoppingStore.add(item.name, item.category, item.unitType, item.unit, item.quantity, item.got);
     }
+
+    fetchItems();
   }
 
+  function checkItem(item: ShoppingViewItem) {
+    if (!shoppingStore) {
+      return
+    }
+
+    const updatedItems = [...items];
+    const index = updatedItems.findIndex((i) => i.id === item.id);
+    if (index !== -1) {
+      updatedItems[index] = {...item, got: !item.got};
+    }
+    setItems(updatedItems);
+
+    shoppingStore.check(item.id, !item.got);
+  } 
+
   return <Page title="List" showNav>
-    <ListView items={items} categories={categories} onCheck={() => {}} />
+    <ListView items={items} categories={categories} onCheck={checkItem} />
     <Fab color="primary" sx={{
       position: "fixed",
       bottom: "2em",

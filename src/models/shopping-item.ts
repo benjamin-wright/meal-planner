@@ -5,6 +5,7 @@ export type ShoppingItem = {
   name: string;
   category: number;
   unitType: UnitType;
+  unit?: number;
   quantity: number;
   got: boolean;
 }

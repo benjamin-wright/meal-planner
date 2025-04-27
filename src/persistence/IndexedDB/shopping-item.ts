@@ -24,12 +24,22 @@ export class ShoppingItems implements ShoppingItemStore {
     return this.db.getAll<ShoppingItem>(TABLE_NAME);
   }
 
-  async add(name: string, category: number, unitType: UnitType, quantity: number, got: boolean): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category, unitType, quantity, got });
+  async add(name: string, category: number, unitType: UnitType, unit: number | undefined, quantity: number, got: boolean): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category, unitType, unit, quantity, got });
   }
 
   async put(value: ShoppingItem): Promise<void> {
     return this.db.put(TABLE_NAME, value);
+  }
+
+  async check(id: number, got: boolean): Promise<void> {
+    const item = await this.get(id);
+    if (!item) {
+      throw new Error(`Failed to update item ${id}: not found`);
+    }
+
+    item.got = got;
+    return this.put(item);
   }
 
   async delete(id: number): Promise<void> {
