@@ -199,7 +199,7 @@ export function MealsEdit() {
       }
 
       {!loading &&
-        <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "secondary.main" }}>
+        <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "background.paper" }}>
           <Table size="small" padding="none">
             <TableHead>
               <TableRow>
