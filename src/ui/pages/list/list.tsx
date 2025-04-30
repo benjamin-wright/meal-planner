@@ -35,7 +35,7 @@ export function List() {
 
     const shoppingItems = await shoppingStore.getAll();
     const items = [];
-    const usedCategories: string[] = [];
+    const usedCategories: Record<string, boolean> = {};
 
     for (const item of shoppingItems) {
       let unit: Unit;
@@ -72,13 +72,13 @@ export function List() {
         got: item.got
       });
 
-      if (!usedCategories.includes(category.name)) {
-        usedCategories.push(category.name);
+      if (!usedCategories[category.name]) {
+        usedCategories[category.name] = true;
       }
     }
 
     setItems(items);
-    setCategories(usedCategories);
+    setCategories(categories.filter(category => usedCategories[category.name]).map(category => category.name));
   }
 
   useEffect(() => {
