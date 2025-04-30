@@ -160,6 +160,14 @@ export const theme = createTheme({
         }),
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+        }),
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: `
         :root,
