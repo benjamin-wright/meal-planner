@@ -142,14 +142,14 @@ export class Unit {
       throw new Error(`Cannot convert to magnitude for unit type ${this.type}`);
     }
 
-    return value / ((this.base ?? 1) * magnitude.multiplier);
+    return FixJSRounding(value / ((this.base ?? 1) * magnitude.multiplier));
   }
 
   fromMagnitude(value: number, magnitude: Magnitude): number {
     if (this.type === UnitType.Count) {
       throw new Error(`Cannot convert from magnitude for unit type ${this.type}`);
     }
-    return value * ((this.base ?? 1) * magnitude.multiplier);
+    return FixJSRounding(value * ((this.base ?? 1) * magnitude.multiplier));
   }
 
   toCollective(value: number, collective: Collective): number {
