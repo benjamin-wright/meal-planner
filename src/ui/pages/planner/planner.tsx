@@ -101,6 +101,10 @@ export function Planner() {
     }
   }
 
+  function onAddDinner(day: MealDay) {
+    navigate(`/planner/meals/new?type=dinner&day=${day}`);
+  }
+
   async function onReorder(newDinners: MealItem[]) {
     if (!mealStore) {
       return;
@@ -192,7 +196,7 @@ export function Planner() {
                   textTransform: "capitalize"
                 }}
               >{meal.day.substring(0, 2)}</Card>
-              <SortableMeal meal={meal} kind="dinner" onEdit={onEdit} onDelete={onDelete} />
+              <SortableMeal meal={meal} kind="dinner" onEdit={onEdit} onDelete={onDelete} onAdd={onAddDinner} />
             </Box>)}
           </Reorder.Group>
         }

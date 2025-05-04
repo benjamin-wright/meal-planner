@@ -25,7 +25,13 @@ export function MealsEdit() {
 
   const [isNew, setIsNew] = useState(true);
   const [settings, setSettings] = useState({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const [meal, setMeal] = useState<MealProps>({ id: 0, recipieId: 0, servings: 2, meal: search.get("type") as MealType || "dinner", days: [] });
+  const [meal, setMeal] = useState<MealProps>({
+    id: 0,
+    recipieId: 0,
+    servings: 2,
+    meal: search.get("type") as MealType || "dinner",
+    days: search.has("day") ? [ search.get("day") as MealDay ] : []
+  });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
