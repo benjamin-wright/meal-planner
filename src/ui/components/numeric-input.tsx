@@ -8,6 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { ParseNumber } from "../../utils/number";
 
 interface NumericInputProps {
   id?: string;
@@ -29,24 +30,28 @@ export function NumericInput({
   onChange,
 }: NumericInputProps) {
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
   const theme = useTheme();
 
   useEffect(() => {
-    setText(value.toString());
+    const parsed = Number.parseFloat(text);
+    if (isNaN(parsed) || parsed !== value) {
+      setText(value.toString());
+    }
   }, [value]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const firstDecimal = e.target.value.indexOf(".");
-    const secondDecimal = e.target.value.indexOf(".", firstDecimal + 1);
-    if (secondDecimal !== -1) {
-      return;
-    }
-
-    setText(e.target.value.replace(/[^0-9.]/g, ""));
-
-    const newValue = parseFloat(e.target.value);
-    if (!isNaN(newValue)) {
-      onChange(newValue);
+    setText(e.target.value);
+    try {
+      const parsed = ParseNumber(e.target.value);
+      setError("");
+      onChange(parsed);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error");
+      }
     }
   }
 
@@ -65,6 +70,7 @@ export function NumericInput({
         id={id}
         size="small"
         type="text"
+        error={error !== ""}
         inputProps={{ inputMode: "decimal", pattern: "[0-9.]*" }}
         value={text}
         onChange={handleChange}

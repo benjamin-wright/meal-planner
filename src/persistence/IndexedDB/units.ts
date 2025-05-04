@@ -36,12 +36,18 @@ export class Units implements UnitStore {
     if (magnitudes) {
       magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
+    if (collectives) {
+      collectives.sort((a, b) => (a.multiplier || 0) - (b.multiplier || 0));
+    }
     return this.db.add(TABLE_NAME, { name, type, magnitudes, collectives, base });
   }
 
   async put(value: Unit): Promise<void> {
     if (value.magnitudes) {
       value.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
+    }
+    if (value.collectives) {
+      value.collectives.sort((a, b) => (a.multiplier || 0) - (b.multiplier || 0));
     }
     return this.db.put(TABLE_NAME, value);
   }

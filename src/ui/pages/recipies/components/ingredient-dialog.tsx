@@ -23,8 +23,8 @@ interface IngredientDialogProps {
 }
 
 export function IngredientDialog({ index, open, ingredient, ingredients, units, onChange, onClose, onDelete, onNewIngredient, onNewUnit }: IngredientDialogProps) {
-  const [ unitType, setUnitType ] = useState<UnitType>(UnitType.Count);
-  const [ unit, setUnit ] = useState<Unit>(units[0]);
+  const [unitType, setUnitType] = useState<UnitType>(UnitType.Count);
+  const [unit, setUnit] = useState<Unit>(units[0]);
 
   function handleUnitTypeChange(type: UnitType) {
     setUnitType(type);
@@ -34,7 +34,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
       return;
     }
 
-    onChange({...ingredient, unit: unit.id});
+    onChange({ ...ingredient, unit: unit.id });
   }
 
   useEffect(() => {
@@ -47,8 +47,8 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
 
   return (
     <Dialog open={open}>
-      <Paper sx={{padding: "1em", display: "flex", flexDirection: "column", gap: "1em", minWidth: "20rem"}}>
-        <Typography variant="h6" sx={{marginBottom: "1em"}}>Ingredient {index+1}</Typography>
+      <Paper sx={{ padding: "1em", display: "flex", flexDirection: "column", gap: "1em", minWidth: "20rem" }}>
+        <Typography variant="h6" sx={{ marginBottom: "1em" }}>Ingredient {index + 1}</Typography>
 
         <SelectID
           id="ingredient"
@@ -58,7 +58,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
           items={ingredients}
           value={ingredient.id}
           required
-          onChange={id => onChange({...ingredient, id})}
+          onChange={id => onChange({ ...ingredient, id })}
           onNav={onNewIngredient}
         />
 
@@ -81,7 +81,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             items={units.filter(u => u.type === unitType)}
             value={ingredient.unit}
             required
-            onChange={id => onChange({...ingredient, unit: id})}
+            onChange={id => onChange({ ...ingredient, unit: id })}
             onNav={onNewUnit}
             sx={{ flexGrow: 1 }}
           />
@@ -92,7 +92,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             label="quantity"
             value={ingredient.quantity}
             unit={unit}
-            onChange={value => onChange({...ingredient, quantity: value})}
+            onChange={value => onChange({ ...ingredient, quantity: value })}
           />
         )}
         {unit && unit.type !== UnitType.Count && (
@@ -102,7 +102,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             value={ingredient.quantity}
             unit={unit}
             onChange={value => {
-              onChange({...ingredient, quantity: value});
+              onChange({ ...ingredient, quantity: value });
               console.info(`Quantity changed to ${value}`);
             }}
           />
