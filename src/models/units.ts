@@ -1,3 +1,5 @@
+import { FixJSRounding } from "../utils/number";
+
 export enum UnitType {
   Count = "count",
   Weight = "weight",
@@ -135,11 +137,19 @@ export class Unit {
     return true;
   }
 
+  toMagnitude(value: number, magnitude: Magnitude): number {
+    if (this.type === UnitType.Count) {
+      throw new Error(`Cannot convert to magnitude for unit type ${this.type}`);
+    }
+
+    return FixJSRounding(value / ((this.base ?? 1) * magnitude.multiplier));
+  }
+
   fromMagnitude(value: number, magnitude: Magnitude): number {
     if (this.type === UnitType.Count) {
       throw new Error(`Cannot convert from magnitude for unit type ${this.type}`);
     }
-    return value * ((this.base ?? 1) * magnitude.multiplier);
+    return FixJSRounding(value * ((this.base ?? 1) * magnitude.multiplier));
   }
 
   toCollective(value: number, collective: Collective): number {
@@ -147,14 +157,14 @@ export class Unit {
       throw new Error(`Cannot convert to collective for unit type ${this.type}`);
     }
 
-    return value / (collective.multiplier ?? 1);
+    return FixJSRounding(value / (collective.multiplier ?? 1));
   }
 
   fromCollective(value: number, collective: Collective): number {
     if (this.type !== UnitType.Count) {
       throw new Error(`Cannot convert from collective for unit type ${this.type}`);
     }
-    return value * (collective.multiplier ?? 1);
+    return FixJSRounding(value * (collective.multiplier ?? 1));
   }
 
   format(value: number, options?: {abbr?: boolean}): string {
@@ -204,14 +214,6 @@ export class Unit {
   private round(value: number, precision: number): number {
     const factor = Math.pow(10, precision);
     return Math.round(value * factor) / factor;
-  }
-
-  toMagnitude(value: number, magnitude: Magnitude): number {
-    if (this.type === UnitType.Count) {
-      throw new Error(`Cannot convert to magnitude for unit type ${this.type}`);
-    }
-
-    return value / ((this.base ?? 1) * magnitude.multiplier);
   }
   
   pickCollective(value: number): Collective {
