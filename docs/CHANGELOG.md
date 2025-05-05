@@ -1,8 +1,12 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.3
+
+- [#18](https://github.com/benjamin-wright/meal-planner/issues/18) - auto-collapse categories on list page load if fully checked
+
 ## Version 1.0.2
 
-- [#10](https://github.com/benjamin-wright/meal-planner/issues/7) - Add and remove incidental items directly from the list screen
+- [#10](https://github.com/benjamin-wright/meal-planner/issues/10) - Add and remove incidental items directly from the list screen
 
 ## Version 1.0.1
 

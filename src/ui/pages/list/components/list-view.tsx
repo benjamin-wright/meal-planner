@@ -15,9 +15,9 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   useEffect(() => {
     const expanded: Record<string, boolean> = {};
-    categories.forEach(c => {expanded[c] = true});
+    categories.forEach(c => {expanded[c] = items.some(i => i.category === c && !i.got)});
     setExpanded(expanded);
-  }, [categories])
+  }, [categories]);
 
   function checkHandler(category: string, item: ShoppingViewItem) {
     const filtered = items.filter(i => i.category === category);
