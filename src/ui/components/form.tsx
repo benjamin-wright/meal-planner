@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Page } from "./page";
 import { IconLink } from "./icon-link";
 import Save from "@mui/icons-material/Save";
-import { ArrowForward, Check } from "@mui/icons-material";
+import { ArrowForward, Check, Delete } from "@mui/icons-material";
 
 interface FormProps {
   title: string;
@@ -12,9 +12,10 @@ interface FormProps {
   morePages?: boolean;
   okButton?: boolean;
   onSubmit?: () => void;
+  onDelete?: () => void;
 }
 
-export function Form({ title, returnTo, children, disabled, morePages, okButton, onSubmit }: FormProps) {
+export function Form({ title, returnTo, children, disabled, morePages, okButton, onSubmit, onDelete }: FormProps) {
   let icon = <Save />;
   if (morePages) {
     icon = <ArrowForward />;
@@ -49,10 +50,16 @@ export function Form({ title, returnTo, children, disabled, morePages, okButton,
         >
           {children}
         </Box>
-        <Box display="flex" width="100%" justifyContent="center">
+        <Box display="flex" width="100%" justifyContent={onDelete ? "space-between" : "center"}>
           <IconLink color="success" onClick={onSubmit} big disabled={disabled}>
             {icon}
           </IconLink>
+          {
+            onDelete &&
+            <IconLink color="error" onClick={onDelete} big>
+              <Delete />
+            </IconLink>
+          }
         </Box>
       </Box>
     </Page>

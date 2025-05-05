@@ -8,9 +8,10 @@ interface ListViewProps {
   items: ShoppingViewItem[];
   categories: string[];
   onCheck(item: ShoppingViewItem): void;
+  onEdit(item: ShoppingViewItem): void;
 }
 
-export function ListView({ items, categories, onCheck }: ListViewProps) {
+export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   useEffect(() => {
     const expanded: Record<string, boolean> = {};
@@ -55,6 +56,7 @@ export function ListView({ items, categories, onCheck }: ListViewProps) {
                   key={item.id}
                   item={item}
                   onCheck={() => checkHandler(category, item)}
+                  onContext={() => onEdit(item)}
                 />
               ))}
             </AccordionDetails>

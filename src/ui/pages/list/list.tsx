@@ -9,8 +9,12 @@ import { AlertContext } from "../../providers/alerts";
 import { ListView } from "./components/list-view";
 import { ShoppingViewItem } from "./components/types";
 import { Unit, UnitType } from "../../../models/units";
+import { FloatingAddButton } from "../../components/floating-add-button";
+import { useNavigate } from "react-router-dom";
 
 export function List() {
+  const navigate = useNavigate();
+
   const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
   const { setError, setMessage } = useContext(AlertContext);
   const [ open, setOpen ] = useState(false);
@@ -202,7 +206,7 @@ export function List() {
   } 
 
   return <Page title="List" showNav>
-    <ListView items={items} categories={categories} onCheck={checkItem} />
+    <ListView items={items} categories={categories} onCheck={checkItem} onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)} />
     <Fab color="primary" sx={{
       position: "fixed",
       bottom: "2em",
@@ -210,6 +214,9 @@ export function List() {
     }} onClick={() => setOpen(true)}>
       <Replay />
     </Fab>
+    <FloatingAddButton
+      to="/list/new"
+    />
     <ConfirmDialog
       open={open}
       message="Resetting shopping list?"
