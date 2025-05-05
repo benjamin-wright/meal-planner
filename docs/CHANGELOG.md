@@ -1,5 +1,9 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.2
+
+- [#10](https://github.com/benjamin-wright/meal-planner/issues/7) - Add and remove incidental items directly from the list screen
+
 ## Version 1.0.1
 
 Enhancements:
