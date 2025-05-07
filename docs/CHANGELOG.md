@@ -1,5 +1,16 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.4
+
+Enhancements:
+
+- [#22](https://github.com/benjamin-wright/meal-planner/issues/22) - create a new "got" column to gather checked items, for a cleaner list UI
+
+Bugs:
+
+- [#20](https://github.com/benjamin-wright/meal-planner/issues/20) - list page was miscalculating ingredient proportions on the list page
+- [#21](https://github.com/benjamin-wright/meal-planner/issues/21) - add padding to the list page to deconflict floating buttons from the list
+
 ## Version 1.0.3
 
 - [#18](https://github.com/benjamin-wright/meal-planner/issues/18) - auto-collapse categories on list page load if fully checked
