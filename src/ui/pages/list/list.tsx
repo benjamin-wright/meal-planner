@@ -139,7 +139,7 @@ export function List() {
           category: ingredient.category,
           unitType: unit.type,
           unit: unit.type === UnitType.Count ? unit.id : undefined,
-          quantity: recipieIngredient.quantity * meal.servings,
+          quantity: recipieIngredient.quantity * meal.servings / recipie.serves,
           got: false
         });
       }
@@ -205,7 +205,9 @@ export function List() {
     shoppingStore.check(item.id, !item.got);
   } 
 
-  return <Page title="List" showNav>
+  return <Page title="List" showNav sx={{
+    paddingBottom: "5em",
+  }}>
     <ListView items={items} categories={categories} onCheck={checkItem} onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)} />
     <Fab color="primary" sx={{
       position: "fixed",

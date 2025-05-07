@@ -13,8 +13,15 @@ interface ListViewProps {
 
 export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [active, setActive] = useState<string[]>([]);
+
   useEffect(() => {
-    const expanded: Record<string, boolean> = {};
+    const active = [...categories.filter(c => items.some(i => i.category === c && !i.got)), "got" ];
+    setActive(active);
+
+    const expanded: Record<string, boolean> = {
+      "got": false,
+    };
     categories.forEach(c => {expanded[c] = items.some(i => i.category === c && !i.got)});
     setExpanded(expanded);
   }, [categories]);
@@ -23,20 +30,31 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
     const filtered = items.filter(i => i.category === category);
     const allDone = filtered.every(i => i.id === item.id ? !i.got : i.got);
     if (allDone) {
-      setExpanded({...expanded, [category]: false});
+      setActive(active.filter(a => a !== category));
+      
+      delete expanded[category];
+      setExpanded({...expanded});
     }
 
     onCheck(item);
   }
 
+  function uncheckHandler(category: string, item: ShoppingViewItem) {
+    const filtered = items.filter(i => i.category === category);
+    const allDone = filtered.every(i => i.got);
+    if (allDone) {
+      setActive([...categories.filter(c => active.includes(c) || c === item.category), "got" ]);
+      setExpanded({...expanded, [item.category]: true});
+    }
+    onCheck(item);
+  }
+
   return (
     <Box>
-      {categories.map(category => {
-        const filtered = items.filter(item => item.category === category);
-        const allDone = filtered.every(item => item.got);
-
+      {active.map(category => {
+        const filtered = category === "got" ? items.filter(item => item.got) : items.filter(item => !item.got && item.category === category);
         return (
-          <Accordion key={category} expanded={expanded[category] || false} sx={{padding: "0.25em", paddingTop: "0", opacity: allDone ? 0.5 : 1}} >            
+          <Accordion key={category} expanded={expanded[category] || false} sx={{padding: "0.25em", paddingTop: "0", opacity: category === "got" ? 0.5 : 1}} >            
             <AccordionSummary
               sx={{  }}
               expandIcon={
@@ -55,7 +73,7 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
                 <CheckItem
                   key={item.id}
                   item={item}
-                  onCheck={() => checkHandler(category, item)}
+                  onCheck={() => category === "got" ? uncheckHandler(category, item) : checkHandler(category, item)}
                   onContext={() => onEdit(item)}
                 />
               ))}
