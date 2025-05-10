@@ -240,7 +240,7 @@ export function Settings() {
           <Typography variant="h6">Info</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>Application Version: 1.0.4</Typography>
+          <Typography>Application Version: 1.0.5</Typography>
         </AccordionDetails>
       </Accordion>
       <CheckDialog open={dialogOpen} mode={mode} onClose={handleClose} />
