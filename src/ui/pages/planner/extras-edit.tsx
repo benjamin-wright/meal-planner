@@ -55,13 +55,14 @@ export function ExtrasEdit() {
 
         if (response) {
           switch (response.field) {
-            case "unit":
+            case "unit": {
               const unit = units.find(u => u.id === response.response as number);
               if (unit) {
                 setUnitType(unit.type);
                 setExtra({...extra, unit: unit.id});
               }
               break;
+            }
             case "ingredient":
               setExtra({...extra, ingredient: response.response as number});
               break;

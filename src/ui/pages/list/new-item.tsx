@@ -88,12 +88,13 @@ export function NewItem() {
 
         if (response) {
           switch (response.field) {
-            case "unit":
+            case "unit": {
               const unit = units.find(u => u.id === response.response as number);
               if (unit) {
                 setPageData({...data, unit: unit.id});
               }
               break;
+            }
             case "ingredient":
               setPageData({...data, ingredient: response.response as number});
               break;

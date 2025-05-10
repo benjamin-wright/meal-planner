@@ -12,15 +12,16 @@ interface CollectiveInputProps {
 }
 
 export function CollectiveInput({id, label, unit, value, onChange}: CollectiveInputProps) {
+  const [ selectedCollective, setSelectedCollective ] = useState<Collective>(unit.pickCollective(value));
+
+  useEffect(() => {
+    const selectedCollective = unit.pickCollective(value); 
+    setSelectedCollective(selectedCollective);
+  }, [unit]);
+  
   if (!unit) {
     return (<Typography variant="body2" color="text.secondary">Wrong unit type</Typography>);
   }
-
-  const [ selectedCollective, setSelectedCollective ] = useState<Collective>(unit.collectives[0]);
-
-  useEffect(() => {
-    setSelectedCollective(unit.pickCollective(value));
-  },[unit.collectives])
 
   return <Box display="flex" flexDirection="row" alignItems="space-between" gap="1em">
     <NumericInput

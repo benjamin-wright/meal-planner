@@ -24,12 +24,12 @@ export type Form = {
   to: string;
   from: string;
   link: string;
-  body: any;
+  body: unknown;
 }
 
 export type FormResponse = {
   field: string;
-  response: any;
+  response: unknown;
 }
 
 export type FormStack = {

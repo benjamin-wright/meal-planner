@@ -151,7 +151,7 @@ export function MealsEdit() {
         }
 
         if (isNew) {
-          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.days) || 0;
+          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.days);
         } else {
           await mealStore?.put(meal);
         }
@@ -197,8 +197,7 @@ export function MealsEdit() {
           multiple
           value={meal.days}
           options={available}
-          onChange={(value: any) => {
-            console.info(value);
+          onChange={(value: string) => {
             setMeal({ ...meal, days: typeof value === "string" ? [value as MealDay] : value as MealDay[] });
           }}
         />

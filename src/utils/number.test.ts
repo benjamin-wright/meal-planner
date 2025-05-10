@@ -36,8 +36,8 @@ describe("number utils", () => {
     });
 
     it("should handle numbers with more than 10 decimal places", () => {
-      const value = 0.1234567890123456789;
-      expect(FixJSRounding(value)).toBeCloseTo(0.1234567890123456789, 16);
+      const value = 0.123456789012345;
+      expect(FixJSRounding(value)).toBeCloseTo(0.123456789012345, 16);
     });
   });
 });

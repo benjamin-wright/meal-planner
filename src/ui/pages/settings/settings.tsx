@@ -155,8 +155,12 @@ export function Settings() {
           DBFlags.setReset(dbName);
           setMessage("Resetting application database...");
           setTimeout(() => window.location.reload(), 1000);
-        } catch (err: any) {
-          setError(err.message);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Unknown error");
+          }
         }
     }
   }
@@ -227,7 +231,13 @@ export function Settings() {
           <DescriptionButton text="restore" color="error" onFileLoad={(contents) => {
             setBackupData(contents);
             handleOpen("restore");
-          }} onFileError={(err: any) => setError(err.message)}>
+          }} onFileError={(err: unknown) => {
+            if (err instanceof Error) {
+              setError(err.message);
+              return;
+            }
+            setError("Unknown error");
+          }}>
             Load a previous application state from a JSON file.
           </DescriptionButton>
           <DescriptionButton text="reset" color="error" onClick={() => handleOpen("reset")}>

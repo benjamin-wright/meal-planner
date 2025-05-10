@@ -29,12 +29,37 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
   function handleUnitTypeChange(type: UnitType) {
     setUnitType(type);
 
-    const unit = units.find(u => u.type === type);
-    if (!unit) {
+    console.info(`Changing unit type to ${type}`);
+
+    const newUnit = units.find(u => u.type === type);
+    if (!newUnit) {
       return;
     }
 
-    onChange({ ...ingredient, unit: unit.id });
+    console.info(`Changing unit type to ${type}, unit to ${newUnit.name}, and quantity to ${unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity}`);
+
+    setUnit(newUnit);
+    onChange({
+      ...ingredient,
+      unit: newUnit.id,
+      quantity: unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity
+    });
+  }
+
+  function handleUnitChange(id: number) {
+    const newUnit = units.find(u => u.id === id);
+    if (!newUnit) {
+      return;
+    }
+
+    console.info(`Changing unit to ${newUnit.name}, and quantity to ${unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity}`);
+
+    setUnit(newUnit);
+    onChange({
+      ...ingredient,
+      unit: newUnit.id,
+      quantity: unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity
+    });
   }
 
   useEffect(() => {
@@ -44,10 +69,6 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
       setUnitType(unit.type);
     }
   }, [ingredient.unit])
-
-  useEffect(() => {
-    onChange({ ...ingredient, quantity: (unit.base ?? 1) });
-  }, [unit.base])
 
   return (
     <Dialog open={open}>
@@ -85,7 +106,7 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             items={units.filter(u => u.type === unitType)}
             value={ingredient.unit}
             required
-            onChange={id => onChange({ ...ingredient, unit: id })}
+            onChange={handleUnitChange}
             onNav={onNewUnit}
             sx={{ flexGrow: 1 }}
           />
