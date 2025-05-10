@@ -21,7 +21,8 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
   const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.magnitudes[0]);
 
   useEffect(() => {
-    setSelectedMagnitude(unit.pickMagnitude(value));
+    const selectedMagnitude = unit.pickMagnitude(value); 
+    setSelectedMagnitude(selectedMagnitude);
   }, [unit.magnitudes]);
 
   return (

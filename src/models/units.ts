@@ -249,7 +249,7 @@ export class Unit {
   
     this.magnitudes.forEach((magnitude) => {
       const diff = Math.abs(value / (magnitude.multiplier * (this.base ?? 1)));
-      if (diff >= 1 && diff < closest) {
+      if (diff >= 0.99 && diff < closest) {
         closest = diff;
         selected = magnitude;
       }
