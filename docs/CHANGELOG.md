@@ -1,5 +1,13 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.5
+
+Bugs:
+
+- [#32](https://github.com/benjamin-wright/meal-planner/issues/32) - unit magnitude picking needs a little leeway to accout for rounding errors
+- [#33](https://github.com/benjamin-wright/meal-planner/issues/33) - magnitude and collective pickers round when base multiplier changes
+- [#37](https://github.com/benjamin-wright/meal-planner/issues/37) - logic bug in list compiler when adding ingredients from different recipies
+
 ## Version 1.0.4
 
 Enhancements:

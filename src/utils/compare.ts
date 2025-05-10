@@ -1,4 +1,4 @@
-export function ArrayEquals(thing1: any[], thing2: any[]): boolean {
+export function ArrayEquals(thing1: unknown[], thing2: unknown[]): boolean {
   if (thing1.length !== thing2.length) {
     return false;
   }

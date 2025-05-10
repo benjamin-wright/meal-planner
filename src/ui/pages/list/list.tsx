@@ -51,7 +51,7 @@ export function List() {
         case UnitType.Volume:
           unit = volumeUnit;
           break;
-        case UnitType.Count:
+        case UnitType.Count: {
           const countUnit = units.find(unit => unit.id === item.unit)
           if (!countUnit) {
             setError(`Failed to find count unit for ${item.name} (${item.id})`);
@@ -60,6 +60,7 @@ export function List() {
 
           unit = countUnit;
           break;
+        }
       }
       const category = categories.find((category) => category.id === item.category);
 

@@ -12,18 +12,18 @@ interface MagnitudeInputProps {
 }
 
 export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeInputProps) {
+  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.pickMagnitude(value));
+  
+  useEffect(() => {
+    const selectedMagnitude = unit.pickMagnitude(value); 
+    setSelectedMagnitude(selectedMagnitude);
+  }, [unit]);
+
   if (!unit) {
     return (
       <Typography variant="body2" color="text.secondary">Wrong unit type</Typography>
     );
   }
-
-  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.magnitudes[0]);
-
-  useEffect(() => {
-    const selectedMagnitude = unit.pickMagnitude(value); 
-    setSelectedMagnitude(selectedMagnitude);
-  }, [unit.magnitudes]);
 
   return (
     <Box display="flex" flexDirection="row" alignItems="space-between" gap="1em">
