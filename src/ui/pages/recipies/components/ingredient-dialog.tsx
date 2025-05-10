@@ -45,6 +45,10 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
     }
   }, [ingredient.unit])
 
+  useEffect(() => {
+    onChange({ ...ingredient, quantity: (unit.base ?? 1) });
+  }, [unit.base])
+
   return (
     <Dialog open={open}>
       <Paper sx={{ padding: "1em", display: "flex", flexDirection: "column", gap: "1em", minWidth: "20rem" }}>
@@ -103,7 +107,6 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
             unit={unit}
             onChange={value => {
               onChange({ ...ingredient, quantity: value });
-              console.info(`Quantity changed to ${value}`);
             }}
           />
         )}

@@ -121,8 +121,8 @@ export function List() {
         }
 
         let found = false;
-        for (const [ recipieId, shoppingItem ] of shoppingMap) {
-          if (recipieId === meal.recipieId && shoppingItem.unitType === unit.type) {
+        for (const [ ingredientId, shoppingItem ] of shoppingMap) {
+          if (recipieIngredient.id === ingredientId && shoppingItem.unitType === unit.type) {
             found = true;
             shoppingItem.quantity += recipieIngredient.quantity * meal.servings / recipie.serves;
             break;
