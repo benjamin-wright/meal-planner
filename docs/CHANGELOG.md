@@ -1,5 +1,9 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.6
+
+- [#41](https://github.com/benjamin-wright/meal-planner/issues/41) - Adding CICD
+
 ## Version 1.0.5
 
 Bugs:
