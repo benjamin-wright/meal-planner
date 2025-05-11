@@ -27,6 +27,4 @@ jobs:
           fi
       - run: npm ci
       - run: npm run build
-      - run: |
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -arvz --delete ./dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:nomnom/"
+      - run: sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -arvz --delete -e "ssh -o StrictHostKeyChecking=no" ./dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:nomnom/"
