@@ -63,10 +63,10 @@ export function RecipiesEdit() {
         if (response) {
           switch (response.field) {
             case "ingredient":
-              recipie.ingredients[data.selectedIngredient].id = response.response;
+              recipie.ingredients[data.selectedIngredient].id = response.response as number;
               break;
             case "unit":
-              recipie.ingredients[data.selectedIngredient].unit = response.response;
+              recipie.ingredients[data.selectedIngredient].unit = response.response as number;
               break;
           }
 
