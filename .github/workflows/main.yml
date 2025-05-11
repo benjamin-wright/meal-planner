@@ -25,6 +25,9 @@ jobs:
             echo "Tag already exists for version $VERSION. Please update the version in package.json."
             exit 1
           fi
+
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
       - run: npm ci
       - run: npm run build
       - run: sshpass -p '${{ secrets.SSH_PASSWORD }}' rsync -arvz --delete -e "ssh -o StrictHostKeyChecking=no" ./dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:nomnom/"
