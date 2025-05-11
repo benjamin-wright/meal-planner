@@ -29,6 +29,9 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           TAG_EXISTS=$(git tag -l "v$VERSION")
 
+          echo "TAG_EXISTS: $TAG_EXISTS"
+          echo "VERSION: $VERSION"
+
           if [[ "$TAG_EXISTS" == "v$VERSION" ]]; then
             echo "Tag already exists for version $VERSION. Please update the version in package.json."
             exit 1
