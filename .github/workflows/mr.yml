@@ -34,9 +34,6 @@ jobs:
           git checkout main
           ORIGINAL_VERSION=$(node -p "require('./package.json').version")
 
-          echo "New version: $NEW_VERSION"
-          echo "Original version: $ORIGINAL_VERSION"
-
           if [[ "$NEW_VERSION" == "$ORIGINAL_VERSION" ]]; then
             echo "Please update the version in package.json."
             exit 1
