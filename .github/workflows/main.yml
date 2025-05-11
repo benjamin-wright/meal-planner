@@ -16,4 +16,8 @@ jobs:
           node-version: '22.11.0'
       - run: npm ci
       - run: npm run build
-      - run: sshpass -p '${{ secrets.SSH_PASSWORD }}' rsync -arvz --delete -e "ssh -o StrictHostKeyChecking=no" ./dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:nomnom/"
+      - run: sshpass -p "$SSH_PASSWORD" rsync -arvz --delete -e "ssh -o StrictHostKeyChecking=no" ./dist/ "${SSH_USER}@${SSH_HOST}:nomnom/"
+        env:
+          SSH_PASSWORD: "${{ secrets.SSH_PASSWORD }}"
+          SSH_USER: "${{ secrets.SSH_USER }}"
+          SSH_HOST: "${{ secrets.SSH_HOST }}"
