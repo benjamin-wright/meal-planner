@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+
   version_check:
     runs-on: ubuntu-latest
     steps:
@@ -28,12 +29,12 @@ jobs:
         with:
           node-version: '22.11.0'
       - run: |
-          VERSION=$(node -p "require('./package.json').version")
-          TAG_EXISTS=$(git tag -l "v$VERSION")
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          
+          git checkout main
+          ORIGINAL_VERSION=$(node -p "require('./package.json').version")
 
-          if [[ "$TAG_EXISTS" == "v$VERSION" ]]; then
-            echo "Tag already exists for version $VERSION. Please update the version in package.json."
+          if [[ "$NEW_VERSION" == "$ORIGINAL_VERSION" ]]; then
+            echo "Please update the version in package.json."
             exit 1
-          else
-            echo "No existing tag found for version $VERSION. Proceeding with the workflow."
           fi
