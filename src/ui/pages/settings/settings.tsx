@@ -57,7 +57,11 @@ function CheckDialog({ open, mode, onClose }: CheckDialogProps) {
   );
 }
 
-export function Settings() {
+interface SettingsProps {
+  version: string;
+}
+
+export function Settings({ version }: SettingsProps) {
   const { db, dbName, unitStore, settingStore } = useContext(DBContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<"restore" | "reset">("restore");
@@ -250,7 +254,7 @@ export function Settings() {
           <Typography variant="h6">Info</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>Application Version: 1.0.5</Typography>
+          <Typography>Application Version: {version}</Typography>
         </AccordionDetails>
       </Accordion>
       <CheckDialog open={dialogOpen} mode={mode} onClose={handleClose} />
