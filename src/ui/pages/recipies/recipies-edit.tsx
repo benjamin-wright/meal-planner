@@ -61,6 +61,9 @@ export function RecipiesEdit() {
           return;
         }
 
+        setSelectedIngredient(data.selectedIngredient);
+        setEditIngredient(true);
+
         if (response) {
           switch (response.field) {
             case "ingredient":
@@ -72,8 +75,6 @@ export function RecipiesEdit() {
           }
 
           setIsNew(recipie.id === 0);
-          setSelectedIngredient(data.selectedIngredient);
-          setEditIngredient(true);
         }
       }
     })();
@@ -199,7 +200,7 @@ export function RecipiesEdit() {
             }})}
             onNewUnit={() => pushForm({ to: "units", from: "recipies", link: location.pathname, body: {
               recipie,
-              selectedIngrsedient: selectedIngredient,
+              selectedIngredient: selectedIngredient,
             }})}
           />
         )

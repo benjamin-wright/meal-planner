@@ -58,7 +58,7 @@ export function Categories() {
 
   return (
     <Page title="Categories" returnTo="/data" showNav>
-      <Reorder.Group axis="y" values={items} onReorder={onReorder}>
+      <Reorder.Group axis="y" values={items} onReorder={onReorder} layoutScroll style={{ overflowY: "scroll" }}>
         <DetailViewGroup>
           {items.map((category: Category) => (
             <SortableCategory key={category.id} category={category} onDelete={() => {
