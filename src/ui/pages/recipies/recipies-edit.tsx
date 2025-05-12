@@ -55,6 +55,7 @@ export function RecipiesEdit() {
         const { form, response } = formsResult;
         const data = form.body as FormsData;
         const recipie = data.recipie;
+        setRecipie(recipie);
 
         if (data.selectedIngredient === undefined || data.selectedIngredient < 0 || data.selectedIngredient >= recipie.ingredients.length) {
           return;
@@ -70,7 +71,6 @@ export function RecipiesEdit() {
               break;
           }
 
-          setRecipie(recipie);
           setIsNew(recipie.id === 0);
           setSelectedIngredient(data.selectedIngredient);
           setEditIngredient(true);
@@ -199,7 +199,7 @@ export function RecipiesEdit() {
             }})}
             onNewUnit={() => pushForm({ to: "units", from: "recipies", link: location.pathname, body: {
               recipie,
-              selectedIngredient: selectedIngredient,
+              selectedIngrsedient: selectedIngredient,
             }})}
           />
         )

@@ -30,7 +30,14 @@ export function DetailViewGroup({ children }: DetailViewGroupProps) {
 
   return (
     <DetailGroupContext.Provider value={{ selected, setSelected }}>
-      {children}
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="0.25em"
+        marginBottom="6em"
+      >
+        {children}
+      </Box>
     </DetailGroupContext.Provider>
   );
 }
@@ -98,7 +105,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
         display: "flex",
         flexDirection: horizontal ? "row" : "column",
         alignItems: horizontal ? "center" : "stretch",
-        overflowX: "hidden",
+        overflowX: "hidden"
       }}
     >
       <CardActionArea onClick={onClickHandler} sx={{

@@ -1,13 +1,10 @@
 import { Box, Dialog, IconButton, Paper, Typography } from "@mui/material";
 import { Ingredient } from "../../../../models/ingredients";
 import { IngredientQuantity } from "../../../../models/recipies";
-import { Unit, UnitType } from "../../../../models/units";
+import { Unit } from "../../../../models/units";
 import { SelectID } from "../../../components/select-id";
-import { SelectObject } from "../../../components/select-object";
-import { useEffect, useState } from "react";
 import { Check, Delete } from "@mui/icons-material";
-import { CollectiveInput } from "../../../components/units/collective-input";
-import { MagnitudeInput } from "../../../components/units/magnitude-input";
+import { UnitQuantityControl } from "../../../components/units/unit-quantity-control";
 
 interface IngredientDialogProps {
   index: number;
@@ -23,53 +20,6 @@ interface IngredientDialogProps {
 }
 
 export function IngredientDialog({ index, open, ingredient, ingredients, units, onChange, onClose, onDelete, onNewIngredient, onNewUnit }: IngredientDialogProps) {
-  const [unitType, setUnitType] = useState<UnitType>(UnitType.Count);
-  const [unit, setUnit] = useState<Unit>(units[0]);
-
-  function handleUnitTypeChange(type: UnitType) {
-    setUnitType(type);
-
-    console.info(`Changing unit type to ${type}`);
-
-    const newUnit = units.find(u => u.type === type);
-    if (!newUnit) {
-      return;
-    }
-
-    console.info(`Changing unit type to ${type}, unit to ${newUnit.name}, and quantity to ${unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity}`);
-
-    setUnit(newUnit);
-    onChange({
-      ...ingredient,
-      unit: newUnit.id,
-      quantity: unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity
-    });
-  }
-
-  function handleUnitChange(id: number) {
-    const newUnit = units.find(u => u.id === id);
-    if (!newUnit) {
-      return;
-    }
-
-    console.info(`Changing unit to ${newUnit.name}, and quantity to ${unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity}`);
-
-    setUnit(newUnit);
-    onChange({
-      ...ingredient,
-      unit: newUnit.id,
-      quantity: unit.base !== newUnit.base ? newUnit.base ?? 1 : ingredient.quantity
-    });
-  }
-
-  useEffect(() => {
-    const unit = units.find(u => u.id === ingredient.unit);
-    if (unit) {
-      setUnit(unit);
-      setUnitType(unit.type);
-    }
-  }, [ingredient.unit])
-
   return (
     <Dialog open={open}>
       <Paper sx={{ padding: "1em", display: "flex", flexDirection: "column", gap: "1em", minWidth: "20rem" }}>
@@ -87,50 +37,19 @@ export function IngredientDialog({ index, open, ingredient, ingredients, units, 
           onNav={onNewIngredient}
         />
 
-        <Box sx={{ display: "flex", flexDirection: "row", gap: "1em", justifyContent: "space-between" }}>
-          <SelectObject
-            id="unit-type"
-            label="unit type"
-            items={[UnitType.Count, UnitType.Weight, UnitType.Volume]}
-            value={unitType}
-            toLabel={t => t.toString()}
-            onChange={handleUnitTypeChange}
-            sx={{ flexGrow: 1 }}
-          />
-
-          <SelectID
-            id="unit"
-            label="unit"
-            link={`/units/new?type=${unitType}`}
-            toLabel={u => u.name}
-            items={units.filter(u => u.type === unitType)}
-            value={ingredient.unit}
-            required
-            onChange={handleUnitChange}
-            onNav={onNewUnit}
-            sx={{ flexGrow: 1 }}
-          />
-        </Box>
-        {unit && unit.type === UnitType.Count && (
-          <CollectiveInput
-            id="quantity"
-            label="quantity"
-            value={ingredient.quantity}
-            unit={unit}
-            onChange={value => onChange({ ...ingredient, quantity: value })}
-          />
-        )}
-        {unit && unit.type !== UnitType.Count && (
-          <MagnitudeInput
-            id="quantity"
-            label="quantity"
-            value={ingredient.quantity}
-            unit={unit}
-            onChange={value => {
-              onChange({ ...ingredient, quantity: value });
-            }}
-          />
-        )}
+        <UnitQuantityControl
+          unitId={ingredient.unit}
+          quantity={ingredient.quantity}
+          units={units}
+          onChange={(unit, quantity) => {
+            onChange({
+              ...ingredient,
+              unit,
+              quantity
+            });
+          }}
+          onNewUnit={onNewUnit}
+        />
 
         <Box display="flex" justifyContent="space-between" alignItems="center" marginTop="0.5em">
           <IconButton size="small" color="success" onClick={onClose}>
