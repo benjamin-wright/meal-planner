@@ -39,7 +39,7 @@ export function Recipies() {
   }
 
   return <Page title="Recipies" returnTo="/data" showNav>
-    <DetailViewGroup>
+    <DetailViewGroup flexLayout bottomMargin="6em">
       {
         recipies.map((recipie) => (
           <DetailView

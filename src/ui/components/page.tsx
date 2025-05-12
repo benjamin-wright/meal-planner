@@ -65,7 +65,7 @@ export function Page({
           overflowY: noScroll ? "hidden" : "scroll",
           display: "flex",
           flexDirection: "column",
-          gap: "1em",
+          gap: "0.25em",
           ...sx,
         }}
       >

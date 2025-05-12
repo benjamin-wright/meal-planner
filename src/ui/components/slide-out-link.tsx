@@ -12,6 +12,7 @@ interface SlideOutLinkProps {
 }
 
 const minWidth = "3em";
+const midWidth = "14.75em";
 const maxWidth = "15em";
 
 export function SlideOutLink({
@@ -31,7 +32,11 @@ export function SlideOutLink({
 
   const slideIn = keyframes`
     0% {
-      width: ${minWidth};
+      width: ${maxWidth};
+    }
+
+    50% {
+      width: ${midWidth};
     }
 
     100% {
@@ -57,7 +62,7 @@ export function SlideOutLink({
         alignItems: "center",
         gap: "1em",
         minWidth: minWidth,
-        width: isExpanded ? maxWidth : minWidth,
+        width: maxWidth,
         padding: "0.5em 1em 0.5em 0.5em",
         overflow: "hidden",
         fontSize: "1.5em",
@@ -66,7 +71,7 @@ export function SlideOutLink({
         lineHeight: 1,
         borderRadius: minWidth,
         ...(isExpanded && {
-          animation: `${slideIn} 0.8s ease-in-out`,
+          animation: `${slideIn} 1.5s ease-in-out`,
         }),
       }}
     >
@@ -74,7 +79,7 @@ export function SlideOutLink({
         sx={{
           fontSize: "1rem",
           ...(isExpanded && {
-            animation: `${spinIn} 0.8s ease-in-out`,
+            animation: `${spinIn} 1.5s ease-in-out`,
           }),
         }}
       >

@@ -1,5 +1,13 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.8
+
+Bugs:
+
+- [#46](https://github.com/benjamin-wright/meal-planner/issues/46) - Reopen ingredient dialog on new ingredient or unit cancel
+- [#34](https://github.com/benjamin-wright/meal-planner/issues/34) - Reset list long-touch on touch move and extend timer
+- [#30](https://github.com/benjamin-wright/meal-planner/issues/30) - Longer delay on home page animation, and make it much more subtle
+
 ## Version 1.0.7
 
 Bugs:

@@ -23,21 +23,24 @@ const DetailGroupContext = createContext({
 
 interface DetailViewGroupProps {
   children: React.ReactNode;
+  flexLayout?: boolean;
+  bottomMargin?: string;
 }
 
-export function DetailViewGroup({ children }: DetailViewGroupProps) {
+export function DetailViewGroup({ children, flexLayout, bottomMargin }: DetailViewGroupProps) {
   const [selected, setSelected] = useState("");
 
   return (
     <DetailGroupContext.Provider value={{ selected, setSelected }}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap="0.25em"
-        marginBottom="6em"
-      >
-        {children}
-      </Box>
+      {
+        flexLayout ? (
+          <Box display="flex" flexDirection="column" gap="0.25em" marginBottom={bottomMargin}>
+            {children}
+          </Box>
+        ) : (
+          children
+        )
+      }
     </DetailGroupContext.Provider>
   );
 }

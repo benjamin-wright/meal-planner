@@ -24,7 +24,7 @@ export function Home() {
             key={category.name}
             to={`/${category.name}`}
             content={category.name}
-            delay={100 + index * 100}
+            delay={500 + index * 500}
           >
             <category.icon />
           </SlideOutLink>

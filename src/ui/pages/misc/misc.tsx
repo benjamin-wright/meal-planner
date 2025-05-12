@@ -76,7 +76,7 @@ export function Misc() {
   }, [ingredientStore, categoryStore]);
 
   return <Page title="Misc" returnTo="/data" showNav sx={{ gap: 0 }}>
-    <DetailViewGroup>
+    <DetailViewGroup flexLayout bottomMargin="6em">
       {
         categories.map(category => (
           <Accordion key={category.id} expanded={expanded === category.id} onChange={() => setExpanded(expanded === category.id ? false : category.id)}>

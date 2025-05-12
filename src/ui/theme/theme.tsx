@@ -207,7 +207,7 @@ export const theme = createTheme({
           margin: 0;
           display: flex;
           flex-direction: column;
-          gap: 1em;
+          gap: 0.25em;
         }
       `,
     },

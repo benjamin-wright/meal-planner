@@ -11,13 +11,17 @@ interface CheckItemProps {
 }
 
 const DEBOUNCE_PERIOD = 500;
-const LONG_PRESS_PERIOD = 500;
+const LONG_PRESS_PERIOD = 1000;
 
 export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
   const [debouncing, setDebouncing] = useState<boolean>(false);
   let touchStart: number = 0;
 
   function touchStartHandler() {
+    if (touchStart) {
+      clearTimeout(touchStart)
+    }
+    
     touchStart = setTimeout(() => {
       onContext();
     }, LONG_PRESS_PERIOD);
@@ -54,6 +58,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
         }}
         onClick={clickHandler}
         onTouchStart={touchStartHandler}
+        onTouchMove={touchStartHandler}
         onTouchEnd={touchEndHandler}
         onTouchCancel={touchEndHandler}
         onContextMenu={(event) => {
