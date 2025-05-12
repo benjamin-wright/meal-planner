@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Page } from "../../components/page";
 import { DetailView, DetailViewGroup } from "../../components/detail-view";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { useContext, useEffect, useState } from "react";
 import { Recipie } from "../../../models/recipies";

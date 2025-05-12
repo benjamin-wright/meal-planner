@@ -1,5 +1,13 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.0.7
+
+Bugs:
+
+- [#35](https://github.com/benjamin-wright/meal-planner/issues/35) - Recipie page not scrolling
+- [#33](https://github.com/benjamin-wright/meal-planner/issues/33) - factoring out a common component
+- [#31](https://github.com/benjamin-wright/meal-planner/issues/31) - Cancelling ingredient clears the recipie
+
 ## Version 1.0.6
 
 - [#41](https://github.com/benjamin-wright/meal-planner/issues/41) - Adding pipeline for unit tests and lint

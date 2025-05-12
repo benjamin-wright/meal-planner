@@ -3,15 +3,12 @@ import { Ingredient } from "../../../models/ingredients";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { Unit, UnitType } from "../../../models/units";
-import { SelectObject } from "../../components/select-object";
 import { SelectID } from "../../components/select-id";
-import Box from "@mui/material/Box";
-import { CollectiveInput } from "../../components/units/collective-input";
-import { MagnitudeInput } from "../../components/units/magnitude-input";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForms } from "../../providers/forms";
 import { Egg, ShoppingBag } from "@mui/icons-material";
 import { SimpleChoiceDialog } from "../../components/simple-choice-dialog";
+import { UnitQuantityControl } from "../../components/units/unit-quantity-control";
 
 type PageData = {
   unit: number;
@@ -108,8 +105,6 @@ export function NewItem() {
   }
   , [ingredientStore, unitStore, formsResult]);
 
-  const unit = units.find(u => u.id === pageData.unit);
-
   return (
     <Form
       title={`Planner - Extras: ${ params.id ? "Edit" : "New" }`}
@@ -163,51 +158,16 @@ export function NewItem() {
         onNav={() => setDialogOpen(true)}
       />
 
-      <Box sx={{ display: "flex", flexDirection: "row", gap: "1em", justifyContent: "space-between" }}>
-        <SelectObject
-          id="unit-type"
-          label="unit type"
-          items={[UnitType.Count, UnitType.Weight, UnitType.Volume]}
-          value={pageData.unitType}
-          toLabel={t => t.toString()}
-          onChange={(value) => {
-            setPageData({...pageData, unitType: value, unit: units.find((unit) => unit.type === value)?.id || 0});
-          }}
-          sx={{ flexGrow: 1 }}
-        />
-        
-        <SelectID
-          id="unit"
-          label="unit"
-          link={`/units/new?type=${pageData.unitType}`}
-          toLabel={u => u.name}
-          items={units.filter(u => u.type === pageData.unitType)}
-          value={pageData.unit}
-          required
-          onChange={id => setPageData({...pageData, unit: id})}
-          onNav={() => pushForm({ to: "units", from: "list", link: location.pathname, body: pageData })}
-          sx={{ flexGrow: 1 }}
-        />
-      </Box>
+      <UnitQuantityControl
+        unitId={pageData.unit}
+        quantity={pageData.quantity}
+        units={units}
+        onChange={(unitId, quantity) => {
+          setPageData({...pageData, unit: unitId, quantity});
+        }}
+        onNewUnit={() => pushForm({ to: "units", from: "list", link: location.pathname, body: pageData })}
+      />
 
-      {unit && unit.type === UnitType.Count && (
-        <CollectiveInput
-          id="quantity"
-          label="quantity"
-          value={pageData.quantity}
-          unit={unit}
-          onChange={value => setPageData({...pageData, quantity: value})}
-        />
-      )}
-      {unit && unit.type !== UnitType.Count && (
-        <MagnitudeInput
-          id="quantity"
-          label="quantity"
-          value={pageData.quantity}
-          unit={unit}
-          onChange={value => setPageData({...pageData, quantity: value})}
-        />
-      )}
       <SimpleChoiceDialog
         open={dialogOpen}
         choices={[
