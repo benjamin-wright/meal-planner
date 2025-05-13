@@ -1,5 +1,11 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.0
+
+Enhancements:
+
+- [#26](https://github.com/benjamin-wright/meal-planner/issues/26) - Add support for meal categories in the planner
+
 ## Version 1.0.8
 
 Bugs:
