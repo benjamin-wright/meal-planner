@@ -193,9 +193,7 @@ export class Unit {
   }
 
   private formatMagnitude(value: number, abbr?: boolean): string {
-    console.info(`formatting ${value} for unit ${this.name}`);
     const magnitude = this.pickMagnitude(value);
-    console.info(`magnitude: ${JSON.stringify(magnitude)}`);
     const adjustedValue = value / (magnitude.multiplier * (this.base ?? 1));
 
     if (abbr) {

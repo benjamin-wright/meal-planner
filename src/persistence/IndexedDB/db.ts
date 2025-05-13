@@ -1,7 +1,7 @@
 import { Units, unitsV1 } from "./units";
 import { Categories, categoriesV1 } from "./categories";
 import { Ingredients, ingredientsV1 } from "./ingredients";
-import { Recipies, recipiesV1 } from "./recipies";
+import { Recipies, recipiesV1, recipiesV2 } from "./recipies";
 import { Meals, mealsV1 } from "./meals";
 import { Extras, extraV1 } from "./extras";
 import { Settings, settingsV1 } from "./settings";
@@ -9,7 +9,7 @@ import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
 
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -21,6 +21,9 @@ const migrations = [
     extraV1(db);
     shoppingItemsV1(db);
     settingsV1(db);
+  },
+  (db: IDBDatabase, transaction: IDBTransaction) => {
+    recipiesV2(db, transaction);
   },
 ]
 
@@ -75,12 +78,17 @@ export class IndexedDB implements DB {
           isNew = true;
         }
 
+        const transaction = (event.target as IDBOpenDBRequest).transaction;
+        if (!transaction) {
+          return reject(new Error("Upgrade transaction not found"));
+        }
+
         const oldVersion = event.oldVersion;
         const newVersion = event.newVersion ? event.newVersion : 0;
 
         for (let v = oldVersion; v < newVersion; v++) {
           console.info(`Migrating to version ${v + 1}`);
-          migrations[v](db);
+          migrations[v](db, transaction);
         }
       };
 

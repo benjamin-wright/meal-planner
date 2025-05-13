@@ -30,7 +30,7 @@ export function MealsEdit() {
     recipieId: 0,
     servings: 2,
     meal: search.get("type") as MealType || "dinner",
-    days: search.has("day") ? [ search.get("day") as MealDay ] : []
+    days: search.has("day") ? [search.get("day") as MealDay] : []
   });
   const [available, setAvailable] = useState<MealDay[]>(MealDays);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
@@ -57,7 +57,7 @@ export function MealsEdit() {
       setIsNew(false);
     } else {
       const recipies = await recipieStore.getAll();
-      setMeal({ ...meal, recipieId: recipies[0].id });
+      setMeal({ ...meal, recipieId: recipies.find(r => r.meal === meal.meal)?.id || 0 });
     }
 
     if (formsResult) {
@@ -100,9 +100,9 @@ export function MealsEdit() {
   }
 
   useEffect(() => {
+    setLoading(true);
     calculateIngredients();
     setIngredients([]);
-    setLoading(true);
   }, [ingredientStore, unitStore, meal]);
 
   async function calculateIngredients() {
@@ -134,12 +134,14 @@ export function MealsEdit() {
 
       return {
         name: ingredientData.name,
-        quantity: unit.format(finalQuantity, {abbr: true})
+        quantity: unit.format(finalQuantity, { abbr: true })
       };
     })));
 
     setLoading(false);
   }
+
+  const filteredRecipies = recipies.filter(r => r.meal === meal.meal);
 
   return (
     <Form
@@ -164,7 +166,7 @@ export function MealsEdit() {
         id="recipie"
         label="Recipie"
         value={meal.recipieId}
-        items={recipies}
+        items={filteredRecipies}
         link="/recipies/new"
         toLabel={(recipie) => recipie.name}
         onChange={recipieChangeHandler}
@@ -184,7 +186,9 @@ export function MealsEdit() {
         capitalise
         value={meal.meal}
         options={MealTypes}
-        onChange={(value) => setMeal({ ...meal, meal: value as MealType })}
+        onChange={(value) => {
+          setMeal({ ...meal, meal: value as MealType, recipieId: recipies.find((recipie) => recipie.meal === value)?.id || 0 });
+        }}
       />
 
       {

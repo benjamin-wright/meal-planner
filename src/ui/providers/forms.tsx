@@ -73,8 +73,6 @@ export function FormProvider({ children }: FormProviderProps) {
       return;
     }
 
-    console.info(`Popping ${from} from ${JSON.stringify(stack)}`);
-
     if (stack.forms[stack.forms.length - 1].from !== from) {
       return;
     }
