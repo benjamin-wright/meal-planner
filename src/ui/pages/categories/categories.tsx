@@ -8,6 +8,7 @@ import { Category } from "../../../models/categories";
 import { DBContext } from "../../providers/database";
 import { SortableCategory } from "./components/sortable-category";
 import { Reorder } from "motion/react";
+import { reorderCategories } from "../../../services/categories";
 
 export function Categories() {
   const { categoryStore } = useContext(DBContext);
@@ -32,14 +33,7 @@ export function Categories() {
 
   async function onReorder(newItems: Category[]) {
     setItems(newItems);
-    for (let i = 0; i < newItems.length; i++) {
-      if (newItems[i].order === i) {
-        continue;
-      }
-
-      newItems[i].order = i;
-      await categoryStore?.put(newItems[i]);
-    }
+    if (categoryStore) { await reorderCategories(newItems, categoryStore) }
   }
 
   function onEdit(category: Category) {

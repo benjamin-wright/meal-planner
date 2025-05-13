@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton } from "@mui/material";
 import { CheckItem } from "./check-item";
-import { ShoppingViewItem } from "./types";
+import { ShoppingViewItem } from "../../../../services/shopping";
 import { ExpandMore } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 

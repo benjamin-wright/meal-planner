@@ -1,7 +1,7 @@
 import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import { CardActionArea, Typography } from "@mui/material";
-import { ShoppingViewItem } from "./types";
+import { ShoppingViewItem } from "../../../../services/shopping";
 import { useState } from "react";
 
 interface CheckItemProps {
