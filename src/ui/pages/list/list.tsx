@@ -26,6 +26,7 @@ export function List() {
   const [ categories, setCategories ] = useState<string[]>([]);
   const [ undo, setUndo ] = useState<ShoppingListToggle[]>([]);
   const [ redo, setRedo ] = useState<ShoppingListToggle[]>([]);
+  const [ pendingItems, setPendingItems ] = useState<{id: number, timeoutId: number}[]>([]);
 
   async function fetchItems() {
     if (!settingStore || !categoryStore || !unitStore || !shoppingStore) {
@@ -45,12 +46,26 @@ export function List() {
 
   useEffect(() => {
     fetchItems();
+    
+    // Cleanup function to clear any pending timeouts when unmounting
+    return () => {
+      pendingItems.forEach(item => {
+        window.clearTimeout(item.timeoutId);
+      });
+    };
   }, [ settingStore, shoppingStore, categoryStore, unitStore ]);
 
   async function reset() {
     if (!ingredientStore || !unitStore || !recipieStore || !mealStore || !extraStore || !shoppingStore) {
       return;
     }
+    
+    // Clear any pending timeouts
+    pendingItems.forEach(item => {
+      window.clearTimeout(item.timeoutId);
+    });
+    setPendingItems([]);
+    
     await resetShoppingList({
       ingredientStore,
       unitStore,
@@ -69,17 +84,68 @@ export function List() {
     setUndo([...undo, { id: item.id, got: item.got }]);
     if (redo.length > 0) { setRedo([]); }
 
-    updateItem(item.id, !item.got);
+    if (!item.got) {
+      // If checking an item, add pending state but delay the actual update
+      const timeoutId = window.setTimeout(() => {
+        // Remove from pending after delay
+        setPendingItems(current => current.filter(p => p.id !== item.id));
+        
+        // Update the item got status in the DB
+        // Use a functional update to ensure we're working with the latest state
+        setItems(currentItems => {
+          const updatedItems = [...currentItems];
+          const index = updatedItems.findIndex(i => i.id === item.id);
+          
+          // Only update if the item is still in pending state
+          if (index !== -1 && updatedItems[index].pending) {
+            shoppingStore?.check(item.id, true);
+            updatedItems[index] = {...updatedItems[index], got: true, pending: false};
+          }
+          return updatedItems;
+        });
+      }, 2000);
+      
+      setPendingItems(current => [...current, { id: item.id, timeoutId }]);
+      
+      // Update the UI immediately to show the pending state
+      updateItemVisually(item.id);
+    } else {
+      // If unchecking, do it immediately
+      updateItem(item.id, !item.got);
+    }
+  }
+
+  function updateItemVisually(id: number) {
+    // This only updates the UI, doesn't save to DB
+    setItems(current => {
+      const updatedItems = [...current];
+      const index = updatedItems.findIndex((i) => i.id === id);
+      if (index !== -1) {
+        updatedItems[index] = {...updatedItems[index], pending: true};
+      }
+      return updatedItems;
+    });
   }
 
   function updateItem(id: number, got: boolean) {
-    const updatedItems = [...items];
-    const index = updatedItems.findIndex((i) => i.id === id);
-    if (index !== -1) {
-      updatedItems[index] = {...updatedItems[index], got};
+    // Clear any pending timeout for this item if it exists
+    const pending = pendingItems.find(p => p.id === id);
+    if (pending) {
+      window.clearTimeout(pending.timeoutId);
+      setPendingItems(current => current.filter(p => p.id !== id));
     }
-    setItems(updatedItems);
+    
+    // Update local state using functional update pattern to ensure we're working with the latest state
+    setItems(current => {
+      const updatedItems = [...current];
+      const index = updatedItems.findIndex((i) => i.id === id);
+      if (index !== -1) {
+        updatedItems[index] = {...updatedItems[index], got, pending: false};
+      }
+      return updatedItems;
+    });
 
+    // Update the database
     shoppingStore?.check(id, got);
   }
 

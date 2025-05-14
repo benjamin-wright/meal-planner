@@ -15,6 +15,7 @@ export type ShoppingViewItem = {
   category: string;
   quantity: string;
   got: boolean;
+  pending?: boolean;
 };
 
 export async function getShoppingListItems({

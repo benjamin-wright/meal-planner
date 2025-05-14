@@ -16,19 +16,25 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
   const [active, setActive] = useState<string[]>([]);
 
   useEffect(() => {
-    const active = [...categories.filter(c => items.some(i => i.category === c && !i.got)), "got" ];
+    // Consider both non-got items and pending items as active in their categories
+    const active = [...categories.filter(c => items.some(i => i.category === c && (!i.got || i.pending))), "got" ];
     setActive(active);
 
     const expanded: Record<string, boolean> = {
       "got": false,
     };
-    categories.forEach(c => {expanded[c] = items.some(i => i.category === c && !i.got)});
+    categories.forEach(c => {expanded[c] = items.some(i => i.category === c && (!i.got || i.pending))});
     setExpanded(expanded);
-  }, [categories]);
+  }, [categories, items]);
 
   function checkHandler(category: string, item: ShoppingViewItem) {
+    // Don't consider item as done if it's only in pending state
     const filtered = items.filter(i => i.category === category);
-    const allDone = filtered.every(i => i.id === item.id ? !i.got : i.got);
+    
+    // Simulate the future state - if this item is checked, will all items in category be done?
+    // Only consider an item "done" if it's got AND not pending
+    const allDone = filtered.every(i => i.id === item.id ? true : (i.got && !i.pending));
+    
     if (allDone) {
       setActive(active.filter(a => a !== category));
       
@@ -40,7 +46,8 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
   }
 
   function uncheckHandler(category: string, item: ShoppingViewItem) {
-    const filtered = items.filter(i => i.category === category);
+    // Only consider non-pending items when determining if all items are done
+    const filtered = items.filter(i => i.category === category && !i.pending);
     const allDone = filtered.every(i => i.got);
     if (allDone) {
       setActive([...categories.filter(c => active.includes(c) || c === item.category), "got" ]);
@@ -52,7 +59,10 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
   return (
     <Box>
       {active.map(category => {
-        const filtered = category === "got" ? items.filter(item => item.got) : items.filter(item => !item.got && item.category === category);
+        // Keep pending items in their original category, not in 'got'
+        const filtered = category === "got" 
+          ? items.filter(item => item.got && !item.pending) 
+          : items.filter(item => (!item.got || item.pending) && item.category === category);
         return (
           <Accordion key={category} expanded={expanded[category] || false} sx={{padding: "0.25em", paddingTop: "0", opacity: category === "got" ? 0.5 : 1}} >            
             <AccordionSummary

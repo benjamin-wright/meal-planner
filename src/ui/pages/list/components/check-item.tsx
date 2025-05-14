@@ -34,7 +34,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
     }
   }
   
-  function clickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function clickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {    
     setDebouncing(true);
     setTimeout(() => setDebouncing(false), DEBOUNCE_PERIOD)
     event.stopPropagation();
@@ -54,7 +54,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
           flexDirection: "row",
           justifyContent: "start",
           overflowX: "hidden",
-          opacity: item.got ? "40%" : "100%"
+          opacity: item.got || item.pending ? "40%" : "100%",
         }}
         onClick={clickHandler}
         onTouchStart={touchStartHandler}
@@ -69,7 +69,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
         disabled={debouncing}
       >
         <Checkbox
-          checked={item.got}
+          checked={item.got || item.pending}
           color="primary"
         />
         <Typography>{item.name}: {item.quantity}</Typography>
