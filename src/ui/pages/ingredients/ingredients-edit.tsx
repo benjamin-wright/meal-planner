@@ -63,7 +63,6 @@ export function IngredientsEdit() {
       disabled={!validate()}
       onSubmit={async () => {
         let id = ingredient.id;
-        console.info("ingredient", ingredient);
         if (isNew) {
           id = await ingredientStore?.add(ingredient.name, ingredient.category, true) || 0;
         } else {

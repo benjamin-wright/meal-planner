@@ -1,7 +1,7 @@
 import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import { CardActionArea, Typography } from "@mui/material";
-import { ShoppingViewItem } from "./types";
+import { ShoppingViewItem } from "../../../../services/shopping";
 import { useState } from "react";
 
 interface CheckItemProps {
@@ -34,7 +34,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
     }
   }
   
-  function clickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function clickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {    
     setDebouncing(true);
     setTimeout(() => setDebouncing(false), DEBOUNCE_PERIOD)
     event.stopPropagation();
@@ -54,7 +54,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
           flexDirection: "row",
           justifyContent: "start",
           overflowX: "hidden",
-          opacity: item.got ? "40%" : "100%"
+          opacity: debouncing ? "40%" : "100%",
         }}
         onClick={clickHandler}
         onTouchStart={touchStartHandler}
@@ -69,7 +69,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
         disabled={debouncing}
       >
         <Checkbox
-          checked={item.got}
+          checked={item.got || item.pending}
           color="primary"
         />
         <Typography>{item.name}: {item.quantity}</Typography>

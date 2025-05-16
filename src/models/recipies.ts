@@ -1,3 +1,5 @@
+import { MealType } from "./meals";
+
 export type IngredientQuantity = {
   id: number;
   unit: number;
@@ -12,4 +14,5 @@ export type Recipie = {
   time: number;
   ingredients: IngredientQuantity[];
   steps: string[];
+  meal: MealType; // breakfast, lunch, or dinner
 }

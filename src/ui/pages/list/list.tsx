@@ -1,93 +1,60 @@
-import Fab from "@mui/material/Fab";
 import { Page } from "../../components/page";
-import { Replay } from "@mui/icons-material";
+import { Add, Redo, Replay, Undo } from "@mui/icons-material";
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
-import { ShoppingItem } from "../../../models/shopping-item";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { AlertContext } from "../../providers/alerts";
 import { ListView } from "./components/list-view";
-import { ShoppingViewItem } from "./components/types";
-import { Unit, UnitType } from "../../../models/units";
-import { FloatingAddButton } from "../../components/floating-add-button";
+import { ShoppingViewItem } from "../../../services/shopping";
 import { useNavigate } from "react-router-dom";
+import { getShoppingListItems, resetShoppingList } from "../../../services/shopping";
+import { Backdrop, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+
+type ShoppingListToggle = {
+  id: number;
+  got: boolean;
+}
+
+const DEBOUNCE_PERIOD = 2000;
 
 export function List() {
   const navigate = useNavigate();
 
   const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
   const { setError, setMessage } = useContext(AlertContext);
-  const [ open, setOpen ] = useState(false);
+  const [ resetPrompt, setResetPrompt ] = useState(false);
+  const [ speedDial, setSpeedDial ] = useState(false);
   const [ items, setItems ] = useState<ShoppingViewItem[]>([]);
   const [ categories, setCategories ] = useState<string[]>([]);
+  const [ undo, setUndo ] = useState<ShoppingListToggle[]>([]);
+  const [ redo, setRedo ] = useState<ShoppingListToggle[]>([]);
+  const [ debounceTimeout, setDebounceTimeout ] = useState<number | undefined>();
 
   async function fetchItems() {
-    if (!settingStore || !shoppingStore || !categoryStore || !unitStore) {
+    if (!settingStore || !categoryStore || !unitStore || !shoppingStore) {
       return;
     }
 
-    const settings = await settingStore.get();
-    const units = await unitStore.getAll();
-    const categories = await categoryStore.getAll();
-
-    const weightUnit = units.find((unit) => unit.id === settings.preferredWeightUnit);
-    const volumeUnit = units.find((unit) => unit.id === settings.preferredVolumeUnit);
-    if (!weightUnit || !volumeUnit) {
-      setError("Weight or volume unit not found in settings");
-      return;
-    }
-
-    const shoppingItems = await shoppingStore.getAll();
-    const items = [];
-    const usedCategories: Record<string, boolean> = {};
-
-    for (const item of shoppingItems) {
-      let unit: Unit;
-
-      switch (item.unitType) {
-        case UnitType.Weight:
-          unit = weightUnit;
-          break;
-        case UnitType.Volume:
-          unit = volumeUnit;
-          break;
-        case UnitType.Count: {
-          const countUnit = units.find(unit => unit.id === item.unit)
-          if (!countUnit) {
-            setError(`Failed to find count unit for ${item.name} (${item.id})`);
-            continue;
-          }
-
-          unit = countUnit;
-          break;
-        }
-      }
-      const category = categories.find((category) => category.id === item.category);
-
-      if (!category) {
-        setError(`Category not found for item ${item.id}`);
-        continue;
-      }
-
-      items.push({
-        id: item.id,
-        name: item.name,
-        category: category.name,
-        quantity: unit.format(item.quantity, { abbr: true }),
-        got: item.got
-      });
-
-      if (!usedCategories[category.name]) {
-        usedCategories[category.name] = true;
-      }
-    }
-
+    const { items, categories } = await getShoppingListItems({
+      settingStore,
+      shoppingStore,
+      categoryStore,
+      unitStore,
+      setError
+    });
     setItems(items);
-    setCategories(categories.filter(category => usedCategories[category.name]).map(category => category.name));
+    setCategories(categories);
   }
 
   useEffect(() => {
     fetchItems();
+    
+    // Cleanup function to clear any pending timeouts when unmounting
+    return () => {
+      if (debounceTimeout) {
+        window.clearTimeout(debounceTimeout);
+      }
+    };
   }, [ settingStore, shoppingStore, categoryStore, unitStore ]);
 
   async function reset() {
@@ -95,139 +62,159 @@ export function List() {
       return;
     }
     
-    await shoppingStore.clear();
-
-    const meals = await mealStore.getAll();
-    const extras = await extraStore.getAll();
-    const shoppingMap = new Map<number, ShoppingItem>();
-
-    for (const meal of meals) {
-      const recipie = await recipieStore.get(meal.recipieId);
-      if (!recipie) {
-        setError(`Recipie ${meal.recipieId} not found for meal ${meal.id}`);
-        continue;
-      }
-
-      for (const recipieIngredient of recipie.ingredients) {
-        const ingredient = await ingredientStore.get(recipieIngredient.id);
-        if (!ingredient) {
-          setError(`Ingredient ${recipieIngredient.id} not found for recipie ${recipie.id}`);
-          continue;
-        }
-
-        const unit = await unitStore.get(recipieIngredient.unit);
-        if (!unit) {
-          setError(`Unit ${recipieIngredient.unit} not found for recipie ${recipie.id}`);
-          continue;
-        }
-
-        let found = false;
-        for (const [ ingredientId, shoppingItem ] of shoppingMap) {
-          if (recipieIngredient.id === ingredientId && shoppingItem.unitType === unit.type) {
-            found = true;
-            shoppingItem.quantity += recipieIngredient.quantity * meal.servings / recipie.serves;
-            break;
-          }
-        }
-
-        if (found) {
-          continue;
-        }
-
-        shoppingMap.set(ingredient.id, {
-          id: 0,
-          name: ingredient.name,
-          category: ingredient.category,
-          unitType: unit.type,
-          unit: unit.type === UnitType.Count ? unit.id : undefined,
-          quantity: recipieIngredient.quantity * meal.servings / recipie.serves,
-          got: false
-        });
-      }
+    // Clear any pending timeouts
+    if (debounceTimeout) {
+      window.clearTimeout(debounceTimeout);
+      setDebounceTimeout(undefined);
     }
-
-    for (const extra of extras) {
-      const ingredient = await ingredientStore.get(extra.ingredient);
-      if (!ingredient) {
-        setError(`Ingredient ${extra.ingredient} not found for extra ${extra.id}`);
-        continue;
-      }
-
-      const unit = await unitStore.get(extra.unit);
-      if (!unit) {
-        setError(`Unit ${extra.unit} not found for extra ${extra.id}`);
-        continue;
-      }
-
-      let found = false;
-      for (const [ recipieId, shoppingItem ] of shoppingMap) {
-        if (recipieId === extra.ingredient && shoppingItem.unitType === unit.type) {
-          found = true;
-          shoppingItem.quantity += extra.quantity;
-          break;
-        }
-      }
-
-      if (found) {
-        continue;
-      }
-
-      shoppingMap.set(ingredient.id, {
-        id: 0,
-        name: ingredient.name,
-        category: ingredient.category,
-        unitType: unit.type,
-        unit: unit.type === UnitType.Count ? unit.id : undefined,
-        quantity: extra.quantity,
-        got: false
-      });
-    }
-
-    const items = Array.from(shoppingMap.values());
-    for (const item of items) {
-      await shoppingStore.add(item.name, item.category, item.unitType, item.unit, item.quantity, item.got);
-    }
-
+    
+    await resetShoppingList({
+      ingredientStore,
+      unitStore,
+      recipieStore,
+      mealStore,
+      extraStore,
+      shoppingStore,
+      setError
+    });
+    setUndo([]);
+    setRedo([]);
     fetchItems();
   }
 
-  function checkItem(item: ShoppingViewItem) {
-    if (!shoppingStore) {
+  function handleCheckItem(item: ShoppingViewItem) {
+    if (debounceTimeout) {
+      window.clearTimeout(debounceTimeout);
+    }
+
+    setDebounceTimeout(window.setTimeout(() => {
+      setDebounceTimeout(undefined);
+      commitPending();
+    }, DEBOUNCE_PERIOD));
+
+    if (item.pending) {
+      updateItem(item.id, false, false);
       return
     }
 
-    const updatedItems = [...items];
-    const index = updatedItems.findIndex((i) => i.id === item.id);
-    if (index !== -1) {
-      updatedItems[index] = {...item, got: !item.got};
+    setRedo([]);
+    
+    if (!item.got) {
+      updateItem(item.id, false, true);
+    } else {
+      shoppingStore?.check(item.id, false);
+      updateItem(item.id, false, false);
+      setUndo(current => [...current, { id: item.id, got: false }]);
     }
-    setItems(updatedItems);
+  }
 
-    shoppingStore.check(item.id, !item.got);
-  } 
+  function commitPending() {
+    setItems(current => {
+      const pending = current.filter(i => i.pending);
+      pending.forEach(item => { shoppingStore?.check(item.id, true) });
+      setUndo([...undo, ...pending.map(item => ({ id: item.id, got: true }))]);
+      return current.map(item => item.pending ? {...item, got: true, pending: false} : item);
+    });
+  }
+
+  function updateItem(id: number, got: boolean, pending: boolean) {
+    setItems(current => {
+      const updatedItems = [...current];
+      const index = updatedItems.findIndex((i) => i.id === id);
+      if (index !== -1) {
+        updatedItems[index] = {...updatedItems[index], got, pending};
+      }
+      return updatedItems;
+    });
+  }
+
+  function handleUndo() {
+    if (undo.length === 0) {
+      return;
+    }
+    const lastAction = undo.pop();
+    if (!lastAction) {
+      return;
+    }
+
+    setRedo([...redo, lastAction]);
+    updateItem(lastAction.id, !lastAction.got, false);
+  }
+
+  function handleRedo() {
+    if (redo.length === 0) {
+      return;
+    }
+    const lastAction = redo.pop();
+    if (!lastAction) {
+      return;
+    }
+
+    setUndo([...undo, lastAction]);
+    updateItem(lastAction.id, lastAction.got, false);
+  }
 
   return <Page title="List" showNav sx={{
     paddingBottom: "5em",
   }}>
-    <ListView items={items} categories={categories} onCheck={checkItem} onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)} />
-    <Fab color="primary" sx={{
-      position: "fixed",
-      bottom: "2em",
-      left: "2em",
-    }} onClick={() => setOpen(true)}>
-      <Replay />
-    </Fab>
-    <FloatingAddButton
-      to="/list/new"
-    />
+    <ListView items={items} categories={categories} onCheck={handleCheckItem} onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)} />
+    <Backdrop open={speedDial} />
+    <SpeedDial
+      ariaLabel="ContextMenu"
+      icon={<SpeedDialIcon />}
+      open={speedDial}
+      onOpen={() => setSpeedDial(true)}
+      onClose={() => setSpeedDial(false)}
+      sx={{
+        position: "fixed",
+        bottom: "2em",
+        right: "2em",
+      }}
+    >
+      <SpeedDialAction
+        icon={<Add />}
+        tooltipTitle="new"
+        onClick={() => {
+          setSpeedDial(false);
+          navigate("/list/new");
+        }}
+      />
+      <SpeedDialAction
+        icon={<Replay />}
+        tooltipTitle="reset"
+        onClick={() => {
+          setSpeedDial(false);
+          setResetPrompt(true);
+        }}
+      />
+      <SpeedDialAction FabProps={{
+        sx: {
+          opacity: redo.length > 0 ? 1 : 0.25
+        }
+      }}
+        icon={<Redo />}
+        tooltipTitle="redo"
+        onClick={handleRedo}
+      />
+      <SpeedDialAction FabProps={{
+        sx: {
+          opacity: undo.length > 0 ? 1 : 0.25
+        }
+      }}
+        icon={<Undo />}
+        tooltipTitle="undo"
+        onClick={handleUndo}
+      />
+    </SpeedDial>
     <ConfirmDialog
-      open={open}
+      open={resetPrompt}
       message="Resetting shopping list?"
+      disableRestoreFocus
       onConfirm={() => {
         reset().then(() => setMessage("Shopping list reset")).catch((error) => setError(error.message));
-        setOpen(false);
+        setResetPrompt(false);
       }}
-      onCancel={() => setOpen(false)}
+      onCancel={() => setResetPrompt(false)}
     />
   </ Page>;
 }

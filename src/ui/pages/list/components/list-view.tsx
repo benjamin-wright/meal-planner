@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, IconButton } from "@mui/material";
 import { CheckItem } from "./check-item";
-import { ShoppingViewItem } from "./types";
+import { ShoppingViewItem } from "../../../../services/shopping";
 import { ExpandMore } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
@@ -12,47 +12,39 @@ interface ListViewProps {
 }
 
 export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [active, setActive] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({"got": false});
+  const active = [...categories.filter(c => items.some(i => i.category === c && (!i.got || i.pending))), "got"];
 
   useEffect(() => {
-    const active = [...categories.filter(c => items.some(i => i.category === c && !i.got)), "got" ];
-    setActive(active);
+    let changed = false;
+    const keys = Object.keys(expanded);
 
-    const expanded: Record<string, boolean> = {
-      "got": false,
-    };
-    categories.forEach(c => {expanded[c] = items.some(i => i.category === c && !i.got)});
-    setExpanded(expanded);
-  }, [categories]);
+    keys.forEach(category => {
+      if (!active.includes(category)) {
+        changed = true;
+        delete expanded[category];
+      }
+    });
 
-  function checkHandler(category: string, item: ShoppingViewItem) {
-    const filtered = items.filter(i => i.category === category);
-    const allDone = filtered.every(i => i.id === item.id ? !i.got : i.got);
-    if (allDone) {
-      setActive(active.filter(a => a !== category));
-      
-      delete expanded[category];
+    active.forEach(category => {
+      if (!keys.includes(category)) {
+        changed = true;
+        expanded[category] = true;
+      }
+    });
+
+    if (changed) {
       setExpanded({...expanded});
     }
-
-    onCheck(item);
-  }
-
-  function uncheckHandler(category: string, item: ShoppingViewItem) {
-    const filtered = items.filter(i => i.category === category);
-    const allDone = filtered.every(i => i.got);
-    if (allDone) {
-      setActive([...categories.filter(c => active.includes(c) || c === item.category), "got" ]);
-      setExpanded({...expanded, [item.category]: true});
-    }
-    onCheck(item);
-  }
+  }, [items]);
 
   return (
     <Box>
       {active.map(category => {
-        const filtered = category === "got" ? items.filter(item => item.got) : items.filter(item => !item.got && item.category === category);
+        // Keep pending items in their original category, not in 'got'
+        const filtered = category === "got" 
+          ? items.filter(item => item.got && !item.pending) 
+          : items.filter(item => (!item.got || item.pending) && item.category === category);
         return (
           <Accordion key={category} expanded={expanded[category] || false} sx={{padding: "0.25em", paddingTop: "0", opacity: category === "got" ? 0.5 : 1}} >            
             <AccordionSummary
@@ -73,7 +65,7 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
                 <CheckItem
                   key={item.id}
                   item={item}
-                  onCheck={() => category === "got" ? uncheckHandler(category, item) : checkHandler(category, item)}
+                  onCheck={() => onCheck(item)}
                   onContext={() => onEdit(item)}
                 />
               ))}

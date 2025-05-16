@@ -12,6 +12,7 @@ import Check from "@mui/icons-material/Check";
 interface ConfirmDialogProps {
   message: string;
   open: boolean;
+  disableRestoreFocus?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -19,11 +20,12 @@ interface ConfirmDialogProps {
 export function ConfirmDialog({
   message,
   open,
+  disableRestoreFocus,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
   return (
-    <Dialog open={!!open}>
+    <Dialog open={!!open} disableRestoreFocus={disableRestoreFocus}>
       <DialogTitle textAlign="center">{message}</DialogTitle>
       <DialogContent>
         <Typography>Are you sure you want to do this?</Typography>

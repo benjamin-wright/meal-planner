@@ -36,7 +36,6 @@ export function UnitsEdit() {
 
     const type = Unit.parseType(search.get("type") || "");
     if (type) {
-      console.log(`changing unit to ${type}`);
       setUnit({ ...unit, type });
     }
   }

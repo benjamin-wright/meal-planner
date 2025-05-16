@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 import { StepsView } from "./components/steps-view";
 import { IngredientDialog } from "./components/ingredient-dialog";
 import { Ingredient } from "../../../models/ingredients";
+import { MealType, MealTypes } from "../../../models/meals";
+import { SelectString } from "../../components/select-string";
 
 type FormsData = {
   recipie: Recipie,
@@ -24,7 +26,7 @@ export function RecipiesEdit() {
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [] });
+  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [], meal: "dinner" });
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const navigate = useNavigate();
@@ -118,7 +120,7 @@ export function RecipiesEdit() {
 
   async function onSubmit() {
     if (isNew) {
-      recipie.id = await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps) || 0;
+      recipie.id = await recipieStore?.add(recipie.name, recipie.description, recipie.serves, recipie.time, recipie.ingredients, recipie.steps, recipie.meal) || 0;
     } else {
       await recipieStore?.put(recipie);
     }
@@ -169,6 +171,16 @@ export function RecipiesEdit() {
           onChange={(value) => setRecipie({ ...recipie, time: value })}
         />
       </Box>
+
+      <SelectString
+        id="meal"
+        label="meal"
+        value={recipie.meal}
+        options={MealTypes}
+        required
+        capitalise
+        onChange={meal => setRecipie({ ...recipie, meal: meal as MealType })}
+      />
 
       <IngredientsView
         units={units}
