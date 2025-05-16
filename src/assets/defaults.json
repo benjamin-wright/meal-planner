@@ -163,6 +163,7 @@
       "description": "A simple potato salad recipe.",
       "serves": 4,
       "time": 30,
+      "meal": "dinner",
       "ingredients": [
         {
           "id": 2,

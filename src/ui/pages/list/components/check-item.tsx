@@ -54,7 +54,7 @@ export function CheckItem({ item, onCheck, onContext }: CheckItemProps) {
           flexDirection: "row",
           justifyContent: "start",
           overflowX: "hidden",
-          opacity: item.got || item.pending ? "40%" : "100%",
+          opacity: debouncing ? "40%" : "100%",
         }}
         onClick={clickHandler}
         onTouchStart={touchStartHandler}

@@ -15,7 +15,7 @@ export type ShoppingViewItem = {
   category: string;
   quantity: string;
   got: boolean;
-  pending?: boolean;
+  pending: boolean;
 };
 
 export async function getShoppingListItems({
@@ -83,7 +83,8 @@ export async function getShoppingListItems({
       name: item.name,
       category: category.name,
       quantity: unit.format(item.quantity, { abbr: true }),
-      got: item.got
+      got: item.got,
+      pending: false
     });
     if (!usedCategories[category.name]) {
       usedCategories[category.name] = true;

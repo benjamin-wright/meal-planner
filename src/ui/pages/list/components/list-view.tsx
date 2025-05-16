@@ -12,49 +12,31 @@ interface ListViewProps {
 }
 
 export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [active, setActive] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({"got": false});
+  const active = [...categories.filter(c => items.some(i => i.category === c && (!i.got || i.pending))), "got"];
 
   useEffect(() => {
-    // Consider both non-got items and pending items as active in their categories
-    const active = [...categories.filter(c => items.some(i => i.category === c && (!i.got || i.pending))), "got" ];
-    setActive(active);
+    let changed = false;
+    let keys = Object.keys(expanded);
 
-    const expanded: Record<string, boolean> = {
-      "got": false,
-    };
-    categories.forEach(c => {expanded[c] = items.some(i => i.category === c && (!i.got || i.pending))});
-    setExpanded(expanded);
-  }, [categories, items]);
+    keys.forEach(category => {
+      if (!active.includes(category)) {
+        changed = true;
+        delete expanded[category];
+      }
+    });
 
-  function checkHandler(category: string, item: ShoppingViewItem) {
-    // Don't consider item as done if it's only in pending state
-    const filtered = items.filter(i => i.category === category);
-    
-    // Simulate the future state - if this item is checked, will all items in category be done?
-    // Only consider an item "done" if it's got AND not pending
-    const allDone = filtered.every(i => i.id === item.id ? true : (i.got && !i.pending));
-    
-    if (allDone) {
-      setActive(active.filter(a => a !== category));
-      
-      delete expanded[category];
+    active.forEach(category => {
+      if (!keys.includes(category)) {
+        changed = true;
+        expanded[category] = true;
+      }
+    });
+
+    if (changed) {
       setExpanded({...expanded});
     }
-
-    onCheck(item);
-  }
-
-  function uncheckHandler(category: string, item: ShoppingViewItem) {
-    // Only consider non-pending items when determining if all items are done
-    const filtered = items.filter(i => i.category === category && !i.pending);
-    const allDone = filtered.every(i => i.got);
-    if (allDone) {
-      setActive([...categories.filter(c => active.includes(c) || c === item.category), "got" ]);
-      setExpanded({...expanded, [item.category]: true});
-    }
-    onCheck(item);
-  }
+  }, [items]);
 
   return (
     <Box>
@@ -83,7 +65,7 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
                 <CheckItem
                   key={item.id}
                   item={item}
-                  onCheck={() => category === "got" ? uncheckHandler(category, item) : checkHandler(category, item)}
+                  onCheck={() => onCheck(item)}
                   onContext={() => onEdit(item)}
                 />
               ))}
