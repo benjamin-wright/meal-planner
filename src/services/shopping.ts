@@ -69,15 +69,18 @@ export async function getShoppingListItems({
         break;
       }
     }
+
     if (!unit) {
       setError(`Unit not found for item ${item.name} (${item.id})`);
       continue;
     }
-    const category = categories.find((category: any) => category.id === item.category);
+
+    const category = categories.find(category => category.id === item.category);
     if (!category) {
       setError(`Category not found for item ${item.id}`);
       continue;
     }
+
     items.push({
       id: item.id,
       name: item.name,
@@ -86,13 +89,14 @@ export async function getShoppingListItems({
       got: item.got,
       pending: false
     });
+    
     if (!usedCategories[category.name]) {
       usedCategories[category.name] = true;
     }
   }
   return {
     items,
-    categories: categories.filter((category: any) => usedCategories[category.name]).map((category: any) => category.name)
+    categories: categories.filter(category => usedCategories[category.name]).map(category => category.name)
   };
 }
 

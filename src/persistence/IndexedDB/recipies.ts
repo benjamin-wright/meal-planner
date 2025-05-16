@@ -10,13 +10,11 @@ export function recipiesV1(db: IDBDatabase) {
   store.createIndex("name", "name", { unique: true });
 }
 
-export function recipiesV2(db: IDBDatabase, transaction: IDBTransaction) {
+export function recipiesV2(_db: IDBDatabase, transaction: IDBTransaction) {
   // Use the object store from the upgrade transaction
-  // @ts-ignore: 'this' context is the IDBOpenDBRequest in onupgradeneeded
-  db.transaction
   const store = transaction.objectStore(TABLE_NAME);
   const request = store.openCursor();
-  request.onsuccess = function (event: any) {
+  request.onsuccess = function (event) {
     const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
     if (cursor) {
       const value = cursor.value;

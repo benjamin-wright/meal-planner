@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import { StepsView } from "./components/steps-view";
 import { IngredientDialog } from "./components/ingredient-dialog";
 import { Ingredient } from "../../../models/ingredients";
-import { MealTypes } from "../../../models/meals";
+import { MealType, MealTypes } from "../../../models/meals";
 import { SelectString } from "../../components/select-string";
 
 type FormsData = {
@@ -179,7 +179,7 @@ export function RecipiesEdit() {
         options={MealTypes}
         required
         capitalise
-        onChange={meal => setRecipie({ ...recipie, meal: meal as any })}
+        onChange={meal => setRecipie({ ...recipie, meal: meal as MealType })}
       />
 
       <IngredientsView

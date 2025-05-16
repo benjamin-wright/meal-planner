@@ -17,7 +17,7 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
 
   useEffect(() => {
     let changed = false;
-    let keys = Object.keys(expanded);
+    const keys = Object.keys(expanded);
 
     keys.forEach(category => {
       if (!active.includes(category)) {
