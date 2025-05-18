@@ -1,6 +1,6 @@
 const NUMBER_REGEX = /^[0-9]+(\.[0-9]+)?$/;
 
-export function ParseNumber(value: string): number {
+export function parseNumber(value: string): number {
   if (value === "") {
     throw new Error("Value is empty");
   }
@@ -21,7 +21,7 @@ export function ParseNumber(value: string): number {
   return parsed;
 }
 
-export function FixJSRounding(value: number): number {
+export function fixJSRounding(value: number): number {
   if (value === 0) {
     return 0;
   }
@@ -50,4 +50,9 @@ export function FixJSRounding(value: number): number {
   }
 
   return Math.round(value * Math.pow(10, count)) / Math.pow(10, count);
+}
+
+export function round(value: number, precision: number): number {
+  const factor = Math.pow(10, precision);
+  return Math.round(value * factor) / factor;
 }

@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import { StepsView } from "./components/steps-view";
 import { IngredientDialog } from "./components/ingredient-dialog";
 import { Ingredient } from "../../../models/ingredients";
-import { MealType, MealTypes } from "../../../models/meals";
+import { MealType } from "../../../models/meals";
 import { SelectString } from "../../components/select-string";
 
 type FormsData = {
@@ -26,7 +26,7 @@ export function RecipiesEdit() {
   const params = useParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [], meal: "dinner" });
+  const [recipie, setRecipie] = useState<Recipie>({ id: 0, name: "", description: "", serves: 1, time: 1, ingredients: [], steps: [], meal: MealType.Dinner });
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const navigate = useNavigate();
@@ -176,7 +176,7 @@ export function RecipiesEdit() {
         id="meal"
         label="meal"
         value={recipie.meal}
-        options={MealTypes}
+        options={Object.values(MealType)}
         required
         capitalise
         onChange={meal => setRecipie({ ...recipie, meal: meal as MealType })}

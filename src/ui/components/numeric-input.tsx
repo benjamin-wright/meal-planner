@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ParseNumber } from "../../utils/number";
+import { parseNumber } from "../../utils/number";
 
 interface NumericInputProps {
   id?: string;
@@ -43,7 +43,7 @@ export function NumericInput({
   function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setText(e.target.value);
     try {
-      const parsed = ParseNumber(e.target.value);
+      const parsed = parseNumber(e.target.value);
       setError("");
       onChange(parsed);
     } catch (err) {

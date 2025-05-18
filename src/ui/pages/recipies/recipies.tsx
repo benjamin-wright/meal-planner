@@ -7,7 +7,7 @@ import { ConfirmDialog } from "../../components/confirm-dialog";
 import { useContext, useEffect, useState } from "react";
 import { Recipie } from "../../../models/recipies";
 import { DBContext } from "../../providers/database";
-import { MealTypes, MealType } from "../../../models/meals";
+import { MealType } from "../../../models/meals";
 
 export function Recipies() {
   const { recipieStore } = useContext(DBContext);
@@ -47,7 +47,7 @@ export function Recipies() {
       variant="fullWidth"
     >
       <Tab label="All" value="all" sx={{ textTransform: "uppercase" }} />
-      {MealTypes.map(type => (
+      {Object.values(MealType).map(type => (
         <Tab key={type} label={type} value={type} sx={{ textTransform: "uppercase" }} />
       ))}
     </Tabs>

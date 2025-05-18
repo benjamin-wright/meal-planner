@@ -1,5 +1,5 @@
 import { Box, MenuItem, Select, Typography } from "@mui/material";
-import { Magnitude, Unit } from "../../../models/units";
+import { Magnitude, Unit, pickMagnitude, toMagnitude, fromMagnitude } from "../../../models/units";
 import { NumericInput } from "../numeric-input";
 import { useEffect, useState } from "react";
 
@@ -12,10 +12,10 @@ interface MagnitudeInputProps {
 }
 
 export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeInputProps) {
-  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.pickMagnitude(value));
+  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(pickMagnitude(unit, value));
   
   useEffect(() => {
-    const selectedMagnitude = unit.pickMagnitude(value); 
+    const selectedMagnitude = pickMagnitude(unit, value); 
     setSelectedMagnitude(selectedMagnitude);
   }, [unit]);
 
@@ -30,8 +30,8 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
       <NumericInput
         id={id}
         label={label}
-        value={unit.toMagnitude(value, selectedMagnitude)}
-        onChange={(value) => onChange(unit.fromMagnitude(value, selectedMagnitude))}
+        value={toMagnitude(unit, value, selectedMagnitude)}
+        onChange={(value) => onChange(fromMagnitude(unit, value, selectedMagnitude))}
       />
       {unit.magnitudes.length > 1 && (
         <Select
@@ -50,7 +50,7 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
         >
           {unit.magnitudes.map((magnitude) => (
             <MenuItem key={magnitude.singular} value={magnitude.singular}>
-              {unit.toMagnitude(value, magnitude) === 1 ? magnitude.singular : magnitude.plural}
+              {toMagnitude(unit, value, magnitude) === 1 ? magnitude.singular : magnitude.plural}
             </MenuItem>
           ))}
         </Select>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Unit, UnitType } from './units';
+import { UnitType, validate, sanitize } from './units';
 
 const validCounts = [
   {
@@ -255,7 +255,7 @@ describe('units', () => {
     describe('valid counts', () => {
       validCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.from(unit).validate()).toBe(true);
+          expect(validate(unit)).toBe(true);
         });
       });
     });
@@ -263,7 +263,7 @@ describe('units', () => {
     describe('invalid counts', () => {
       invalidCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.from(unit).validate()).toBe(false);
+          expect(validate(unit)).toBe(false);
         });
       });
     });
@@ -271,7 +271,7 @@ describe('units', () => {
     describe('valid magnitudes', () => {
       validMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.from(unit).validate()).toBe(true);
+          expect(validate(unit)).toBe(true);
         });
       });
     });
@@ -279,9 +279,73 @@ describe('units', () => {
     describe('invalid magnitudes', () => {
       invalidMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.from(unit).validate()).toBe(false);
+          expect(validate(unit)).toBe(false);
         });
       });
+    });
+  });
+
+  describe('sanitize', () => {
+    it('passes a valid unit unchanged', () => {
+      const unit = {
+        id: 1,
+        name: 'litre',
+        type: UnitType.Volume,
+        base: 1,
+        magnitudes: [
+          { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' }
+        ],
+        collectives: [],
+      };
+
+      expect(sanitize(unit)).toEqual(unit);
+    });
+
+    it('fills in missing fields for magnitude', () => {
+      const unit = {
+        magnitudes: [{}]
+      };
+      const sanitizedUnit = {
+        id: 0,
+        name: '',
+        type: UnitType.Count,
+        base: 1,
+        magnitudes: [
+          { singular: '', plural: '', multiplier: 1, abbrev: '' }
+        ],
+        collectives: [],
+      };
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
+    });
+
+    it('fills in missing fields for collective', () => {
+      const unit = {
+        collectives: [{}]
+      };
+      const sanitizedUnit = {
+        id: 0,
+        name: '',
+        type: UnitType.Count,
+        base: 1,
+        magnitudes: [], 
+        collectives: [
+          { singular: '', plural: '', multiplier: 1 }
+        ],
+      };
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
+    });
+
+    it('initialises an empty object', () => {
+      const unit = {};
+      const sanitizedUnit = {
+        id: 0,
+        name: '',
+        type: UnitType.Count,
+        base: 1,
+        magnitudes: [],
+        collectives: [],
+      };
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
   });
 });

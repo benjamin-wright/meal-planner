@@ -1,4 +1,4 @@
-import { Collective, UnitProps, Magnitude, Unit, UnitType } from "../../models/units";
+import { Collective, Magnitude, Unit, UnitType } from "../../models/units";
 import { UnitStore } from "../interfaces/units";
 import { TypedDB } from "./typed-db";
 
@@ -18,18 +18,15 @@ export class Units implements UnitStore {
   }
 
   async get(id: number): Promise<Unit> {
-    const data = await this.db.get<UnitProps>(TABLE_NAME, id);
-    return Unit.from(data);
+    return this.db.get<Unit>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Unit[]> {
-    const data = await this.db.getAll<UnitProps>(TABLE_NAME);
-    return data.map((item) => Unit.from(item));
+    return this.db.getAll<Unit>(TABLE_NAME);
   }
 
   async getAllByType(type: UnitType): Promise<Unit[]> {
-    const data = await this.db.getByIndex<UnitProps, "type">(TABLE_NAME, "type", type);
-    return data.map((item) => Unit.from(item));
+    return this.db.getByIndex<Unit, "type">(TABLE_NAME, "type", type);
   }
 
   async add(name: string, type: UnitType, magnitudes?: Magnitude[], collectives?: Collective[], base?: number): Promise<number> {

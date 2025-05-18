@@ -1,5 +1,11 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.1
+
+Enhancements:
+
+- [#51](https://github.com/benjamin-wright/meal-planner/issues/51) - Check restored data objects and default unset fields
+
 ## Version 1.1.0
 
 Enhancements:
@@ -7,7 +13,7 @@ Enhancements:
 - [#26](https://github.com/benjamin-wright/meal-planner/issues/26) - Add support for meal categories in the planner
 - [#48](https://github.com/benjamin-wright/meal-planner/issues/48) - Made a start on factoring out business logic
 - [#24](https://github.com/benjamin-wright/meal-planner/issues/24) - Adding undo and redo logic to the list page
-- [#36](https://github.com/benjamin-wright/meal-planner/issues/36) - Added 2-second delay before moving checked items to "got" category
+- [#25](https://github.com/benjamin-wright/meal-planner/issues/25) - Added 2-second delay before moving checked items to "got" category
 
 ## Version 1.0.8
 
