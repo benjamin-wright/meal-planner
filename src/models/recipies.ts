@@ -21,7 +21,7 @@ export type Recipie = {
 export namespace Recipie {
   export function sanitize(value: unknown): Recipie {
     if (!isObject(value)) {
-      return { id: 0, name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], meal: "breakfast" };
+      return { id: 0, name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], meal: MealType.Dinner };
     }
 
     return {

@@ -1,7 +1,7 @@
-import { Settings } from "../../models/settings";
+import { settings } from "../../models/settings";
 
 export interface SettingsStore {
-  get(): Promise<Settings>;
-  put(value: Settings): Promise<void>;
+  get(): Promise<settings>;
+  put(value: settings): Promise<void>;
   clear(): Promise<void>;
 }

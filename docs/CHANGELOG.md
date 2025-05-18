@@ -1,5 +1,11 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.1
+
+Enhancements:
+
+- [#51](https://github.com/benjamin-wright/meal-planner/issues/51) - Check restored data objects and default unset fields
+
 ## Version 1.1.0
 
 Enhancements:

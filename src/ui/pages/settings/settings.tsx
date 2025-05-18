@@ -13,7 +13,7 @@ import Accordion from "@mui/material/Accordion";
 import { AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Unit, UnitType } from "../../../models/units";
-import { Settings } from "../../../models/settings";
+import { settings } from "../../../models/settings";
 import { SelectID } from "../../components/select-id";
 import { useForms } from "../../providers/forms";
 import { DBFlags } from "../../../persistence/db-flags";
@@ -69,7 +69,7 @@ export function Settings({ version }: SettingsProps) {
   const { setMessage, setError } = useContext(AlertContext);
   const [weightUnits, setWeightUnits] = useState<Unit[]>([]);
   const [volumeUnits, setVolumeUnits] = useState<Unit[]>([]);
-  const [settings, setSettings] = useState<Settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const { formsResult, pushForm } = useForms("settings");
 
   useEffect(() => {
