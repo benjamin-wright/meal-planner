@@ -1,4 +1,4 @@
-import { settings } from "../../models/settings";
+import { Settings } from "../../models/settings";
 import { SettingsStore } from "../interfaces/settings";
 import { TypedDB } from "./typed-db";
 
@@ -8,7 +8,7 @@ export function settingsV1(db: IDBDatabase) {
   db.createObjectStore(TABLE_NAME, { keyPath: "id" });
 }
 
-type storedSettings = settings &{
+type storedSettings = Settings &{
   id: number;
 }
 
@@ -19,7 +19,7 @@ export class Settings implements SettingsStore {
     this.db = db;
   }
 
-  async get(): Promise<settings> {
+  async get(): Promise<Settings> {
     const stored = await this.db.get<storedSettings>(TABLE_NAME, 1);
     return {
       preferredWeightUnit: stored.preferredWeightUnit,
@@ -27,7 +27,7 @@ export class Settings implements SettingsStore {
     }
   }
 
-  async put(value: settings): Promise<void> {
+  async put(value: Settings): Promise<void> {
     return this.db.put(TABLE_NAME, {id: 1, ...value});
   }
 

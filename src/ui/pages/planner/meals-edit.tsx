@@ -3,12 +3,12 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import { Meal, MealDay, MealDays, MealProps, MealType, MealTypes } from "../../../models/meals";
+import { Meal, MealDay, MealProps, MealType } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
-import { UnitType } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
@@ -29,10 +29,10 @@ export function MealsEdit() {
     id: 0,
     recipieId: 0,
     servings: 2,
-    meal: search.get("type") as MealType || "dinner",
+    meal: search.get("type") as MealType || MealType.Dinner,
     days: search.has("day") ? [search.get("day") as MealDay] : []
   });
-  const [available, setAvailable] = useState<MealDay[]>(MealDays);
+  const [available, setAvailable] = useState<MealDay[]>(Object.values(MealDay));
   const [recipies, setRecipies] = useState<Recipie[]>([]);
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
@@ -46,7 +46,7 @@ export function MealsEdit() {
 
     const meals = await mealStore.getAll();
     const days = meals.filter((meal) => meal.id.toString() !== params.meal).map((meal) => meal.days).flat();
-    setAvailable(MealDays.filter((day) => !days.includes(day)));
+    setAvailable(Object.values(MealDay).filter((day) => !days.includes(day)));
 
     const recipies = await recipieStore.getAll();
     setRecipies(recipies);
@@ -134,7 +134,7 @@ export function MealsEdit() {
 
       return {
         name: ingredientData.name,
-        quantity: unit.format(finalQuantity, { abbr: true })
+        quantity: Unit.format(unit, finalQuantity, { abbr: true })
       };
     })));
 
@@ -160,7 +160,7 @@ export function MealsEdit() {
 
         navigate(`${returnTo}?tab=${meal.meal}`);
       }}
-      disabled={!Meal.from(meal).validate()}
+      disabled={!Meal.validate(meal)}
     >
       <SelectID
         id="recipie"
@@ -185,7 +185,7 @@ export function MealsEdit() {
         label="Meal"
         capitalise
         value={meal.meal}
-        options={MealTypes}
+        options={Object.values(MealType)}
         onChange={(value) => {
           setMeal({ ...meal, meal: value as MealType, recipieId: recipies.find((recipie) => recipie.meal === value)?.id || 0 });
         }}

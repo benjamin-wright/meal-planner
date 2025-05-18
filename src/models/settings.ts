@@ -1,4 +1,4 @@
-export type settings = {
+export type Settings = {
   preferredWeightUnit: number;
   preferredVolumeUnit: number;
 }

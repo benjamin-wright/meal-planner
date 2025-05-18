@@ -12,10 +12,10 @@ interface CollectiveInputProps {
 }
 
 export function CollectiveInput({id, label, unit, value, onChange}: CollectiveInputProps) {
-  const [ selectedCollective, setSelectedCollective ] = useState<Collective>(unit.pickCollective(value));
+  const [ selectedCollective, setSelectedCollective ] = useState<Collective>(Unit.pickCollective(unit, value));
 
   useEffect(() => {
-    const selectedCollective = unit.pickCollective(value); 
+    const selectedCollective = Unit.pickCollective(unit, value); 
     setSelectedCollective(selectedCollective);
   }, [unit]);
   
@@ -27,8 +27,8 @@ export function CollectiveInput({id, label, unit, value, onChange}: CollectiveIn
     <NumericInput
       id={id}
       label={label}
-      value={unit.toCollective(value, selectedCollective)}
-      onChange={(value) => onChange(unit.fromCollective(value, selectedCollective))}
+      value={Unit.toCollective(unit, value, selectedCollective)}
+      onChange={(value) => onChange(Unit.fromCollective(unit, value, selectedCollective))}
     />
     { 
       unit.collectives.length > 1 && 
@@ -49,7 +49,7 @@ export function CollectiveInput({id, label, unit, value, onChange}: CollectiveIn
         {
           unit.collectives.map((collective) => 
             <MenuItem key={collective.singular} value={collective.singular}>
-              { unit.toCollective(value, collective) === 1 ? collective.singular : collective.plural }
+              { Unit.toCollective(unit, value, collective) === 1 ? collective.singular : collective.plural }
             </MenuItem>
           )
         }

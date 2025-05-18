@@ -9,7 +9,7 @@ import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { settings } from "../../../models/settings";
+import { Settings } from "../../../models/settings";
 
 export function Units() {
   const { unitStore, settingStore } = useContext(DBContext);
@@ -17,7 +17,7 @@ export function Units() {
 
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
   const [units, setUnits] = useState<Unit[]>([]);
-  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
+  const [settings, setSettings] = useState<Settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
   const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Unit | null>(null);
   const navigate = useNavigate();

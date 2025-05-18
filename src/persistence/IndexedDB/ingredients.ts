@@ -19,7 +19,12 @@ type IndexedIngredient = {
 }
 
 function toIngredient(data: IndexedIngredient): Ingredient {
-  return new Ingredient(data.id, data.name, data.category, data.edible === 1);
+  return {
+    id: data.id,
+    name: data.name,
+    category: data.category,
+    edible: data.edible === 1,
+  };
 }
 
 export class Ingredients implements IngredientStore {

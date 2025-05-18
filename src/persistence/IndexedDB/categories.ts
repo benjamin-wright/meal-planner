@@ -1,4 +1,4 @@
-import { Category } from "../../models/categories";
+import { Category, CategoryProps } from "../../models/categories";
 import { CategoryStore } from "../interfaces/categories";
 import { TypedDB } from "./typed-db";
 
@@ -17,22 +17,20 @@ export class Categories implements CategoryStore {
   }
 
   async get(id: number): Promise<Category> {
-    return this.db.get<Category>(TABLE_NAME, id);
+    return this.db.get<CategoryProps>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Category[]> {
-    const data = this.db.getAll<Category>(TABLE_NAME);
-    return data.then((categories) => {
-      categories.sort((a, b) => a.order - b.order);
-      return categories;
-    });
+    const categories = await this.db.getAll<CategoryProps>(TABLE_NAME);
+    return categories
+      .sort((a, b) => a.order - b.order);
   }
 
   async add(name: string, order: number): Promise<number> {
     return this.db.add(TABLE_NAME, { name, order });
   }
 
-  async put(value: Category): Promise<void> {
+  async put(value: CategoryProps): Promise<void> {
     return this.db.put(TABLE_NAME, value);
   }
 

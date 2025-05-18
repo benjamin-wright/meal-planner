@@ -2,7 +2,7 @@ import { Category } from "../models/categories";
 import { Ingredient } from "../models/ingredients";
 import { Meal } from "../models/meals";
 import { Recipie } from "../models/recipies";
-import { UnitProps } from "../models/units";
+import { Unit } from "../models/units";
 import { CategoryStore } from "./interfaces/categories";
 import { IngredientStore } from "./interfaces/ingredients";
 import { MealStore } from "./interfaces/meals";
@@ -17,12 +17,12 @@ import { ExtraStore } from "./interfaces/extras";
 
 export type ExportedData = {
   version: number;
-  units?: UnitProps[];
-  categories?: Category[];
-  ingredients?: Ingredient[];
-  recipies?: Recipie[];
-  meals?: Meal[];
-  extra?: Extra[];
+  units?: unknown[];
+  categories?: unknown[];
+  ingredients?: unknown[];
+  recipies?: unknown[];
+  meals?: unknown[];
+  extra?: unknown[];
   settings?: settings;
 };
 
@@ -62,7 +62,7 @@ async function loadDataFile(
   await units.clear();
   if (data.units) {
     for (let i = 0; i < data.units.length; i++) {
-      await units.put(data.units[i]);
+      await units.put(Unit.sanitize(data.units[i]));
     }
   }
 
@@ -70,7 +70,7 @@ async function loadDataFile(
   await categories.clear();
   if (data.categories) {
     for (let i = 0; i < data.categories.length; i++) {
-      await categories.put(data.categories[i]);
+      await categories.put(Category.sanitize(data.categories[i]));
     }
   }
 
@@ -78,7 +78,7 @@ async function loadDataFile(
   await ingredients.clear();
   if (data.ingredients) {
     for (let i = 0; i < data.ingredients.length; i++) {
-      await ingredients.put(data.ingredients[i]);
+      await ingredients.put(Ingredient.sanitize(data.ingredients[i]));
     }
   }
 
@@ -86,7 +86,7 @@ async function loadDataFile(
   await recipies.clear();
   if (data.recipies) {
     for (let i = 0; i < data.recipies.length; i++) {
-      await recipies.put(data.recipies[i]);
+      await recipies.put(Recipie.sanitize(data.recipies[i]));
     }
   }
 
@@ -94,7 +94,7 @@ async function loadDataFile(
   await meals.clear();
   if (data.meals) {
     for (let i = 0; i < data.meals.length; i++) {
-      await meals.put(data.meals[i]);
+      await meals.put(Meal.sanitize(data.meals[i]));
     }
   }
 
@@ -102,7 +102,7 @@ async function loadDataFile(
   await extra.clear();
   if (data.extra) {
     for (let i = 0; i < data.extra.length; i++) {
-      await extra.put(data.extra[i]);
+      await extra.put(Extra.sanitize(data.extra[i]));
     }
   }
 

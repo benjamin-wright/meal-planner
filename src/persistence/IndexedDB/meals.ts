@@ -17,13 +17,11 @@ export class Meals implements MealStore {
   }
 
   async get(id: number): Promise<Meal> {
-    const meal = await this.db.get<MealProps>(TABLE_NAME, id);
-    return Meal.from(meal);
+    return this.db.get<MealProps>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Meal[]> {
-    const meals = await this.db.getAll<Meal>(TABLE_NAME);
-    return meals.map(Meal.from);
+    return this.db.getAll<Meal>(TABLE_NAME);
   }
 
   async add(recipieId: number, servings: number, meal: MealType, days: MealDay[]): Promise<number> {

@@ -12,10 +12,10 @@ interface MagnitudeInputProps {
 }
 
 export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeInputProps) {
-  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(unit.pickMagnitude(value));
+  const [selectedMagnitude, setSelectedMagnitude] = useState<Magnitude>(Unit.pickMagnitude(unit, value));
   
   useEffect(() => {
-    const selectedMagnitude = unit.pickMagnitude(value); 
+    const selectedMagnitude = Unit.pickMagnitude(unit, value); 
     setSelectedMagnitude(selectedMagnitude);
   }, [unit]);
 
@@ -30,8 +30,8 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
       <NumericInput
         id={id}
         label={label}
-        value={unit.toMagnitude(value, selectedMagnitude)}
-        onChange={(value) => onChange(unit.fromMagnitude(value, selectedMagnitude))}
+        value={Unit.toMagnitude(unit, value, selectedMagnitude)}
+        onChange={(value) => onChange(Unit.fromMagnitude(unit, value, selectedMagnitude))}
       />
       {unit.magnitudes.length > 1 && (
         <Select
@@ -50,7 +50,7 @@ export function MagnitudeInput({ id, label, unit, value, onChange }: MagnitudeIn
         >
           {unit.magnitudes.map((magnitude) => (
             <MenuItem key={magnitude.singular} value={magnitude.singular}>
-              {unit.toMagnitude(value, magnitude) === 1 ? magnitude.singular : magnitude.plural}
+              {Unit.toMagnitude(unit, value, magnitude) === 1 ? magnitude.singular : magnitude.plural}
             </MenuItem>
           ))}
         </Select>

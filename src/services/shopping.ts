@@ -85,7 +85,7 @@ export async function getShoppingListItems({
       id: item.id,
       name: item.name,
       category: category.name,
-      quantity: unit.format(item.quantity, { abbr: true }),
+      quantity: Unit.format(unit, item.quantity, { abbr: true }),
       got: item.got,
       pending: false
     });

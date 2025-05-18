@@ -2,7 +2,7 @@ import { Box, Card, Tab, Tabs } from "@mui/material";
 import { Page } from "../../components/page";
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
-import { Meal, MealDay, MealDays } from "../../../models/meals";
+import { Meal, MealDay, MealType } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { FloatingAddButton } from "../../components/floating-add-button";
 import { DetailViewGroup } from "../../components/detail-view";
@@ -39,11 +39,13 @@ function mapExtraToItem(extra: Extra | undefined, index: number, ingredients: In
     };
   }
 
+  const unit = units.find((unit) => unit.id === extra.unit);
+
   return {
     id: extra.id,
     index: index,
     name: ingredients.find((ingredient) => ingredient.id === extra.ingredient)?.name || "",
-    quantity: units.find((unit) => unit.id === extra.unit)?.format(extra.quantity, { abbr: true }) || "",
+    quantity: unit ? Unit.format(unit, extra.quantity, { abbr: true }) : "",
   };
 }
 
@@ -74,14 +76,14 @@ export function Planner() {
     const meals = await mealStore.getAll();
     const extras = await extraStore.getAll();
 
-    const dinners = MealDays.map((day, index) => {
-      const meal = meals.find((meal) => meal.meal === "dinner" && meal.days.includes(day))
+    const dinners = Object.values(MealDay).map((day, index) => {
+      const meal = meals.find((meal) => meal.meal === MealType.Dinner && meal.days.includes(day))
       return mapMealToItem(meal, index, day, recipies);
     });
     setDinners(dinners);
 
-    setLunches(meals.filter((meal) => meal.meal === "lunch").map((meal, index) => mapMealToItem(meal, index, "saturday", recipies)));
-    setBreakfasts(meals.filter((meal) => meal.meal === "breakfast").map((meal, index) => mapMealToItem(meal, index, "saturday", recipies)));
+    setLunches(meals.filter((meal) => meal.meal === MealType.Lunch).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies)));
+    setBreakfasts(meals.filter((meal) => meal.meal === MealType.Breakfast).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies)));
     setExtras(extras.map((extra, index) => mapExtraToItem(extra, index, ingredients, units)));
   }
 
@@ -111,7 +113,7 @@ export function Planner() {
     }
 
     const reordered = newDinners.map((meal, index) => {
-      meal.day = MealDays[index];
+      meal.day = Object.values(MealDay)[index];
       return meal;
     });
 
