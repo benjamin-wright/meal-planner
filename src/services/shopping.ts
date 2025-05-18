@@ -1,4 +1,4 @@
-import { Unit, UnitType } from "../models/units";
+import { Unit, UnitType, format as formatUnit } from "../models/units";
 import { CategoryStore } from "../persistence/interfaces/categories";
 import { SettingsStore } from "../persistence/interfaces/settings";
 import { ShoppingItemStore } from "../persistence/interfaces/shopping-item";
@@ -85,7 +85,7 @@ export async function getShoppingListItems({
       id: item.id,
       name: item.name,
       category: category.name,
-      quantity: Unit.format(unit, item.quantity, { abbr: true }),
+      quantity: formatUnit(unit, item.quantity, { abbr: true }),
       got: item.got,
       pending: false
     });

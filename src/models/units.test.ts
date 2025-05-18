@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Unit, UnitType } from './units';
+import { UnitType, validate, sanitize } from './units';
 
 const validCounts = [
   {
@@ -255,7 +255,7 @@ describe('units', () => {
     describe('valid counts', () => {
       validCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(true);
+          expect(validate(unit)).toBe(true);
         });
       });
     });
@@ -263,7 +263,7 @@ describe('units', () => {
     describe('invalid counts', () => {
       invalidCounts.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(false);
+          expect(validate(unit)).toBe(false);
         });
       });
     });
@@ -271,7 +271,7 @@ describe('units', () => {
     describe('valid magnitudes', () => {
       validMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(true);
+          expect(validate(unit)).toBe(true);
         });
       });
     });
@@ -279,7 +279,7 @@ describe('units', () => {
     describe('invalid magnitudes', () => {
       invalidMagnitudes.forEach(unit => {
         it(unit.name, () => {
-          expect(Unit.validate(unit)).toBe(false);
+          expect(validate(unit)).toBe(false);
         });
       });
     });
@@ -298,7 +298,7 @@ describe('units', () => {
         collectives: [],
       };
 
-      expect(Unit.sanitize(unit)).toEqual(unit);
+      expect(sanitize(unit)).toEqual(unit);
     });
 
     it('fills in missing fields for magnitude', () => {
@@ -315,7 +315,7 @@ describe('units', () => {
         ],
         collectives: [],
       };
-      expect(Unit.sanitize(unit)).toEqual(sanitizedUnit);
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
 
     it('fills in missing fields for collective', () => {
@@ -332,7 +332,7 @@ describe('units', () => {
           { singular: '', plural: '', multiplier: 1 }
         ],
       };
-      expect(Unit.sanitize(unit)).toEqual(sanitizedUnit);
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
 
     it('initialises an empty object', () => {
@@ -345,7 +345,7 @@ describe('units', () => {
         magnitudes: [],
         collectives: [],
       };
-      expect(Unit.sanitize(unit)).toEqual(sanitizedUnit);
+      expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
   });
 });

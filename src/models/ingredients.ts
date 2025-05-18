@@ -7,17 +7,15 @@ export type Ingredient = {
   edible: boolean;
 };
 
-export namespace Ingredient {
-  export function sanitize(value: unknown): Ingredient {
-    if (!isObject(value)) {
-      return { id: 0, name: "", category: 0, edible: true };
-    }
-
-    return {
-      id: defaultNumber(value["id"], 0),
-      name: defaultString(value["name"], ""),
-      category: defaultNumber(value["category"], 0),
-      edible: defaultBoolean(value["edible"], true),
-    };
+export function sanitize(value: unknown): Ingredient {
+  if (!isObject(value)) {
+    return { id: 0, name: "", category: 0, edible: true };
   }
+
+  return {
+    id: defaultNumber(value["id"], 0),
+    name: defaultString(value["name"], ""),
+    category: defaultNumber(value["category"], 0),
+    edible: defaultBoolean(value["edible"], true),
+  };
 }

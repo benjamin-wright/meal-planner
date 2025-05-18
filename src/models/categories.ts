@@ -12,16 +12,14 @@ export type Category = {
   order: number;
 }
 
-export namespace Category {
-  export function sanitize(value: unknown): Category {
-    if (!isObject(value)) {
-      return {id: 0, name: "", order: 0};
-    }
-
-    return {
-      id: defaultNumber(value.id, 0),
-      name: defaultString(value.name, ""),
-      order: defaultNumber(value.order, 0),
-    };
+export function sanitize(value: unknown): Category {
+  if (!isObject(value)) {
+    return {id: 0, name: "", order: 0};
   }
+
+  return {
+    id: defaultNumber(value.id, 0),
+    name: defaultString(value.name, ""),
+    order: defaultNumber(value.order, 0),
+  };
 }

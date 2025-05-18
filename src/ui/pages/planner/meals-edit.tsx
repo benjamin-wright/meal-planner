@@ -3,12 +3,12 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import { Meal, MealDay, MealProps, MealType } from "../../../models/meals";
+import { Meal, MealDay, MealProps, MealType, validate } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
-import { Unit, UnitType } from "../../../models/units";
+import { UnitType, format } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 type IngredientItem = {
@@ -134,7 +134,7 @@ export function MealsEdit() {
 
       return {
         name: ingredientData.name,
-        quantity: Unit.format(unit, finalQuantity, { abbr: true })
+        quantity: format(unit, finalQuantity, { abbr: true })
       };
     })));
 
@@ -160,7 +160,7 @@ export function MealsEdit() {
 
         navigate(`${returnTo}?tab=${meal.meal}`);
       }}
-      disabled={!Meal.validate(meal)}
+      disabled={!validate(meal)}
     >
       <SelectID
         id="recipie"

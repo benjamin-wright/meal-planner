@@ -16,7 +16,7 @@ import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingClearButton } from "../../components/floating-clear-button";
 import { Extra } from "../../../models/extras";
 import { Ingredient } from "../../../models/ingredients";
-import { Unit } from "../../../models/units";
+import { Unit, format as formatUnit } from "../../../models/units";
 import { ExtraItemView } from "./components/extra-item-view";
 
 function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, recipies: Recipie[]): MealItem {
@@ -45,7 +45,7 @@ function mapExtraToItem(extra: Extra | undefined, index: number, ingredients: In
     id: extra.id,
     index: index,
     name: ingredients.find((ingredient) => ingredient.id === extra.ingredient)?.name || "",
-    quantity: unit ? Unit.format(unit, extra.quantity, { abbr: true }) : "",
+    quantity: unit ? formatUnit(unit, extra.quantity, { abbr: true }) : "",
   };
 }
 

@@ -32,34 +32,32 @@ export type Meal = {
   days: MealDay[];
 }
 
-export namespace Meal {
-  export function validate(meal: Meal): boolean {
-    if (meal.recipieId <= 0) {
-      return false;
-    }
-
-    if (meal.servings <= 0) {
-      return false;
-    }
-
-    if (meal.meal === MealType.Dinner && meal.days.length === 0) {
-      return false;
-    }
-
-    return true;
+export function validate(meal: Meal): boolean {
+  if (meal.recipieId <= 0) {
+    return false;
   }
 
-  export function sanitize(value: unknown): Meal {
-    if (!isObject(value)) {
-      return { id: 0, recipieId: 0, servings: 0, meal: MealType.Dinner, days: [] };
-    }
-
-    return {
-      id: defaultNumber(value.id, 0),
-      recipieId: defaultNumber(value.recipieId, 0),
-      servings: defaultNumber(value.servings, 0),
-      meal: defaultType<MealType>(value.meal, MealType.Dinner),
-      days: defaultArray<MealDay>(value.days, day => defaultString(day, MealDay.Saturday) as MealDay),
-    }
+  if (meal.servings <= 0) {
+    return false;
   }
-};
+
+  if (meal.meal === MealType.Dinner && meal.days.length === 0) {
+    return false;
+  }
+
+  return true;
+}
+
+export function sanitize(value: unknown): Meal {
+  if (!isObject(value)) {
+    return { id: 0, recipieId: 0, servings: 0, meal: MealType.Dinner, days: [] };
+  }
+
+  return {
+    id: defaultNumber(value.id, 0),
+    recipieId: defaultNumber(value.recipieId, 0),
+    servings: defaultNumber(value.servings, 0),
+    meal: defaultType<MealType>(value.meal, MealType.Dinner),
+    days: defaultArray<MealDay>(value.days, day => defaultString(day, MealDay.Saturday) as MealDay),
+  }
+}

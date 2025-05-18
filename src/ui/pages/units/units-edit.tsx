@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Unit, UnitType } from "../../../models/units";
+import { Unit, UnitType, sanitize, parseType, validate } from "../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
@@ -17,7 +17,7 @@ export function UnitsEdit() {
   const [search] = useSearchParams();
 
   const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>(Unit.sanitize({}));
+  const [unit, setUnit] = useState<Unit>(sanitize({}));
   const navigate = useNavigate();
 
   const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
@@ -34,7 +34,7 @@ export function UnitsEdit() {
       return;
     }
 
-    const type = Unit.parseType(search.get("type") || "");
+    const type = parseType(search.get("type") || "");
     if (type) {
       setUnit({ ...unit, type });
     }
@@ -58,7 +58,7 @@ export function UnitsEdit() {
     <Form
       title={isNew ? "Units: new" : `Units: ${unit.name}`}
       returnTo={returnTo}
-      disabled={!Unit.validate(unit)}
+      disabled={!validate(unit)}
       onSubmit={async () => {
         let id = unit.id;
 

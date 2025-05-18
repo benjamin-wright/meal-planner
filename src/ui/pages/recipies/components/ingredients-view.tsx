@@ -1,5 +1,5 @@
 import { Card, CardActionArea, Typography } from "@mui/material";
-import { Unit } from "../../../../models/units";
+import { Unit, format as formatUnit } from "../../../../models/units";
 import { OutlinedContainer } from "../../../components/outlined-container";
 import { NewItemButton } from "../../../components/new-item-button";
 import { IngredientQuantity } from "../../../../models/recipies";
@@ -23,7 +23,7 @@ export function IngredientsView({ ingredients, units, quantities, disabled, onEd
         return { name: "unknown", amount: `${quantity.quantity}` };
       }
 
-      const amount = Unit.format(unit, quantity.quantity, {abbr: true});
+      const amount = formatUnit(unit, quantity.quantity, {abbr: true});
       return { name: ingredient.name, amount, unit };
     }).map((quantity, index) =>
       <Card key={index} sx={{ display: "flex", flexDirection: "row", overflowX: "hidden" }}>
