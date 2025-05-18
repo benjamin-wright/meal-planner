@@ -11,44 +11,68 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { settings } from "../../../models/settings";
 
-export function Units() {
-  const { unitStore, settingStore } = useContext(DBContext);
-  const [search] = useSearchParams();
-
+function useTabs(params: URLSearchParams) {
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
-  const [units, setUnits] = useState<Unit[]>([]);
-  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<Unit | null>(null);
-  const navigate = useNavigate();
 
-  async function load() {
+  useEffect(() => {
+    const type = params.get("type");
+    if (type) {
+      const parsedType = UnitType[type as keyof typeof UnitType];
+      if (parsedType) {
+        setTab(parsedType);
+      }
+    }
+  }, [])
+
+  return { tab, setTab };
+}
+
+function useUnits(tab: UnitType) {
+  const { unitStore } = useContext(DBContext);
+  const [units, setUnits] = useState<Unit[]>([]);
+
+  useEffect(() => {
     if (!unitStore) {
       return;
     }
 
-    const units = await unitStore.getAllByType(tab);
-    setUnits(units);
-
-    const type = UnitType[search.get("type") as keyof typeof UnitType];
-    if (type) {
-      setTab(type);
-    }
-  }
-
-  useEffect(() => {
-    load();
+    (async () => {
+      const units = await unitStore.getAllByType(tab);
+      setUnits(units);
+    })();
   }, [unitStore, tab]);
+
+  return { units, unitStore, setUnits };
+}
+
+function useSettings() {
+  const { settingStore } = useContext(DBContext);
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
 
   useEffect(() => {
     if (!settingStore) {
       return;
     }
 
-    settingStore.get().then((settings) => {
+    (async () => {
+      const settings = await settingStore.get();
       setSettings(settings);
-    });
+    })();
   }, [settingStore]);
+
+  return { settings };
+}
+
+export function Units() {
+  const [search] = useSearchParams();
+
+  const { settings } = useSettings();
+  const { tab, setTab } = useTabs(search);
+  const { units, unitStore, setUnits } = useUnits(tab);
+
+  const [isOpen, setOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<Unit | null>(null);
+  const navigate = useNavigate();
 
   function handleEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
@@ -90,7 +114,7 @@ export function Units() {
         <Tab label={UnitType.Volume} value={UnitType.Volume} />
       </Tabs>
 
-      <DetailViewGroup>
+      <DetailViewGroup flexLayout bottomMargin="6em">
         {units.filter(unit => unit.type === tab).map((unit) => (
           <UnitView key={unit.id} unit={unit} isDefault={isDefault(unit)} onEdit={handleEdit} onDelete={handleDelete} />
         ))}

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Unit, UnitType, sanitize, parseType, validate } from "../../../models/units";
+import { Unit, UnitType, sanitize, parseType, validate, Magnitude, Collective } from "../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
@@ -11,41 +11,78 @@ import { SelectObject } from "../../components/select-object";
 import { NumericInput } from "../../components/numeric-input";
 import { CollectiveEdit } from "./components/collective-edit";
 
+function usePageData(unitId: string | undefined, unitType: string | null): {unit: Unit, isNew: boolean, setUnit: (unit: Unit) => void} {
+  const { unitStore } = useContext(DBContext);
+  const [unit, setUnit] = useState<Unit>(sanitize({}));
+  const [isNew, setIsNew] = useState(true);
+
+  useEffect(() => {
+    if (!unitStore) {
+      return;
+    }
+
+    (async () => {
+      if (unitId) {
+        const unit = await unitStore.get(Number.parseInt(unitId, 10));
+        setUnit(unit);
+        setIsNew(false);
+        return;
+      }
+
+      if (unitType) {
+        const type = parseType(unitType);
+        if (type) {
+          setUnit({ ...unit, type });
+        }
+      }
+    })();
+  }, [unitStore]);
+
+  return { unit, isNew, setUnit };
+}
+
 export function UnitsEdit() {
   const { unitStore } = useContext(DBContext);
   const params = useParams();
   const [search] = useSearchParams();
-
-  const [isNew, setIsNew] = useState(true);
-  const [unit, setUnit] = useState<Unit>(sanitize({}));
+  const { unit, isNew, setUnit } = usePageData(params.unit, search.get("type"));
   const navigate = useNavigate();
-
   const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
 
-  async function load() {
-    if (unitStore === undefined) {
-      return;
+  async function submit() {
+    let id = unit.id;
+
+    if (isNew) {
+      id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.collectives, unit.base) || 0;
+    } else {
+      await unitStore?.put(unit);
     }
 
-    if (params.unit) {
-      const unit = await unitStore.get(Number.parseInt(params.unit, 10));
-      setUnit(unit);
-      setIsNew(false);
-      return;
-    }
+    setFormResult("units", { field: "unit", response: id });
 
-    const type = parseType(search.get("type") || "");
-    if (type) {
-      setUnit({ ...unit, type });
-    }
+    navigate(returnTo);
   }
 
-  useEffect(() => {
-    load();
-  }, [unitStore]);
+  function handleBaseChange(value: number) {
+    unit.base = value;
+    if (value <= 0) {
+      unit.base = 1;
+    }
+    setUnit({ ...unit });
+  }
 
   function handleNewMagnitude() {
     unit.magnitudes.push({ abbrev: "", singular: "", plural: "", multiplier: 1 });
+    setUnit({ ...unit });
+  }
+
+  function handleMagnitudeChange(index: number, magnitude: Magnitude) {
+    unit.magnitudes[index] = magnitude;
+    setUnit({ ...unit });
+  }
+
+  function handleMagnitudeRemove(index: number) {
+    unit.magnitudes.splice(index, 1);
     setUnit({ ...unit });
   }
 
@@ -54,24 +91,22 @@ export function UnitsEdit() {
     setUnit({ ...unit });
   }
 
+  function handleCollectiveChange(index: number, collective: Collective) {
+    unit.collectives[index] = collective;
+    setUnit({ ...unit });
+  }
+
+  function handleCollectiveRemove(index: number) {
+    unit.collectives.splice(index, 1);
+    setUnit({ ...unit });
+  }
+
   return (
     <Form
       title={isNew ? "Units: new" : `Units: ${unit.name}`}
       returnTo={returnTo}
       disabled={!validate(unit)}
-      onSubmit={async () => {
-        let id = unit.id;
-
-        if (isNew) {
-          id = await unitStore?.add(unit.name, unit.type, unit.magnitudes, unit.collectives, unit.base) || 0;
-        } else {
-          await unitStore?.put(unit);
-        }
-
-        setFormResult("units", { field: "unit", response: id });
-
-        navigate(returnTo);
-      }}
+      onSubmit={submit}
     >
       <TextInput
         id="variant"
@@ -98,14 +133,8 @@ export function UnitsEdit() {
             index={index}
             collective={collective}
             multiple={unit.collectives.length > 1}
-            onChange={(c) => {
-              unit.collectives[index] = c;
-              setUnit({ ...unit });
-            }}
-            onRemove={() => {
-              unit.collectives.splice(index, 1);
-              setUnit({ ...unit });
-            }}
+            onChange={(c) => handleCollectiveChange(index, c)}
+            onRemove={() => handleCollectiveRemove(index)}
           />)}
           <NewItemButton onClick={handleNewCollective} />
         </>)
@@ -116,22 +145,16 @@ export function UnitsEdit() {
           required
           info="How many of this unit type's base units (e.g. grams for weight, litres of volume) go into 1 of this unit."
           value={unit.base || 1}
-          onChange={(value) => {
-            unit.base = value;
-            if (value <= 0) {
-              unit.base = 1;
-            }
-            setUnit({ ...unit });
-          }}
+          onChange={handleBaseChange}
         />
         {unit.magnitudes.map((magnitude, index) => (
-          <MagnitudeEdit key={index} index={index} magnitude={magnitude} onChange={(m) => {
-            unit.magnitudes[index] = m;
-            setUnit({ ...unit });
-          }} onRemove={() => {
-            unit.magnitudes.splice(index, 1);
-            setUnit({ ...unit });
-          }} />
+          <MagnitudeEdit
+            key={index}
+            index={index}
+            magnitude={magnitude}
+            onChange={(m) => handleMagnitudeChange(index, m)}
+            onRemove={() => handleMagnitudeRemove(index)}
+          />
         ))}
 
         <NewItemButton onClick={handleNewMagnitude} />
