@@ -9,28 +9,28 @@ import { IconLink } from "./icon-link";
 import Close from "@mui/icons-material/Close";
 import Check from "@mui/icons-material/Check";
 
-interface ConfirmDialogProps {
+interface ConfirmDialogProps<T> {
   message: string;
-  open: boolean;
+  item?: T;
   disableRestoreFocus?: boolean;
-  onConfirm: () => void;
+  onConfirm: (item: T) => void;
   onCancel: () => void;
 }
 
-export function ConfirmDialog({
+export function ConfirmDialog<T>({
   message,
-  open,
+  item,
   disableRestoreFocus,
   onConfirm,
   onCancel,
-}: ConfirmDialogProps) {
+}: ConfirmDialogProps<T>) {
   return (
-    <Dialog open={!!open} disableRestoreFocus={disableRestoreFocus}>
+    <Dialog open={!!item} disableRestoreFocus={disableRestoreFocus}>
       <DialogTitle textAlign="center">{message}</DialogTitle>
       <DialogContent>
         <Typography>Are you sure you want to do this?</Typography>
         <Box display="flex" justifyContent="space-between" marginTop="1em">
-          <IconLink color="success" onClick={onConfirm}>
+          <IconLink color="success" onClick={() => onConfirm(item as T)}>
             <Check />
           </IconLink>
           <IconLink color="error" onClick={onCancel}>

@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { Unit, UnitType } from "../../../models/units";
+import { parseType, Unit, UnitType } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
@@ -17,9 +17,12 @@ function useTabs(params: URLSearchParams) {
   useEffect(() => {
     const type = params.get("type");
     if (type) {
-      const parsedType = UnitType[type as keyof typeof UnitType];
+      const parsedType = parseType(type);
       if (parsedType) {
+        console.info(`Setting tab to '${parsedType}'`);
         setTab(parsedType);
+      } else {
+        console.warn(`Invalid type: '${type}'`);
       }
     }
   }, [])
@@ -42,7 +45,12 @@ function useUnits(tab: UnitType) {
     })();
   }, [unitStore, tab]);
 
-  return { units, unitStore, setUnits };
+  function deleteUnit(unit: Unit): Promise<void> | undefined {
+    setUnits(units.filter((u) => u.id !== unit.id));
+    return unitStore?.delete(unit.id);
+  }
+
+  return { units, unitStore, deleteUnit };
 }
 
 function useSettings() {
@@ -68,10 +76,9 @@ export function Units() {
 
   const { settings } = useSettings();
   const { tab, setTab } = useTabs(search);
-  const { units, unitStore, setUnits } = useUnits(tab);
+  const { units, deleteUnit } = useUnits(tab);
 
-  const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<Unit | null>(null);
+  const [toDelete, setToDelete] = useState<Unit | undefined>();
   const navigate = useNavigate();
 
   function handleEdit(unit: Unit) {
@@ -80,17 +87,11 @@ export function Units() {
 
   function handleDelete(unit: Unit) {
     setToDelete(unit);
-    setOpen(true);
   }
 
-  async function onDelete() {
-    if (toDelete?.id === undefined) {
-      return;
-    }
-
-    await unitStore?.delete(toDelete.id);
-    setOpen(false);
-    setUnits(units.filter((unit) => unit.id !== toDelete.id));
+  async function onDelete(unit: Unit) {
+    await deleteUnit(unit);
+    setToDelete(undefined);
   }
 
   function isDefault(unit: Unit): boolean {
@@ -122,9 +123,9 @@ export function Units() {
       <FloatingAddButton to={`/units/new?type=${tab}`} />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
-        open={isOpen}
+        item={toDelete}
         onConfirm={onDelete}
-        onCancel={() => setOpen(false)}
+        onCancel={() => setToDelete(undefined)}
       />
     </Page>
   );

@@ -15,7 +15,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Unit, UnitType } from "../../../models/units";
 import { settings } from "../../../models/settings";
 import { SelectID } from "../../components/select-id";
-import { useForms } from "../../providers/forms";
+import { FormResult, useForms } from "../../providers/forms";
 import { DBFlags } from "../../../persistence/db-flags";
 
 interface CheckDialogProps {
@@ -61,16 +61,12 @@ interface SettingsProps {
   version: string;
 }
 
-export function Settings({ version }: SettingsProps) {
+function usePageData(formResult?: FormResult) {
   const { db, dbName, unitStore, settingStore } = useContext(DBContext);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [mode, setMode] = useState<"restore" | "reset">("restore");
-  const [backupData, setBackupData] = useState<string | null>(null);
-  const { setMessage, setError } = useContext(AlertContext);
   const [weightUnits, setWeightUnits] = useState<Unit[]>([]);
   const [volumeUnits, setVolumeUnits] = useState<Unit[]>([]);
+  
   const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const { formsResult, pushForm } = useForms("settings");
 
   useEffect(() => {
     (async () => {
@@ -91,8 +87,8 @@ export function Settings({ version }: SettingsProps) {
 
       const settings = await settingStore.get();
 
-      if (formsResult) {
-        const { form, response } = formsResult;
+      if (formResult) {
+        const { form, response } = formResult;
         const type = form.body as UnitType;
 
         if (response) {
@@ -109,7 +105,27 @@ export function Settings({ version }: SettingsProps) {
 
       setSettings(settings);
     })();
-  }, [settingStore, formsResult]);
+  }, [settingStore, formResult]);
+
+  return { db, dbName, weightUnits, volumeUnits, settings, setSettings };
+}
+
+export function Settings({ version }: SettingsProps) {
+  const { settingStore } = useContext(DBContext);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [mode, setMode] = useState<"restore" | "reset">("restore");
+  const [backupData, setBackupData] = useState<string | null>(null);
+  const { setMessage, setError } = useContext(AlertContext);
+  const { formsResult, pushForm } = useForms("settings");
+
+  const {
+    db,
+    dbName,
+    weightUnits,
+    volumeUnits,
+    settings,
+    setSettings,
+  } = usePageData(formsResult);
 
   function backup() {
     if (!db) {

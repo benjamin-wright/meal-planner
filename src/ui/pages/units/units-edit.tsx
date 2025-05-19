@@ -17,6 +17,15 @@ function usePageData(unitId: string | undefined, unitType: string | null): {unit
   const [isNew, setIsNew] = useState(true);
 
   useEffect(() => {
+    if (unitType) {
+      const type = parseType(unitType);
+      if (type) {
+        setUnit({ ...unit, type });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (!unitStore) {
       return;
     }
@@ -28,13 +37,6 @@ function usePageData(unitId: string | undefined, unitType: string | null): {unit
         setIsNew(false);
         return;
       }
-
-      if (unitType) {
-        const type = parseType(unitType);
-        if (type) {
-          setUnit({ ...unit, type });
-        }
-      }
     })();
   }, [unitStore]);
 
@@ -43,11 +45,11 @@ function usePageData(unitId: string | undefined, unitType: string | null): {unit
 
 export function UnitsEdit() {
   const { unitStore } = useContext(DBContext);
+  const navigate = useNavigate();
   const params = useParams();
   const [search] = useSearchParams();
   const { unit, isNew, setUnit } = usePageData(params.unit, search.get("type"));
-  const navigate = useNavigate();
-  const { returnTo, setFormResult } = useForms("units" + (params.unit ? `?type=${unit.type}` : ""));
+  const { returnTo, setFormResult } = useForms(`units?type=${unit.type}`);
 
   async function submit() {
     let id = unit.id;
