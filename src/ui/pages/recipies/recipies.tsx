@@ -21,7 +21,7 @@ function useRecipies() {
     (async () => {
       const recipies = await recipieStore.getAll();
       setRecipies(recipies);
-    });
+    })();
     
   }, [recipieStore]);
 

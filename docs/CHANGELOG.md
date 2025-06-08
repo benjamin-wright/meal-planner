@@ -1,5 +1,12 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.2
+
+Enhancements:
+
+- [#56](https://github.com/benjamin-wright/meal-planner/issues/56) - Visualise the time before an item is moved from pending to got
+- [#54](https://github.com/benjamin-wright/meal-planner/issues/54) - Simplify the dialog control
+
 ## Version 1.1.1
 
 Enhancements:

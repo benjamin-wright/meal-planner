@@ -15,6 +15,11 @@ type ShoppingListToggle = {
   got: boolean;
 }
 
+type DebounceTimes = {
+  startTimestamp?: number;
+  endTimestamp?: number;
+}
+
 const DEBOUNCE_PERIOD = 2000;
 
 export function List() {
@@ -29,6 +34,7 @@ export function List() {
   const [ undo, setUndo ] = useState<ShoppingListToggle[]>([]);
   const [ redo, setRedo ] = useState<ShoppingListToggle[]>([]);
   const [ debounceTimeout, setDebounceTimeout ] = useState<number | undefined>();
+  const [ debounceTimes, setDebounceTimes ] = useState<DebounceTimes>({});
 
   async function fetchItems() {
     if (!settingStore || !categoryStore || !unitStore || !shoppingStore) {
@@ -66,6 +72,7 @@ export function List() {
     if (debounceTimeout) {
       window.clearTimeout(debounceTimeout);
       setDebounceTimeout(undefined);
+      setDebounceTimes({});
     }
     
     await resetShoppingList({
@@ -86,6 +93,11 @@ export function List() {
     if (debounceTimeout) {
       window.clearTimeout(debounceTimeout);
     }
+
+    setDebounceTimes({
+      startTimestamp: Date.now(),
+      endTimestamp: Date.now() + DEBOUNCE_PERIOD
+    });
 
     setDebounceTimeout(window.setTimeout(() => {
       setDebounceTimeout(undefined);
@@ -157,7 +169,14 @@ export function List() {
   return <Page title="List" showNav sx={{
     paddingBottom: "5em",
   }}>
-    <ListView items={items} categories={categories} onCheck={handleCheckItem} onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)} />
+    <ListView
+      items={items}
+      categories={categories}
+      startTimestamp={debounceTimes.startTimestamp}
+      endTimestamp={debounceTimes.endTimestamp}
+      onCheck={handleCheckItem}
+      onEdit={(item: ShoppingViewItem) => navigate(`/list/${item.id}`)}
+    />
     <Backdrop open={speedDial} />
     <SpeedDial
       ariaLabel="ContextMenu"
@@ -207,7 +226,7 @@ export function List() {
       />
     </SpeedDial>
     <ConfirmDialog
-      open={resetPrompt}
+      item={resetPrompt}
       message="Resetting shopping list?"
       disableRestoreFocus
       onConfirm={() => {

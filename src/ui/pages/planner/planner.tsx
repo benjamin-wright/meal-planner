@@ -53,7 +53,6 @@ export function Planner() {
   const { ingredientStore, unitStore, mealStore, recipieStore, extraStore } = useContext(DBContext);
   const [params] = useSearchParams();
 
-  const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<MealItem | ExtraItem | null>(null);
   const [toClear, setToClear] = useState<boolean>(false);
 
@@ -143,32 +142,37 @@ export function Planner() {
   }
 
   function onDelete(item: MealItem | ExtraItem) {
+    console.info(`Setting item to delete: ${item.id} - ${"recipie" in item ? item.recipie : item.name}`);
     setToDelete(item);
-    setOpen(true);
   }
 
-  async function runDelete() {
-    setOpen(false);
-
-    if (!mealStore || !extraStore) {
+  async function runDelete(item: MealItem | ExtraItem | null) {
+    if (!mealStore || !extraStore || !item) {
       return;
     }
 
-    if (toClear) {
-      await mealStore.clear();
-      await extraStore.clear();
-    }
+    setToDelete(null);
 
-    if (toDelete?.id !== undefined) {
-      if ("recipie" in toDelete) {
-        await mealStore.delete(toDelete.id);
+    if (item.id !== undefined) {
+      if ("recipie" in item) {
+        await mealStore.delete(item.id);
       } else {
-        await extraStore.delete(toDelete.id);
+        await extraStore.delete(item.id);
       }
     }
 
-    setToDelete(null);
+    await load();
+  }
+
+  async function runClear(toClear: boolean) {
+    if (!mealStore || !extraStore || !toClear) {
+      return;
+    }
+
     setToClear(false);
+
+    await mealStore.clear();
+    await extraStore.clear();
 
     await load();
   }
@@ -233,14 +237,18 @@ export function Planner() {
     <FloatingAddButton to={ tab === "extras" ? "/planner/extras/new" : `/planner/meals/new?type=${tab}`} />
     <FloatingClearButton onClick={() => {
       setToClear(true);
-      setToDelete(null);
-      setOpen(true);
     }} />
     <ConfirmDialog
-      message={toDelete ? `Deleting "${"recipie" in toDelete ? toDelete.recipie : toDelete.name}"` : "Clearing all meals"}
-      open={isOpen}
+      message={toDelete ? `Deleting "${"recipie" in toDelete ? toDelete.recipie : toDelete.name}"` : "No item selected"}
+      item={toDelete}
       onConfirm={runDelete}
-      onCancel={() => setOpen(false)}
+      onCancel={() => setToDelete(null)}
+    />
+    <ConfirmDialog
+      message="Are you sure you want to clear all meals and extras?"
+      item={toClear}
+      onConfirm={runClear}
+      onCancel={() => setToClear(false)}
     />
   </ Page>;
 }

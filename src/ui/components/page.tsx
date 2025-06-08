@@ -43,6 +43,7 @@ export function Page({
           <Typography
             variant="h6"
             component="div"
+            role="heading"
             marginLeft="1em"
             flexGrow="1"
             noWrap

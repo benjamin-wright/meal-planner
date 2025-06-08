@@ -15,7 +15,6 @@ export function Ingredients() {
   const [ingredients, setIngredients] = useState<Record<number, Ingredient[]>>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [toDelete, setToDelete] = useState<Ingredient | null>(null);
-  const [isOpen, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<number | false>(false);
   const navigate = useNavigate();
 
@@ -49,32 +48,29 @@ export function Ingredients() {
 
   function onDelete(ingredient: Ingredient) {
     setToDelete(ingredient);
-    setOpen(true);
   }
   
-  async function onConfirm() {
-    if (toDelete?.id === undefined) {
+  async function onConfirm(item: Ingredient | null) {
+    if (item?.id === undefined) {
       return;
     }
   
-    await ingredientStore?.delete(toDelete.id);
+    await ingredientStore?.delete(item.id);
 
     setToDelete(null);
-    setOpen(false);
 
     const newIngredients = {...ingredients}
-    newIngredients[toDelete.category] = newIngredients[toDelete.category].filter((ingredient) => ingredient.id !== toDelete.id);
+    newIngredients[item.category] = newIngredients[item.category].filter((ingredient) => ingredient.id !== item.id);
     setIngredients(newIngredients);
 
-    if (newIngredients[toDelete.category].length === 0) {
-      const newCategories = categories.filter((category) => category.id !== toDelete.category);
+    if (newIngredients[item.category].length === 0) {
+      const newCategories = categories.filter((category) => category.id !== item.category);
       setCategories(newCategories);
     }
   }
 
   function onCancel() {
     setToDelete(null);
-    setOpen(false);
   }
 
   return <Page title="Ingredients" returnTo="/data" showNav sx={{ gap: 0 }}>
@@ -101,7 +97,7 @@ export function Ingredients() {
     <FloatingAddButton to="/ingredients/new" />
     <ConfirmDialog      
       message={`Deleting "${toDelete?.name}"`}
-      open={isOpen}
+      item={toDelete}
       onConfirm={onConfirm}
       onCancel={onCancel}
     />

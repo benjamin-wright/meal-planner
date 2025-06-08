@@ -14,7 +14,6 @@ export function Categories() {
   const { categoryStore } = useContext(DBContext);
 
   const navigate = useNavigate();
-  const [isOpen, setOpen] = useState(false);
   const [toDelete, setToDelete] = useState<Category | null>(null);
   const [items, setItems] = useState<Category[]>([]);
 
@@ -40,14 +39,14 @@ export function Categories() {
     navigate(`/categories/${category.id}`);
   }
 
-  function onDelete() {
-    if (toDelete?.id === undefined) {
+  function onDelete(item: Category | null) {
+    if (item?.id === undefined) {
       return;
     }
 
-    categoryStore?.delete(toDelete.id);
-    setOpen(false);
-    setItems(items.filter((category) => category.id !== toDelete.id));
+    categoryStore?.delete(item.id);
+    setItems(items.filter((category) => category.id !== item.id));
+    setToDelete(null);
   }
 
   return (
@@ -57,7 +56,6 @@ export function Categories() {
           {items.map((category: Category) => (
             <SortableCategory key={category.id} category={category} onDelete={() => {
               setToDelete(category);
-              setOpen(true);
             }} onEdit={onEdit} />
           ))}
         </DetailViewGroup>
@@ -65,9 +63,9 @@ export function Categories() {
       <FloatingAddButton to="/categories/new" />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
-        open={isOpen}
+        item={toDelete}
         onConfirm={onDelete}
-        onCancel={() => setOpen(false)}
+        onCancel={() => setToDelete(null)}
       />
     </Page>
   );
