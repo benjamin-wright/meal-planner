@@ -20,7 +20,6 @@ export function Misc() {
   const [expanded, setExpanded] = useState<number | false>(false);
   const navigate = useNavigate();
   const [toDelete, setToDelete] = useState<Ingredient | null>(null);
-  const [isOpen, setOpen] = useState(false);
 
   async function load() {
     if (!ingredientStore || !categoryStore) return;
@@ -46,18 +45,16 @@ export function Misc() {
 
   function onDelete(item: Ingredient) {
     setToDelete(item);
-    setOpen(true);
   }
 
-  function onConfirm() {
-    if (toDelete?.id === undefined) return;
-    ingredientStore?.delete(toDelete.id);
-    setOpen(false);
+  function onConfirm(item: Ingredient | null) {
+    if (item?.id === undefined) return;
+    ingredientStore?.delete(item.id);
     setToDelete(null);
 
     const newIngredients = { ...ingredients };
-    const categoryId = toDelete.category;
-    newIngredients[categoryId] = newIngredients[categoryId].filter((item) => item.id !== toDelete.id);
+    const categoryId = item.category;
+    newIngredients[categoryId] = newIngredients[categoryId].filter((item) => item.id !== item.id);
     if (newIngredients[categoryId].length === 0) {
       delete newIngredients[categoryId];
       setCategories(categories.filter((category) => category.id !== categoryId));
@@ -67,7 +64,6 @@ export function Misc() {
   }
 
   function onCancel() {
-    setOpen(false);
     setToDelete(null);
   }
 
@@ -101,7 +97,7 @@ export function Misc() {
     <FloatingAddButton to="/misc/new" />
     <ConfirmDialog
       message={`Deleting "${toDelete?.name}"`}
-      open={isOpen}
+      item={toDelete}
       onConfirm={onConfirm}
       onCancel={onCancel}
     />

@@ -9,35 +9,40 @@ import { Recipie } from "../../../models/recipies";
 import { DBContext } from "../../providers/database";
 import { MealType } from "../../../models/meals";
 
-export function Recipies() {
+function useRecipies() {
   const { recipieStore } = useContext(DBContext);
   const [recipies, setRecipies] = useState<Recipie[]>([]);
-  const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<Recipie | null>(null);
-  const [mealType, setMealType] = useState<MealType | "all">("all");
-  const navigate = useNavigate();
-
-  async function load() {
+  
+  useEffect(() => {
     if (!recipieStore) {
       return;
     }
 
-    const recipies = await recipieStore.getAll();
-    setRecipies(recipies);
-  }
-
-  useEffect(() => {
-    load();
+    (async () => {
+      const recipies = await recipieStore.getAll();
+      setRecipies(recipies);
+    })();
+    
   }, [recipieStore]);
 
-  function onDelete() {
-    if (toDelete?.id === undefined) {
-      return;
-    }
+  function deleteRecipie(recipie: Recipie): Promise<void> | undefined {
+    setRecipies(recipies.filter((r) => r.id !== recipie.id));
+    return recipieStore?.delete(recipie.id);
+  }
 
-    recipieStore?.delete(toDelete.id);
-    setOpen(false);
-    setRecipies(recipies.filter((recipie) => recipie.id !== toDelete.id));
+  return { recipies, deleteRecipie };
+}
+
+
+export function Recipies() {
+  const { recipies, deleteRecipie } = useRecipies();
+  const [toDelete, setToDelete] = useState<Recipie | undefined>();
+  const [mealType, setMealType] = useState<MealType | "all">("all");
+  const navigate = useNavigate();
+
+  async function onDelete(item: Recipie) {
+    await deleteRecipie(item);
+    setToDelete(undefined);
   }
 
   return <Page title="Recipies" returnTo="/data" showNav>
@@ -64,7 +69,6 @@ export function Recipies() {
               }}
               onDelete={() => {
                 setToDelete(recipie);
-                setOpen(true);
               }}
             >
               <Paper sx={{ padding: "0.75em" }}>
@@ -79,9 +83,9 @@ export function Recipies() {
     <FloatingAddButton to="/recipies/new" />
     <ConfirmDialog
       message={`Deleting "${toDelete?.name}"`}
-      open={isOpen}
+      item={toDelete}
       onConfirm={onDelete}
-      onCancel={() => setOpen(false)}
+      onCancel={() => setToDelete(undefined)}
     />
   </Page>;
 }

@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 interface ListViewProps {
   items: ShoppingViewItem[];
   categories: string[];
+  startTimestamp?: number;
+  endTimestamp?: number;
   onCheck(item: ShoppingViewItem): void;
   onEdit(item: ShoppingViewItem): void;
 }
 
-export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) {
+export function ListView({ items, categories, startTimestamp, endTimestamp, onCheck, onEdit }: ListViewProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({"got": false});
   const active = [...categories.filter(c => items.some(i => i.category === c && (!i.got || i.pending))), "got"];
 
@@ -65,6 +67,8 @@ export function ListView({ items, categories, onCheck, onEdit }: ListViewProps) 
                 <CheckItem
                   key={item.id}
                   item={item}
+                  startTimestamp={item.pending ? startTimestamp : undefined}
+                  endTimestamp={item.pending ? endTimestamp : undefined}
                   onCheck={() => onCheck(item)}
                   onContext={() => onEdit(item)}
                 />

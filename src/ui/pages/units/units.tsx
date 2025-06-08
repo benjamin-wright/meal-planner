@@ -4,51 +4,82 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ConfirmDialog } from "../../components/confirm-dialog";
 import { FloatingAddButton } from "../../components/floating-add-button";
-import { Unit, UnitType } from "../../../models/units";
+import { parseType, Unit, UnitType } from "../../../models/units";
 import { DBContext } from "../../providers/database";
 import { UnitView } from "./components/unit-view";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { settings } from "../../../models/settings";
 
-export function Units() {
-  const { unitStore, settingStore } = useContext(DBContext);
-  const [search] = useSearchParams();
-
+function useTabs(params: URLSearchParams) {
   const [tab, setTab] = useState<UnitType>(UnitType.Count);
-  const [units, setUnits] = useState<Unit[]>([]);
-  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
-  const [isOpen, setOpen] = useState(false);
-  const [toDelete, setToDelete] = useState<Unit | null>(null);
-  const navigate = useNavigate();
 
-  async function load() {
+  useEffect(() => {
+    const type = params.get("type");
+    if (type) {
+      const parsedType = parseType(type);
+      if (parsedType) {
+        console.info(`Setting tab to '${parsedType}'`);
+        setTab(parsedType);
+      } else {
+        console.warn(`Invalid type: '${type}'`);
+      }
+    }
+  }, [])
+
+  return { tab, setTab };
+}
+
+function useUnits(tab: UnitType) {
+  const { unitStore } = useContext(DBContext);
+  const [units, setUnits] = useState<Unit[]>([]);
+
+  useEffect(() => {
     if (!unitStore) {
       return;
     }
 
-    const units = await unitStore.getAllByType(tab);
-    setUnits(units);
+    (async () => {
+      const units = await unitStore.getAllByType(tab);
+      setUnits(units);
+    })();
+  }, [unitStore, tab]);
 
-    const type = UnitType[search.get("type") as keyof typeof UnitType];
-    if (type) {
-      setTab(type);
-    }
+  function deleteUnit(unit: Unit): Promise<void> | undefined {
+    setUnits(units.filter((u) => u.id !== unit.id));
+    return unitStore?.delete(unit.id);
   }
 
-  useEffect(() => {
-    load();
-  }, [unitStore, tab]);
+  return { units, unitStore, deleteUnit };
+}
+
+function useSettings() {
+  const { settingStore } = useContext(DBContext);
+  const [settings, setSettings] = useState<settings>({ preferredVolumeUnit: 0, preferredWeightUnit: 0 });
 
   useEffect(() => {
     if (!settingStore) {
       return;
     }
 
-    settingStore.get().then((settings) => {
+    (async () => {
+      const settings = await settingStore.get();
       setSettings(settings);
-    });
+    })();
   }, [settingStore]);
+
+  return { settings };
+}
+
+export function Units() {
+  const [search] = useSearchParams();
+
+  const { settings } = useSettings();
+  const { tab, setTab } = useTabs(search);
+  const { units, deleteUnit } = useUnits(tab);
+
+  const [toDelete, setToDelete] = useState<Unit | undefined>();
+  const navigate = useNavigate();
 
   function handleEdit(unit: Unit) {
     navigate(`/units/${unit.id}`);
@@ -56,17 +87,11 @@ export function Units() {
 
   function handleDelete(unit: Unit) {
     setToDelete(unit);
-    setOpen(true);
   }
 
-  async function onDelete() {
-    if (toDelete?.id === undefined) {
-      return;
-    }
-
-    await unitStore?.delete(toDelete.id);
-    setOpen(false);
-    setUnits(units.filter((unit) => unit.id !== toDelete.id));
+  async function onDelete(unit: Unit) {
+    await deleteUnit(unit);
+    setToDelete(undefined);
   }
 
   function isDefault(unit: Unit): boolean {
@@ -90,7 +115,7 @@ export function Units() {
         <Tab label={UnitType.Volume} value={UnitType.Volume} />
       </Tabs>
 
-      <DetailViewGroup>
+      <DetailViewGroup flexLayout bottomMargin="6em">
         {units.filter(unit => unit.type === tab).map((unit) => (
           <UnitView key={unit.id} unit={unit} isDefault={isDefault(unit)} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
@@ -98,9 +123,9 @@ export function Units() {
       <FloatingAddButton to={`/units/new?type=${tab}`} />
       <ConfirmDialog
         message={`Deleting "${toDelete?.name}"`}
-        open={isOpen}
+        item={toDelete}
         onConfirm={onDelete}
-        onCancel={() => setOpen(false)}
+        onCancel={() => setToDelete(undefined)}
       />
     </Page>
   );
