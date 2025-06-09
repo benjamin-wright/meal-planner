@@ -1,5 +1,11 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.3
+
+Bugs:
+
+- [#59](https://github.com/benjamin-wright/meal-planner/issues/56) - Remove long-press context menu for now
+
 ## Version 1.1.2
 
 Enhancements:
