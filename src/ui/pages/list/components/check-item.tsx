@@ -13,7 +13,6 @@ interface CheckItemProps {
 }
 
 const DEBOUNCE_PERIOD = 500;
-const LONG_PRESS_PERIOD = 1000;
 
 let count = 0;
 
@@ -29,35 +28,25 @@ export function CheckItem({ item, startTimestamp, endTimestamp, onCheck, onConte
 
   useEffect(() => {
     count++;
+    
+    if (timer) {
+      timer.cancel();
+      setTimer(null);
+    }
 
     if (!startTimestamp || !endTimestamp || endTimestamp < Date.now()) {
       console.info(`CheckItem [${count}: ${item.name}]: No active animation, resetting state`);
-      
-      if (timer) {
-        timer.cancel();
-        setTimer(null);
-      }
-      
       return;
     }
-
-    if (timer) {
-      console.info(`CheckItem [${count}: ${item.name}]: Cancelling previous animation interval`);
-      timer.cancel();
-    }
-
-    console.info(`CheckItem [${count}: ${item.name}]: Starting animation from ${startTimestamp} to ${endTimestamp}`);
     
     let running = true;
     const handle = setInterval(() => {
       if (!running) {
-        console.info("CheckItem: Animation stopped, clearing interval");
         clearInterval(handle);
         return;
       }
 
       if (!startTimestamp || !endTimestamp || endTimestamp < Date.now()) {
-        console.info(`CheckItem [${count}: ${item.name}]: Animation ended, resetting state`);
         clearInterval(handle);
         return;
       }
@@ -68,7 +57,6 @@ export function CheckItem({ item, startTimestamp, endTimestamp, onCheck, onConte
       const progressValue = Math.min(100, (elapsed / duration) * 100) + 100 / 10; // Add a small offset to account for animation lag
       setTimer(timer => {
         if (!timer) {
-          console.warn(`CheckItem [${count}: ${item.name}]: Timer is null, cannot update progress`);
           return null;
         }
 
@@ -81,41 +69,15 @@ export function CheckItem({ item, startTimestamp, endTimestamp, onCheck, onConte
 
     setTimer({
       cancel: () => {
-        console.info(`CheckItem [${count}: ${item.name}]: Cancelling animation interval`);
         running = false;
         clearInterval(handle);
         setTimer(null);
-
-        // Clear touch start timeout if it exists
-        // This is to prevent the long press from triggering after the animation ends
-        if (touchStart) {
-          clearTimeout(touchStart)
-        }
       },
       progress: 0,
       index: count
     })
   }, [startTimestamp, endTimestamp]);
-
-  let touchStart: number | null = null;
-
-  function touchStartHandler() {
-    if (touchStart) {
-      clearTimeout(touchStart)
-    }
-
-    touchStart = setTimeout(() => {
-      onContext();
-    }, LONG_PRESS_PERIOD);
-  }
-
-  function touchEndHandler() {
-    if (touchStart) {
-      clearTimeout(touchStart)
-      touchStart = null;
-    }
-  }
-  
+ 
   function clickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {    
     setDebouncing(true);
     setTimeout(() => setDebouncing(false), DEBOUNCE_PERIOD)
@@ -136,13 +98,10 @@ export function CheckItem({ item, startTimestamp, endTimestamp, onCheck, onConte
           flexDirection: "row",
           justifyContent: "start",
           overflowX: "hidden",
-          opacity: debouncing ? "40%" : "100%"
+          opacity: debouncing ? "40%" : "100%",
+          position: "relative",
         }}
         onClick={clickHandler}
-        onTouchStart={touchStartHandler}
-        onTouchMove={touchStartHandler}
-        onTouchEnd={touchEndHandler}
-        onTouchCancel={touchEndHandler}
         onContextMenu={(event) => {
           event.preventDefault();
           onContext();
