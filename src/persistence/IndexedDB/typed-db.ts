@@ -35,14 +35,14 @@ export class TypedDB {
     });
   }
 
-  async getByIndex<T, K extends keyof T>(
+  async getByIndex<T>(
     table: string,
-    key: K,
-    value: T[K] & IDBValidKey
+    indexName: string,
+    value: IDBValidKey | IDBValidKey[]
   ): Promise<T[]> {
     const tx = this.db.transaction(table, "readonly");
     const store = tx.objectStore(table);
-    const index = store.index(key as string);
+    const index = store.index(indexName);
     const req = index.getAll(value);
     tx.commit();
     return new Promise((resolve, reject) => {

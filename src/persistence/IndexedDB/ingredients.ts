@@ -9,6 +9,7 @@ export function ingredientsV1(db: IDBDatabase) {
   store.createIndex("name", "name", { unique: true });
   store.createIndex("category", "category");
   store.createIndex("edible", "edible");
+  store.createIndex("edible_readymeal", ["edible", "readymeal"]);
 }
 
 type IndexedIngredient = {
@@ -16,6 +17,7 @@ type IndexedIngredient = {
   name: string;
   category: number;
   edible: number;
+  readymeal: number;
 }
 
 function toIngredient(data: IndexedIngredient): Ingredient {
@@ -24,6 +26,7 @@ function toIngredient(data: IndexedIngredient): Ingredient {
     name: data.name,
     category: data.category,
     edible: data.edible === 1,
+    readymeal: data.readymeal === 1,
   };
 }
 
@@ -45,17 +48,22 @@ export class Ingredients implements IngredientStore {
   }
 
   async getEdible(): Promise<Ingredient[]> {
-    const data = await this.db.getByIndex<IndexedIngredient, "edible">(TABLE_NAME, "edible", 1);
+    const data = await this.db.getByIndex<IndexedIngredient>(TABLE_NAME, "edible_readymeal", [1, 0]);
     return data.map(toIngredient);
   }
 
   async getInedible(): Promise<Ingredient[]> {
-    const data = await this.db.getByIndex<IndexedIngredient, "edible">(TABLE_NAME, "edible", 0);
+    const data = await this.db.getByIndex<IndexedIngredient>(TABLE_NAME, "edible", 0);
     return data.map(toIngredient);
   }
 
-  async add(name: string, category: number, edible: boolean): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category, edible: edible ? 1 : 0 });
+  async getReadyMeals(): Promise<Ingredient[]> {
+    const data = await this.db.getByIndex<IndexedIngredient>(TABLE_NAME, "edible_readymeal", [1, 1]);
+    return data.map(toIngredient);
+  }
+
+  async add(name: string, category: number, edible: boolean, readymeal: boolean): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category, edible: edible ? 1 : 0, readymeal: readymeal ? 1 : 0 });
   }
 
   async put(value: Ingredient): Promise<void> {
@@ -64,6 +72,7 @@ export class Ingredients implements IngredientStore {
       name: value.name,
       category: value.category,
       edible: value.edible ? 1 : 0,
+      readymeal: value.readymeal ? 1 : 0,
     });
   }
 

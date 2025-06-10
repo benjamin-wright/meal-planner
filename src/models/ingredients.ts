@@ -5,11 +5,12 @@ export type Ingredient = {
   name: string;
   category: number;
   edible: boolean;
+  readymeal: boolean;
 };
 
 export function sanitize(value: unknown): Ingredient {
   if (!isObject(value)) {
-    return { id: 0, name: "", category: 0, edible: true };
+    return { id: 0, name: "", category: 0, edible: true, readymeal: false };
   }
 
   return {
@@ -17,5 +18,6 @@ export function sanitize(value: unknown): Ingredient {
     name: defaultString(value["name"], ""),
     category: defaultNumber(value["category"], 0),
     edible: defaultBoolean(value["edible"], true),
+    readymeal: defaultBoolean(value["readymeal"], false),
   };
 }

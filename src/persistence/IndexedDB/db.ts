@@ -9,7 +9,7 @@ import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -149,7 +149,7 @@ export class IndexedDB implements DB {
   shopping() {
     return new ShoppingItems(this.db);
   }
-  
+
   settings() {
     return new Settings(this.db);
   }
