@@ -1,12 +1,14 @@
 import { sanitize as sanitizeCategory } from "../models/categories";
 import { sanitize as sanitizeIngredient } from "../models/ingredients";
 import { sanitize as sanitizeMeal } from "../models/meals";
+import { sanitize as sanitizeReadyMeal } from "../models/readymeals";
 import { sanitize as sanitizeRecipie } from "../models/recipies";
 import { sanitize as sanitizeUnit } from "../models/units";
 import { sanitize as sanitizeExtra } from "../models/extras";
 import { CategoryStore } from "./interfaces/categories";
 import { IngredientStore } from "./interfaces/ingredients";
 import { MealStore } from "./interfaces/meals";
+import { ReadyMealStore } from "./interfaces/readymeals";
 import { RecipieStore } from "./interfaces/recipies";
 import { UnitStore } from "./interfaces/units";
 import defaultData from "../assets/defaults.json";
@@ -20,6 +22,7 @@ export type ExportedData = {
   units?: unknown[];
   categories?: unknown[];
   ingredients?: unknown[];
+  readymeals?: unknown[];
   recipies?: unknown[];
   meals?: unknown[];
   extra?: unknown[];
@@ -31,6 +34,7 @@ export async function exportData(db: DB): Promise<string> {
     units: await db.units().getAll(),
     categories: await db.categories().getAll(),
     ingredients: await db.ingredients().getAll(),
+    readymeals: await db.readymeals().getAll(),
     recipies: await db.recipies().getAll(),
     meals: await db.meals().getAll(),
     extra: await db.extra().getAll(),
@@ -40,12 +44,12 @@ export async function exportData(db: DB): Promise<string> {
 
 export async function importData(db: DB, data: string): Promise<void> {
   const parsed = JSON.parse(data) as ExportedData;
-  await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.extra(), db.settings());
+  await loadDataFile(parsed, db.units(), db.categories(), db.ingredients(), db.readymeals(), db.recipies(), db.meals(), db.extra(), db.settings());
 }
 
 export async function initData(db: DB): Promise<void> {
   const data = defaultData as ExportedData;
-  await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.recipies(), db.meals(), db.extra(), db.settings());
+  await loadDataFile(data, db.units(), db.categories(), db.ingredients(), db.readymeals(), db.recipies(), db.meals(), db.extra(), db.settings());
 }
 
 async function loadDataFile(
@@ -53,6 +57,7 @@ async function loadDataFile(
   units: UnitStore,
   categories: CategoryStore,
   ingredients: IngredientStore,
+  readymeals: ReadyMealStore,
   recipies: RecipieStore,
   meals: MealStore,
   extra: ExtraStore,
@@ -87,6 +92,14 @@ async function loadDataFile(
   if (data.recipies) {
     for (let i = 0; i < data.recipies.length; i++) {
       await recipies.put(sanitizeRecipie(data.recipies[i]));
+    }
+  }
+
+  console.info("Loading ready meals...");
+  await readymeals.clear();
+  if (data.readymeals) {
+    for (let i = 0; i < data.readymeals.length; i++) {
+      await readymeals.put(sanitizeReadyMeal(data.readymeals[i]));
     }
   }
 

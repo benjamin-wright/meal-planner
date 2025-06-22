@@ -8,8 +8,9 @@ import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
+import { ReadyMeals, readymealsV1 } from "./readymeals";
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -25,6 +26,9 @@ const migrations = [
   (db: IDBDatabase, transaction: IDBTransaction) => {
     recipiesV2(db, transaction);
   },
+  (db: IDBDatabase) => {
+    readymealsV1(db);
+  }
 ]
 
 interface ICreateProps {
@@ -132,6 +136,10 @@ export class IndexedDB implements DB {
 
   ingredients() {
     return new Ingredients(this.db);
+  }
+
+  readymeals() {
+    return new ReadyMeals(this.db);
   }
 
   recipies() {
