@@ -2,14 +2,15 @@ import { Units, unitsV1 } from "./units";
 import { Categories, categoriesV1 } from "./categories";
 import { Ingredients, ingredientsV1 } from "./ingredients";
 import { Recipies, recipiesV1, recipiesV2 } from "./recipies";
-import { Meals, mealsV1 } from "./meals";
+import { Meals, mealsV1, mealsV2 } from "./meals";
 import { Extras, extraV1 } from "./extras";
 import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
+import { ReadyMeals, readymealsV1 } from "./readymeals";
 
-const DB_VERSION = 2;
+const DB_VERSION = 4;
 
 const migrations = [
   (db: IDBDatabase) => {
@@ -24,6 +25,12 @@ const migrations = [
   },
   (db: IDBDatabase, transaction: IDBTransaction) => {
     recipiesV2(db, transaction);
+  },
+  (db: IDBDatabase) => {
+    readymealsV1(db);
+  },
+  (db: IDBDatabase, transaction: IDBTransaction) => {
+    mealsV2(db, transaction)
   },
 ]
 
@@ -132,6 +139,10 @@ export class IndexedDB implements DB {
 
   ingredients() {
     return new Ingredients(this.db);
+  }
+
+  readymeals() {
+    return new ReadyMeals(this.db);
   }
 
   recipies() {

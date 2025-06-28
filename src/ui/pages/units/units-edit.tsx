@@ -51,6 +51,8 @@ export function UnitsEdit() {
   const { unit, isNew, setUnit } = usePageData(params.unit, search.get("type"));
   const { returnTo, setFormResult } = useForms(`units?type=${unit.type}`);
 
+  console.info(`UnitsEdit: unitId=${params.unit}, type=${unit.type}, isNew=${isNew}, returnTo=${returnTo}`);
+
   async function submit() {
     let id = unit.id;
 
@@ -61,6 +63,7 @@ export function UnitsEdit() {
     }
 
     setFormResult("units", { field: "unit", response: id });
+    console.info(`Unit ${unit.name} saved with id ${id} and returning to ${returnTo}`);
 
     navigate(returnTo);
   }

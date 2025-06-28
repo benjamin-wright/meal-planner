@@ -1,5 +1,15 @@
 # CHANGE LOG ([back](../README.md))
 
+## Version 1.1.4
+
+Bugs:
+
+- [#61](https://github.com/benjamin-wright/meal-planner/issues/61) - Fix broken unit navigation
+
+Enhancements:
+
+- [#36](https://github.com/benjamin-wright/meal-planner/issues/36) - Adding support for readymeals
+
 ## Version 1.1.3
 
 Bugs:

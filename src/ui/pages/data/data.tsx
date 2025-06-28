@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { Page } from "../../components/page";
 import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
-import { Egg, Scale, Sell, ShoppingBag } from "@mui/icons-material";
+import { Egg, Fastfood, Scale, Sell, ShoppingBag } from "@mui/icons-material";
 import { Card, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ export function Data() {
       {
         [
           { name: "misc", icon: ShoppingBag},
+          { name: "readymeals", alias: "ready meals", icon: Fastfood },
           { name: "recipies", icon: RestaurantRounded },
           { name: "ingredients", icon: Egg },
           { name: "categories", icon: Sell },
@@ -31,7 +32,7 @@ export function Data() {
           }} onClick={() => navigateTo(category.name)} >
             <category.icon />
             <Typography textTransform="capitalize">
-              {category.name}
+              {category.alias || category.name}
             </Typography>
           </Card>
         ))

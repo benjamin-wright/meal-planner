@@ -156,6 +156,16 @@
       "edible": false
     }
   ],
+  "readymeals": [
+    {
+      "id": 1,
+      "name": "pasta pot",
+      "serves": 1,
+      "time": 1,
+      "meal": "lunch",
+      "category": 7
+    }
+  ],
   "recipies": [
     {
       "id": 1,

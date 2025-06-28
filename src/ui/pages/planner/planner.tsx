@@ -2,7 +2,7 @@ import { Box, Card, Tab, Tabs } from "@mui/material";
 import { Page } from "../../components/page";
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
-import { Meal, MealDay, MealType } from "../../../models/meals";
+import { Meal, MealDay, MealRecipieType, MealType } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { FloatingAddButton } from "../../components/floating-add-button";
 import { DetailViewGroup } from "../../components/detail-view";
@@ -18,15 +18,38 @@ import { Extra } from "../../../models/extras";
 import { Ingredient } from "../../../models/ingredients";
 import { Unit, format as formatUnit } from "../../../models/units";
 import { ExtraItemView } from "./components/extra-item-view";
+import { ReadyMeal } from "../../../models/readymeals";
 
-function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, recipies: Recipie[]): MealItem {
-  return {
-    id: meal?.id,
-    index: index,
-    recipie: meal ? recipies.find((recipie) => recipie.id === meal.recipieId)?.name || "" : "",
-    servings: meal?.servings || 0,
-    day: day
-  };
+function mapMealToItem(meal: Meal | undefined, index: number, day: MealDay, recipies: Recipie[], readymeals: ReadyMeal[]): MealItem {
+  switch (meal?.recipieType) {
+    case MealRecipieType.Recipie: {
+      return {
+        id: meal?.id,
+        index: index,
+        recipie: meal ? recipies.find((recipie) => recipie.id === meal.recipieId)?.name || "" : "",
+        servings: meal?.servings || 0,
+        day: day
+      };
+    }
+    case MealRecipieType.ReadyMeal: {
+      return {
+        id: meal?.id,
+        index: index,
+        recipie: meal ? readymeals.find((readymeal) => readymeal.id === meal.recipieId)?.name || "" : "",
+        servings: meal?.servings || 0,
+        day: day
+      };
+    }
+    default: {
+      return {
+        id: meal?.id,
+        index: index,
+        recipie: "Unknown",
+        servings: meal?.servings || 0,
+        day: day
+      };
+    }
+  }
 }
 
 function mapExtraToItem(extra: Extra | undefined, index: number, ingredients: Ingredient[], units: Unit[]): ExtraItem {
@@ -50,7 +73,7 @@ function mapExtraToItem(extra: Extra | undefined, index: number, ingredients: In
 }
 
 export function Planner() {
-  const { ingredientStore, unitStore, mealStore, recipieStore, extraStore } = useContext(DBContext);
+  const { ingredientStore, unitStore, mealStore, recipieStore, extraStore, readymealStore } = useContext(DBContext);
   const [params] = useSearchParams();
 
   const [toDelete, setToDelete] = useState<MealItem | ExtraItem | null>(null);
@@ -65,7 +88,7 @@ export function Planner() {
   const navigate = useNavigate();
 
   async function load() {
-    if (!unitStore || !ingredientStore || !mealStore || !recipieStore || !extraStore) {
+    if (!unitStore || !ingredientStore || !mealStore || !recipieStore || !extraStore || !readymealStore) {
       return;
     }
 
@@ -74,15 +97,16 @@ export function Planner() {
     const recipies = await recipieStore.getAll();
     const meals = await mealStore.getAll();
     const extras = await extraStore.getAll();
+    const readymeals = await readymealStore.getAll();
 
     const dinners = Object.values(MealDay).map((day, index) => {
       const meal = meals.find((meal) => meal.meal === MealType.Dinner && meal.days.includes(day))
-      return mapMealToItem(meal, index, day, recipies);
+      return mapMealToItem(meal, index, day, recipies, readymeals);
     });
     setDinners(dinners);
 
-    setLunches(meals.filter((meal) => meal.meal === MealType.Lunch).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies)));
-    setBreakfasts(meals.filter((meal) => meal.meal === MealType.Breakfast).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies)));
+    setLunches(meals.filter((meal) => meal.meal === MealType.Lunch).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies, readymeals)));
+    setBreakfasts(meals.filter((meal) => meal.meal === MealType.Breakfast).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies, readymeals)));
     setExtras(extras.map((extra, index) => mapExtraToItem(extra, index, ingredients, units)));
   }
 
