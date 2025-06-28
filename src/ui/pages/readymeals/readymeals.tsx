@@ -9,7 +9,6 @@ import { DBContext } from "../../providers/database";
 import { MealType } from "../../../models/meals";
 import { ReadyMeal } from "../../../models/readymeals";
 import { Category } from "../../../models/categories";
-import { categoriesV1 } from "../../../persistence/IndexedDB/categories";
 
 function useReadymeals() {
   const { categoryStore, readymealStore } = useContext(DBContext);
