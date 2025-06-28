@@ -3,13 +3,15 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
 import { useForms } from "../../providers/forms";
-import { Meal, MealDay, MealProps, MealType, validate } from "../../../models/meals";
+import { Meal, MealDay, MealProps, MealRecipieType, MealType, validate } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
 import { NumericInput } from "../../components/numeric-input";
 import { SelectID } from "../../components/select-id";
 import { UnitType, format } from "../../../models/units";
 import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { SelectObject } from "../../components/select-object";
+import { ReadyMeal } from "../../../models/readymeals";
 
 type IngredientItem = {
   name: string;
@@ -20,7 +22,7 @@ export function MealsEdit() {
   const [search] = useSearchParams();
   const params = useParams();
 
-  const { mealStore, recipieStore, ingredientStore, unitStore, settingStore } = useContext(DBContext);
+  const { mealStore, recipieStore, readymealStore, ingredientStore, unitStore, settingStore } = useContext(DBContext);
   const { pushForm, formsResult, returnTo } = useForms("planner");
 
   const [isNew, setIsNew] = useState(true);
@@ -28,19 +30,21 @@ export function MealsEdit() {
   const [meal, setMeal] = useState<MealProps>({
     id: 0,
     recipieId: 0,
+    recipieType: MealRecipieType.Recipie,
     servings: 2,
     meal: search.get("type") as MealType || MealType.Dinner,
     days: search.has("day") ? [search.get("day") as MealDay] : []
   });
   const [available, setAvailable] = useState<MealDay[]>(Object.values(MealDay));
   const [recipies, setRecipies] = useState<Recipie[]>([]);
+  const [readyMeals, setReadyMeals] = useState<ReadyMeal[]>([]);
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
 
   const navigate = useNavigate();
 
   async function load() {
-    if (mealStore === undefined || recipieStore === undefined) {
+    if (mealStore === undefined || recipieStore === undefined || readymealStore === undefined) {
       return;
     }
 
@@ -50,6 +54,9 @@ export function MealsEdit() {
 
     const recipies = await recipieStore.getAll();
     setRecipies(recipies);
+
+    const readyMeals = await readymealStore.getAll();
+    setReadyMeals(readyMeals);
 
     if (params.meal) {
       const meal = await mealStore.get(Number.parseInt(params.meal, 10));
@@ -142,6 +149,15 @@ export function MealsEdit() {
   }
 
   const filteredRecipies = recipies.filter(r => r.meal === meal.meal);
+  let options: Recipie[] | ReadyMeal[] = [];
+  switch (meal.recipieType) {
+    case MealRecipieType.Recipie:
+      options = filteredRecipies;
+      break;
+    case MealRecipieType.ReadyMeal:
+      options = readyMeals;
+      break;
+  }
 
   return (
     <Form
@@ -153,7 +169,7 @@ export function MealsEdit() {
         }
 
         if (isNew) {
-          await mealStore?.add(meal.recipieId, meal.servings, meal.meal, meal.days);
+          await mealStore?.add(meal.recipieId, meal.recipieType, meal.servings, meal.meal, meal.days);
         } else {
           await mealStore?.put(meal);
         }
@@ -162,6 +178,15 @@ export function MealsEdit() {
       }}
       disabled={!validate(meal)}
     >
+      <SelectObject
+        id="recipieType"
+        label="Recipie Type"
+        value={meal.recipieType}
+        items={Object.values(MealRecipieType)}
+        onChange={(value) => setMeal({ ...meal, recipieType: value })}
+        toLabel={(type) => type}
+      />
+
       <SelectID
         id="recipie"
         label="Recipie"

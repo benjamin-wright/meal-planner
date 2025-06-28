@@ -1,4 +1,4 @@
-import { Meal, MealDay, MealProps, MealType } from "../../models/meals";
+import { Meal, MealDay, MealProps, MealRecipieType, MealType } from "../../models/meals";
 import { MealStore } from "../interfaces/meals";
 import { TypedDB } from "./typed-db";
 
@@ -24,8 +24,8 @@ export class Meals implements MealStore {
     return this.db.getAll<Meal>(TABLE_NAME);
   }
 
-  async add(recipieId: number, servings: number, meal: MealType, days: MealDay[]): Promise<number> {
-    return this.db.add(TABLE_NAME, { recipieId, servings, meal, days });
+  async add(recipieId: number, recipieType: MealRecipieType, servings: number, meal: MealType, days: MealDay[]): Promise<number> {
+    return this.db.add(TABLE_NAME, { recipieId, recipieType, servings, meal, days });
   }
 
   async put(value: MealProps): Promise<void> {
