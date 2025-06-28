@@ -8,19 +8,25 @@ import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
 import { MealType } from "../../../models/meals";
 import { ReadyMeal } from "../../../models/readymeals";
+import { Category } from "../../../models/categories";
+import { categoriesV1 } from "../../../persistence/IndexedDB/categories";
 
 function useReadymeals() {
-  const { readymealStore } = useContext(DBContext);
+  const { categoryStore, readymealStore } = useContext(DBContext);
   const [readymeals, setReadymeals] = useState<ReadyMeal[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   
   useEffect(() => {
-    if (!readymealStore) {
+    if (!readymealStore || !categoryStore) {
       return;
     }
 
     (async () => {
       const readymeals = await readymealStore.getAll();
       setReadymeals(readymeals);
+
+      const categories = await categoryStore.getAll();
+      setCategories(categories);
     })();
     
   }, [readymealStore]);
@@ -30,12 +36,12 @@ function useReadymeals() {
     return readymealStore?.delete(readymeal.id);
   }
 
-  return { readymeals, deleteReadymeal };
+  return { readymeals, categories, deleteReadymeal };
 }
 
 
 export function ReadyMeals() {
-  const { readymeals, deleteReadymeal } = useReadymeals();
+  const { readymeals, categories, deleteReadymeal } = useReadymeals();
   const [toDelete, setToDelete] = useState<ReadyMeal | undefined>();
   const [mealType, setMealType] = useState<MealType | "all">("all");
   const navigate = useNavigate();
@@ -45,7 +51,7 @@ export function ReadyMeals() {
     setToDelete(undefined);
   }
 
-  return <Page title="Readymeals" returnTo="/data" showNav>
+  return <Page title="Ready Meals" returnTo="/data" showNav>
     <Tabs
       value={mealType}
       onChange={(_, value) => setMealType(value)}
@@ -60,23 +66,27 @@ export function ReadyMeals() {
       {
         readymeals
           .filter((readymeal) => mealType === "all" || readymeal.meal === mealType)
-          .map((readymeal) => (
-            <DetailView
-              key={readymeal.id}
-              title={readymeal.name}
-              onEdit={() => {
-                navigate(`/readymeals/${readymeal.id}`);
-              }}
-              onDelete={() => {
-                setToDelete(readymeal);
-              }}
-            >
-              <Paper sx={{ padding: "0.75em" }}>
-                <Typography variant="body2">Time: {readymeal.time || "0"} mins</Typography>
-                <Typography variant="caption" color="text.secondary">Meal: {readymeal.meal}</Typography>
-              </Paper>
-            </DetailView>
-          ))
+          .map((readymeal) => {
+            const category = categories.find(c => c.id === readymeal.category)?.name || "Uncategorized";
+
+            return (
+              <DetailView
+                key={readymeal.id}
+                title={readymeal.name}
+                onEdit={() => {
+                  navigate(`/readymeals/${readymeal.id}`);
+                }}
+                onDelete={() => {
+                  setToDelete(readymeal);
+                }}
+              >
+                <Paper sx={{ padding: "0.75em" }}>
+                  <Typography variant="body2">Time: {readymeal.time || "0"} mins, Serves: { readymeal.serves }</Typography>
+                  <Typography variant="caption" color="text.secondary">{readymeal.meal} - {category}</Typography>
+                </Paper>
+              </DetailView>
+            )
+          })
       }
     </DetailViewGroup>
     <FloatingAddButton to="/readymeals/new" />

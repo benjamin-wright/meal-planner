@@ -161,8 +161,9 @@
       "id": 1,
       "name": "pasta pot",
       "serves": 1,
-      "time": 0,
-      "meal": "lunch"
+      "time": 1,
+      "meal": "lunch",
+      "category": 7
     }
   ],
   "recipies": [

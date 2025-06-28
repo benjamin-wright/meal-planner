@@ -25,8 +25,8 @@ export class ReadyMeals implements ReadyMealStore {
     return this.db.getAll<ReadyMeal>(TABLE_NAME);
   }
 
-  async add(name: string, serves: number, time: number, meal: MealType): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, serves, time, meal });
+  async add(name: string, serves: number, time: number, meal: MealType, category: number): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, serves, time, meal, category });
   }
 
   async put(value: ReadyMeal): Promise<void> {
