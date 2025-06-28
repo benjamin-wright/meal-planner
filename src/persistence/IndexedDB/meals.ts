@@ -9,6 +9,23 @@ export function mealsV1(db: IDBDatabase) {
   store.createIndex("day", "day");
 }
 
+export function mealsV2(_db: IDBDatabase, transaction: IDBTransaction) {
+  const store = transaction.objectStore(TABLE_NAME);
+  const request = store.openCursor();
+  request.onsuccess = function (event) {
+    const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+    if (cursor) {
+      const value = cursor.value;
+      if (!value.recipieType) {
+        // Default to Recipie if recipieType is not set
+        value.recipieType = MealRecipieType.Recipie;
+      }
+      cursor.update(value);
+      cursor.continue();
+    }
+  }
+}
+
 export class Meals implements MealStore {
   private db: TypedDB;
 

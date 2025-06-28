@@ -117,6 +117,10 @@ export function MealsEdit() {
       return;
     }
 
+    if (meal.recipieType === MealRecipieType.ReadyMeal) {
+      return;
+    }
+
     const recipie = await recipieStore?.get(meal.recipieId);
     if (recipie === undefined) {
       return;
@@ -149,15 +153,7 @@ export function MealsEdit() {
   }
 
   const filteredRecipies = recipies.filter(r => r.meal === meal.meal);
-  let options: Recipie[] | ReadyMeal[] = [];
-  switch (meal.recipieType) {
-    case MealRecipieType.Recipie:
-      options = filteredRecipies;
-      break;
-    case MealRecipieType.ReadyMeal:
-      options = readyMeals;
-      break;
-  }
+  const filteredReadyMeals = readyMeals.filter(r => r.meal === meal.meal);
 
   return (
     <Form
@@ -183,20 +179,35 @@ export function MealsEdit() {
         label="Recipie Type"
         value={meal.recipieType}
         items={Object.values(MealRecipieType)}
-        onChange={(value) => setMeal({ ...meal, recipieType: value })}
+        onChange={(value) => setMeal({ ...meal, recipieType: value, recipieId: 0 })}
         toLabel={(type) => type}
       />
 
-      <SelectID
-        id="recipie"
-        label="Recipie"
-        value={meal.recipieId}
-        items={filteredRecipies}
-        link="/recipies/new"
-        toLabel={(recipie) => recipie.name}
-        onChange={recipieChangeHandler}
-        onNav={() => pushForm({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
-      />
+      {meal.recipieType === MealRecipieType.ReadyMeal &&
+        <SelectID
+          id="readymeal"
+          label="Ready Meal"
+          value={meal.recipieId}
+          items={filteredReadyMeals}
+          link="/readymeals/new"
+          toLabel={(readymeal) => readymeal.name}
+          onChange={(readymealId) => setMeal({ ...meal, recipieId: readymealId })}
+          onNav={() => pushForm({ to: "readymeals", from: "planner", link: location.pathname, body: meal })}
+        />
+      }
+
+      {meal.recipieType === MealRecipieType.Recipie &&
+        <SelectID
+          id="recipie"
+          label="Recipie"
+          value={meal.recipieId}
+          items={filteredRecipies}
+          link="/recipies/new"
+          toLabel={(recipie) => recipie.name}
+          onChange={recipieChangeHandler}
+          onNav={() => pushForm({ to: "recipies", from: "planner", link: location.pathname, body: meal })}
+        />
+      }
 
       <NumericInput
         id="servings"
@@ -232,7 +243,7 @@ export function MealsEdit() {
         />
       }
 
-      {!loading &&
+      {!loading && meal.recipieType === MealRecipieType.Recipie &&
         <Card sx={{ padding: "1em", marginTop: "1em", backgroundColor: "background.paper" }}>
           <Table size="small" padding="none">
             <TableHead>
