@@ -14,7 +14,7 @@ export function FloatingAddButton({ to }: FloatingAddButtonProps) {
       position: "fixed",
       bottom: "2em",
       right: "2em",
-    }} onClick={() => navigate(to)}>
+    }} onClick={() => navigate(to)} aria-label="add-button">
       <Add />
     </Fab>
   );

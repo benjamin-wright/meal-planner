@@ -9,6 +9,7 @@ interface IconLinkProps {
   color?: ButtonProps["color"];
   big?: boolean;
   disabled?: boolean;
+  label?: string;
 }
 
 export function IconLink({
@@ -18,7 +19,8 @@ export function IconLink({
   onClick,
   color,
   big,
-  disabled
+  disabled,
+  label
 }: IconLinkProps) {
   return (
     <Button
@@ -31,6 +33,7 @@ export function IconLink({
       color={color}
       disableRipple
       disabled={disabled}
+      aria-label={label}
     >
       <CircleIcon>{children}</CircleIcon>
     </Button>

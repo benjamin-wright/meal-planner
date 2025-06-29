@@ -34,7 +34,7 @@ export function DetailViewGroup({ children, flexLayout, bottomMargin }: DetailVi
     <DetailGroupContext.Provider value={{ selected, setSelected }}>
       {
         flexLayout ? (
-          <Box display="flex" flexDirection="column" gap="0.25em" marginBottom={bottomMargin}>
+          <Box display="flex" flexDirection="column" gap="0.25em" marginBottom={bottomMargin} data-testid="detail-view-group">
             {children}
           </Box>
         ) : (
@@ -110,6 +110,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
         alignItems: horizontal ? "center" : "stretch",
         overflowX: "hidden"
       }}
+      data-testid={`detail-view:${id || title}`}
     >
       <CardActionArea onClick={onClickHandler} sx={{
         width: horizontal ? "min-content" : "auto"
@@ -159,7 +160,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
               justifyContent="space-between"
               paddingTop={horizontal ? "0" : "0.75em"}
             >
-              <IconLink sx={{ minWidth: "0" }} onClick={onEdit}>
+              <IconLink sx={{ minWidth: "0" }} onClick={onEdit} label="edit-link">
                 <Edit />
               </IconLink>
               <IconLink
@@ -167,6 +168,7 @@ export function DetailView({ id, title, horizontal, narrow, dragControls, workin
                 sx={{ minWidth: "0" }}
                 onClick={onDelete}
                 disabled={noDelete}
+                label="delete-link"
               >
                 <Delete />
               </IconLink>
