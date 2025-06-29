@@ -26,6 +26,7 @@ export function NewItemButton({ onClick, sx, small, disabled }: NewItemButtonPro
           opacity: disabled ? 0.3 : 1,
         }}
         disabled={disabled}
+        aria-label="new-item-button"
       >
         <Add />
       </CardActionArea>

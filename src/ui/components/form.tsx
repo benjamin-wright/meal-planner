@@ -51,7 +51,7 @@ export function Form({ title, returnTo, children, disabled, morePages, okButton,
           {children}
         </Box>
         <Box display="flex" width="100%" justifyContent={onDelete ? "space-between" : "center"}>
-          <IconLink color="success" onClick={onSubmit} big disabled={disabled}>
+          <IconLink color="success" onClick={onSubmit} big disabled={disabled} label="save-button">
             {icon}
           </IconLink>
           {
