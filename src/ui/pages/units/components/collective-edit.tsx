@@ -27,6 +27,7 @@ export function CollectiveEdit({
       component={Card}
       overflow="unset"
       alignItems="stretch"
+      data-testid={`collective-${index}`}
     >
       <Box
         padding="0.75em"

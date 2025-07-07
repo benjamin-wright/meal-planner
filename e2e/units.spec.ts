@@ -1,54 +1,25 @@
-import { Experimental_CssVarsProvider } from '@mui/material';
 import { test, expect } from '@playwright/test';
+import { UnitsPage } from './pages/units';
 
 test.describe('Units Page', () => {
   test('create a custom unit', async ({ page }) => {
-    await page.goto('/units');
-    
-    // Check if the page title contains "Units"
-    await expect(page.getByRole('heading', { name: 'Units' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Count', selected: true })).toBeVisible();
+    const units = new UnitsPage(page);
+    await units.goto();
 
-    const createButton = page.getByRole('button', { name: 'add-button' });
-    await expect(createButton).toBeVisible();
-    await expect(createButton).toBeEnabled();
+    await expect(units.tab('Count')).toBeVisible();
+    expect(await units.listUnits(1)).toEqual(['count']);
 
-    await createButton.click();
-    
-    await expect(page).toHaveURL(/\/units\/new/);
+    const newUnit = await units.newUnit();
 
-    const nameInput = page.getByLabel('Name');
-    await expect(nameInput).toBeVisible();
-    await expect(nameInput).toBeEditable();
+    await newUnit.setName('loaves');
+    await newUnit.setType('count');
+    await newUnit.newItem();
+    await newUnit.setCollective(0, 'loaf', 'loaves');
+    await newUnit.save();
 
-    await nameInput.fill('loaves');
-
-    const typeSelect = page.getByLabel('Type');
-    await expect(typeSelect).toBeVisible();
-    await expect(typeSelect).toBeEditable();
-    await expect(typeSelect).toHaveText('count');
-
-    await page.getByRole('button', { name: 'new-item-button' }).click();
-
-    const singularInput = page.getByLabel('Singular');
-    await expect(singularInput).toBeVisible();
-    await expect(singularInput).toBeEditable(); 
-
-    await singularInput.fill('loaf');
-
-    const pluralInput = page.getByLabel('Plural');
-    await expect(pluralInput).toBeVisible();
-    await expect(pluralInput).toBeEditable(); 
-
-    await pluralInput.fill('loaves');
-
-    const saveButton = page.getByRole('button', { name: 'save-button' });
-    await expect(saveButton).toBeVisible();
-    await expect(saveButton).toBeEnabled();
-
-    await saveButton.click();
-
-    await expect(page).toHaveURL(/\/units/);
+    await units.currentPage();
+    await expect(units.tab('Count')).toBeVisible();
+    expect(await units.listUnits(2)).toEqual(['count', 'loaves']);
   });
   
   test('edit a custom unit', async ({ page }) => {

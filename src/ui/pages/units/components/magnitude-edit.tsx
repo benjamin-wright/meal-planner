@@ -25,6 +25,7 @@ export function MagnitudeEdit({
       component={Card}
       overflow="unset"
       alignItems="stretch"
+      data-testid={`magnitude-${index}`}
     >
       <Box
         padding="0.75em"
