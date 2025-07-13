@@ -146,6 +146,7 @@ export function UnitsEdit() {
       )}
       {unit.type !== UnitType.Count && (<>
         <NumericInput
+          id="base"
           label="base"
           required
           info="How many of this unit type's base units (e.g. grams for weight, litres of volume) go into 1 of this unit."

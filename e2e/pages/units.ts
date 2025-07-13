@@ -17,8 +17,15 @@ export class UnitsPage {
     await expect(this.page.getByRole('heading', { name: 'Units' })).toBeVisible();
   }
 
-  tab(tabName: string) {
+  getTab(tabName: string) {
     return this.page.getByRole('tab', { name: tabName, selected: true });
+  }
+
+  async setTab(tabName: string) {
+    const tab = this.page.getByRole('tab', { name: tabName });
+    await expect(tab).toBeVisible();
+    await tab.click();
+    await expect(this.getTab(tabName)).toBeVisible();
   }
 
   async newUnit() {

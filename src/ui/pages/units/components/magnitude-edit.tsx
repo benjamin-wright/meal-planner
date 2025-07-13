@@ -69,6 +69,7 @@ export function MagnitudeEdit({
         </Box>
 
         <NumericInput
+          id={`magnitude-${index}-multiplier`}
           label="multiplier"
           required
           value={magnitude.multiplier}

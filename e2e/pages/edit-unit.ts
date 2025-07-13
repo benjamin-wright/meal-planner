@@ -36,11 +36,11 @@ export class EditUnitPage {
   }
 
   async getType() {
-    return this.page.getByLabel('type').first().textContent();
+    return this.page.getByRole('combobox', { name: 'type' }).textContent();
   }
 
   async setType(value: string) {
-    const typeSelect = this.page.getByLabel('Type');
+    const typeSelect = this.page.getByRole('combobox', { name: 'type' });
     await expect(typeSelect).toBeVisible();
     await expect(typeSelect).toBeEditable();
 
@@ -49,7 +49,15 @@ export class EditUnitPage {
   }
 
   async getBase() {
-    return this.page.getByLabel('Base').first().textContent().then(value => value ? parseFloat(value) : undefined);
+    return this.page.getByRole('textbox', {name: 'base'}).textContent().then(value => value ? parseFloat(value) : undefined);
+  }
+
+  async setBase(value: number) {
+    const baseInput = this.page.getByRole('textbox', {name: 'base'});
+    await expect(baseInput).toBeVisible();
+    await expect(baseInput).toBeEditable();
+
+    await baseInput.fill(value.toString());
   }
 
   async newItem() {
@@ -77,6 +85,29 @@ export class EditUnitPage {
       await expect(multiplierInput).toBeEditable();
       await multiplierInput.fill(multiplier.toString());
     }
+  }
+
+  async setMagnitude(index: number, singular: string, plural: string, abbrev: string, multiplier: number) {
+    const magnitudeInput = this.page.getByTestId(`magnitude-${index}`);
+    const singularInput = magnitudeInput.getByLabel('Singular');
+    await expect(singularInput).toBeVisible();
+    await expect(singularInput).toBeEditable(); 
+    await singularInput.fill(singular);
+
+    const pluralInput = magnitudeInput.getByLabel('Plural');
+    await expect(pluralInput).toBeVisible();
+    await expect(pluralInput).toBeEditable();
+    await pluralInput.fill(plural);
+
+    const abbrevInput = magnitudeInput.getByLabel('Abbreviation');
+    await expect(abbrevInput).toBeVisible();
+    await expect(abbrevInput).toBeEditable();
+    await abbrevInput.fill(abbrev);
+
+    const multiplierInput = magnitudeInput.getByLabel('Multiplier');
+    await expect(multiplierInput).toBeVisible();
+    await expect(multiplierInput).toBeEditable();
+    await multiplierInput.fill(multiplier.toString());
   }
 
   async getFormState(): Promise<FormState> {
