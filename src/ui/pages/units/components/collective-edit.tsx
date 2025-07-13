@@ -63,6 +63,7 @@ export function CollectiveEdit({
         {multiple && (
           <NumericInput
             label="multiplier"
+            id={`collective-${index}-multiplier`}
             required
             value={collective.multiplier || 1}
             onChange={(value) => {

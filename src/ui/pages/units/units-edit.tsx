@@ -114,7 +114,7 @@ export function UnitsEdit() {
       onSubmit={submit}
     >
       <TextInput
-        id="variant"
+        id="name"
         variant="outlined"
         label="name"
         value={unit.name}

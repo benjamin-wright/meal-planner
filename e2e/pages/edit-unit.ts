@@ -24,7 +24,7 @@ export class EditUnitPage {
   }
 
   async getName() {
-    return this.page.getByLabel('Name').inputValue();
+    return this.page.getByLabel('Name').first().inputValue();
   }
 
   async setName(value: string) {
@@ -36,7 +36,7 @@ export class EditUnitPage {
   }
 
   async getType() {
-    return this.page.getByLabel('Type').inputValue();
+    return this.page.getByLabel('type').first().textContent();
   }
 
   async setType(value: string) {
@@ -48,15 +48,15 @@ export class EditUnitPage {
     await this.page.getByRole('option', { name: value }).click();
   }
 
-  get base() {
-    return this.page.getByLabel('Base').inputValue().then(value => value ? parseFloat(value) : undefined);
+  async getBase() {
+    return this.page.getByLabel('Base').first().textContent().then(value => value ? parseFloat(value) : undefined);
   }
 
   async newItem() {
     return this.page.getByRole('button', { name: 'new-item-button' }).click();
   }
 
-  async setCollective(index: number, singular: string, plural: string) {
+  async setCollective(index: number, singular: string, plural: string, multiplier?: number) {
     const collectiveInput = this.page.getByTestId(`collective-${index}`);
 
     const singularInput = collectiveInput.getByLabel('Singular');
@@ -67,15 +67,22 @@ export class EditUnitPage {
 
     const pluralInput = collectiveInput.getByLabel('Plural');
     await expect(pluralInput).toBeVisible();
-    await expect(pluralInput).toBeEditable(); 
+    await expect(pluralInput).toBeEditable();
 
     await pluralInput.fill(plural);
+
+    if (multiplier !== undefined) {
+      const multiplierInput = collectiveInput.getByLabel('Multiplier');
+      await expect(multiplierInput).toBeVisible();
+      await expect(multiplierInput).toBeEditable();
+      await multiplierInput.fill(multiplier.toString());
+    }
   }
 
   async getFormState(): Promise<FormState> {
-    const name = await this.getName();
-    const type = await this.getType();
-    const base = await this.base;
+    const name = await this.getName() || '';
+    const type = await this.getType() || '';
+    const base = type === 'count' ? undefined : await this.getBase();
     
     return { name, type, base };
   }

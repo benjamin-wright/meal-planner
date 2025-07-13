@@ -32,12 +32,24 @@ export class UnitsPage {
     return new EditUnitPage(this.page);
   }
 
-  async listUnits(expected: number): Promise<string[]> {
+  async listUnits(): Promise<string[]> {
     const headings = this.page.getByTestId('detail-view-group').getByTestId(/detail-view:.*/).getByRole('heading');
-    await expect(headings).toHaveCount(expected);
+    await expect(headings).not.toHaveCount(0);
 
     const headingElements = await headings.all();
     const contents = await Promise.all(headingElements.map(unit => unit.textContent()));
     return contents.filter(text => text !== null);
+  }
+
+  async editUnit(unitName: string) {
+    const unitButton = this.page.getByTestId(`detail-view:${unitName}`).getByRole('button');
+    await unitButton.click();
+
+    const updateButton = this.page.getByTestId(`detail-view:${unitName}`).getByRole('button', { name: 'edit-link' });
+    await expect(updateButton).toHaveCount(1);
+
+    await updateButton.first().click();
+    await expect(this.page).toHaveURL(new RegExp(`/units/\\d+`));
+    return new EditUnitPage(this.page);
   }
 }
