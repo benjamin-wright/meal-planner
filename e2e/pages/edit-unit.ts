@@ -1,12 +1,13 @@
 import { expect, Page } from "@playwright/test";
 
-type FormState = {
+export type FormState = {
   name: string;
   type: string;
   base?: number;
   collectives?: {
     singular: string;
     plural: string;
+    multiplier?: number;
   }[],
   magnitudes?: {
     singular: string;
@@ -116,6 +117,39 @@ export class EditUnitPage {
     const base = type === 'count' ? undefined : await this.getBase();
     
     return { name, type, base };
+  }
+
+  async setFormState(state: FormState) {
+    if (state.collectives && state.collectives.length > 0) {
+      for (let i = 0; i < state.collectives.length; i++) {
+        await this.newItem();
+      }
+    }
+
+    if (state.magnitudes && state.magnitudes.length > 0) {
+      for (let i = 0; i < state.magnitudes.length; i++) {
+        await this.newItem();
+      }
+    }
+
+    await this.setName(state.name);
+    await this.setType(state.type);
+
+    if (state.base !== undefined && state.type !== 'count') {
+      await this.setBase(state.base);
+    }
+
+    if (state.collectives) {
+      for (let i = 0; i < state.collectives.length; i++) {
+        await this.setCollective(i, state.collectives[i].singular, state.collectives[i].plural, state.collectives[i].multiplier);
+      }
+    }
+
+    if (state.magnitudes) {
+      for (let i = 0; i < state.magnitudes.length; i++) {
+        await this.setMagnitude(i, state.magnitudes[i].singular, state.magnitudes[i].plural, state.magnitudes[i].abbrev, state.magnitudes[i].multiplier);
+      }
+    }
   }
 
   async save() {
