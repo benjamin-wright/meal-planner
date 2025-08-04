@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import { EditCategoriesPage } from "./edit-categories";
 
 export class CategoriesPage {
   private readonly page: Page;
@@ -23,5 +24,10 @@ export class CategoriesPage {
     const headingElements = await headings.all();
     const contents = await Promise.all(headingElements.map(unit => unit.textContent()));
     return contents.filter(text => text !== null);
+  }
+
+  async clickCategory(name: string): Promise<EditCategoriesPage> {
+    await this.page.getByRole('button', { name }).click();
+    return new EditCategoriesPage(this.page);
   }
 }
