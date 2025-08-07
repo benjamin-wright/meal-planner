@@ -36,7 +36,7 @@ test.describe('Categories Page', () => {
 
     // Go to the main list page, click on the edit button for 'fruit'
     await categoriesList.goto();
-    const categoriesEdit =  await categoriesList.clickCategory('fruit');
+    const categoriesEdit =  await categoriesList.editCategory('fruit');
 
     // Set the new category name
     await categoriesEdit.setCategoryName('New Fruit');
@@ -49,5 +49,17 @@ test.describe('Categories Page', () => {
     const categoryNames = await categoriesList.listCategories();
     await expect(categoryNames).toContain('new fruit');
     await expect(categoryNames).not.toContain('fruit');
+  });
+
+  test('should reorder categories with drag-and-drop', async ({ page }) => {
+    const categoriesList = new CategoriesPage(page);
+
+    // Go to the main list page, grab the 'bakery' drag handle and move it to the location of the 'home' category
+    await categoriesList.goto();
+    await categoriesList.dragCategory('bakery', 'home');
+
+    // Verify that the new order is correct
+    const categoryNames = await categoriesList.listCategories();
+    expect(categoryNames).toEqual(['fruit', 'vegetable', 'meat', 'fish', 'dairy', 'home', 'bakery', 'cupboard', 'drugs']);
   });
 });

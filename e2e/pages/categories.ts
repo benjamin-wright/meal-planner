@@ -26,8 +26,20 @@ export class CategoriesPage {
     return contents.filter(text => text !== null);
   }
 
-  async clickCategory(name: string): Promise<EditCategoriesPage> {
+  async editCategory(name: string): Promise<EditCategoriesPage> {
     await this.page.getByRole('button', { name }).click();
+    await this.page.getByRole('button', { name: 'edit-link'}).click();
+
     return new EditCategoriesPage(this.page);
+  }
+
+  async dragCategory(from: string, to: string) {
+    const fromCategory = this.page.getByRole('button', { name: from }).getByTestId('DragHandleIcon');
+    const toCategory = this.page.getByRole('button', { name: to }).getByTestId('DragHandleIcon');
+
+    await expect(fromCategory).toBeVisible();
+    await expect(toCategory).toBeVisible();
+
+    await fromCategory.dragTo(toCategory);
   }
 }

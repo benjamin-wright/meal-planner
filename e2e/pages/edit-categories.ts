@@ -16,7 +16,9 @@ export class EditCategoriesPage {
     const nameInput = this.page.getByRole('textbox', {name: 'name'});
     await expect(nameInput).toBeVisible();
     await expect(nameInput).toBeEditable();
+    
     await nameInput.click();
+    await this.page.keyboard.press('Control+a');
     await this.page.keyboard.type(name);
   }
 
@@ -26,5 +28,15 @@ export class EditCategoriesPage {
     await expect(saveButton).toBeEnabled();
 
     await saveButton.click();
+  }
+
+  async dragCategory(from: string, to: string) {
+    const fromCategory = this.page.locator(`.category-item[data-name="${from}"]`);
+    const toCategory = this.page.locator(`.category-item[data-name="${to}"]`);
+
+    await expect(fromCategory).toBeVisible();
+    await expect(toCategory).toBeVisible();
+
+    await fromCategory.dragTo(toCategory);
   }
 }

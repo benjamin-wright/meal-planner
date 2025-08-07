@@ -57,6 +57,7 @@ export class UnitsPage {
 
     await updateButton.first().click();
     await expect(this.page).toHaveURL(new RegExp(`/units/\\d+`));
+
     return new EditUnitPage(this.page);
   }
 }
