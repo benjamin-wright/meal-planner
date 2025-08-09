@@ -58,6 +58,8 @@ test.describe('Categories Page', () => {
     await categoriesList.goto();
     await categoriesList.dragCategory('bakery', 'home');
 
+    await page.waitForTimeout(2000);
+
     // Verify that the new order is correct
     const categoryNames = await categoriesList.listCategories();
     expect(categoryNames).toEqual(['fruit', 'vegetable', 'meat', 'fish', 'dairy', 'home', 'bakery', 'cupboard', 'drugs']);
