@@ -5,6 +5,7 @@
     --background-primary: #222831;
     --background-secondary: #393e46;
     --foreground-primary: #ffffff;
+    --glazing: color-mix(in srgb, var(--background-primary), transparent 80%);
   }
 }
 
@@ -14,5 +15,6 @@
     --background-primary: #ffffff;
     --background-secondary: #cccccc;
     --foreground-primary: #000;
+    --glazing: color-mix(in srgb, var(--background-primary), transparent 80%);
   }
 }
