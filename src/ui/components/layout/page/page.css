@@ -1,0 +1,7 @@
+.page {
+  background: var(--background-image);
+  background-position: center;
+  background-size: cover;
+  backdrop-filter: blur(0.4em);
+  -webkit-backdrop-filter: blur(0.4em);
+}

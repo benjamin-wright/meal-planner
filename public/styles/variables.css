@@ -1,0 +1,18 @@
+/* Use a media query to set variables for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-image: url('/images/dark-background.jpg');
+    --background-primary: #222831;
+    --background-secondary: #393e46;
+    --foreground-primary: #ffffff;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background-image: url('/images/light-background.webp');
+    --background-primary: #ffffff;
+    --background-secondary: #cccccc;
+    --foreground-primary: #000;
+  }
+}

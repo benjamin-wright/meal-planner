@@ -27,3 +27,6 @@ dist-ssr
 .envrc
 
 test-results
+
+*storybook.log
+storybook-static
