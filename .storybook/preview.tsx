@@ -1,7 +1,9 @@
 import '../public/styles/variables.css';
 import '../public/styles/global.css';
+import './styles.css';
 
-import type { Preview } from '@storybook/react-vite'
+import type { Preview } from '@storybook/react-vite';
+import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 import { Backdrop } from '../src/ui/components/presentation/backdrop/backdrop';
 
 const preview: Preview = {
@@ -12,11 +14,8 @@ const preview: Preview = {
        date: /Date$/i,
       },
     },
-    backgrounds: {
-      options: {
-        dark: { name: 'Dark', value: '#222831' },
-        light: { name: 'Light', value: '#ffffff' },
-      }
+    viewport: {
+      options: INITIAL_VIEWPORTS
     },
     a11y: {
       // 'todo' - show a11y violations in the test UI only
@@ -26,8 +25,7 @@ const preview: Preview = {
     }
   },
   initialGlobals: {
-    // 👇 Set the initial background color
-    backgrounds: { value: 'dark' },
+    viewport: { value: 'iphone14promax', isRotated: false },
   },
   decorators: [
     (Story) => (

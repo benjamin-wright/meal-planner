@@ -15,7 +15,7 @@ div.backdrop-filter {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--glazing);
+  background-color: var(--thick-glazing);
   backdrop-filter: blur(0.4em);
   -webkit-backdrop-filter: blur(0.4em);
 }

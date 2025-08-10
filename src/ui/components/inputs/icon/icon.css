@@ -3,7 +3,7 @@
   color: var(--foreground-primary);
 }
 
-fieldset.icon {
+fieldset.icon, button.icon {
   border: none;
   width: fit-content;
   height: fit-content;
@@ -13,4 +13,8 @@ fieldset.icon {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+
+button.icon {
+  cursor: pointer;
 }

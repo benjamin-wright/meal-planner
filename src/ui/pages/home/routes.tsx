@@ -1,4 +1,4 @@
-import { Home } from "./home";
+import { Home } from "./home/home";
 
 export const routes = [
   ...["", "home"].map((name) => ({

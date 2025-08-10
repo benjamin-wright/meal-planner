@@ -10,7 +10,7 @@ export function Page({ children, title }: Props) {
   return (
     <>
       <Backdrop />
-      <Header title={title} />
+      <Header title={title} onHome={() => {}} />
       {children}
     </>
   );
