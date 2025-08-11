@@ -1,0 +1,18 @@
+import { SVGProps } from "react";
+
+export default function House(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 16 16"
+      width="1.5em"
+      height="1.5em"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="m8 .5l-8 8L1.5 10L3 8.5V15h4v-3h2v3h4V8.5l1.5 1.5L16 8.5zM8 7a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
+      ></path>
+    </svg>
+  );
+}

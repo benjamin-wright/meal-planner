@@ -1,4 +1,4 @@
-import Checklist from '@mui/icons-material/Checklist';
+import House from '../../icons/house';
 import { BannerButton } from './banner-button';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -7,14 +7,14 @@ import { fn } from 'storybook/test';
 const meta = {
   component: BannerButton,
   args: {
-    icon: <Checklist />,
+    icon: <House />,
   },
   argTypes: {
     icon: {
       control: { type: 'select' },
-      options: ['Checklist'],
+      options: ['House'],
       mapping: {
-        House: <Checklist />
+        House: <House />
       },
     },
   },
@@ -25,6 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    label: "test label"
+    label: "test label",
+    onClick: fn()
   }
 };

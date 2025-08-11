@@ -6,6 +6,10 @@
 
 The Meal Planner App is a comprehensive web application designed to help users organize their cooking, plan weekly meals, and generate shopping lists. The app provides a complete workflow from recipe management to grocery shopping.
 
+## Work In Progress
+
+This applications is part-way through a refactor, moving from material-ui to native React and locally-defined css files.
+
 ## Core Features
 
 ### 1. Recipe Management
@@ -114,9 +118,10 @@ The Meal Planner App is a comprehensive web application designed to help users o
 
 ### Frontend
 - **React with TypeScript**: Type-safe component architecture
-- **Material-UI**: Consistent design system and components
+- **Raw React components**: Using react to wrap native semantic HTML elements and locally defined CSS for an end result which is more accessible and easier to drive with tools like playwright
 - **React Router**: Client-side routing and navigation
 - **Framer Motion**: Smooth animations and drag-and-drop interactions
+- **SVG Icons**: Icons from https://reactsvgicons.com
 
 ### Data Layer
 - **IndexedDB**: Local browser database for offline functionality
@@ -128,6 +133,7 @@ The Meal Planner App is a comprehensive web application designed to help users o
 - **Playwright**: End-to-end testing with visual regression testing
 - **Unit Tests**: Component and utility function testing
 - **Mobile Testing**: Chrome mobile viewport testing
+- **Storybook**: Storybook for visual manual testing
 
 ## User Workflow
 

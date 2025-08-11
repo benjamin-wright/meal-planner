@@ -6,11 +6,15 @@
   width: 100%;
   color: var(--foreground-primary);
   border: none;
-  font-size: 1.7em;
-  text-transform: uppercase;
   border-radius: 2em;
+  cursor: pointer;
+  font-size: 1.5em;
 }
 
 .banner-button svg {
   font-size: 1.1em;
+}
+
+.banner-button span {
+  text-transform: uppercase;
 }

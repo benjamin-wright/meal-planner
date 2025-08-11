@@ -1,4 +1,4 @@
-import House from "@mui/icons-material/House";
+import House from "../../icons/house";
 import { Icon } from "../../inputs/icon/icon";
 import "./header.css";
 
