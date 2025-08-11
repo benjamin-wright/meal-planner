@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { routes as home } from "./ui/pages/home/routes";
+import { routes as settings } from "./ui/pages/settings/routes";
+
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
@@ -25,7 +27,8 @@ const router = createBrowserRouter([
     path: "/",
     errorElement: <div>Something went wrong...</div>,
     children: [
-      ...home
+      ...home,
+      ...settings,
     ],
   },
 ]);

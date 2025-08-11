@@ -1,0 +1,26 @@
+.accordion details {
+  background-color: var(--glazing);
+  border-radius: 0.5em;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  overflow: hidden;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, block-size 0.5s ease;
+}
+
+/* Watch this: https://www.youtube.com/watch?v=wU0C2Y7r8eg */
+
+.accordion details[open] {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  block-size: auto;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, block-size 0.5s ease;
+}
+
+.accordion summary {
+  padding: 1em;
+}
+
+.accordion section {
+  padding: 1em;
+}
+
