@@ -1,6 +1,6 @@
 .accordion details {
-  background-color: var(--glazing);
-  border-radius: 0.5em;
+  background-color: var(--thick-glazing);
+  border-radius: 0em;
   margin-top: 0em;
   margin-bottom: 0em;
   overflow: hidden;
@@ -10,10 +10,21 @@
 /* Watch this: https://www.youtube.com/watch?v=wU0C2Y7r8eg */
 
 .accordion details[open] {
+  border-radius: 1em;
   margin-top: 1em;
   margin-bottom: 1em;
   block-size: auto;
   transition: margin-top 0.5s ease, margin-bottom 0.5s ease, block-size 0.5s ease;
+}
+
+.accordion details:first-child, .accordion details[open] + details {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+.accordion details:last-child, .accordion details:has(+ details[open]) {
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
 }
 
 .accordion summary {

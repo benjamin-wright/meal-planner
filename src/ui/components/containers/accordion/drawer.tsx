@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef } from "react"
 import "./drawer.css";
 
 type Props = {
@@ -7,8 +7,10 @@ type Props = {
 }
 
 export function Drawer({ title, children }: Props) {
+  const details = useRef<HTMLDetailsElement>(null);
+
   return (
-    <details aria-label={`Collapsible section for ${title}`}>
+    <details aria-label={`Collapsible section for ${title}`} ref={details}>
       <summary>{title}</summary>
       <section>
         {children}

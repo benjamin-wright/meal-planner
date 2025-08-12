@@ -6,7 +6,7 @@
     --background-secondary: #393e46;
     --foreground-primary: #ffffff;
     --glazing: color-mix(in srgb, var(--background-primary), transparent 65%);
-    --thick-glazing: color-mix(in srgb, var(--background-primary), transparent 50%);
+    --thick-glazing: color-mix(in srgb, var(--background-primary), transparent 40%);
   }
 }
 
