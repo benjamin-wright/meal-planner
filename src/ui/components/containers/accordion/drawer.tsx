@@ -20,7 +20,7 @@ export function Drawer({ id, title, children, open }: Props) {
     }
   }, []);
 
-  const classes = ["drawer", isOpen ? "open" : "closed"];
+  const classes = ["drawer", "glazing", isOpen ? "open" : "closed"];
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
 

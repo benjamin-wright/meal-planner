@@ -1,11 +1,9 @@
 li.drawer {
-  background-color: var(--thick-glazing);
   border-radius: 0em;
   margin-top: 0em;
   margin-bottom: 0em;
   overflow: hidden;
   transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
-  box-shadow: 0 0.2em 0.5em rgba(0, 0, 0, 0.2);
 }
 
 li.drawer.open {
@@ -32,6 +30,9 @@ li.drawer:last-child, li.drawer:has(+ li.drawer.open) {
 
 li.drawer .drawer-content {
   padding: 1em;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
 }
 
 li.drawer button {
@@ -59,4 +60,5 @@ li.drawer.open svg {
 
 li.drawer h2 {
   margin: 0;
+  text-transform: capitalize;
 }

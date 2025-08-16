@@ -7,7 +7,7 @@ export function Backdrop() {
       <div className="backdrop-filter"></div>
       <svg className="backdrop-filter" xmlns="http://www.w3.org/2000/svg">
         <filter id="noiseFilter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1"></feTurbulence>
+          <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="1"></feTurbulence>
           <feColorMatrix type="saturate" values="0" result="grain"/>
         </filter>
 

@@ -20,8 +20,18 @@ h1 {
   padding: 0;
 }
 
+p {
+  margin: 0;
+  padding: 0;
+}
+
 .glazing {
   background-color: var(--glazing);
   backdrop-filter: blur(0.4em);
   -webkit-backdrop-filter: blur(0.4em);
+  box-shadow: var(--control-shadow);
+}
+
+.hidden {
+  display: none;
 }

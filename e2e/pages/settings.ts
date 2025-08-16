@@ -15,4 +15,8 @@ export class SettingsPage {
     await this.page.goto('/settings');
     await expect(this.page.getByRole('heading', { name: 'Settings' })).toBeVisible();
   }
+
+  async getVolumeUnit() {
+    return await this.page.getByLabel('Default volume unit').inputValue();
+  }
 }

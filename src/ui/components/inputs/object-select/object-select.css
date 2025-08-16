@@ -1,0 +1,30 @@
+.object-select {
+  display: flex;
+  border: solid 1px var(--background-secondary);
+  border-radius: 0.3em;
+  background: var(--thick-glazing);
+}
+
+.object-select legend {
+  font-size: 0.8em;
+}
+
+.object-select select {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: var(--foreground-primary);
+  width: 100%;
+}
+
+.object-select select:focus {
+  outline: none;
+}
+
+.object-select option {
+  background: var(--background-primary);
+  border: none;
+  font-size: 1em;
+  color: var(--foreground-primary);
+  width: 100%;
+}

@@ -24,7 +24,7 @@ export function AccordionProvider({ children }: { children: React.ReactNode }) {
   const toggle = (id: string) => {
     setInitial(undefined);
     setCurrent((prev) => {
-      return (prev === id ? undefined : id);
+      return (prev === id || initial === id ? undefined : id);
     });
   };
 
