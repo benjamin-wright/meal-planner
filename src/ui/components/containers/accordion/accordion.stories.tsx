@@ -14,13 +14,13 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <Drawer title="Section 1">
+        <Drawer id="1" title="Section 1">
           <div>Content for section 1</div>
         </Drawer>
-        <Drawer title="Section 2">
+        <Drawer id="2" title="Section 2">
           <div>Content for section 2</div>
         </Drawer>
-        <Drawer title="Section 3">
+        <Drawer id="3" title="Section 3">
           <div>Content for section 3</div>
         </Drawer>
       </>

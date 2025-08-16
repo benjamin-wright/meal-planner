@@ -1,4 +1,6 @@
 import './accordion.css';
+import { AccordionProvider } from './accordion-context';
+
 
 type Props = {
   children: React.ReactNode;
@@ -6,8 +8,10 @@ type Props = {
 
 export function Accordion({ children }: Props) {
   return (
-    <section className="accordion">
-      {children}
-    </section>
+    <ul className="accordion">
+      <AccordionProvider>
+        {children}
+      </AccordionProvider>
+    </ul>
   );
 }

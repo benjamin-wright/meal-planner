@@ -1,37 +1,59 @@
-.accordion details {
+li.drawer {
   background-color: var(--thick-glazing);
   border-radius: 0em;
   margin-top: 0em;
   margin-bottom: 0em;
   overflow: hidden;
-  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, block-size 0.5s ease;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease;
 }
 
 /* Watch this: https://www.youtube.com/watch?v=wU0C2Y7r8eg */
 
-.accordion details[open] {
+li.drawer.open {
   border-radius: 1em;
   margin-top: 1em;
   margin-bottom: 1em;
-  block-size: auto;
-  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, block-size 0.5s ease;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease;
 }
 
-.accordion details:first-child, .accordion details[open] + details {
+li.drawer:first-child, li.drawer.open + li.drawer {
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
 }
 
-.accordion details:last-child, .accordion details:has(+ details[open]) {
+li.drawer:last-child, li.drawer:has(+ li.drawer.open) {
   border-bottom-left-radius: 1em;
   border-bottom-right-radius: 1em;
 }
 
-.accordion summary {
+.drawer summary {
+  padding: 1em;
+  user-select: none;
+}
+
+li.drawer .drawer-content {
   padding: 1em;
 }
 
-.accordion section {
+li.drawer button {
+  background: none;
+  color: var(--foreground-primary);
+  border: none;
   padding: 1em;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 1em;
 }
 
+li.drawer svg {
+  font-size: 1.3em;
+  transform: rotate(0deg);
+  transition: transform 0.5s ease;
+}
+
+li.drawer.open svg {
+  transform: rotate(90deg);
+}
