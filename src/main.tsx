@@ -17,7 +17,6 @@ const db = IndexedDB.create({
   dbName: dbName,
   reset: DBFlags.getReset(dbName),
   initFunc: async (db) => {
-    console.info("New database, loading initial data...");
     await initData(db);
   },
 });

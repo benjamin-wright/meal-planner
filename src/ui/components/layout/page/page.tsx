@@ -1,17 +1,22 @@
 import { Backdrop } from "../../presentation/backdrop/backdrop";
 import { Header } from "../header/header";
 
+import './page.css'
+
 type Props = {
   children: React.ReactNode;
   title: string;
+  onHome?: () => void;
 }
 
-export function Page({ children, title }: Props) {
+export function Page({ children, title, onHome }: Props) {
   return (
     <>
       <Backdrop />
-      <Header title={title} onHome={() => {}} />
-      {children}
+      <section className="page-content">
+        {children}
+      </section>
+      <Header title={title} onHome={onHome} />
     </>
   );
 }

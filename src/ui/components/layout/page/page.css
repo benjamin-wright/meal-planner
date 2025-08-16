@@ -1,7 +1,4 @@
-.page {
-  background: var(--background-image);
-  background-position: center;
-  background-size: cover;
-  backdrop-filter: blur(0.4em);
-  -webkit-backdrop-filter: blur(0.4em);
+.page-content {
+  position: relative;
+  padding: 4em 1em 1em;
 }

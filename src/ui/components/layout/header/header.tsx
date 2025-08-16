@@ -4,7 +4,7 @@ import "./header.css";
 
 type Props = {
   title: string;
-  onHome: () => void;
+  onHome?: () => void;
 }
 
 export function Header({ title, onHome }: Props) {

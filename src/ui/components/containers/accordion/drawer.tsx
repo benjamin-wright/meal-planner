@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import "./drawer.css";
 import CaretCircle from "../../icons/caret-circle";
 import { useAccordionContext } from "./accordion-context";
@@ -24,7 +24,7 @@ export function Drawer({ id, title, children }: Props) {
     let cancelled = false;
     const handleTransitionEnd = () => {
       if (cancelled) return;
-      
+
       section.style.height = "auto";
       section.removeEventListener("transitionend", handleTransitionEnd);
     }
