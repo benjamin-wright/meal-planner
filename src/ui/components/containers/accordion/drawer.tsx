@@ -7,11 +7,19 @@ type Props = {
   id: string;
   title: string;
   children: React.ReactNode;
+  open?: boolean;
 }
 
-export function Drawer({ id, title, children }: Props) {
-  const { current, toggle } = useAccordionContext();
-  const isOpen = current === id;
+export function Drawer({ id, title, children, open }: Props) {
+  const context = useAccordionContext();
+  const isOpen = context.isOpen(id);
+
+  useEffect(() => {
+    if (open) {
+      context.setInitial(id);
+    }
+  }, []);
+
   const classes = ["drawer", isOpen ? "open" : "closed"];
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
@@ -46,21 +54,11 @@ export function Drawer({ id, title, children }: Props) {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    const section = containerRef.current;
-    if (!section) return;
-    if (!isOpen) {
-      section.style.height = "0px";
-    } else {
-      section.style.height = "auto";
-    }
-  }, []);
-
   return (
     <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`}>
-      <button id={id} onClick={() => toggle(id)}>
+      <button id={id} onClick={() => context.toggle(id)}>
+        <h2>{title}</h2>
         <CaretCircle />
-        <span>{title}</span>
       </button>
       <section ref={containerRef} style={{ overflow: 'hidden', transition: 'height 0.5s ease' }}>
         <div ref={sectionRef} className="drawer-content">

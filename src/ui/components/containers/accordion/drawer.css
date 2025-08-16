@@ -4,16 +4,15 @@ li.drawer {
   margin-top: 0em;
   margin-bottom: 0em;
   overflow: hidden;
-  transition: margin-top 0.5s ease, margin-bottom 0.5s ease;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
+  box-shadow: 0 0.2em 0.5em rgba(0, 0, 0, 0.2);
 }
-
-/* Watch this: https://www.youtube.com/watch?v=wU0C2Y7r8eg */
 
 li.drawer.open {
   border-radius: 1em;
   margin-top: 1em;
   margin-bottom: 1em;
-  transition: margin-top 0.5s ease, margin-bottom 0.5s ease;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
 }
 
 li.drawer:first-child, li.drawer.open + li.drawer {
@@ -44,16 +43,20 @@ li.drawer button {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
   gap: 1em;
 }
 
 li.drawer svg {
-  font-size: 1.3em;
-  transform: rotate(0deg);
+  font-size: 2em;
+  transform: rotate(180deg);
   transition: transform 0.5s ease;
 }
 
 li.drawer.open svg {
   transform: rotate(90deg);
+}
+
+li.drawer h2 {
+  margin: 0;
 }
