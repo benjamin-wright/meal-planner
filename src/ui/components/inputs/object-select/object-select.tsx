@@ -6,9 +6,10 @@ type Props<T> = {
   label: string;
   onChange: (value: T | null) => void;
   toDisplay: (option: T) => string;
+  disabled?: boolean;
 }
 
-export function ObjectSelect<T>({ options, value, label, onChange, toDisplay }: Props<T>) {
+export function ObjectSelect<T>({ options, value, label, onChange, toDisplay, disabled }: Props<T>) {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const selectedValue = options.find((o) => toDisplay(o) === event.target.value) ?? null;
     if (selectedValue === value) return; // Avoid unnecessary updates
@@ -17,7 +18,7 @@ export function ObjectSelect<T>({ options, value, label, onChange, toDisplay }: 
   }
 
   return (
-    <fieldset className="object-select">
+    <fieldset className="object-select" disabled={disabled}>
       <legend>{label}</legend>
       <label className="hidden" htmlFor={label}>
         {label}

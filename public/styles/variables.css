@@ -5,6 +5,9 @@
     --background-primary: #222831;
     --background-secondary: #393e46;
     --foreground-primary: #ffffff;
+    --foreground-disabled: #aaaaaa;
+    --success-primary: #379b46;
+    --error-primary: #d22a24;
     --glazing: color-mix(in srgb, var(--background-primary), transparent 65%);
     --thick-glazing: color-mix(in srgb, var(--background-primary), transparent 40%);
     --control-shadow: 0 0.2em 0.5em rgba(0, 0, 0, 0.2);
@@ -17,6 +20,8 @@
     --background-primary: #ffffff;
     --background-secondary: #cccccc;
     --foreground-primary: #000;
+    --success-primary: #5cb85c;
+    --error-primary: #d22a24;
     --glazing: color-mix(in srgb, var(--background-primary), transparent 90%);
     --thick-glazing: color-mix(in srgb, var(--background-primary), transparent 80%);
     --control-shadow: 0 0.2em 0.5em rgba(0, 0, 0, 0.2);

@@ -21,15 +21,6 @@ export enum MealRecipieType {
   ReadyMeal = "readymeal"
 }
 
-export type MealProps = {
-  id: number;
-  recipieId: number;
-  recipieType: MealRecipieType;
-  servings: number;
-  meal: MealType;
-  days: MealDay[];
-}
-
 export type Meal = {
   id: number;
   recipieId: number;

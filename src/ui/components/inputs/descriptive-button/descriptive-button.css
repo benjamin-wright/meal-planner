@@ -1,0 +1,52 @@
+fieldset.descriptive-button {
+  border: 1px solid var(--background-secondary);
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding-top: 0.5em;
+}
+
+fieldset.descriptive-button:disabled {
+  color: var(--foreground-disabled);
+}
+
+fieldset.descriptive-button button {
+  width: 100%;
+  padding: 0.5em;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  background-color: var(--background-secondary);
+  color: var(--foreground-primary);
+  border: none;
+  border-radius: 0.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+fieldset.descriptive-button button:disabled {
+  background-color: var(--background-secondary);
+  color: var(--foreground-disabled);
+  cursor: not-allowed;
+}
+
+fieldset.descriptive-button button.success {
+  background-color: var(--success-primary);
+  color: var(--background-primary);
+}
+
+fieldset.descriptive-button button.success:disabled {
+  background-color: var(--background-secondary);
+  color: var(--success-primary);
+}
+
+fieldset.descriptive-button button.error {
+  background-color: var(--error-primary);
+  color: var(--foreground-primary);
+}
+
+fieldset.descriptive-button button.error:disabled {
+  background-color: var(--background-secondary);
+  color: var(--error-primary);
+}

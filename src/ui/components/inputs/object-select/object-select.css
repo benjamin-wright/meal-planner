@@ -5,6 +5,11 @@
   background: var(--thick-glazing);
 }
 
+.object-select:disabled {
+  background: var(--background-secondary);
+  color: var(--foreground-disabled);
+}
+
 .object-select legend {
   font-size: 0.8em;
 }
@@ -19,6 +24,11 @@
 
 .object-select select:focus {
   outline: none;
+}
+
+.object-select select:disabled {
+  color: var(--foreground-disabled);
+  cursor: not-allowed;
 }
 
 .object-select option {

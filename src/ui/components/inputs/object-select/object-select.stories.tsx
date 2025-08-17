@@ -20,6 +20,19 @@ export const Primary: Story = {
     value: null,
     onChange: fn(),
     toDisplay: (option: any) => option.name,
-    toKey: (value: any) => value?.id ?? "",
+  }
+};
+
+export const Disabled: Story = {
+  args: {
+    label: "test label",
+    options: [
+      { id: '1', name: 'Option 1' },
+      { id: '2', name: 'Option 2' },
+    ],
+    value: null,
+    onChange: fn(),
+    toDisplay: (option: any) => option.name,
+    disabled: true,
   }
 };
