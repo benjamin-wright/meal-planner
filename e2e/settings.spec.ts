@@ -16,7 +16,7 @@ test.describe('Settings Page', () => {
     const settingsPage = new SettingsPage(page);
     await settingsPage.goto();
 
-    const volumeUnit = await settingsPage.getVolumeUnit();
-    expect(volumeUnit).toBe('litre');
-  })
+    expect(await settingsPage.getVolumeUnit()).toBe('litre');
+    expect(await settingsPage.getWeightUnit()).toBe('gram');
+  });
 });

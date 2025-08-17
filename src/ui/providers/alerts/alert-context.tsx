@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 export type Alert = {
   message: string;
-  severity: "success" | "info" | "error";
+  severity: "info" | "warning" | "error";
   undo?: () => void;
 }
 

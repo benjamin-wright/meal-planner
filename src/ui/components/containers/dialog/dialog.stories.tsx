@@ -15,6 +15,7 @@ export const Default: Story = {
   },
   args: {
     isOpen: true,
-    children: (<p>Dialog Content that is quite long and makes things grow</p>)
+    prompt: "Are you sure?",
+    warning: "Some detail to explain why this might be a bad idea..."
   },
 };

@@ -1,0 +1,24 @@
+div.alert {
+  padding: 1em 1em;
+  border: 1px solid var(--background-secondary);
+  border-radius: 0.5em;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+
+div.alert > svg {
+  font-size: 1.3em;
+}
+
+div.alert > svg.info {
+  color: var(--info-primary);
+}
+
+div.alert > svg.warning {
+  color: var(--warning-primary);
+}
+
+div.alert > svg.error {
+  color: var(--error-primary);
+}

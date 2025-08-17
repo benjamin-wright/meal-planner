@@ -10,6 +10,7 @@ import { FormProvider } from "./ui/providers/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
 import { initData } from "./persistence/exporter";
 import { DBFlags } from "./persistence/db-flags";
+import { AlertProvider } from "./ui/providers/alerts";
 
 const dbName = "meal-planner";
 
@@ -34,10 +35,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <DBProvider database={db} dbName={dbName}>
-      <FormProvider>
-        <RouterProvider router={router} />
-      </FormProvider>
-    </DBProvider>
+    <AlertProvider>
+      <DBProvider database={db} dbName={dbName}>
+        <FormProvider>
+          <RouterProvider router={router} />
+        </FormProvider>
+      </DBProvider>
+    </AlertProvider>
   </StrictMode>
 );

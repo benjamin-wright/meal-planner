@@ -2,16 +2,16 @@ import './object-select.css';
 
 type Props<T> = {
   options: T[];
-  value: T | null;
+  value?: T;
   label: string;
-  onChange: (value: T | null) => void;
+  onChange: (value?: T) => void;
   toDisplay: (option: T) => string;
   disabled?: boolean;
 }
 
 export function ObjectSelect<T>({ options, value, label, onChange, toDisplay, disabled }: Props<T>) {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedValue = options.find((o) => toDisplay(o) === event.target.value) ?? null;
+    const selectedValue = options.find((o) => toDisplay(o) === event.target.value);
     if (selectedValue === value) return; // Avoid unnecessary updates
 
     onChange(selectedValue);

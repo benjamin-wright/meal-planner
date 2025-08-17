@@ -16,22 +16,29 @@ type Props = {
   weightUnits: Unit[];
   onHome: () => void;
   onSettingsUpdate: (settings: settings) => void;
-  onBackup: (action: 'backup' | 'restore' | 'delete') => void;
+  onBackup: (action: 'backup' | 'restore' | 'reset') => void;
   busy?: boolean;
 };
 
 export function SettingsView({ version, settings, volumeUnits, weightUnits, onHome, onSettingsUpdate, onBackup, busy }: Props) {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ dialogAction, setDialogAction ] = useState<'restore' | 'delete'>('restore');
+  const [ dialogAction, setDialogAction ] = useState<'restore' | 'reset'>('restore');
 
-  function getDialogContent(action: 'restore' | 'delete') {
+  function getDialogPrompt(action: 'restore' | 'reset') {
     switch (action) {
       case 'restore':
-        return <p>Are you sure you want to restore?</p>;
-      case 'delete':
-        return <p>Are you sure you want to delete?</p>;
-      default:
-        return null;
+        return "Are you sure you want to restore?";
+      case 'reset':
+        return "Are you sure you want to reset?";
+    }
+  }
+
+  function getDialogWarning(action: 'restore' | 'reset') {
+    switch (action) {
+      case 'restore':
+        return "This action will replace all current application data with the contents of the backup you select.";
+      case 'reset':
+        return "This action will wipe all application data and cannot be undone.";
     }
   }
 
@@ -41,7 +48,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
         <Drawer id="settings" title="settings" open>
           <ObjectSelect
             options={volumeUnits}
-            value={volumeUnits.find(unit => unit.id === settings?.preferredVolumeUnit) ?? null}
+            value={volumeUnits.find(unit => unit.id === settings?.preferredVolumeUnit)}
             label="Default volume unit"
             onChange={(value) => onSettingsUpdate({ ...settings, preferredVolumeUnit: value?.id || settings.preferredVolumeUnit })}
             toDisplay={(unit) => unit.name}
@@ -49,7 +56,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
           />
           <ObjectSelect
             options={weightUnits}
-            value={weightUnits.find(unit => unit.id === settings?.preferredWeightUnit) ?? null}
+            value={weightUnits.find(unit => unit.id === settings?.preferredWeightUnit)}
             label="Default weight unit"
             onChange={(value) => onSettingsUpdate({ ...settings, preferredWeightUnit: value?.id || settings.preferredWeightUnit })}
             toDisplay={(unit) => unit.name}
@@ -76,10 +83,10 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
           />
           <DescriptiveButton
             description="Drop all data and reset the application to its initial state."
-            content="Delete"
+            content="Reset"
             kind="error"
             onClick={() => {
-              setDialogAction('delete');
+              setDialogAction('reset');
               setIsOpen(true);
             }}
             disabled={busy}
@@ -90,6 +97,8 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
         </Drawer>
       </Accordion>
       <Dialog
+        prompt={getDialogPrompt(dialogAction)}
+        warning={getDialogWarning(dialogAction)}
         isOpen={isOpen}
         onClose={(accept) => {
           setIsOpen(false);
@@ -97,9 +106,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
             onBackup(dialogAction);
           }
         }}
-      >
-        {getDialogContent(dialogAction)}
-      </Dialog>
+      />
     </Page>
   );
 }

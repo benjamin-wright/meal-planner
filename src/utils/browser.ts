@@ -32,6 +32,9 @@ export async function loadFile() {
       };
       reader.readAsText(file);
     };
+    input.oncancel = () => {
+      reject(new Error("File selection was cancelled"));
+    };
     input.click();
   });
 }

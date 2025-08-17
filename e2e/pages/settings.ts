@@ -19,4 +19,8 @@ export class SettingsPage {
   async getVolumeUnit() {
     return await this.page.getByLabel('Default volume unit').inputValue();
   }
+
+  async getWeightUnit() {
+    return await this.page.getByLabel('Default weight unit').inputValue();
+  }
 }

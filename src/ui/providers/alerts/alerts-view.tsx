@@ -1,9 +1,9 @@
-import './alerts.css';
+import './alerts-view.css';
 
 export function AlertsView() {
   return (
-    <div className="alerts">
+    <section className="alerts">
       <p>some alerts</p>
-    </div>
+    </section>
   );
 }

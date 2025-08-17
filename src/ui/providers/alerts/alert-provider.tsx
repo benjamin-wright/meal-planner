@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Alert, AlertContext } from "./alert-context";
+import { AlertsView } from "./alerts-view";
 
 let alertNumber = 0;
 const ALERT_TIMEOUT_PERIOD = 3000;
@@ -49,6 +50,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
       value={{ alert: handleAlert }}
     >
       {children}
+      <AlertsView />
     </AlertContext.Provider>
   );
 }

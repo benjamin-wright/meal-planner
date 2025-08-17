@@ -7,16 +7,17 @@ import { Unit } from "../../../models/units";
 import { SettingsController } from "../../../controllers/settings";
 import { SettingsView } from "./settings-view";
 import { loadFile, saveFile } from "../../../utils/browser";
+import { AlertContext } from "../../providers/alerts";
 
 type Props = {
   version: string;
 };
 
 function useSettingsController() {
-  const { db, stores } = useContext(DBContext);
+  const { db, dbName, stores } = useContext(DBContext);
   if (!db || !stores) return { controller: null };
 
-  const controller = new SettingsController(db, stores.settingStore, stores.unitStore);
+  const controller = new SettingsController(db, dbName, stores.settingStore, stores.unitStore);
 
   return { controller };
 }
@@ -25,9 +26,12 @@ export function Settings({ version }: Props) {
   const { controller } = useSettingsController();
   const navigate = useNavigate();
 
+  const { alert } = useContext(AlertContext);
+
   const [settings, setSettings] = useState<settings | undefined>(undefined);
   const [volumeUnits, setVolumeUnits] = useState<Unit[]>([]);
   const [weightUnits, setWeightUnits] = useState<Unit[]>([]);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -45,7 +49,9 @@ export function Settings({ version }: Props) {
     load();
   }, [controller]);
 
-  const handleHome = () => navigate("/");
+  function handleHome() {
+    navigate("/");
+  }
 
   if (!controller || !settings || !volumeUnits || !weightUnits) {
     return <Page title="Settings" onHome={handleHome}>
@@ -58,25 +64,41 @@ export function Settings({ version }: Props) {
     setSettings(settings);
   }
 
-  async function handleBackup(action: 'backup' | 'restore' | 'delete') {
+  async function handleBackup(action: 'backup' | 'restore' | 'reset') {
     if (!controller) return;
+    setBusy(true);
 
     switch (action) {
       case 'backup':
         const data = await controller.backup();
         saveFile({ json: data, filename: "meal-planner-backup.json" });
+        setBusy(false);
         break;
       case 'restore':
         try {
           const data = await loadFile();
           await controller.restore(data);
+          alert({
+            message: "Settings restored successfully.",
+            severity: "info",
+          });
         } catch (error) {
-          console.error("Failed to load file:", error);
-          return;
+          let errorMessage = "Failed to restore settings from file";
+          if (error instanceof Error) {
+            errorMessage += ": " + error.message;
+          }
+
+          alert({
+            message: errorMessage,
+            severity: "error",
+          });
+        } finally {
+          setBusy(false);
         }
         break;
-      case 'delete':
-        await controller.delete();
+      case 'reset':
+        controller.reset();
+        setTimeout(() => location.reload(), 2000);
         break;
     }
   }
@@ -90,6 +112,7 @@ export function Settings({ version }: Props) {
       onHome={handleHome}
       onSettingsUpdate={updateSettings}
       onBackup={handleBackup}
+      busy={busy}
     />
   );
 }

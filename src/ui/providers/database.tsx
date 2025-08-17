@@ -8,7 +8,7 @@ import { MealStore } from "../../persistence/interfaces/meals";
 import { ExtraStore } from "../../persistence/interfaces/extras";
 import { ShoppingItemStore } from "../../persistence/interfaces/shopping-item";
 import { SettingsStore } from "../../persistence/interfaces/settings";
-import { AlertContext } from "./alerts/alert-provider";
+import { AlertContext } from "./alerts";
 import { ReadyMealStore } from "../../persistence/interfaces/readymeals";
 
 type Stores = {
@@ -38,7 +38,7 @@ interface DBProviderProps {
 }
 
 export function DBProvider({ children, database, dbName }: DBProviderProps) {
-  const { setError } = useContext(AlertContext);
+  const { alert } = useContext(AlertContext);
 
   const [db, setDB] = useState<DB | undefined>();
   const [stores, setStores] = useState<Stores | undefined>();
@@ -58,7 +58,10 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
         settingStore: db.settings(),
       })
     }).catch((error: Error) => {
-      setError(error.message);
+      alert({
+        message: error.message,
+        severity: "error"
+      });
       console.error("Error creating database", error);
     });
   }, [database])
