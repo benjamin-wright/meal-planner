@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { routes as home } from "./ui/pages/home/routes";
 import { routes as settings } from "./ui/pages/settings/routes";
+import { routes as units } from "./ui/pages/units/routes";
+import { routes as data } from "./ui/pages/data/routes";
 
 import { DBProvider } from "./ui/providers/database";
 import { FormProvider } from "./ui/providers/forms";
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
     children: [
       ...home,
       ...settings,
+      ...units,
+      ...data,
     ],
   },
 ]);

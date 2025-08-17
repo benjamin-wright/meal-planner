@@ -1,4 +1,3 @@
-import { Icon } from '../icon/icon';
 import './banner-button.css';
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 export function BannerButton({ icon, label, onClick }: Props) {
   return(
     <button className="banner-button glazing" aria-label={`Go to ${label}`} onClick={() => onClick()}>
-      <Icon icon={icon} size="small" />
+      {icon}
       <span>{label}</span>
     </button>
   )

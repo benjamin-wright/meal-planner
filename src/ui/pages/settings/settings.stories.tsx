@@ -26,7 +26,7 @@ export const Primary: Story = {
     weightUnits: [
       { id: 2, name: 'grams', type: UnitType.Weight, collectives: [], magnitudes: [] },
     ],
-    onHome: fn(),
+    onNav: fn(),
     onSettingsUpdate: fn(),
     onBackup: fn(),
   },

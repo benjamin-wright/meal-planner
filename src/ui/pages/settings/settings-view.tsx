@@ -14,13 +14,13 @@ type Props = {
   settings: settings;
   volumeUnits: Unit[];
   weightUnits: Unit[];
-  onHome: () => void;
+  onNav: () => void;
   onSettingsUpdate: (settings: settings) => void;
   onBackup: (action: 'backup' | 'restore' | 'reset') => void;
   busy?: boolean;
 };
 
-export function SettingsView({ version, settings, volumeUnits, weightUnits, onHome, onSettingsUpdate, onBackup, busy }: Props) {
+export function SettingsView({ version, settings, volumeUnits, weightUnits, onNav, onSettingsUpdate, onBackup, busy }: Props) {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ dialogAction, setDialogAction ] = useState<'restore' | 'reset'>('restore');
 
@@ -43,7 +43,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
   }
 
   return (
-    <Page title="Settings" onHome={onHome}>
+    <Page title="Settings" onNav={onNav}>
       <Accordion>
         <Drawer id="settings" title="settings" open>
           <ObjectSelect

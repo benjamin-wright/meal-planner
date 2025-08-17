@@ -1,11 +1,11 @@
 import House from '@mui/icons-material/House';
-import { Icon } from './icon';
+import { IconButton } from './icon-button';
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from 'storybook/test';
 
 const meta = {
-  component: Icon,
+  component: IconButton,
   args: {
     icon: <House />,
   },
@@ -18,17 +18,13 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {};
-
-export const Secondary: Story = {
+export const Primary: Story = {
   args: {
     onClick: fn(),
-    id: "test-id",
-    label: "test-label"
   }
 };

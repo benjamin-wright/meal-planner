@@ -1,18 +1,18 @@
 import { SVGProps } from "react";
 
-export default function House(props: SVGProps<SVGSVGElement>) {
+export default function Trash(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
+      viewBox="0 0 20 20"
       width="1em"
       height="1em"
       {...props}
     >
       <path
         fill="currentColor"
-        d="m8 .5l-8 8L1.5 10L3 8.5V15h4v-3h2v3h4V8.5l1.5 1.5L16 8.5zM8 7a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
+        d="M17 2h-3.5l-1-1h-5l-1 1H3v2h14zM4 17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5H4z"
       ></path>
     </svg>
-  );
+  )
 }

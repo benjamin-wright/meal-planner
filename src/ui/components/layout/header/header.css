@@ -8,6 +8,10 @@
   grid-template-columns: auto max-content auto;
   align-items: center;
   justify-content: start;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 0.5rem 0.75rem;
+}
+
+.header svg {
+  font-size: 2em;
 }

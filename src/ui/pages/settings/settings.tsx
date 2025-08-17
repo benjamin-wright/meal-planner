@@ -54,7 +54,7 @@ export function Settings({ version }: Props) {
   }
 
   if (!controller || !settings || !volumeUnits || !weightUnits) {
-    return <Page title="Settings" onHome={handleHome}>
+    return <Page title="Settings" onNav={handleHome}>
       <p>Loading...</p>
     </Page>;
   }
@@ -109,7 +109,7 @@ export function Settings({ version }: Props) {
       settings={settings}
       volumeUnits={volumeUnits}
       weightUnits={weightUnits}
-      onHome={handleHome}
+      onNav={handleHome}
       onSettingsUpdate={updateSettings}
       onBackup={handleBackup}
       busy={busy}

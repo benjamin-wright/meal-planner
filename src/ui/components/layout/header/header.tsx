@@ -1,16 +1,19 @@
+import Back from "../../icons/back";
 import House from "../../icons/house";
-import { Icon } from "../../inputs/icon/icon";
+import { IconButton } from "../../inputs/icon-button/icon-button";
 import "./header.css";
 
 type Props = {
   title: string;
-  onHome?: () => void;
+  onNav?: () => void;
 }
 
-export function Header({ title, onHome }: Props) {
+export function Header({ title, onNav }: Props) {
+  const icon = onNav ? <IconButton onClick={onNav} icon={<Back />} /> : <House />;
+
   return (
     <div className="header glazing">
-      <Icon id="home" label="home" icon={<House />} onClick={onHome} />
+      {icon}
       <h1>{title}</h1>
     </div>
   );

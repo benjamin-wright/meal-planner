@@ -6,17 +6,17 @@ import './page.css'
 type Props = {
   children: React.ReactNode;
   title: string;
-  onHome?: () => void;
+  onNav?: () => void;
 }
 
-export function Page({ children, title, onHome }: Props) {
+export function Page({ children, title, onNav }: Props) {
   return (
     <>
       <Backdrop />
       <section className="page-content">
         {children}
       </section>
-      <Header title={title} onHome={onHome} />
+      <Header title={title} onNav={onNav} />
     </>
   );
 }
