@@ -6,6 +6,8 @@ import { ObjectSelect } from "../../components/inputs/object-select/object-selec
 import { settings } from "../../../models/settings";
 import { Unit } from "../../../models/units";
 import { DescriptiveButton } from "../../components/inputs/descriptive-button/descriptive-button";
+import { useState } from "react";
+import { Dialog } from "../../components/containers/dialog/dialog";
 
 type Props = {
   version: string;
@@ -19,6 +21,20 @@ type Props = {
 };
 
 export function SettingsView({ version, settings, volumeUnits, weightUnits, onHome, onSettingsUpdate, onBackup, loading }: Props) {
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ dialogAction, setDialogAction ] = useState<'restore' | 'delete'>('restore');
+
+  function getDialogContent(action: 'restore' | 'delete') {
+    switch (action) {
+      case 'restore':
+        return <p>Are you sure you want to restore?</p>;
+      case 'delete':
+        return <p>Are you sure you want to delete?</p>;
+      default:
+        return null;
+    }
+  }
+
   return (
     <Page title="Settings" onHome={onHome}>
       <Accordion>
@@ -52,14 +68,20 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
             description="Restore the application state from a JSON file on your device."
             content="Restore"
             kind="error"
-            onClick={() => onBackup('restore')}
+            onClick={() => {
+              setDialogAction('restore');
+              setIsOpen(true);
+            }}
             disabled={loading}
           />
           <DescriptiveButton
             description="Drop all data and reset the application to its initial state."
             content="Delete"
             kind="error"
-            onClick={() => onBackup('delete')}
+            onClick={() => {
+              setDialogAction('delete');
+              setIsOpen(true);
+            }}
             disabled={loading}
           />
         </Drawer>
@@ -67,6 +89,17 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
           <p>Application Version: {version}</p>
         </Drawer>
       </Accordion>
+      <Dialog
+        isOpen={isOpen}
+        onClose={(accept) => {
+          setIsOpen(false);
+          if (accept) {
+            onBackup(dialogAction);
+          }
+        }}
+      >
+        {getDialogContent(dialogAction)}
+      </Dialog>
     </Page>
   );
 }

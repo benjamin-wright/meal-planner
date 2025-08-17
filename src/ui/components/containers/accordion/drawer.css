@@ -23,11 +23,6 @@ li.drawer:last-child, li.drawer:has(+ li.drawer.open) {
   border-bottom-right-radius: 1em;
 }
 
-.drawer summary {
-  padding: 1em;
-  user-select: none;
-}
-
 li.drawer .drawer-content {
   padding: 1em;
   display: grid;
@@ -35,7 +30,7 @@ li.drawer .drawer-content {
   gap: 1em;
 }
 
-li.drawer button {
+li.drawer > button {
   background: none;
   color: var(--foreground-primary);
   border: none;
@@ -58,7 +53,7 @@ li.drawer.open svg {
   transform: rotate(90deg);
 }
 
-li.drawer h2 {
+li.drawer > button > h2 {
   margin: 0;
   text-transform: capitalize;
 }

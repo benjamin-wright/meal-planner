@@ -21,3 +21,7 @@ dl.storybook dd {
   align-items: center;
   justify-content: center;
 }
+
+#storybook-root {
+  height: 100%;
+}

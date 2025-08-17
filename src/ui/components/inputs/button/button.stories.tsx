@@ -1,30 +1,37 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { DescriptiveButton } from './descriptive-button';
+import { Button } from './button';
 import { fn } from 'storybook/test';
 
 function Buttons() {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-    <DescriptiveButton
-      description="some example description for a standard button"
+    <Button
       content="Click me"
       onClick={fn()}
     />
-    <DescriptiveButton
-      description="some example description for a success button"
+    <Button
+      content="Disabled"
+      onClick={fn()}
+      disabled
+    />
+    <Button
       content="success"
       kind="success"
       onClick={fn()}
     />
-    <DescriptiveButton
-      description="some example description for an error button"
+    <Button
+      content="Disabled"
+      kind="success"
+      onClick={fn()}
+      disabled
+    />
+    <Button
       content="error"
       kind="error"
       onClick={fn()}
     />
-    <DescriptiveButton
-      description="some example description for a disabled error button"
+    <Button
       content="disabled"
-      kind="success"
+      kind="error"
       onClick={fn()}
       disabled
     />

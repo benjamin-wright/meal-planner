@@ -6,16 +6,17 @@ import { settings } from "../../../models/settings";
 import { Unit } from "../../../models/units";
 import { SettingsController } from "../../../controllers/settings";
 import { SettingsView } from "./settings-view";
+import { loadFile, saveFile } from "../../../utils/browser";
 
 type Props = {
   version: string;
 };
 
 function useSettingsController() {
-  const { stores } = useContext(DBContext);
-  if (!stores) return { controller: null };
+  const { db, stores } = useContext(DBContext);
+  if (!db || !stores) return { controller: null };
 
-  const controller = new SettingsController(stores.settingStore, stores.unitStore);
+  const controller = new SettingsController(db, stores.settingStore, stores.unitStore);
 
   return { controller };
 }
@@ -62,13 +63,20 @@ export function Settings({ version }: Props) {
 
     switch (action) {
       case 'backup':
-        controller.backup();
+        const data = await controller.backup();
+        saveFile({ json: data, filename: "meal-planner-backup.json" });
         break;
       case 'restore':
-        controller.restore();
+        try {
+          const data = await loadFile();
+          await controller.restore(data);
+        } catch (error) {
+          console.error("Failed to load file:", error);
+          return;
+        }
         break;
       case 'delete':
-        controller.delete();
+        await controller.delete();
         break;
     }
   }

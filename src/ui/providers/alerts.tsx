@@ -1,50 +1,66 @@
-import { Alert, Slide, Snackbar } from "@mui/material";
 import { createContext, useState } from "react";
 
+export type Alert = {
+  message: string;
+  severity: "success" | "info" | "error";
+  undo?: () => void;
+}
+
 interface AlertContextProps {
-  message?: string;
-  error?: string;
-  setMessage: (message: string) => void;
-  setError: (error: string) => void;
+  alert: (alert: Alert) => void;
 }
 
 export const AlertContext = createContext<AlertContextProps>({
-  setMessage: () => {},
-  setError: () => {},
+  alert: () => {},
 });
 
-export function AlertProvider({ children }: { children: React.ReactNode }) {
-  const [message, setMessage] = useState<string | undefined>(undefined);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [alertOpen, setAlertOpen] = useState(false);
+let alertNumber = 0;
+const ALERT_TIMEOUT_PERIOD = 3000;
 
-  function handleSetMessage(message: string) {
-    setMessage(message);
-    setError(undefined);
-    setAlertOpen(true);
+type RegisteredAlert = {
+  alert: Alert,
+  number: number,
+  removeAt: number,
+}
+
+export function AlertProvider({ children }: { children: React.ReactNode }) {
+  const [alerts, setAlerts] = useState<RegisteredAlert[]>([]);
+  const [pendingTimeout, setPendingTimeout] = useState<number | null>(null);
+
+  function handleAlert(alert: Alert) {
+    const newAlert: RegisteredAlert = {
+      alert,
+      number: alertNumber++,
+      removeAt: Date.now() + ALERT_TIMEOUT_PERIOD,
+    };
+
+    setAlerts((prev) => [...prev, newAlert]);
+    resetTimeout();
   }
 
-  function handleSetError(error: string) {
-    setMessage(undefined);
-    setError(error);
-    setAlertOpen(true);
+  function resetTimeout() {
+    if (pendingTimeout) {
+      clearTimeout(pendingTimeout);
+    }
+
+    if (alerts.length === 0) {
+      setPendingTimeout(null);
+      return;
+    }
+
+    const now = Date.now();
+    const nextRemoveAt = alerts.reduce((min, a) => Math.min(min, a.removeAt), now + ALERT_TIMEOUT_PERIOD);
+
+    setTimeout(() => {
+      setAlerts((prev) => prev.filter((a) => a.removeAt < nextRemoveAt));
+      resetTimeout();
+    }, nextRemoveAt - now);
   }
 
   return (
     <AlertContext.Provider
-      value={{ setMessage: handleSetMessage, setError: handleSetError }}
+      value={{ alert: handleAlert }}
     >
-      <Snackbar
-        open={alertOpen}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        onClose={() => setAlertOpen(false)}
-        TransitionComponent={Slide}
-      >
-        <Alert severity={error ? "error" : "success"} sx={{ width: "100%" }}>
-          {error || message || "No message"}
-        </Alert>
-      </Snackbar>
       {children}
     </AlertContext.Provider>
   );

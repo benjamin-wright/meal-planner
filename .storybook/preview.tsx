@@ -4,7 +4,7 @@ import './styles.css';
 
 import type { Preview } from '@storybook/react-vite';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
-import { Backdrop } from '../src/ui/components/presentation/backdrop/backdrop';
+import { Backdrop } from '../src/ui/components/layout/backdrop/backdrop';
 
 const preview: Preview = {
   parameters: {
@@ -31,7 +31,7 @@ const preview: Preview = {
     (Story) => (
       <>
         <Backdrop />
-        <div style={{ position: 'relative', padding: 0, margin: 0 }}>
+        <div style={{ position: 'relative', padding: 0, margin: 0, height: "100%" }}>
           <Story />
         </div>
       </>

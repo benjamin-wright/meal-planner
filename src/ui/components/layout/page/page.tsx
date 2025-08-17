@@ -1,4 +1,4 @@
-import { Backdrop } from "../../presentation/backdrop/backdrop";
+import { Backdrop } from "../backdrop/backdrop";
 import { Header } from "../header/header";
 
 import './page.css'
