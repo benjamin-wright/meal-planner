@@ -32,12 +32,12 @@ export const Primary: Story = {
   },
 };
 
-export const Loading: Story = {
+export const Busy: Story = {
   parameters: {
     layout: "fullscreen"
   },
   args: {
     ...Primary.args,
-    loading: true,
+    busy: true,
   },
 };

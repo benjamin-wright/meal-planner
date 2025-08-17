@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { AlertContext } from "../../providers/alerts";
+import { AlertContext } from "../../providers/alerts/alert-provider";
 import { exportData, importData } from "../../../persistence/exporter";
 import { DBContext } from "../../providers/database";
 import { DescriptionButton } from "../../components/description-button";

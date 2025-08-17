@@ -3,7 +3,7 @@ import { Add, Redo, Replay, Undo } from "@mui/icons-material";
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
 import { ConfirmDialog } from "../../components/confirm-dialog";
-import { AlertContext } from "../../providers/alerts";
+import { AlertContext } from "../../providers/alerts/alert-provider";
 import { ListView } from "./components/list-view";
 import { ShoppingViewItem } from "../../../services/shopping";
 import { useNavigate } from "react-router-dom";

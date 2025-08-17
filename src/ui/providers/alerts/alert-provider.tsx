@@ -1,18 +1,5 @@
-import { createContext, useState } from "react";
-
-export type Alert = {
-  message: string;
-  severity: "success" | "info" | "error";
-  undo?: () => void;
-}
-
-interface AlertContextProps {
-  alert: (alert: Alert) => void;
-}
-
-export const AlertContext = createContext<AlertContextProps>({
-  alert: () => {},
-});
+import { useState } from "react";
+import { Alert, AlertContext } from "./alert-context";
 
 let alertNumber = 0;
 const ALERT_TIMEOUT_PERIOD = 3000;

@@ -17,10 +17,10 @@ type Props = {
   onHome: () => void;
   onSettingsUpdate: (settings: settings) => void;
   onBackup: (action: 'backup' | 'restore' | 'delete') => void;
-  loading?: boolean;
+  busy?: boolean;
 };
 
-export function SettingsView({ version, settings, volumeUnits, weightUnits, onHome, onSettingsUpdate, onBackup, loading }: Props) {
+export function SettingsView({ version, settings, volumeUnits, weightUnits, onHome, onSettingsUpdate, onBackup, busy }: Props) {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ dialogAction, setDialogAction ] = useState<'restore' | 'delete'>('restore');
 
@@ -45,7 +45,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
             label="Default volume unit"
             onChange={(value) => onSettingsUpdate({ ...settings, preferredVolumeUnit: value?.id || settings.preferredVolumeUnit })}
             toDisplay={(unit) => unit.name}
-            disabled={loading}
+            disabled={busy}
           />
           <ObjectSelect
             options={weightUnits}
@@ -53,7 +53,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
             label="Default weight unit"
             onChange={(value) => onSettingsUpdate({ ...settings, preferredWeightUnit: value?.id || settings.preferredWeightUnit })}
             toDisplay={(unit) => unit.name}
-            disabled={loading}
+            disabled={busy}
           />
         </Drawer>
         <Drawer id="backup" title="backup">
@@ -62,7 +62,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
             content="Backup"
             kind="success"
             onClick={() => onBackup('backup')}
-            disabled={loading}
+            disabled={busy}
           />
           <DescriptiveButton
             description="Restore the application state from a JSON file on your device."
@@ -72,7 +72,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
               setDialogAction('restore');
               setIsOpen(true);
             }}
-            disabled={loading}
+            disabled={busy}
           />
           <DescriptiveButton
             description="Drop all data and reset the application to its initial state."
@@ -82,7 +82,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onHo
               setDialogAction('delete');
               setIsOpen(true);
             }}
-            disabled={loading}
+            disabled={busy}
           />
         </Drawer>
         <Drawer id="info" title="info">

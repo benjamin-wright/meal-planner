@@ -8,7 +8,7 @@ import { MealStore } from "../../persistence/interfaces/meals";
 import { ExtraStore } from "../../persistence/interfaces/extras";
 import { ShoppingItemStore } from "../../persistence/interfaces/shopping-item";
 import { SettingsStore } from "../../persistence/interfaces/settings";
-import { AlertContext } from "./alerts";
+import { AlertContext } from "./alerts/alert-provider";
 import { ReadyMealStore } from "../../persistence/interfaces/readymeals";
 
 type Stores = {
