@@ -56,7 +56,7 @@ export function Drawer({ id, title, children, open }: Props) {
 
   return (
     <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`}>
-      <button id={id} onClick={() => context.toggle(id)}>
+      <button className="drawer-toggle" id={id} onClick={() => context.toggle(id)}>
         <h2>{title}</h2>
         <CaretCircle />
       </button>

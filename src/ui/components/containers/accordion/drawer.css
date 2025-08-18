@@ -13,12 +13,14 @@ li.drawer.open {
   transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
 }
 
-li.drawer:first-child, li.drawer.open + li.drawer {
+li.drawer:first-child,
+li.drawer.open+li.drawer {
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
 }
 
-li.drawer:last-child, li.drawer:has(+ li.drawer.open) {
+li.drawer:last-child,
+li.drawer:has(+ li.drawer.open) {
   border-bottom-left-radius: 1em;
   border-bottom-right-radius: 1em;
 }
@@ -30,7 +32,7 @@ li.drawer .drawer-content {
   gap: 1em;
 }
 
-li.drawer > button {
+li.drawer>button {
   background: none;
   color: var(--foreground-primary);
   border: none;
@@ -43,17 +45,17 @@ li.drawer > button {
   gap: 1em;
 }
 
-li.drawer svg {
+li.drawer .drawer-toggle svg {
   font-size: 2em;
   transform: rotate(180deg);
   transition: transform 0.5s ease;
 }
 
-li.drawer.open svg {
+li.drawer.open .drawer-toggle svg {
   transform: rotate(90deg);
 }
 
-li.drawer > button > h2 {
+li.drawer button.drawer-toggle>h2 {
   margin: 0;
   text-transform: capitalize;
 }

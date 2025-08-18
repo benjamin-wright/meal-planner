@@ -21,8 +21,8 @@ type Props = {
 };
 
 export function SettingsView({ version, settings, volumeUnits, weightUnits, onNav, onSettingsUpdate, onBackup, busy }: Props) {
-  const [ isOpen, setIsOpen ] = useState(false);
-  const [ dialogAction, setDialogAction ] = useState<'restore' | 'reset'>('restore');
+  const [isOpen, setIsOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState<'restore' | 'reset'>('restore');
 
   function getDialogPrompt(action: 'restore' | 'reset') {
     switch (action) {
@@ -45,7 +45,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onNa
   return (
     <Page title="Settings" onNav={onNav}>
       <Accordion>
-        <Drawer id="settings" title="settings" open>
+        <Drawer id="units" title="units" open>
           <ObjectSelect
             options={volumeUnits}
             value={volumeUnits.find(unit => unit.id === settings?.preferredVolumeUnit)}
