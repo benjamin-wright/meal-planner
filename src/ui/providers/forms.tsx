@@ -65,6 +65,10 @@ export function FormProvider({ children }: FormProviderProps) {
   }
 
   const has = (from: string) => {
+    if (from.includes("?")) {
+      from = from.split("?")[0];
+    }
+
     return stack.forms.some(form => form.from === from);
   }
 
@@ -94,6 +98,10 @@ export function FormProvider({ children }: FormProviderProps) {
   }
 
   const getReturn = (to: string, defaultReturn: string) => {
+    if (to.includes("?")) {
+      to = to.split("?")[0];
+    }
+
     if (stack.forms.length === 0) {
       return defaultReturn;
     }

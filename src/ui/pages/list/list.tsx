@@ -25,7 +25,7 @@ const DEBOUNCE_PERIOD = 2000;
 export function List() {
   const navigate = useNavigate();
 
-  const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, extraStore, shoppingStore } = useContext(DBContext);
+  const { settingStore, ingredientStore, categoryStore, unitStore, recipieStore, mealStore, readymealStore, extraStore, shoppingStore } = useContext(DBContext);
   const { setError, setMessage } = useContext(AlertContext);
   const [ resetPrompt, setResetPrompt ] = useState(false);
   const [ speedDial, setSpeedDial ] = useState(false);
@@ -64,7 +64,7 @@ export function List() {
   }, [ settingStore, shoppingStore, categoryStore, unitStore ]);
 
   async function reset() {
-    if (!ingredientStore || !unitStore || !recipieStore || !mealStore || !extraStore || !shoppingStore) {
+    if (!ingredientStore || !unitStore || !recipieStore || !mealStore || !readymealStore || !extraStore || !shoppingStore) {
       return;
     }
     
@@ -80,6 +80,7 @@ export function List() {
       unitStore,
       recipieStore,
       mealStore,
+      readymealStore,
       extraStore,
       shoppingStore,
       setError

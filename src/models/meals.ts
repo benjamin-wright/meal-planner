@@ -16,9 +16,15 @@ export enum MealDay {
   Friday = "friday"
 }
 
+export enum MealRecipieType {
+  Recipie = "recipie",
+  ReadyMeal = "readymeal"
+}
+
 export type MealProps = {
   id: number;
   recipieId: number;
+  recipieType: MealRecipieType;
   servings: number;
   meal: MealType;
   days: MealDay[];
@@ -27,6 +33,7 @@ export type MealProps = {
 export type Meal = {
   id: number;
   recipieId: number;
+  recipieType: MealRecipieType;
   servings: number;
   meal: MealType;
   days: MealDay[];
@@ -50,12 +57,13 @@ export function validate(meal: Meal): boolean {
 
 export function sanitize(value: unknown): Meal {
   if (!isObject(value)) {
-    return { id: 0, recipieId: 0, servings: 0, meal: MealType.Dinner, days: [] };
+    return { id: 0, recipieId: 0, recipieType: MealRecipieType.Recipie, servings: 0, meal: MealType.Dinner, days: [] };
   }
 
   return {
     id: defaultNumber(value.id, 0),
     recipieId: defaultNumber(value.recipieId, 0),
+    recipieType: defaultType<MealRecipieType>(value.recipieType, MealRecipieType.Recipie),
     servings: defaultNumber(value.servings, 0),
     meal: defaultType<MealType>(value.meal, MealType.Dinner),
     days: defaultArray<MealDay>(value.days, day => defaultString(day, MealDay.Saturday) as MealDay),

@@ -11,6 +11,7 @@ import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as ingredients } from "./ui/pages/ingredients/routes";
 import { routes as settings } from "./ui/pages/settings/routes";
+import { routes as readymeals } from "./ui/pages/readymeals/routes";
 import { routes as recipies } from "./ui/pages/recipies/routes";
 import { routes as planner } from "./ui/pages/planner/routes";
 import { routes as list } from "./ui/pages/list/routes";
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
       ...categories,
       ...units,
       ...ingredients,
+      ...readymeals,
       ...recipies,
       ...misc,
       ...data,
