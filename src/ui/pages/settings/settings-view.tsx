@@ -16,11 +16,13 @@ type Props = {
   weightUnits: Unit[];
   onNav: () => void;
   onSettingsUpdate: (settings: settings) => void;
-  onBackup: (action: 'backup' | 'restore' | 'reset') => void;
+  onBackup: () => void;
+  onRestore: () => void;
+  onReset: () => void;
   busy?: boolean;
 };
 
-export function SettingsView({ version, settings, volumeUnits, weightUnits, onNav, onSettingsUpdate, onBackup, busy }: Props) {
+export function SettingsView({ version, settings, volumeUnits, weightUnits, onNav, onSettingsUpdate, onBackup, onRestore, onReset, busy }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState<'restore' | 'reset'>('restore');
 
@@ -68,7 +70,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onNa
             description="Save the current application state to a JSON file on your device."
             content="Backup"
             kind="success"
-            onClick={() => onBackup('backup')}
+            onClick={onBackup}
             disabled={busy}
           />
           <DescriptiveButton
@@ -103,7 +105,14 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onNa
         onClose={(accept) => {
           setIsOpen(false);
           if (accept) {
-            onBackup(dialogAction);
+            switch (dialogAction) {
+              case 'restore':
+                onRestore();
+                break;
+              case 'reset':
+                onReset();
+                break;
+            }
           }
         }}
       />

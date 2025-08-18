@@ -29,3 +29,10 @@
 .unit-list-item td:last-child {
   padding-right: 1em;
 }
+
+.unit-list-item-actions {
+  font-size: 1.5em;
+  display: flex;
+  gap: 0.5em;
+  justify-content: space-between;
+}

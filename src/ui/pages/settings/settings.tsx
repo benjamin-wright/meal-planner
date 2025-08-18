@@ -13,30 +13,24 @@ type Props = {
   version: string;
 };
 
-function useSettingsController() {
+function useDatabase() {
   const { db, dbName, stores } = useContext(DBContext);
-  if (!db || !stores) return { controller: null };
-
-  const controller = new SettingsController(db, dbName, stores.settingStore, stores.unitStore);
-
-  return { controller };
-}
-
-export function Settings({ version }: Props) {
-  const { controller } = useSettingsController();
-  const navigate = useNavigate();
-
-  const { alert } = useContext(AlertContext);
-
+  const [controller, setController] = useState<SettingsController | null>(null);
   const [settings, setSettings] = useState<settings | undefined>(undefined);
   const [volumeUnits, setVolumeUnits] = useState<Unit[]>([]);
   const [weightUnits, setWeightUnits] = useState<Unit[]>([]);
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
-      if (!controller) return;
+    if (!db || !stores) return;
 
+    const controller = new SettingsController(db, dbName, stores.settingStore, stores.unitStore);
+    setController(controller);
+  }, [db, stores])
+
+  useEffect(() => {
+    if (!controller) return;
+
+    const loadSettings = async () => {
       const settings = await controller.getSettings();
       const volumeUnits = await controller.getVolumeUnits();
       const weightUnits = await controller.getWeightUnits();
@@ -46,8 +40,18 @@ export function Settings({ version }: Props) {
       setWeightUnits(weightUnits);
     };
 
-    load();
+    loadSettings();
   }, [controller]);
+
+  return { controller, settings, setSettings, volumeUnits, weightUnits };
+}
+
+export function Settings({ version }: Props) {
+  const { controller, settings, setSettings, volumeUnits, weightUnits } = useDatabase();
+  const [busy, setBusy] = useState(false);
+  
+  const navigate = useNavigate();
+  const { alert } = useContext(AlertContext);
 
   function handleHome() {
     navigate("/");
@@ -64,43 +68,34 @@ export function Settings({ version }: Props) {
     setSettings(settings);
   }
 
-  async function handleBackup(action: 'backup' | 'restore' | 'reset') {
+  async function handleBackup() {
     if (!controller) return;
     setBusy(true);
 
-    switch (action) {
-      case 'backup':
-        const data = await controller.backup();
-        saveFile({ json: data, filename: "meal-planner-backup.json" });
-        setBusy(false);
-        break;
-      case 'restore':
-        try {
-          const data = await loadFile();
-          await controller.restore(data);
-          alert({
-            message: "Settings restored successfully.",
-            severity: "info",
-          });
-        } catch (error) {
-          let errorMessage = "Failed to restore settings from file";
-          if (error instanceof Error) {
-            errorMessage += ": " + error.message;
-          }
+    const data = await controller.backup();
+    saveFile({ json: data, filename: "meal-planner-backup.json" });
+    setBusy(false);
+  }
 
-          alert({
-            message: errorMessage,
-            severity: "error",
-          });
-        } finally {
-          setBusy(false);
-        }
-        break;
-      case 'reset':
-        controller.reset();
-        setTimeout(() => location.reload(), 2000);
-        break;
-    }
+  async function handleRestore() {
+    if (!controller) return;
+    setBusy(true);
+
+    const data = await loadFile();
+    await controller.restore(data);
+    alert({
+      message: "Settings restored successfully.",
+      severity: "info",
+    });
+    setBusy(false);
+  }
+
+  function handleReset() {
+    if (!controller) return;
+    setBusy(true);
+
+    controller.reset();
+    setTimeout(() => location.reload(), 2000);
   }
 
   return (
@@ -112,6 +107,8 @@ export function Settings({ version }: Props) {
       onNav={handleHome}
       onSettingsUpdate={updateSettings}
       onBackup={handleBackup}
+      onRestore={handleRestore}
+      onReset={handleReset}
       busy={busy}
     />
   );
