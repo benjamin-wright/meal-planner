@@ -59,3 +59,8 @@ li.drawer button.drawer-toggle>h2 {
   margin: 0;
   text-transform: capitalize;
 }
+
+li.drawer button.drawer-toggle--small {
+  /* padding: 0.5em; */
+  font-size: 0.7em;
+}

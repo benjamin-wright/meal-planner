@@ -8,9 +8,10 @@ type Props = {
   title: string;
   children: React.ReactNode;
   open?: boolean;
+  size?: 'small' | 'medium' | 'large';
 }
 
-export function Drawer({ id, title, children, open }: Props) {
+export function Drawer({ id, title, children, open, size = 'medium' }: Props) {
   const context = useAccordionContext();
   const isOpen = context.isOpen(id);
 
@@ -21,6 +22,7 @@ export function Drawer({ id, title, children, open }: Props) {
   }, []);
 
   const classes = ["drawer", "glazing", isOpen ? "open" : "closed"];
+  const toggleClasses = ["drawer-toggle", `drawer-toggle--${size}`];
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
 
@@ -56,7 +58,7 @@ export function Drawer({ id, title, children, open }: Props) {
 
   return (
     <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`}>
-      <button className="drawer-toggle" id={id} onClick={() => context.toggle(id)}>
+      <button className={toggleClasses.join(" ")} id={id} onClick={() => context.toggle(id)}>
         <h2>{title}</h2>
         <CaretCircle />
       </button>

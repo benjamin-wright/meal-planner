@@ -8,6 +8,9 @@ type Props = {
 }
 
 export function TabHeader({ id, tabs, selected, onTabChange }: Props) {
+  const tabWidth = 100 / tabs.length;
+  const position = tabs.indexOf(selected) * tabWidth;
+
   return <>
     <div className="tab-header">
       {tabs.map((tab, index) => (
@@ -15,6 +18,10 @@ export function TabHeader({ id, tabs, selected, onTabChange }: Props) {
           {tab}
         </button>
       ))}
+      <div className="tab-header__indicator" style={{
+        width: `${tabWidth}%`,
+        left: `${position}%`
+      }} />
     </div>
   </>
 }

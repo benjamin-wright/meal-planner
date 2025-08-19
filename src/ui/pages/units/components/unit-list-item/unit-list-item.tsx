@@ -14,7 +14,7 @@ type Props = {
 }
 
 export function UnitListItem({ unit, onEdit, onDelete }: Props) {
-  return <Drawer id={`unit-${unit.id}`} title={unit.name}>
+  return <Drawer id={`unit-${unit.id}`} title={unit.name} size="small">
     <div className="unit-list-item">
       {unit.type === "volume" && <MagnitudeView magnitudes={unit.magnitudes} />}
       {unit.type === "weight" && <MagnitudeView magnitudes={unit.magnitudes} />}

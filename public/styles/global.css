@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -13,6 +15,10 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--foreground-primary);
   position: relative;
+}
+
+button {
+  font-size: inherit;
 }
 
 h1 {
