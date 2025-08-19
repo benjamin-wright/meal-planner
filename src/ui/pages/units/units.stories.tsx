@@ -19,8 +19,9 @@ export const Primary: Story = {
       { id: 1, name: 'litre', type: UnitType.Volume, collectives: [], magnitudes: [{ abbrev: "l", singular: "litre", plural: "litres", multiplier: 1 }] },
       { id: 2, name: 'grams', type: UnitType.Weight, collectives: [], magnitudes: [{ abbrev: "g", singular: "gram", plural: "grams", multiplier: 1 }] },
     ],
-    onNav: fn(),
+    onBack: fn(),
     onEdit: fn(),
     onDelete: fn(),
+    onNew: fn(),
   },
 };

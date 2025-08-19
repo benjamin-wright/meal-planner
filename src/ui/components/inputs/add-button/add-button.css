@@ -1,0 +1,12 @@
+.add-button {
+  padding: 0.5em;
+  font-size: 1.4em;
+  text-transform: uppercase;
+  color: var(--foreground-primary);
+  border: none;
+  border-radius: 0.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

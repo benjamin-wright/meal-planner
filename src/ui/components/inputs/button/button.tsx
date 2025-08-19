@@ -2,7 +2,7 @@ import './button.css';
 
 type Props = {
   id: string;
-  content: string;
+  content: React.ReactNode;
   onClick: () => void;
   kind?: 'success' | 'error';
   disabled?: boolean;

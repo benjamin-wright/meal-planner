@@ -28,3 +28,10 @@ export const Primary: Story = {
     onClick: fn(),
   }
 };
+
+export const Circular: Story = {
+  args: {
+    onClick: fn(),
+    circular: true,
+  }
+};
