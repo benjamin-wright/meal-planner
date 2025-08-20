@@ -2,7 +2,12 @@ section.alerts {
   position: fixed;
   top: 1rem;
   right: 1rem;
+  left: 1rem;
   z-index: 1000;
-  max-width: 300px;
   user-select: none;
+}
+
+section.alerts>ul {
+  list-style: none;
+  display: relative;
 }

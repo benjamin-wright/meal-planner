@@ -13,6 +13,7 @@ import { IndexedDB } from "./persistence/IndexedDB/db";
 import { initData } from "./persistence/exporter";
 import { DBFlags } from "./persistence/db-flags";
 import { AlertProvider } from "./ui/providers/alerts";
+import { NotFound } from "./ui/pages/not-found/not-found";
 
 const dbName = "meal-planner";
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       ...settings,
       ...units,
       ...data,
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
   },
 ]);

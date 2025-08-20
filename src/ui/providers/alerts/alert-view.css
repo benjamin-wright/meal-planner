@@ -7,18 +7,29 @@ div.alert {
   align-items: center;
 }
 
-div.alert > svg {
+div.alert>svg {
   font-size: 1.3em;
 }
 
-div.alert > svg.info {
+div.alert>svg.info {
   color: var(--info-primary);
 }
 
-div.alert > svg.warning {
+div.alert>svg.warning {
   color: var(--warning-primary);
 }
 
-div.alert > svg.error {
+div.alert>svg.error {
   color: var(--error-primary);
+}
+
+div.alert div.timer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  padding: 0;
+  margin: 0 0.4em;
+  background-color: orange;
 }
