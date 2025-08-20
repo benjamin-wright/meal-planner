@@ -8,12 +8,8 @@ export class UnitsController {
     this.units = units;
   }
 
-  async getUnits(): Promise<Unit[]> {
-    return this.units.getAll();
-  }
-
-  async getUnit(id: number): Promise<Unit | null> {
-    return this.units.get(id);
+  async getUnits(type: UnitType): Promise<Unit[]> {
+    return this.units.getAllByType(type);
   }
 
   async deleteUnit(id: number): Promise<void> {

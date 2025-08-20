@@ -64,3 +64,7 @@ li.drawer button.drawer-toggle--small {
   /* padding: 0.5em; */
   font-size: 0.7em;
 }
+
+li.drawer section {
+  height: 0px;
+}

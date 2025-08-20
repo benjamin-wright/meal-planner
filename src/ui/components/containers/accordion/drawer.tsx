@@ -21,8 +21,11 @@ export function Drawer({ id, title, children, open, size = 'medium' }: Props) {
     }
   }, []);
 
-  const classes = ["drawer", "glazing", isOpen ? "open" : "closed"];
+  const classes = ["drawer", "glazing", isOpen ? "open" : ""];
   const toggleClasses = ["drawer-toggle", `drawer-toggle--${size}`];
+
+  console.info(`${id}: ${isOpen ? "open" : "closed"}`);
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
 
@@ -55,6 +58,15 @@ export function Drawer({ id, title, children, open, size = 'medium' }: Props) {
       section.removeEventListener("transitionend", handleTransitionEnd);
     }
   }, [isOpen]);
+
+  // Set section height on initial component render to avoid pop-in
+  useEffect(() => {
+    const section = containerRef.current;
+    const content = sectionRef.current;
+    if (!section || !content) return;
+
+    section.style.height = isOpen ? content.scrollHeight + "px" : "0px";
+  }, []);
 
   return (
     <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`}>

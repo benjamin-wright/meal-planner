@@ -3,13 +3,14 @@ import { UnitsView } from "./units-view";
 import { useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
 import { UnitsController } from "../../../controllers/units";
-import { Unit } from "../../../models/units";
+import { Unit, UnitType } from "../../../models/units";
 
 function useDatabase() {
   const { stores } = useContext(DBContext);
 
   const [controller, setController] = useState<UnitsController | null>(null);
   const [units, setUnits] = useState<Unit[]>([]);
+  const [unitType, setUnitType] = useState<UnitType>(UnitType.Weight);
 
   useEffect(() => {
     if (!stores) return;
@@ -22,18 +23,18 @@ function useDatabase() {
     if (!controller) return;
 
     const loadUnits = async () => {
-      const units = await controller.getUnits();
+      const units = await controller.getUnits(unitType);
       setUnits(units);
     };
 
     loadUnits();
-  }, [controller]);
+  }, [controller, unitType]);
 
-  return { controller, units, setUnits };
+  return { controller, units, setUnits, unitType, setUnitType };
 }
 
 export function Units() {
-  const { controller, units, setUnits } = useDatabase();
+  const { controller, units, setUnits, unitType, setUnitType } = useDatabase();
   const navigate = useNavigate();
 
   if (!controller || !units) {
@@ -51,6 +52,8 @@ export function Units() {
 
   return <UnitsView
     units={units}
+    unitType={unitType}
+    onTypeChanged={setUnitType}
     onBack={() => navigate("/data")}
     onEdit={(unit) => navigate(`/units/${unit.id}`)}
     onDelete={handleDelete}

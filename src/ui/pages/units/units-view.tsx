@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { parseType, Unit, UnitType } from "../../../models/units";
 import { Accordion } from "../../components/containers/accordion/accordion";
 import { TabHeader } from "../../components/inputs/tab-header/tab-header";
@@ -8,28 +7,28 @@ import { AddButton } from "../../components/inputs/add-button/add-button";
 
 type Props = {
   units: Unit[];
+  unitType: UnitType;
+  onTypeChanged: (type: UnitType) => void;
   onBack: () => void;
   onEdit: (unit: Unit) => void;
   onDelete: (unit: Unit) => void;
   onNew: () => void;
 }
 
-export function UnitsView({ units, onBack, onEdit, onDelete, onNew }: Props) {
-  const [selectedTab, setSelectedTab] = useState<UnitType>(UnitType.Weight);
-
+export function UnitsView({ units, unitType, onTypeChanged, onBack, onEdit, onDelete, onNew }: Props) {
   function handleTabChange(tab: string) {
     const type = parseType(tab);
     if (type) {
-      setSelectedTab(type);
+      onTypeChanged(type);
     }
   }
 
   return (
     <Page title="Units" onNav={onBack}>
-      <TabHeader id="units-tabs" tabs={[UnitType.Weight, UnitType.Volume, UnitType.Count]} selected={selectedTab} onTabChange={handleTabChange} />
+      <TabHeader id="units-tabs" tabs={[UnitType.Weight, UnitType.Volume, UnitType.Count]} selected={unitType} onTabChange={handleTabChange} />
       <br />
       <Accordion>
-        {units.filter(unit => unit.type === selectedTab).map(unit => (
+        {units.map(unit => (
           <UnitListItem
             key={unit.id}
             unit={unit}
