@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { UnitsEditView } from './units-edit-view';
 import { UnitType } from '../../../../models/units';
 import { useState } from 'react';
+import { fn } from 'storybook/test';
 
 const meta = {
   component: UnitsEditView,
@@ -22,7 +23,9 @@ export const Primary: Story = {
       magnitudes: [],
       collectives: [],
     },
-    onChange: () => { }
+    onChange: () => { },
+    onSubmit: fn(),
+    onNav: fn(),
   },
   render: (args) => {
     const [unit, setUnit] = useState(args.unit);

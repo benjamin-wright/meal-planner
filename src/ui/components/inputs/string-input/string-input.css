@@ -24,3 +24,7 @@ fieldset.string-input input {
   padding: 4px;
   width: 100%;
 }
+
+fieldset.string-input input:focus {
+  border-color: var(--foreground-secondary);
+}
