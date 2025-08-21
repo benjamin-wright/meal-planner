@@ -12,6 +12,10 @@ export class UnitsController {
     return this.units.getAllByType(type);
   }
 
+  async getUnit(id: number): Promise<Unit | null> {
+    return this.units.get(id);
+  }
+
   async deleteUnit(id: number): Promise<void> {
     await this.units.delete(id);
   }

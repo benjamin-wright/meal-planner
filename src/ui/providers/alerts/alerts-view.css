@@ -5,6 +5,7 @@ section.alerts {
   left: 1rem;
   z-index: 1000;
   user-select: none;
+  pointer-events: none;
 }
 
 section.alerts>ul {

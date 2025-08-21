@@ -1,9 +1,9 @@
-import { parseType, Unit, UnitType } from "../../../models/units";
-import { Accordion } from "../../components/containers/accordion/accordion";
-import { TabHeader } from "../../components/inputs/tab-header/tab-header";
-import { Page } from "../../components/layout/page/page";
+import { parseType, Unit, UnitType } from "../../../../models/units";
+import { Accordion } from "../../../components/containers/accordion/accordion";
+import { TabHeader } from "../../../components/inputs/tab-header/tab-header";
+import { Page } from "../../../components/layout/page/page";
 import { UnitListItem } from "./components/unit-list-item/unit-list-item";
-import { AddButton } from "../../components/inputs/add-button/add-button";
+import { AddButton } from "../../../components/inputs/add-button/add-button";
 
 type Props = {
   units: Unit[];

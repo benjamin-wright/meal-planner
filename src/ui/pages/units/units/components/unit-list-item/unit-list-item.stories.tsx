@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { UnitListItem } from './unit-list-item';
-import { UnitType } from '../../../../../models/units';
-import { Accordion } from '../../../../components/containers/accordion/accordion';
+import { UnitType } from '../../../../../../models/units';
+import { Accordion } from '../../../../../components/containers/accordion/accordion';
 import { fn } from 'storybook/test';
 
 const meta = {

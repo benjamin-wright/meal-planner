@@ -1,4 +1,4 @@
-import { Magnitude } from "../../../../../models/units";
+import { Magnitude } from "../../../../../../models/units";
 
 export function MagnitudeView({ magnitudes }: { magnitudes: Magnitude[] }) {
   return (

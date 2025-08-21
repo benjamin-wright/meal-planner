@@ -1,23 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { UnitsView } from "./units-view";
-import { useContext, useEffect, useState } from "react";
-import { DBContext } from "../../providers/database";
-import { UnitsController } from "../../../controllers/units";
-import { Unit, UnitType } from "../../../models/units";
+import { useEffect, useState } from "react";
+import { Unit, UnitType } from "../../../../models/units";
+import { useController } from "../hooks/use-controller";
 
-function useDatabase() {
-  const { stores } = useContext(DBContext);
-
-  const [controller, setController] = useState<UnitsController | null>(null);
+export function Units() {
+  const { controller } = useController();
   const [units, setUnits] = useState<Unit[]>([]);
   const [unitType, setUnitType] = useState<UnitType>(UnitType.Weight);
-
-  useEffect(() => {
-    if (!stores) return;
-
-    const controller = new UnitsController(stores.unitStore);
-    setController(controller);
-  }, [stores]);
 
   useEffect(() => {
     if (!controller) return;
@@ -30,11 +20,6 @@ function useDatabase() {
     loadUnits();
   }, [controller, unitType]);
 
-  return { controller, units, setUnits, unitType, setUnitType };
-}
-
-export function Units() {
-  const { controller, units, setUnits, unitType, setUnitType } = useDatabase();
   const navigate = useNavigate();
 
   if (!controller || !units) {

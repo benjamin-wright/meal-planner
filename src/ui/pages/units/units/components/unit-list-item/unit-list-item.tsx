@@ -1,8 +1,8 @@
-import { Unit } from "../../../../../models/units";
-import { Drawer } from "../../../../components/containers/accordion/drawer";
-import Pencil from "../../../../components/icons/pencil";
-import Trash from "../../../../components/icons/trash";
-import { IconButton } from "../../../../components/inputs/icon-button/icon-button";
+import { Unit } from "../../../../../../models/units";
+import { Drawer } from "../../../../../components/containers/accordion/drawer";
+import Pencil from "../../../../../components/icons/pencil";
+import Trash from "../../../../../components/icons/trash";
+import { IconButton } from "../../../../../components/inputs/icon-button/icon-button";
 import { CountView } from "./count-view";
 import { MagnitudeView } from "./mangitude-view";
 import "./unit-list-item.css";

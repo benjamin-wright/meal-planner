@@ -1,4 +1,4 @@
-import { Collective } from "../../../../../models/units";
+import { Collective } from "../../../../../../models/units";
 
 export function CountView({ collectives }: { collectives: Collective[] }) {
   return (

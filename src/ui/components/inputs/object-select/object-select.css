@@ -12,6 +12,7 @@
 
 .object-select legend {
   font-size: 0.8em;
+  color: var(--foreground-secondary);
 }
 
 .object-select select {

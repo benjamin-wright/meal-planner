@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from 'storybook/test';
 import { UnitsView } from './units-view';
-import { UnitType } from '../../../models/units';
+import { UnitType } from '../../../../models/units';
 import { useState } from 'react';
 
 const meta = {

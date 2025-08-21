@@ -5,6 +5,7 @@
     --background-primary: #222831;
     --background-secondary: #393e46;
     --foreground-primary: #ffffff;
+    --foreground-secondary: #cccccc;
     --foreground-disabled: #aaaaaa;
     --success-primary: #379b46;
     --error-primary: #d22a24;
@@ -22,6 +23,7 @@
     --background-primary: #ffffff;
     --background-secondary: #cccccc;
     --foreground-primary: #000;
+    --foreground-secondary: #666;
     --success-primary: #5cb85c;
     --error-primary: #d22a24;
     --warning-primary: #f0ad4e;
