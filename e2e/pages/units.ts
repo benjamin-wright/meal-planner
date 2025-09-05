@@ -1,6 +1,11 @@
 import { expect, Page } from "@playwright/test";
 import { EditUnitPage } from "./edit-unit";
 
+type UnitData = {
+  base?: number;
+  data: string[][];
+}
+
 export class UnitsPage {
   private readonly page: Page;
 
@@ -8,8 +13,9 @@ export class UnitsPage {
     this.page = page;
   }
 
-  async currentPage() {
+  async expectCurrent() {
     await expect(this.page).toHaveURL(/\/units/);
+    await expect(this.page.getByRole('heading', { name: 'Units' })).toBeVisible();
   }
 
   async goto() {
@@ -17,15 +23,18 @@ export class UnitsPage {
     await expect(this.page.getByRole('heading', { name: 'Units' })).toBeVisible();
   }
 
-  getTab(tabName: string) {
-    return this.page.getByRole('tab', { name: tabName, selected: true });
+  async currentTab() {
+    const currentTab = this.page.getByRole('tablist').getByRole('tab', { selected: true });
+    await expect(currentTab).toHaveCount(1);
+
+    return currentTab.textContent();
   }
 
   async setTab(tabName: string) {
     const tab = this.page.getByRole('tab', { name: tabName });
     await expect(tab).toBeVisible();
     await tab.click();
-    await expect(this.getTab(tabName)).toBeVisible();
+    await expect(this.page.getByRole('tablist').getByRole('tab', { name: tabName })).toHaveAttribute('aria-selected', 'true');
   }
 
   async newUnit() {
@@ -39,25 +48,35 @@ export class UnitsPage {
     return new EditUnitPage(this.page);
   }
 
-  async listUnits(): Promise<string[]> {
-    const headings = this.page.getByTestId('detail-view-group').getByTestId(/detail-view:.*/).getByRole('heading');
-    await expect(headings).not.toHaveCount(0);
+  async expectUnits(units: string[]) {
+    const buttons = this.page
+      .getByRole('listitem', { name: /Collapsible section for/ })
+      .getByRole('button', { name: "Toggle section" });
 
-    const headingElements = await headings.all();
-    const contents = await Promise.all(headingElements.map(unit => unit.textContent()));
-    return contents.filter(text => text !== null);
+    await expect(buttons).toHaveCount(units.length);
+    for (const unit of units) {
+      await expect(buttons.filter({ hasText: unit })).toHaveCount(1);
+    }
   }
 
-  async editUnit(unitName: string) {
-    const unitButton = this.page.getByTestId(`detail-view:${unitName}`).getByRole('button');
-    await unitButton.click();
+  async expandUnit(unitName: string) {
+    const button = this.page
+      .getByRole('listitem', { name: `Collapsible section for ${unitName}` })
+      .getByRole('button', { name: "Toggle section" });
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
 
-    const updateButton = this.page.getByTestId(`detail-view:${unitName}`).getByRole('button', { name: 'edit-link' });
-    await expect(updateButton).toHaveCount(1);
+    await button.click();
+  }
 
-    await updateButton.first().click();
-    await expect(this.page).toHaveURL(new RegExp(`/units/\\d+`));
+  async getUnitDetails(unitName: string): Promise<string[][]> {
+    const unitSection = this.page.getByRole('listitem', { name: `Collapsible section for ${unitName}` }).getByRole('definition');
+    await expect(unitSection).toBeVisible();
 
-    return new EditUnitPage(this.page);
+    const rows = await unitSection.getByRole('table').getByRole('row').all();
+
+    return Promise.all(rows.map(async row => {
+      return Promise.all((await row.getByRole('cell').all()).map(async cell => (await cell.textContent()) || ''));
+    }));
   }
 }

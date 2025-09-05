@@ -2,16 +2,18 @@ import React, { useRef, useEffect } from "react"
 import "./drawer.css";
 import CaretCircle from "../../icons/caret-circle";
 import { useAccordionContext } from "./accordion-context";
+import { test } from "vitest";
 
 type Props = {
   id: string;
+  testId?: string;
   title: string;
   children: React.ReactNode;
   open?: boolean;
   size?: 'small' | 'medium' | 'large';
 }
 
-export function Drawer({ id, title, children, open, size = 'medium' }: Props) {
+export function Drawer({ id, testId, title, children, open, size = 'medium' }: Props) {
   const context = useAccordionContext();
   const isOpen = context.isOpen(id);
 
@@ -69,12 +71,12 @@ export function Drawer({ id, title, children, open, size = 'medium' }: Props) {
   }, []);
 
   return (
-    <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`}>
-      <button className={toggleClasses.join(" ")} id={id} onClick={() => context.toggle(id)}>
+    <li className={classes.join(" ")} aria-label={`Collapsible section for ${title}`} data-testid={testId}>
+      <button className={toggleClasses.join(" ")} id={id} onClick={() => context.toggle(id)} aria-controls={`${id}-section`} aria-expanded={isOpen} aria-label="Toggle section">
         <h2>{title}</h2>
         <CaretCircle />
       </button>
-      <section ref={containerRef} style={{ overflow: 'hidden', transition: 'height 0.5s ease' }}>
+      <section id={`${id}-section`} role="definition" ref={containerRef} style={{ overflow: 'hidden', transition: 'height 0.5s ease' }} aria-labelledby={id}>
         <div ref={sectionRef} className="drawer-content">
           {children}
         </div>

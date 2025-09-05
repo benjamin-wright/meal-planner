@@ -12,9 +12,9 @@ export function TabHeader({ id, tabs, selected, onTabChange }: Props) {
   const position = tabs.indexOf(selected) * tabWidth;
 
   return <>
-    <div className="tab-header">
+    <div className="tab-header" role="tablist" aria-label="Tab List" id={id}>
       {tabs.map((tab, index) => (
-        <button id={`${id}-tab-${index}`} aria-label={tab} className={`glazing ${selected === tab ? 'selected' : ''}`} key={tab} onClick={() => onTabChange(tab)}>
+        <button id={`${id}-tab-${index}`} role="tab" aria-label={tab} aria-selected={selected === tab} className={`glazing ${selected === tab ? 'selected' : ''}`} key={tab} onClick={() => onTabChange(tab)}>
           {tab}
         </button>
       ))}
