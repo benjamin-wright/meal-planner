@@ -21,6 +21,7 @@ fieldset.string-input input {
   outline: none;
   background: none;
   border-bottom: 1px solid var(--background-secondary);
+  border-radius: 0;
   padding: 4px;
   width: 100%;
 }

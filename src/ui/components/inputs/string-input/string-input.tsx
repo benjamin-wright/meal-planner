@@ -12,6 +12,7 @@ type Props = {
 export function StringInput({ id, label, placeholder, disabled, value, onChange }: Props) {
   return <fieldset className="string-input" disabled={disabled}>
     <legend>{label}</legend>
+    <label htmlFor={id} hidden>{label}</label>
     <input type="text" id={id} placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} />
   </fieldset>;
 }

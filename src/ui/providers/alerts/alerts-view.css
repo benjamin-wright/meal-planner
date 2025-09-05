@@ -10,5 +10,7 @@ section.alerts {
 
 section.alerts>ul {
   list-style: none;
-  display: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
 }

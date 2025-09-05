@@ -32,13 +32,15 @@ p {
   padding: 0;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .glazing {
   background-color: var(--glazing);
   backdrop-filter: blur(0.4em);
   -webkit-backdrop-filter: blur(0.4em);
   box-shadow: var(--control-shadow);
-}
-
-.hidden {
-  display: none;
 }

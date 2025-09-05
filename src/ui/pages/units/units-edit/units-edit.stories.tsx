@@ -17,9 +17,9 @@ export const Primary: Story = {
   },
   args: {
     unit: {
-      id: 3,
+      id: 0,
       name: "Test Unit",
-      type: UnitType.Volume,
+      type: UnitType.Weight,
       magnitudes: [],
       collectives: [],
     },

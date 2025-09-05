@@ -8,7 +8,7 @@ type Props = {
 
 export function AddButton({ onClick, id }: Props) {
   return (
-    <button className="add-button glazing" onClick={onClick} id={id}>
+    <button className="add-button glazing" onClick={onClick} id={id} aria-label="Add button">
       <Plus />
     </button>
   );

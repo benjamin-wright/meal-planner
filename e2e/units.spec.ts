@@ -61,4 +61,14 @@ test.describe('Units Page', () => {
       ['N/A', 'N/A'],
     ]);
   });
+
+  test('can create a new unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+
+    const editUnitPage = await unitsPage.newUnit();
+    await editUnitPage.expectNew();
+
+    await editUnitPage.setName('test unit');
+  });
 });

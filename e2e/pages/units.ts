@@ -38,7 +38,7 @@ export class UnitsPage {
   }
 
   async newUnit() {
-    const createButton = this.page.getByRole('button', { name: 'add-button' });
+    const createButton = this.page.getByRole('button', { name: 'Add button' });
     await expect(createButton).toBeVisible();
     await expect(createButton).toBeEnabled();
 

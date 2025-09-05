@@ -1,4 +1,5 @@
-import { Unit } from "../../../../models/units";
+import { Unit, UnitType } from "../../../../models/units";
+import { ObjectSelect } from "../../../components/inputs/object-select/object-select";
 import { StringInput } from "../../../components/inputs/string-input/string-input";
 import { Form } from "../../../components/layout/form/form";
 
@@ -17,6 +18,15 @@ export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
         label="Unit Name"
         value={unit.name}
         onChange={(value) => onChange({ ...unit, name: value })}
+      />
+
+      <ObjectSelect
+        id="unit-type"
+        label="Unit Type"
+        value={unit.type}
+        options={[UnitType.Weight, UnitType.Volume, UnitType.Count]}
+        onChange={(value) => onChange({ ...unit, ...(value ? { type: value } : {}) })}
+        toDisplay={(option) => option}
       />
     </Form>
   );
