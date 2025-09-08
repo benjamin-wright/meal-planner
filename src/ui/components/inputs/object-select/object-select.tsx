@@ -1,3 +1,4 @@
+import { Fieldset } from '../fieldset/fieldset';
 import './object-select.css';
 
 type Props<T> = {
@@ -19,18 +20,14 @@ export function ObjectSelect<T>({ options, id, value, label, onChange, toDisplay
   }
 
   return (
-    <fieldset className="object-select" disabled={disabled}>
-      <legend>{label}</legend>
-      <label hidden htmlFor={id}>
-        {label}
-      </label>
-      <select id={id} value={value ? toDisplay(value) : ""} onChange={handleChange}>
+    <Fieldset label={label} id={id} disabled={disabled}>
+      <select className="object-select" id={id} value={value ? toDisplay(value) : ""} onChange={handleChange}>
         {options.map((option) => (
           <option key={toDisplay(option)} value={toDisplay(option)}>
             {toDisplay(option)}
           </option>
         ))}
       </select>
-    </fieldset>
+    </Fieldset>
   );
 }

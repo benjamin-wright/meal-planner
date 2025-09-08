@@ -1,0 +1,22 @@
+.fieldset-default {
+  position: relative;
+  border: solid 1px var(--background-secondary);
+  border-radius: 4px;
+  background-color: var(--background-primary);
+  border-color: var(--background-secondary);
+  padding-top: 0.8em;
+}
+
+.fieldset-default:disabled {
+  background: var(--background-secondary);
+  color: var(--foreground-disabled);
+}
+
+
+.fieldset-default legend,
+.fieldset-default .legend {
+  font-size: 0.8em;
+  color: var(--foreground-secondary);
+  position: absolute;
+  top: -0.6em;
+}

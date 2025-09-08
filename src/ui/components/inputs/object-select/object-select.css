@@ -1,23 +1,4 @@
 .object-select {
-  box-sizing: border-box;
-  border: solid 1px var(--background-secondary);
-  border-radius: 4px;
-  background-color: var(--background-primary);
-  border-color: var(--background-secondary);
-}
-
-.object-select:disabled {
-  background: var(--background-secondary);
-  color: var(--foreground-disabled);
-}
-
-.object-select legend {
-  font-size: 0.8em;
-  color: var(--foreground-secondary);
-  position: absolute;
-}
-
-.object-select select {
   background: none;
   border: none;
   font-size: 1em;
@@ -29,21 +10,20 @@
   text-transform: capitalize;
 }
 
-.object-select select:focus {
+.object-select:focus {
   outline: none;
   border-color: var(--foreground-secondary);
 }
 
-.object-select select:disabled {
+.object-select:disabled {
   color: var(--foreground-disabled);
   cursor: not-allowed;
 }
 
-/* 
 .object-select option {
   background: var(--background-primary);
   border: none;
   font-size: 1em;
   color: var(--foreground-primary);
   width: 100%;
-} */
+}

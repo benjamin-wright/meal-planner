@@ -12,6 +12,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    id: "test-object-select",
     label: "test label",
     options: [
       { id: '1', name: 'Option 1' },
@@ -25,6 +26,7 @@ export const Primary: Story = {
 
 export const Disabled: Story = {
   args: {
+    id: "test-object-select",
     label: "test label",
     options: [
       { id: '1', name: 'Option 1' },

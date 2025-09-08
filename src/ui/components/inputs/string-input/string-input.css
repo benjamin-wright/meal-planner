@@ -1,20 +1,4 @@
-fieldset.string-input {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: var(--background-primary);
-  border-color: var(--background-secondary);
-}
-
-fieldset.string-input legend {
-  font-size: 0.8em;
-  color: var(--foreground-secondary);
-}
-
-fieldset.string-input[disabled] {
-  opacity: 0.5;
-}
-
-fieldset.string-input input {
+.string-input {
   font-size: 1em;
   color: var(--foreground-primary);
   border: none;
@@ -26,6 +10,6 @@ fieldset.string-input input {
   width: 100%;
 }
 
-fieldset.string-input input:focus {
+.string-input:focus {
   border-color: var(--foreground-secondary);
 }
