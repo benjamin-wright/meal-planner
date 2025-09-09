@@ -70,5 +70,6 @@ test.describe('Units Page', () => {
     await editUnitPage.expectNew();
 
     await editUnitPage.setName('test unit');
+    await editUnitPage.setType('volume');
   });
 });

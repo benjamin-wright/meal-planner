@@ -21,6 +21,7 @@ export function ObjectSelect<T>({ options, id, value, label, onChange, toDisplay
 
   return (
     <Fieldset label={label} id={id} disabled={disabled}>
+      <label htmlFor={id} hidden>{label}</label>
       <select className="object-select" id={id} value={value ? toDisplay(value) : ""} onChange={handleChange}>
         {options.map((option) => (
           <option key={toDisplay(option)} value={toDisplay(option)}>

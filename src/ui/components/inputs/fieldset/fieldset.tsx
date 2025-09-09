@@ -5,17 +5,17 @@ type Props = {
   label: string;
   id: string;
   disabled?: boolean;
+  group?: boolean;
 }
 
-export function Fieldset({ children, label, id, disabled }: Props) {
+export function Fieldset({ children, label, id, disabled, group }: Props) {
+  const classList = ['fieldset-default', (group ? 'fieldset-group' : '')].join(' ').trim();
+
   return (
-    <fieldset className="fieldset-default" id={`${id}-fieldset`} aria-labelledby={`${id}-legend`} disabled={disabled}>
+    <fieldset className={classList} id={`${id}-fieldset`} disabled={disabled}>
       <div className="legend" id={`${id}-legend`}>
         <span>{label}</span>
       </div>
-      <label hidden htmlFor={id}>
-        {label}
-      </label>
       {children}
     </fieldset>
   );

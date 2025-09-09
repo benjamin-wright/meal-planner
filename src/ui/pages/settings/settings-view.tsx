@@ -49,6 +49,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onNa
       <Accordion>
         <Drawer id="units" title="units" open>
           <ObjectSelect
+            id="preferred-volume-unit"
             options={volumeUnits}
             value={volumeUnits.find(unit => unit.id === settings?.preferredVolumeUnit)}
             label="Default volume unit"
@@ -57,6 +58,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, onNa
             disabled={busy}
           />
           <ObjectSelect
+            id="preferred-weight-unit"
             options={weightUnits}
             value={weightUnits.find(unit => unit.id === settings?.preferredWeightUnit)}
             label="Default weight unit"

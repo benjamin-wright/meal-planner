@@ -39,4 +39,16 @@ export class EditUnitPage {
 
     await nameInput.fill(value);
   }
+
+  async getType() {
+    return this.page.getByLabel('Type').inputValue();
+  }
+
+  async setType(value: string) {
+    const typeInput = this.page.getByLabel('Type');
+    await expect(typeInput).toBeVisible();
+    await expect(typeInput).toBeEnabled();
+
+    await typeInput.selectOption(value);
+  }
 }
