@@ -6,10 +6,11 @@ type Props = {
   id: string;
   disabled?: boolean;
   group?: boolean;
+  className?: string;
 }
 
-export function Fieldset({ children, label, id, disabled, group }: Props) {
-  const classList = ['fieldset-default', (group ? 'fieldset-group' : '')].join(' ').trim();
+export function Fieldset({ children, label, id, disabled, group, className }: Props) {
+  const classList = ['fieldset-default', (group ? 'fieldset-group' : ''), className].join(' ').trim();
 
   return (
     <fieldset className={classList} id={`${id}-fieldset`} disabled={disabled}>

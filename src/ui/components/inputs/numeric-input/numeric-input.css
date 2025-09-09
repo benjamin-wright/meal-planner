@@ -1,0 +1,38 @@
+.numeric-input {
+  font-size: 1em;
+  color: var(--foreground-primary);
+  border: none;
+  outline: none;
+  background: none;
+  border-bottom: 1px solid var(--background-secondary);
+  border-radius: 0;
+  padding: 4px;
+  width: 100%;
+}
+
+.numeric-input:focus {
+  border-color: var(--foreground-secondary);
+}
+
+/* 
+.numeric-input::-webkit-inner-spin-button,
+.numeric-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  width: 1em;
+  background: var(--background-secondary);
+  border-radius: 2px;
+  opacity: 0;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+}
+
+.numeric-input::-webkit-inner-spin-button:active,
+.numeric-input::-webkit-outer-spin-button:active,
+.numeric-input:hover::-webkit-inner-spin-button,
+.numeric-input:hover::-webkit-outer-spin-button {
+  opacity: 1;
+} */

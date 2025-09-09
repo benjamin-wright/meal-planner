@@ -1,4 +1,5 @@
 import { Magnitude } from "../../../../../models/units"
+import { NumericInput } from "../../../../components/inputs/numeric-input/numeric-input";
 import { StringInput } from "../../../../components/inputs/string-input/string-input";
 import "./magnitude-edit.css";
 
@@ -18,6 +19,12 @@ export function MagnitudeEdit({ id, magnitude, onChange, onDelete }: Props) {
         value={magnitude.abbrev}
         onChange={(value) => onChange({ ...magnitude, abbrev: value })}
       />
+      <NumericInput
+        id={`${id}-multiplier`}
+        label="multiplier"
+        value={magnitude.multiplier}
+        onChange={(value) => onChange({ ...magnitude, multiplier: value })}
+      />
       <StringInput
         id={`${id}-singular`}
         label="singular"
@@ -29,19 +36,6 @@ export function MagnitudeEdit({ id, magnitude, onChange, onDelete }: Props) {
         label="plural"
         value={magnitude.plural}
         onChange={(value) => onChange({ ...magnitude, plural: value })}
-      />
-      <StringInput
-        id={`${id}-multiplier`}
-        label="multiplier"
-        value={magnitude.multiplier.toString()}
-        onChange={(value) => {
-          const parsed = parseFloat(value);
-          if (!isNaN(parsed)) {
-            onChange({ ...magnitude, multiplier: parsed });
-          } else if (value === "") {
-            onChange({ ...magnitude, multiplier: 0 });
-          }
-        }}
       />
     </div>
   );
