@@ -17,8 +17,8 @@ export function Dialog({ isOpen, onClose, prompt, warning }: Props) {
         <h2>{prompt}</h2>
         <p className="warning">{warning}</p>
         <div className="button-row">
-          <Button onClick={() => onClose(true)} content="OK" kind="success" />
-          <Button onClick={() => onClose(false)} content="Cancel" kind="error" />
+          <Button id="confirm-delete-button" onClick={() => onClose(true)} content="OK" kind="success" />
+          <Button id="cancel-delete-button" onClick={() => onClose(false)} content="Cancel" kind="error" />
         </div>
       </div>
     </section>

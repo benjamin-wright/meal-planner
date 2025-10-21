@@ -26,8 +26,6 @@ export function Drawer({ id, testId, title, children, open, size = 'medium' }: P
   const classes = ["drawer", "glazing", isOpen ? "open" : ""];
   const toggleClasses = ["drawer-toggle", `drawer-toggle--${size}`];
 
-  console.info(`${id}: ${isOpen ? "open" : "closed"}`);
-
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
 

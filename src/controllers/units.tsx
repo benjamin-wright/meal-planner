@@ -19,4 +19,12 @@ export class UnitsController {
   async deleteUnit(id: number): Promise<void> {
     await this.units.delete(id);
   }
+
+  async saveUnit(unit: Unit): Promise<void> {
+    if (unit.id && unit.id > 0) {
+      await this.units.put(unit);
+    } else {
+      await this.units.add(unit.name, unit.type, unit.magnitudes, unit.collectives);
+    }
+  }
 }

@@ -1,4 +1,6 @@
 import { Page } from "../page/page";
+import { Button } from "../../inputs/button/button";
+import './form.css';
 
 type Props = {
   title: string
@@ -9,8 +11,11 @@ type Props = {
 
 export function Form({ title, children, onNav, onSubmit }: Props) {
   return <Page title={title} onNav={onNav}>
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
-      {children}
-    </form>
+    <section className="form-section">
+      <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+        {children}
+      </form>
+      <Button id="confirm-submit-button" onClick={() => onSubmit()} content="Save" kind="success" />
+    </section>
   </Page>;
 }

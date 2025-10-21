@@ -33,5 +33,13 @@ export function UnitsEdit() {
     fetchUnit();
   }, [unitId, controller]);
 
-  return <UnitsEditView unit={unit} onChange={setUnit} onNav={() => navigate(-1)} onSubmit={(unit) => console.info(JSON.stringify(unit))} />;
+  async function handleSubmit(unit: Unit) {
+    if (!controller) {
+      return;
+    }
+    await controller.saveUnit(unit);
+    navigate(-1);
+  }
+
+  return <UnitsEditView unit={unit} onChange={setUnit} onNav={() => navigate(-1)} onSubmit={handleSubmit} />;
 }
