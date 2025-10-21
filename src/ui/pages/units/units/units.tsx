@@ -1,13 +1,24 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsView } from "./units-view";
 import { useEffect, useState } from "react";
 import { Unit, UnitType } from "../../../../models/units";
 import { useController } from "../hooks/use-controller";
 
 export function Units() {
+  const navigate = useNavigate();
+
   const { controller } = useController();
+  const [ search ] = useSearchParams();
+
+  const type = search.get("type") as UnitType | undefined;
   const [units, setUnits] = useState<Unit[]>([]);
-  const [unitType, setUnitType] = useState<UnitType>(UnitType.Weight);
+  const [unitType, setUnitType] = useState<UnitType>(type || UnitType.Weight);
+
+  useEffect(() => {
+    if (type !== unitType) {
+      navigate(`/units?type=${unitType}`, { replace: true });
+    }
+  }, [type, unitType]);
 
   useEffect(() => {
     if (!controller) return;
@@ -20,7 +31,6 @@ export function Units() {
     loadUnits();
   }, [controller, unitType]);
 
-  const navigate = useNavigate();
 
   if (!controller || !units) {
     return <div>Loading...</div>; // Handle loading state
@@ -38,10 +48,10 @@ export function Units() {
   return <UnitsView
     units={units}
     unitType={unitType}
-    onTypeChanged={setUnitType}
+    onTypeChanged={(type: UnitType) => setUnitType(type)}
     onBack={() => navigate("/data")}
     onEdit={(unit) => navigate(`/units/${unit.id}`)}
     onDelete={handleDelete}
-    onNew={() => navigate("/units/new")}
+    onNew={(type: UnitType) => navigate(`/units/new?type=${type}`)}
   />;
 }

@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import { useController } from "../hooks/use-controller";
 import { UnitsEditView } from "./units-edit-view";
 import { Unit, UnitType } from "../../../../models/units";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export function UnitsEdit() {
   const navigate = useNavigate();
   const params = useParams();
+  const [search] = useSearchParams();
   const unitId = params.id ? parseInt(params.id, 10) : null;
+  const type = search.get("type") as UnitType | undefined;
 
   const { controller } = useController();
   const [unit, setUnit] = useState<Unit>({
     id: 0,
     name: "",
-    type: UnitType.Weight,
+    type: type || UnitType.Count,
     magnitudes: [],
     collectives: []
   });

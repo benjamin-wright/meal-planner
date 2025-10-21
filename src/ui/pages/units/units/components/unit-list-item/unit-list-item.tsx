@@ -20,8 +20,8 @@ export function UnitListItem({ unit, onEdit, onDelete }: Props) {
       {unit.type === "weight" && <MagnitudeView magnitudes={unit.magnitudes} />}
       {unit.type === "count" && <CountView collectives={unit.collectives} />}
       <div className="unit-list-item-actions">
-        <IconButton id="edit-button" icon={<Pencil />} circular onClick={onEdit} />
-        <IconButton id="delete-button" icon={<Trash />} circular kind="error" onClick={onDelete} />
+        <IconButton id="edit-button" icon={<Pencil />} label="Edit unit" circular onClick={onEdit} />
+        <IconButton id="delete-button" icon={<Trash />} label="Delete unit" circular kind="error" onClick={onDelete} />
       </div>
     </div>
   </Drawer>;

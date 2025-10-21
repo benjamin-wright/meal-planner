@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from './pages/home';
 import { UnitsPage } from './pages/units';
 import { DataPage } from './pages/data';
+import { Header } from './pages/header';
 
 test.describe('Units Page', () => {
   test('reachable from the main menu', async ({ page }) => {
@@ -66,10 +67,67 @@ test.describe('Units Page', () => {
     const unitsPage = new UnitsPage(page);
     await unitsPage.goto();
 
+    await unitsPage.setTab('volume');
     const editUnitPage = await unitsPage.newUnit();
     await editUnitPage.expectNew();
 
     await editUnitPage.setName('test unit');
-    await editUnitPage.setType('volume');
+    expect(await editUnitPage.getType()).toBe('volume');
+    await editUnitPage.save();
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits(['litre', 'test unit']);
+  });
+
+  ['weight', 'volume', 'count'].forEach(type => {
+    test(`new units of type "${type}" have correct default values`, async ({ page }) => {
+      const unitsPage = new UnitsPage(page);
+      await unitsPage.goto();
+      await unitsPage.setTab(type);
+
+      const editUnitPage = await unitsPage.newUnit();
+      await editUnitPage.expectNew();
+
+      expect(await editUnitPage.getType()).toBe(type);
+    });
+  });
+
+  test('can edit an existing unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+    await unitsPage.expandUnit('gram');
+
+    const editUnitPage = await unitsPage.editUnit('gram');
+    await editUnitPage.expectExisting('gram');
+
+    expect(await editUnitPage.getName()).toBe('gram');
+    expect(await editUnitPage.getType()).toBe('weight');
+
+    await editUnitPage.setName('edited gram');
+    await editUnitPage.save();
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits(['edited gram']);
+  });
+
+  test('can cancel editing an existing unit', async ({ page }) => {
+    const header = new Header(page);
+    const unitsPage = new UnitsPage(page);
+    
+    await unitsPage.goto();
+    await unitsPage.expandUnit('gram');
+
+    const editUnitPage = await unitsPage.editUnit('gram');
+    await editUnitPage.expectExisting('gram');
+
+    expect(await editUnitPage.getName()).toBe('gram');
+    expect(await editUnitPage.getType()).toBe('weight');
+
+    await editUnitPage.setName('edited gram');
+    
+    await header.back();
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits(['gram']);
   });
 });

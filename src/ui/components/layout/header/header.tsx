@@ -9,7 +9,7 @@ type Props = {
 }
 
 export function Header({ title, onNav }: Props) {
-  const icon = onNav ? <IconButton onClick={onNav} icon={<Back />} /> : <House />;
+  const icon = onNav ? <IconButton onClick={onNav} icon={<Back />} label="Nav back" /> : <House />;
 
   return (
     <div className="header glazing">

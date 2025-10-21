@@ -69,6 +69,19 @@ export class UnitsPage {
     await button.click();
   }
 
+  async editUnit(unitName: string) {
+    const editButton = this.page
+      .getByRole('listitem', { name: `Collapsible section for ${unitName}` })
+      .getByRole('button', { name: 'Edit unit' });
+    await expect(editButton).toBeVisible();
+    await expect(editButton).toBeEnabled();
+
+    await editButton.click();
+
+    await expect(this.page).toHaveURL(/\/units\/\d+/);
+    return new EditUnitPage(this.page);
+  }
+
   async getUnitDetails(unitName: string): Promise<string[][]> {
     const unitSection = this.page.getByRole('listitem', { name: `Collapsible section for ${unitName}` }).getByRole('definition');
     await expect(unitSection).toBeVisible();

@@ -14,7 +14,7 @@ type Props = {
   onBack: () => void;
   onEdit: (unit: Unit) => void;
   onDelete: (unit: Unit) => void;
-  onNew: () => void;
+  onNew: (type: UnitType) => void;
 }
 
 export function UnitsView({ units, unitType, onTypeChanged, onBack, onEdit, onDelete, onNew }: Props) {
@@ -48,7 +48,7 @@ export function UnitsView({ units, unitType, onTypeChanged, onBack, onEdit, onDe
         ))}
         <AddButton
           id="add-unit-button"
-          onClick={onNew}
+          onClick={() => onNew(unitType)}
         />
       </Accordion>
       <Dialog

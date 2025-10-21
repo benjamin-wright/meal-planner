@@ -28,6 +28,10 @@ export class EditUnitPage {
     await expect(this.page.getByRole('heading', { name: 'Unit: New' })).toBeVisible();
   }
 
+  async expectExisting(unitName: string) {
+    await expect(this.page.getByRole('heading', { name: `Unit: ${unitName}` })).toBeVisible();
+  }
+
   async getName() {
     return this.page.getByLabel('Name').first().inputValue();
   }
@@ -50,5 +54,13 @@ export class EditUnitPage {
     await expect(typeInput).toBeEnabled();
 
     await typeInput.selectOption(value);
+  }
+
+  async save() {
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await expect(saveButton).toBeVisible();
+    await expect(saveButton).toBeEnabled();
+
+    await saveButton.click();
   }
 }
