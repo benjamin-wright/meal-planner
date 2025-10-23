@@ -1,5 +1,7 @@
+import { useContext, useEffect, useState } from "react";
 import { Unit, UnitType } from "../models/units";
 import { UnitStore } from "../persistence/interfaces/units";
+import { DBContext } from "../ui/providers/database";
 
 export class UnitsController {
   private units: UnitStore;
@@ -27,4 +29,19 @@ export class UnitsController {
       await this.units.add(unit.name, unit.type, unit.magnitudes, unit.collectives);
     }
   }
+}
+
+export function useController() {
+  const { stores } = useContext(DBContext);
+
+  const [controller, setController] = useState<UnitsController | null>(null);
+
+  useEffect(() => {
+    if (!stores) return;
+
+    const controller = new UnitsController(stores.unitStore);
+    setController(controller);
+  }, [stores]);
+
+  return { controller };
 }

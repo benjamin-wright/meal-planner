@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useController } from "../hooks/use-controller";
+import { useController } from "../../../../controllers/units";
 import { UnitsEditView } from "./units-edit-view";
 import { Unit, UnitType } from "../../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";

@@ -14,15 +14,15 @@ type Props = {
   settings: settings;
   volumeUnits: Unit[];
   weightUnits: Unit[];
+  busy?: boolean;
   onNav: () => void;
   onSettingsUpdate: (settings: settings) => void;
   onBackup: () => void;
   onRestore: () => void;
   onReset: () => void;
-  busy?: boolean;
 };
 
-export function SettingsView({ version, settings, volumeUnits, weightUnits, onNav, onSettingsUpdate, onBackup, onRestore, onReset, busy }: Props) {
+export function SettingsView({ version, settings, volumeUnits, weightUnits, busy, onNav, onSettingsUpdate, onBackup, onRestore, onReset }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState<'restore' | 'reset'>('restore');
 

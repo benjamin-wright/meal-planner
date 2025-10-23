@@ -2,13 +2,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsView } from "./units-view";
 import { useEffect, useState } from "react";
 import { Unit, UnitType } from "../../../../models/units";
-import { useController } from "../hooks/use-controller";
+import { useController } from "../../../../controllers/units";
 
 export function Units() {
   const navigate = useNavigate();
 
   const { controller } = useController();
-  const [ search ] = useSearchParams();
+  const [search] = useSearchParams();
 
   const type = search.get("type") as UnitType | undefined;
   const [units, setUnits] = useState<Unit[]>([]);
@@ -23,12 +23,10 @@ export function Units() {
   useEffect(() => {
     if (!controller) return;
 
-    const loadUnits = async () => {
+    (async () => {
       const units = await controller.getUnits(unitType);
       setUnits(units);
-    };
-
-    loadUnits();
+    })();
   }, [controller, unitType]);
 
 

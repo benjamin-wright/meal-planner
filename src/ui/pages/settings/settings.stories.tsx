@@ -29,6 +29,8 @@ export const Primary: Story = {
     onNav: fn(),
     onSettingsUpdate: fn(),
     onBackup: fn(),
+    onRestore: fn(),
+    onReset: fn(),
   },
 };
 
