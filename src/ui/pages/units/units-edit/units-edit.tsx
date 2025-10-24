@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useController } from "../../../../controllers/units";
+import { useContext, useEffect, useState } from "react";
 import { UnitsEditView } from "./units-edit-view";
 import { Unit, UnitType } from "../../../../models/units";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { DBContext } from "../../../providers/database";
 
 export function UnitsEdit() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export function UnitsEdit() {
   const unitId = params.id ? parseInt(params.id, 10) : null;
   const type = search.get("type") as UnitType | undefined;
 
-  const { controller } = useController();
+  const { stores } = useContext(DBContext);
   const [unit, setUnit] = useState<Unit>({
     id: 0,
     name: "",
@@ -21,25 +21,31 @@ export function UnitsEdit() {
   });
 
   useEffect(() => {
-    if (!controller || !unitId) {
+    if (!stores || !unitId) {
       return;
     }
 
     const fetchUnit = async () => {
-      const fetchedUnit = await controller.getUnit(unitId);
+      const fetchedUnit = await stores.unitStore.get(unitId);
       if (fetchedUnit) {
         setUnit(fetchedUnit);
       }
     };
 
     fetchUnit();
-  }, [unitId, controller]);
+  }, [unitId, stores]);
 
   async function handleSubmit(unit: Unit) {
-    if (!controller) {
+    if (!stores) {
       return;
     }
-    await controller.saveUnit(unit);
+
+    if (unit.id) {
+      await stores.unitStore.put(unit);
+    } else {
+      await stores.unitStore.add(unit.name, unit.type, unit.magnitudes, unit.collectives);
+    }
+
     navigate(-1);
   }
 

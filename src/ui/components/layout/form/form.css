@@ -5,11 +5,12 @@
     height: 100%;
 }
 
-.form-section > form {
+.form-section>form {
     flex-grow: 1;
     overflow-y: scroll;
+    overflow-x: visible;
 }
 
-.form-section > form > :first-child {
+.form-section>form> :first-child {
     margin-top: 0.2em;
 }

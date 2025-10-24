@@ -12,9 +12,9 @@ type Props = {
 
 export function MagnitudeEdit({ id, magnitude, onChange, onDelete }: Props) {
   return (
-    <div className="edit-control">
+    <div className="edit-control" aria-label={id}>
       <StringInput
-        id={id}
+        id={`${id}-abbreviation`}
         label="abbreviation"
         value={magnitude.abbrev}
         onChange={(value) => onChange({ ...magnitude, abbrev: value })}

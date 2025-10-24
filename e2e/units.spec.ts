@@ -102,18 +102,34 @@ test.describe('Units Page', () => {
 
     expect(await editUnitPage.getName()).toBe('gram');
     expect(await editUnitPage.getType()).toBe('weight');
+    expect(await editUnitPage.getMagnitudes()).toEqual([
+      { singular: 'milligram', plural: 'milligrams', abbrev: 'mg', multiplier: 0.001 },
+      { singular: 'gram', plural: 'grams', abbrev: 'g', multiplier: 1 },
+      { singular: 'kilogram', plural: 'kilograms', abbrev: 'kg', multiplier: 1000 },
+    ]);
+
+    await editUnitPage.addMagnitude({ singular: 'tonne', plural: 'tonnes', abbrev: 't', multiplier: 1000000 });
 
     await editUnitPage.setName('edited gram');
     await editUnitPage.save();
 
     await unitsPage.expectCurrent();
     await unitsPage.expectUnits(['edited gram']);
+    await unitsPage.expandUnit('edited gram');
+    const details = await unitsPage.getUnitDetails('edited gram');
+    expect(details).toEqual([
+      ['Abbr.', 'Singular', 'Plural', 'Multiplier'],
+      ['mg', 'milligram', 'milligrams', '0.001'],
+      ['g', 'gram', 'grams', '1'],
+      ['kg', 'kilogram', 'kilograms', '1000'],
+      ['t', 'tonne', 'tonnes', '1000000'],
+    ]);
   });
 
   test('can cancel editing an existing unit', async ({ page }) => {
     const header = new Header(page);
     const unitsPage = new UnitsPage(page);
-    
+
     await unitsPage.goto();
     await unitsPage.expandUnit('gram');
 
@@ -124,7 +140,7 @@ test.describe('Units Page', () => {
     expect(await editUnitPage.getType()).toBe('weight');
 
     await editUnitPage.setName('edited gram');
-    
+
     await header.back();
 
     await unitsPage.expectCurrent();

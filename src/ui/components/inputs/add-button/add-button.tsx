@@ -8,7 +8,10 @@ type Props = {
 
 export function AddButton({ onClick, id }: Props) {
   return (
-    <button className="add-button glazing" onClick={onClick} id={id} aria-label="Add button">
+    <button className="add-button glazing" onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      onClick();
+    }} id={id} aria-label="Add button">
       <Plus />
     </button>
   );

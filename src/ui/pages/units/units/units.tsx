@@ -1,13 +1,13 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsView } from "./units-view";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Unit, UnitType } from "../../../../models/units";
-import { useController } from "../../../../controllers/units";
+import { DBContext } from "../../../providers/database";
 
 export function Units() {
   const navigate = useNavigate();
 
-  const { controller } = useController();
+  const { stores } = useContext(DBContext);
   const [search] = useSearchParams();
 
   const type = search.get("type") as UnitType | undefined;
@@ -21,22 +21,24 @@ export function Units() {
   }, [type, unitType]);
 
   useEffect(() => {
-    if (!controller) return;
+    if (!stores) return;
 
     (async () => {
-      const units = await controller.getUnits(unitType);
+      const units = await stores.unitStore.getAllByType(unitType);
       setUnits(units);
     })();
-  }, [controller, unitType]);
+  }, [stores, unitType]);
 
 
-  if (!controller || !units) {
+  if (!stores || !units) {
     return <div>Loading...</div>; // Handle loading state
   }
 
   async function handleDelete(unit: Unit) {
+    if (!stores) return;
+
     try {
-      await controller?.deleteUnit(unit.id);
+      await stores.unitStore.delete(unit.id);
       setUnits(prev => prev.filter(u => u.id !== unit.id));
     } catch (error) {
       console.error("Failed to delete unit:", error);

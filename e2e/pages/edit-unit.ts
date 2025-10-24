@@ -17,6 +17,13 @@ export type FormState = {
   }[]
 }
 
+export type Magnitude = {
+  singular: string;
+  plural: string;
+  abbrev: string;
+  multiplier: number;
+}
+
 export class EditUnitPage {
   private readonly page: Page;
 
@@ -54,6 +61,40 @@ export class EditUnitPage {
     await expect(typeInput).toBeEnabled();
 
     await typeInput.selectOption(value);
+  }
+
+  async getMagnitudes() {
+    const magnitudeElements = this.page.getByLabel(/^magnitude-\d+/);
+    const count = await magnitudeElements.count();
+    const magnitudes = [];
+
+    for (let i = 0; i < count; i++) {
+      const magnitudeElement = magnitudeElements.nth(i);
+      const abbrev = await magnitudeElement.getByLabel('Abbreviation').inputValue();
+      const singular = await magnitudeElement.getByLabel('Singular').inputValue();
+      const plural = await magnitudeElement.getByLabel('Plural').inputValue();
+      const multiplierStr = await magnitudeElement.getByLabel('Multiplier').inputValue();
+      const multiplier = parseFloat(multiplierStr);
+
+      magnitudes.push({ singular, plural, abbrev, multiplier });
+    }
+
+    return magnitudes;
+  }
+
+  async addMagnitude(magnitude: Magnitude) {
+    const addButton = this.page.getByRole('button', { name: 'Add button' });
+    await expect(addButton).toBeVisible();
+    await expect(addButton).toBeEnabled();
+
+    await addButton.click();
+
+    const newMagnitudeElements = this.page.getByLabel(/^magnitude-\d+/);
+    const newMagnitudeElement = newMagnitudeElements.nth(-1);
+    await newMagnitudeElement.getByLabel('Abbreviation').fill(magnitude.abbrev);
+    await newMagnitudeElement.getByLabel('Singular').fill(magnitude.singular);
+    await newMagnitudeElement.getByLabel('Plural').fill(magnitude.plural);
+    await newMagnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
   }
 
   async save() {
