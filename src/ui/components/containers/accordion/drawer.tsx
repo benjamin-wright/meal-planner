@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from "react"
 import "./drawer.css";
 import CaretCircle from "../../icons/caret-circle";
 import { useAccordionContext } from "./accordion-context";
-import { test } from "vitest";
 
 type Props = {
   id: string;
