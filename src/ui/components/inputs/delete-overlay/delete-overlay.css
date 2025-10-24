@@ -1,0 +1,21 @@
+.delete-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: none;
+  outline: none;
+  font-size: 2em;
+  color: var(--error-primary);
+  background: var(--glazing);
+  backdrop-filter: blur(0.05em);
+  visibility: hidden;
+}
+
+.delete-overlay--deleting {
+  visibility: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

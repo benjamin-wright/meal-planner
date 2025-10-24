@@ -1,7 +1,7 @@
 import './button-row.css';
 
 type Props = {
-  children?: React.ReactNode[];
+  children?: React.ReactNode | React.ReactNode[];
   kind?: 'spaced';
 }
 

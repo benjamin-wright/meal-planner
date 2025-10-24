@@ -147,3 +147,14 @@ test.describe('Units Page', () => {
     await unitsPage.expectUnits(['gram']);
   });
 });
+
+// TODO:
+// - Deleting units
+// - Deleting magnitudes
+//   - Deleting a magnitude when only one exists
+//   - Deleting multiple magnitudes
+// - Cancelling creating a new unit
+// - Validation errors when creating/editing units
+// - Validation errors when creating/editing magnitudes
+// - Preventing navigation with unsaved changes
+// - Editing magnitudes

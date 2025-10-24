@@ -1,9 +1,11 @@
 .edit-control {
+  position: relative;
   background: var(--thick-glazing);
   padding: 0.5em;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5em;
+  border-radius: 0.25em;
 }
 
 .col1 {

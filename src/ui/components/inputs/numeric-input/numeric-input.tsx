@@ -6,10 +6,11 @@ type Props = {
   id: string;
   label: string;
   value: number;
+  disabled?: boolean;
   onChange: (value: number) => void;
 }
 
-export function NumericInput({ id, label, value, onChange }: Props) {
+export function NumericInput({ id, label, value, disabled, onChange }: Props) {
   const rounded = Math.round(value * 1000) / 1000;
   const [innerValue, setInnerValue] = useState(rounded.toString());
 
@@ -42,9 +43,19 @@ export function NumericInput({ id, label, value, onChange }: Props) {
   }
 
   return (
-    <Fieldset id={id} label={label}>
+    <Fieldset id={id} label={label} disabled={disabled}>
       <label htmlFor={id} hidden>{label}</label>
-      <input className="numeric-input" id={id} type="number" value={innerValue} onChange={handleChange} onBlur={handleBlur} />
+      <input
+        className="numeric-input"
+        id={id}
+        type="text"
+        inputMode="decimal"
+        pattern="[0-9]*[.,]?[0-9]*"
+        autoComplete="off"
+        value={innerValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
     </Fieldset>
   )
 }
