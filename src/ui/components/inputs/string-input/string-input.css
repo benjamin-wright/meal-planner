@@ -10,6 +10,13 @@
   width: 100%;
 }
 
+.string-input:is(:-webkit-autofill, :autofill) {
+  color: var(--foreground-primary) !important;
+  background-color: var(--background-secondary) !important;
+  appearance: inherit;
+  background-image: inherit !important;
+}
+
 .string-input:focus {
   border-color: var(--foreground-secondary);
 }
