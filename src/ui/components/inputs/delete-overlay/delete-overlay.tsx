@@ -14,7 +14,7 @@ export function DeleteOverlay({ onClick, id, deleting }: Props) {
     <button className={classNames} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       onClick();
-    }} id={id} aria-label="Delete button">
+    }} id={id} aria-label="Delete overlay">
       {
         <Trash />
       }

@@ -97,6 +97,54 @@ export class EditUnitPage {
     await newMagnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
   }
 
+  async setMagnitude(abbrev: string, magnitude: Magnitude) {
+    const magnitudeElements = this.page.getByLabel(/^magnitude-\d+/);
+    const count = await magnitudeElements.count();
+
+    for (let i = 0; i < count; i++) {
+      const magnitudeElement = magnitudeElements.nth(i);
+      const currentAbbrev = await magnitudeElement.getByLabel('Abbreviation').inputValue();
+
+      if (currentAbbrev === abbrev) {
+        await magnitudeElement.getByLabel('Abbreviation').fill(magnitude.abbrev);
+        await magnitudeElement.getByLabel('Singular').fill(magnitude.singular);
+        await magnitudeElement.getByLabel('Plural').fill(magnitude.plural);
+        await magnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
+        return;
+      }
+    }
+
+    throw new Error(`Magnitude with abbreviation "${abbrev}" not found`);
+  }
+
+  async toggleDelete() {
+    const enableDeleteButton = this.page.getByRole('button', { name: 'Delete button' });
+    await expect(enableDeleteButton).toBeVisible();
+    await expect(enableDeleteButton).toBeEnabled();
+    await enableDeleteButton.click();
+  }
+
+  async deleteMagnitude(abbrev: string) {
+    const magnitudeElements = this.page.getByLabel(/^magnitude-\d+/);
+    const count = await magnitudeElements.count();
+
+    for (let i = 0; i < count; i++) {
+      const magnitudeElement = magnitudeElements.nth(i);
+      const currentAbbrev = await magnitudeElement.getByLabel('Abbreviation').inputValue();
+
+      if (currentAbbrev === abbrev) {
+        const deleteButton = magnitudeElement.getByRole('button', { name: 'Delete overlay' });
+        await expect(deleteButton).toBeVisible();
+        await expect(deleteButton).toBeEnabled();
+
+        await deleteButton.click();
+        return;
+      }
+    }
+
+    throw new Error(`Magnitude with abbreviation "${abbrev}" not found`);
+  }
+
   async save() {
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await expect(saveButton).toBeVisible();

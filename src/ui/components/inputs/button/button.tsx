@@ -6,9 +6,10 @@ type Props = {
   onClick: () => void;
   kind?: 'success' | 'error';
   disabled?: boolean;
+  label?: string;
 }
 
-export function Button({ id, content, kind, onClick, disabled }: Props) {
+export function Button({ id, content, kind, onClick, disabled, label }: Props) {
   const classes = ["button", ...(kind ? [`button--${kind}`] : [])].join(" ");
-  return <button id={id} className={classes} onClick={onClick} disabled={disabled}>{content}</button>;
+  return <button id={id} className={classes} onClick={onClick} disabled={disabled} aria-label={label}>{content}</button>;
 }

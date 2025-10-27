@@ -108,6 +108,10 @@ test.describe('Units Page', () => {
       { singular: 'kilogram', plural: 'kilograms', abbrev: 'kg', multiplier: 1000 },
     ]);
 
+    await editUnitPage.toggleDelete();
+    await editUnitPage.deleteMagnitude('g');
+    await editUnitPage.toggleDelete();
+    await editUnitPage.setMagnitude('kg', { singular: 'kilogramers', plural: 'kilogramsers', abbrev: 'kgs', multiplier: 1001 });
     await editUnitPage.addMagnitude({ singular: 'tonne', plural: 'tonnes', abbrev: 't', multiplier: 1000000 });
 
     await editUnitPage.setName('edited gram');
@@ -120,8 +124,7 @@ test.describe('Units Page', () => {
     expect(details).toEqual([
       ['Abbr.', 'Singular', 'Plural', 'Multiplier'],
       ['mg', 'milligram', 'milligrams', '0.001'],
-      ['g', 'gram', 'grams', '1'],
-      ['kg', 'kilogram', 'kilograms', '1000'],
+      ['kgs', 'kilogramers', 'kilogramsers', '1001'],
       ['t', 'tonne', 'tonnes', '1000000'],
     ]);
   });
@@ -146,14 +149,35 @@ test.describe('Units Page', () => {
     await unitsPage.expectCurrent();
     await unitsPage.expectUnits(['gram']);
   });
+
+  test('can cancel creating a new unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+
+    await unitsPage.setTab('volume');
+    const editUnitPage = await unitsPage.newUnit();
+    await editUnitPage.expectNew();
+
+    await editUnitPage.setName('test unit');
+    expect(await editUnitPage.getType()).toBe('volume');
+    await new Header(page).back();
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits(['litre']);
+  });
+
+  test('can delete an existing unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+    await unitsPage.expandUnit('gram');
+    await unitsPage.deleteUnit('gram');
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits([/* 'gram' should be gone */]);
+  });
 });
 
 // TODO:
-// - Deleting units
-// - Deleting magnitudes
-//   - Deleting a magnitude when only one exists
-//   - Deleting multiple magnitudes
-// - Cancelling creating a new unit
 // - Validation errors when creating/editing units
 // - Validation errors when creating/editing magnitudes
 // - Preventing navigation with unsaved changes

@@ -82,6 +82,21 @@ export class UnitsPage {
     return new EditUnitPage(this.page);
   }
 
+  async deleteUnit(unitName: string) {
+    const deleteButton = this.page
+      .getByRole('listitem', { name: `Collapsible section for ${unitName}` })
+      .getByRole('button', { name: 'Delete unit' });
+    await expect(deleteButton).toBeVisible();
+    await expect(deleteButton).toBeEnabled();
+
+    await deleteButton.click();
+    const confirmButton = this.page.getByRole('button', { name: 'Confirm dialog' });
+    await expect(confirmButton).toBeVisible();
+    await expect(confirmButton).toBeEnabled();
+
+    await confirmButton.click();
+  }
+
   async getUnitDetails(unitName: string): Promise<string[][]> {
     const unitSection = this.page.getByRole('listitem', { name: `Collapsible section for ${unitName}` }).getByRole('definition');
     await expect(unitSection).toBeVisible();
