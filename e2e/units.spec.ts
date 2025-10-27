@@ -176,9 +176,3 @@ test.describe('Units Page', () => {
     await unitsPage.expectUnits([/* 'gram' should be gone */]);
   });
 });
-
-// TODO:
-// - Validation errors when creating/editing units
-// - Validation errors when creating/editing magnitudes
-// - Preventing navigation with unsaved changes
-// - Editing magnitudes
