@@ -8,27 +8,37 @@ type Props = {
   id: string;
   magnitude: Magnitude;
   deleting: boolean;
+  hideAbbrev?: boolean;
+  hideMultiplier?: boolean;
   onChange: (magnitude: Magnitude) => void;
   onDelete: () => void;
 }
 
-export function MagnitudeEdit({ id, magnitude, deleting, onChange, onDelete }: Props) {
+export function MagnitudeEdit({ id, magnitude, deleting, hideAbbrev, hideMultiplier, onChange, onDelete }: Props) {
+  const hideTopRow = hideAbbrev && hideMultiplier;
+
   return (
     <div className="edit-control" aria-label={id}>
-      <StringInput
-        id={`${id}-abbreviation`}
-        label="abbreviation"
-        value={magnitude.abbrev}
-        onChange={(value) => onChange({ ...magnitude, abbrev: value })}
-        disabled={deleting}
-      />
-      <NumericInput
-        id={`${id}-multiplier`}
-        label="multiplier"
-        value={magnitude.multiplier}
-        onChange={(value) => onChange({ ...magnitude, multiplier: value })}
-        disabled={deleting}
-      />
+      {!hideTopRow && (<>
+        {hideAbbrev ? <br /> :
+          <StringInput
+            id={`${id}-abbreviation`}
+            label="abbreviation"
+            value={magnitude.abbrev}
+            onChange={(value) => onChange({ ...magnitude, abbrev: value })}
+            disabled={deleting}
+          />
+        }
+        {hideMultiplier ? <br /> :
+          <NumericInput
+            id={`${id}-multiplier`}
+            label="multiplier"
+            value={magnitude.multiplier}
+            onChange={(value) => onChange({ ...magnitude, multiplier: value })}
+            disabled={deleting}
+          />
+        }
+      </>)}
       <StringInput
         id={`${id}-singular`}
         label="singular"

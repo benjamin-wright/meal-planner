@@ -11,7 +11,7 @@ export function DeleteOverlay({ onClick, id, deleting }: Props) {
   const classNames = ["delete-overlay", ...(deleting ? ["delete-overlay--deleting"] : [])].join(" ");
 
   return (
-    <button className={classNames} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+    <button className={classNames} disabled={!deleting} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       onClick();
     }} id={id} aria-label="Delete overlay">

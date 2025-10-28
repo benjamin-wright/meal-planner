@@ -82,7 +82,7 @@ export class EditUnitPage {
     return magnitudes;
   }
 
-  async addMagnitude(magnitude: Magnitude) {
+  async addMagnitude(magnitude: { abbrev: string, singular: string, plural: string, multiplier?: number }) {
     const addButton = this.page.getByRole('button', { name: 'Add button' });
     await expect(addButton).toBeVisible();
     await expect(addButton).toBeEnabled();
@@ -94,10 +94,12 @@ export class EditUnitPage {
     await newMagnitudeElement.getByLabel('Abbreviation').fill(magnitude.abbrev);
     await newMagnitudeElement.getByLabel('Singular').fill(magnitude.singular);
     await newMagnitudeElement.getByLabel('Plural').fill(magnitude.plural);
-    await newMagnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
+    if (magnitude.multiplier) {
+      await newMagnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
+    }
   }
 
-  async setMagnitude(abbrev: string, magnitude: Magnitude) {
+  async setMagnitude(abbrev: string, magnitude: { abbrev: string, singular: string, plural: string, multiplier?: number }) {
     const magnitudeElements = this.page.getByLabel(/^magnitude-\d+/);
     const count = await magnitudeElements.count();
 
@@ -109,7 +111,9 @@ export class EditUnitPage {
         await magnitudeElement.getByLabel('Abbreviation').fill(magnitude.abbrev);
         await magnitudeElement.getByLabel('Singular').fill(magnitude.singular);
         await magnitudeElement.getByLabel('Plural').fill(magnitude.plural);
-        await magnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
+        if (magnitude.multiplier) {
+          await magnitudeElement.getByLabel('Multiplier').fill(magnitude.multiplier.toString());
+        }
         return;
       }
     }

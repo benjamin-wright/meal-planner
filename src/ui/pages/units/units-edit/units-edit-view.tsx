@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Magnitude, Unit, UnitType } from "../../../../models/units";
+import { Magnitude, Unit, UnitType, validate } from "../../../../models/units";
 import { ButtonRow } from "../../../components/containers/button-row/button-row";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
 import { DeleteButton } from "../../../components/inputs/delete-button/delete-button";
@@ -8,6 +8,7 @@ import { ObjectSelect } from "../../../components/inputs/object-select/object-se
 import { StringInput } from "../../../components/inputs/string-input/string-input";
 import { Form } from "../../../components/layout/form/form";
 import { MagnitudeEdit } from "./components/magnitude-edit";
+import { NumericInput } from "../../../components/inputs/numeric-input/numeric-input";
 
 type Props = {
   unit: Unit;
@@ -17,7 +18,7 @@ type Props = {
 }
 
 export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
-  const [ deleting, setDeleting ] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   function handleNewMagnitude() {
     unit.magnitudes.push({ singular: "", plural: "", abbrev: "", multiplier: 1 });
@@ -42,7 +43,7 @@ export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
       title={`Unit: ${unit.id ? unit.name : "New"}`}
       onNav={onNav}
       onSubmit={() => onSubmit(unit)}
-      disableSubmit={deleting}
+      disableSubmit={deleting || !validate(unit)}
     >
       <StringInput
         id="unit-name"
@@ -62,33 +63,36 @@ export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
         disabled={deleting}
       />
 
-      {
-        unit.type === UnitType.Count ?
-          <Fieldset group label="Collectives" id="unit-collectives">
-            <AddButton id="new-collective-button" onClick={() => { }} />
-          </Fieldset>
-          :
-          <Fieldset group label="Magnitudes" id="unit-magnitudes">
-            {unit.magnitudes.map((magnitude, index) => (
-              <MagnitudeEdit
-                id={`magnitude-${index}`}
-                key={index}
-                magnitude={magnitude}
-                deleting={deleting}
-                onChange={(updated) => handleMagnitudeChange(updated, index)}
-                onDelete={() => handleMagnitudeDeleted(index)} />
-            ))}
-            <ButtonRow>
-              <AddButton id="new-magnitude-button" onClick={handleNewMagnitude} disabled={deleting} /> 
-              <DeleteButton
-                id="delete-magnitudes-button"
-                deleting={deleting}
-                disabled={unit.magnitudes.length === 0}
-                onClick={() => setDeleting(!deleting)}
-              />
-            </ButtonRow>
-          </Fieldset>
-      }
+      <NumericInput
+        id="unit-base"
+        label="Base Multiplier"
+        value={unit.base}
+        onChange={(value) => onChange({ ...unit, base: value })}
+        disabled={deleting}
+      />
+
+      <Fieldset group label="Magnitudes" id="unit-magnitudes">
+        {unit.magnitudes.map((magnitude, index) => (
+          <MagnitudeEdit
+            id={`magnitude-${index}`}
+            key={index}
+            magnitude={magnitude}
+            hideMultiplier={unit.magnitudes.length === 1}
+            hideAbbrev={unit.type === UnitType.Count}
+            deleting={deleting}
+            onChange={(updated) => handleMagnitudeChange(updated, index)}
+            onDelete={() => handleMagnitudeDeleted(index)} />
+        ))}
+        <ButtonRow>
+          <AddButton id="new-magnitude-button" onClick={handleNewMagnitude} disabled={deleting} />
+          <DeleteButton
+            id="delete-magnitudes-button"
+            deleting={deleting}
+            disabled={unit.magnitudes.length === 0}
+            onClick={() => setDeleting(!deleting)}
+          />
+        </ButtonRow>
+      </Fieldset>
     </Form>
   );
 }

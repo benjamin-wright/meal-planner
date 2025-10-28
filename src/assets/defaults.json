@@ -5,8 +5,7 @@
       "id": 1,
       "name": "count",
       "type": "count",
-      "magnitudes": [],
-      "collectives": [
+      "magnitudes": [
         {}
       ]
     },
@@ -34,8 +33,7 @@
           "plural": "kilograms",
           "multiplier": 1000
         }
-      ],
-      "collectives": []
+      ]
     },
     {
       "id": 3,
@@ -55,8 +53,7 @@
           "plural": "litres",
           "multiplier": 1
         }
-      ],
-      "collectives": []
+      ]
     }
   ],
   "categories": [

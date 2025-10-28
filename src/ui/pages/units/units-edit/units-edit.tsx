@@ -15,9 +15,9 @@ export function UnitsEdit() {
   const [unit, setUnit] = useState<Unit>({
     id: 0,
     name: "",
+    base: 1,
     type: type || UnitType.Count,
-    magnitudes: [],
-    collectives: []
+    magnitudes: []
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function UnitsEdit() {
     if (unit.id) {
       await stores.unitStore.put(unit);
     } else {
-      await stores.unitStore.add(unit.name, unit.type, unit.magnitudes, unit.collectives);
+      await stores.unitStore.add(unit.name, unit.type, unit.magnitudes);
     }
 
     navigate(-1);

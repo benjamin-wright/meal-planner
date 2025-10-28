@@ -70,13 +70,20 @@ test.describe('Units Page', () => {
     await unitsPage.setTab('volume');
     const editUnitPage = await unitsPage.newUnit();
     await editUnitPage.expectNew();
+    expect(await editUnitPage.getType()).toBe('volume');
 
     await editUnitPage.setName('test unit');
-    expect(await editUnitPage.getType()).toBe('volume');
+    await editUnitPage.addMagnitude({ singular: 'singular', plural: 'plural', abbrev: 'U' });
     await editUnitPage.save();
 
     await unitsPage.expectCurrent();
     await unitsPage.expectUnits(['litre', 'test unit']);
+    await unitsPage.expandUnit('test unit');
+    const details = await unitsPage.getUnitDetails('test unit');
+    expect(details).toEqual([
+      ['Abbr.', 'Singular', 'Plural'],
+      ['U', 'singular', 'plural'],
+    ]);
   });
 
   ['weight', 'volume', 'count'].forEach(type => {
