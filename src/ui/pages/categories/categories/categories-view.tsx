@@ -1,19 +1,16 @@
 import { Category } from "../../../../models/categories";
 import { Page } from "../../../components/layout/page/page";
+import { CategoriesList } from "./components/categories-list";
 
 type Props = {
   categories: Category[];
+  onReorder: (newOrder: Category[]) => void;
 };
 
-export function CategoriesView({ categories }: Props) {
+export function CategoriesView({ categories, onReorder }: Props) {
   return (
     <Page title="Categories">
-      <h1>Categories</h1>
-      <ul>
-        {categories.map((category) => (
-          <li key={category.id}>{category.name}</li>
-        ))}
-      </ul>
+      <CategoriesList categories={categories} onReorder={onReorder} />
     </Page>
   );
 }

@@ -3,6 +3,35 @@ import { CategoriesView } from "./categories-view";
 import { DBContext } from "../../../providers/database";
 import { Category } from "../../../../models/categories";
 
+class ActionQueue {
+  private actions: (() => Promise<void>)[] = [];
+  private isProcessing = false;
+
+  enqueue(action: () => Promise<void>) {
+    this.actions.push(action);
+    this.processQueue();
+  }
+
+  private async processQueue() {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+
+    while (this.actions.length > 0) {
+      const action = this.actions.shift();
+      if (action) {
+        try {
+          await action();
+        } catch (error) {
+          console.error("Error processing action:", error);
+        }
+      }
+    }
+
+    this.isProcessing = false;
+  }
+}
+
+const queue = new ActionQueue();
 
 export function Categories() {
   const { stores } = useContext(DBContext);
@@ -17,7 +46,22 @@ export function Categories() {
     })();
   }, [stores]);
 
+  function reorder(newOrder: Category[]) {
+    if (!stores) return;
+    for (let i = 0; i < newOrder.length; i++) {
+      const newCategory = newOrder[i];
+      if (newCategory.order === i) continue;
+
+      newCategory.order = i;
+      queue.enqueue(async () => {
+        await stores.categoryStore.put(newCategory);
+      });
+    }
+
+    setCategories(newOrder);
+  }
+
   return (
-    <CategoriesView categories={categories} />
+    <CategoriesView categories={categories} onReorder={reorder} />
   );
 }

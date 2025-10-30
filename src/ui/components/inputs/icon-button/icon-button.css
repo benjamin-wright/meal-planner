@@ -26,3 +26,7 @@ button.icon-button.icon-button--circular {
   background-color: var(--background-primary);
   padding: 0.3em;
 }
+
+button.icon-button.drag-trigger {
+  touch-action: none;
+}
