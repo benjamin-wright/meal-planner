@@ -13,11 +13,10 @@ import { NumericInput } from "../../../components/inputs/numeric-input/numeric-i
 type Props = {
   unit: Unit;
   onChange: (unit: Unit) => void;
-  onNav: () => void;
   onSubmit: (unit: Unit) => void;
 }
 
-export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
+export function UnitsEditView({ unit, onChange, onSubmit }: Props) {
   const [deleting, setDeleting] = useState(false);
 
   function handleNewMagnitude() {
@@ -41,7 +40,6 @@ export function UnitsEditView({ unit, onChange, onNav, onSubmit }: Props) {
   return (
     <Form
       title={`Unit: ${unit.id ? unit.name : "New"}`}
-      onNav={onNav}
       onSubmit={() => onSubmit(unit)}
       disableSubmit={deleting || !validate(unit)}
     >

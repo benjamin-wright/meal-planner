@@ -49,7 +49,6 @@ export function Units() {
     units={units}
     unitType={unitType}
     onTypeChanged={(type: UnitType) => setUnitType(type)}
-    onBack={() => navigate("/data")}
     onEdit={(unit) => navigate(`/units/${unit.id}`)}
     onDelete={handleDelete}
     onNew={(type: UnitType) => navigate(`/units/new?type=${type}`)}

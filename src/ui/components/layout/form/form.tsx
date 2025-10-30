@@ -5,13 +5,12 @@ import './form.css';
 type Props = {
   title: string
   children: React.ReactNode
-  onNav: () => void
   onSubmit: () => void
   disableSubmit?: boolean
 }
 
-export function Form({ title, children, onNav, onSubmit, disableSubmit }: Props) {
-  return <Page title={title} onNav={onNav}>
+export function Form({ title, children, onSubmit, disableSubmit }: Props) {
+  return <Page title={title}>
     <section className="form-section">
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
         {children}

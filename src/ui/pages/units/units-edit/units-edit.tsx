@@ -49,5 +49,5 @@ export function UnitsEdit() {
     navigate(-1);
   }
 
-  return <UnitsEditView unit={unit} onChange={setUnit} onNav={() => navigate(-1)} onSubmit={handleSubmit} />;
+  return <UnitsEditView unit={unit} onChange={setUnit} onSubmit={handleSubmit} />;
 }

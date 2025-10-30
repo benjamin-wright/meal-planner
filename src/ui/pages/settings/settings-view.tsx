@@ -2,27 +2,19 @@
 import { Page } from "../../components/layout/page/page";
 import { Accordion } from "../../components/containers/accordion/accordion";
 import { Drawer } from "../../components/containers/accordion/drawer";
-import { ObjectSelect } from "../../components/inputs/object-select/object-select";
-import { settings } from "../../../models/settings";
-import { Unit } from "../../../models/units";
 import { DescriptiveButton } from "../../components/inputs/descriptive-button/descriptive-button";
 import { useState } from "react";
 import { Dialog } from "../../components/containers/dialog/dialog";
 
 type Props = {
   version: string;
-  settings: settings;
-  volumeUnits: Unit[];
-  weightUnits: Unit[];
   busy?: boolean;
-  onNav: () => void;
-  onSettingsUpdate: (settings: settings) => void;
   onBackup: () => void;
   onRestore: () => void;
   onReset: () => void;
 };
 
-export function SettingsView({ version, settings, volumeUnits, weightUnits, busy, onNav, onSettingsUpdate, onBackup, onRestore, onReset }: Props) {
+export function SettingsView({ version, busy, onBackup, onRestore, onReset }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState<'restore' | 'reset'>('restore');
 
@@ -45,28 +37,8 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, busy
   }
 
   return (
-    <Page title="Settings" onNav={onNav}>
+    <Page title="Settings">
       <Accordion>
-        <Drawer id="units" title="units" open>
-          <ObjectSelect
-            id="preferred-volume-unit"
-            options={volumeUnits}
-            value={volumeUnits.find(unit => unit.id === settings?.preferredVolumeUnit)}
-            label="Default volume unit"
-            onChange={(value) => onSettingsUpdate({ ...settings, preferredVolumeUnit: value?.id || settings.preferredVolumeUnit })}
-            toDisplay={(unit) => unit.name}
-            disabled={busy}
-          />
-          <ObjectSelect
-            id="preferred-weight-unit"
-            options={weightUnits}
-            value={weightUnits.find(unit => unit.id === settings?.preferredWeightUnit)}
-            label="Default weight unit"
-            onChange={(value) => onSettingsUpdate({ ...settings, preferredWeightUnit: value?.id || settings.preferredWeightUnit })}
-            toDisplay={(unit) => unit.name}
-            disabled={busy}
-          />
-        </Drawer>
         <Drawer id="backup" title="backup">
           <DescriptiveButton
             description="Save the current application state to a JSON file on your device."
@@ -96,7 +68,7 @@ export function SettingsView({ version, settings, volumeUnits, weightUnits, busy
             disabled={busy}
           />
         </Drawer>
-        <Drawer id="info" title="info">
+        <Drawer id="info" title="info" open={true}>
           <p>Application Version: {version}</p>
         </Drawer>
       </Accordion>

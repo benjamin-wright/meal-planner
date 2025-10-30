@@ -3,6 +3,7 @@ import { UnitsEditView } from './units-edit-view';
 import { UnitType } from '../../../../models/units';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
+import { MemoryRouter } from 'react-router';
 
 const meta = {
   component: UnitsEditView,
@@ -18,17 +19,18 @@ export const Primary: Story = {
   args: {
     unit: {
       id: 0,
+      base: 1,
       name: "Test Unit",
       type: UnitType.Weight,
       magnitudes: [],
-      collectives: [],
     },
     onChange: () => { },
     onSubmit: fn(),
-    onNav: fn(),
   },
   render: (args) => {
     const [unit, setUnit] = useState(args.unit);
-    return <UnitsEditView {...args} unit={unit} onChange={setUnit} />;
+    return <MemoryRouter>
+      <UnitsEditView {...args} unit={unit} onChange={setUnit} />
+    </MemoryRouter>;
   }
 };

@@ -11,13 +11,12 @@ type Props = {
   units: Unit[];
   unitType: UnitType;
   onTypeChanged: (type: UnitType) => void;
-  onBack: () => void;
   onEdit: (unit: Unit) => void;
   onDelete: (unit: Unit) => void;
   onNew: (type: UnitType) => void;
 }
 
-export function UnitsView({ units, unitType, onTypeChanged, onBack, onEdit, onDelete, onNew }: Props) {
+export function UnitsView({ units, unitType, onTypeChanged, onEdit, onDelete, onNew }: Props) {
   function handleTabChange(tab: string) {
     const type = parseType(tab);
     if (type) {
@@ -34,7 +33,7 @@ export function UnitsView({ units, unitType, onTypeChanged, onBack, onEdit, onDe
   }
 
   return (
-    <Page title="Units" onNav={onBack}>
+    <Page title="Units">
       <TabHeader id="units-tabs" tabs={[UnitType.Weight, UnitType.Volume, UnitType.Count]} selected={unitType} onTabChange={handleTabChange} />
       <br />
       <Accordion>

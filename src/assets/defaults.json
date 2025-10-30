@@ -6,7 +6,9 @@
       "name": "count",
       "type": "count",
       "magnitudes": [
-        {}
+        {
+          "multiplier": 1
+        }
       ]
     },
     {

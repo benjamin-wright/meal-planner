@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from 'storybook/test';
 import { SettingsView } from './settings-view';
 import { UnitType } from '../../../models/units';
+import { MemoryRouter } from 'react-router-dom';
 
 const meta = {
   component: SettingsView,
@@ -16,22 +17,13 @@ export const Primary: Story = {
   },
   args: {
     version: '1.0.0',
-    settings: {
-      preferredVolumeUnit: 1,
-      preferredWeightUnit: 2
-    },
-    volumeUnits: [
-      { id: 1, name: 'litre', type: UnitType.Volume, collectives: [], magnitudes: [] },
-    ],
-    weightUnits: [
-      { id: 2, name: 'grams', type: UnitType.Weight, collectives: [], magnitudes: [] },
-    ],
-    onNav: fn(),
-    onSettingsUpdate: fn(),
     onBackup: fn(),
     onRestore: fn(),
     onReset: fn(),
   },
+  render: (args) => <MemoryRouter>
+    <SettingsView {...args} />
+  </MemoryRouter>,
 };
 
 export const Busy: Story = {
@@ -42,4 +34,7 @@ export const Busy: Story = {
     ...Primary.args,
     busy: true,
   },
+  render: (args) => <MemoryRouter>
+    <SettingsView {...args} />
+  </MemoryRouter>,
 };

@@ -15,9 +15,9 @@ export const Primary: Story = {
   args: {
     unit: {
       id: 1,
+      base: 1,
       name: 'litre',
       type: UnitType.Volume,
-      collectives: [],
       magnitudes: [
         { abbrev: 'l', singular: 'litre', plural: 'litres', multiplier: 1 },
         { abbrev: 'ml', singular: 'millilitre', plural: 'millilitres', multiplier: 0.001 }

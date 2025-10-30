@@ -7,7 +7,7 @@ export function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <Page title="Huh?" onNav={() => navigate(-1)}>
+    <Page title="Huh?" >
       <CenteredPanel>
         <h1>Page not found</h1>
         <p>Sorry, we couldn't find the page you were looking for.</p>
