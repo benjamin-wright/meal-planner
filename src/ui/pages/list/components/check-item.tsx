@@ -103,7 +103,7 @@ export function CheckItem({ item, startTimestamp, endTimestamp, onCheck, onConte
         }}
         onClick={clickHandler}
         onContextMenu={(event) => {
-          event.preventDefault();
+          event.stopPropagation();
           onContext();
         }}
         disableTouchRipple

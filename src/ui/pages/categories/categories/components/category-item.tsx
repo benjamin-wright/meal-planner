@@ -3,23 +3,46 @@ import { Category } from "../../../../../models/categories"
 import DragHandle from "../../../../components/icons/drag-handle";
 import { IconButton } from "../../../../components/inputs/icon-button/icon-button";
 import './category-item.css'
+import Trash from "../../../../components/icons/trash";
 
 type Props = {
   category: Category
+  editing: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-export function CategoryItem({ category }: Props) {
-  const controls = useDragControls();
+export function CategoryItem({ category, editing, onEdit, onDelete }: Props) {
+  const dragControls = useDragControls();
 
-  const handleDragStart = (event: React.PointerEvent) => {
-    event.preventDefault();
-    controls.start(event);
-  };
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (!editing) { return; }
+
+    dragControls.start(e);
+  }
+
+  function handleClick(event: React.MouseEvent) {
+    if (editing) {
+      event.preventDefault();
+      return;
+    }
+    onEdit();
+  }
 
   return (
-    <Reorder.Item value={category} dragListener={false} dragControls={controls} className="category-item glazing">
-      <IconButton icon={<DragHandle />} onClick={() => { }} onPointerDown={handleDragStart} />
+    <Reorder.Item
+      value={category}
+      dragListener={false}
+      dragControls={dragControls}
+      className="category-item glazing"
+      style={{ touchAction: 'none' }}
+      onPointerDown={handlePointerDown}
+      onClick={handleClick}
+    >
+      {editing && <IconButton icon={<DragHandle />} />}
       <span className="category-item-name">{category.name}</span>
+      {editing || <span>&gt;</span>}
+      {editing && <IconButton icon={<Trash />} kind="error" onClick={onDelete} />}
     </Reorder.Item>
   );
 }

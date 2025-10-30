@@ -12,7 +12,7 @@ type Props = {
 export function Form({ title, children, onSubmit, disableSubmit }: Props) {
   return <Page title={title}>
     <section className="form-section">
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+      <form onSubmit={(e) => { e.stopPropagation(); onSubmit(); }}>
         {children}
       </form>
       <Button id="confirm-submit-button" onClick={() => onSubmit()} content="Save" kind="success" disabled={disableSubmit} />

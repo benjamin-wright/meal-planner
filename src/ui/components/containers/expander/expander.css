@@ -1,0 +1,13 @@
+div.expander {
+  overflow: hidden;
+  width: 0;
+  transition: width 0.5s ease;
+}
+
+div.expander-content {
+  background: var(--background-primary);
+  border-radius: 1em 0.3em 0.3em 1em;
+  padding: 1em;
+  white-space: nowrap;
+  box-sizing: border-box;
+}

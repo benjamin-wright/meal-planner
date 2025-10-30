@@ -3,9 +3,9 @@
   top: 0;
   left: 0;
   right: 0;
-  display: grid;
 
-  grid-template-columns: auto max-content auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   justify-content: start;
   gap: 1.5rem;

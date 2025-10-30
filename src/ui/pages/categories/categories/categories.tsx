@@ -35,6 +35,11 @@ export function Categories() {
   }
 
   return (
-    <CategoriesView categories={categories} onReorder={reorder} />
+    <CategoriesView
+      categories={categories}
+      onReorder={reorder}
+      onEdit={() => {}}
+      onDelete={() => {}}
+    />
   );
 }

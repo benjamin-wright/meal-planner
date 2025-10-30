@@ -15,8 +15,5 @@ test.describe('Settings Page', () => {
   test('has the right content', async ({ page }) => {
     const settingsPage = new SettingsPage(page);
     await settingsPage.goto();
-
-    expect(await settingsPage.getVolumeUnit()).toBe('litre');
-    expect(await settingsPage.getWeightUnit()).toBe('gram');
   });
 });

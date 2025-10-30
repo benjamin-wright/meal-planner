@@ -18,7 +18,16 @@ export function IconButton({ id, label, icon, kind, circular, onClick, onPointer
     ...(onPointerDown ? ['drag-trigger'] : []),
   ].join(" ");
   return (
-    <button id={id} aria-label={label} className={classes} onClick={() => onClick?.()} onPointerDown={(e) => onPointerDown?.(e)}>
+    <button
+      id={id}
+      aria-label={label}
+      className={classes}
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        onClick?.();
+      }}
+      onPointerDown={(e) => onPointerDown?.(e)}
+    >
       {icon}
     </button>
   );

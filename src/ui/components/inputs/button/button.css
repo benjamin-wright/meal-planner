@@ -37,3 +37,8 @@ button.button.button--error:disabled {
   background-color: var(--background-secondary);
   color: var(--error-primary);
 }
+
+button.button--small {
+  padding: 0.2em 0.4em;
+  text-transform: capitalize;
+}
