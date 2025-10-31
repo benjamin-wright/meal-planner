@@ -42,7 +42,7 @@ export function CategoryItem({ category, editing, onEdit, onDelete }: Props) {
       {editing && <IconButton icon={<DragHandle />} />}
       <span className="category-item-name">{category.name}</span>
       {editing || <span>&gt;</span>}
-      {editing && <IconButton icon={<Trash />} kind="error" onClick={onDelete} />}
+      {editing && <IconButton icon={<Trash />} kind="error" label="Delete category" onClick={onDelete} />}
     </Reorder.Item>
   );
 }

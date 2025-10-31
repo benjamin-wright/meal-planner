@@ -49,6 +49,7 @@ export function UnitsEditView({ unit, onChange, onSubmit }: Props) {
         value={unit.name}
         onChange={(value) => onChange({ ...unit, name: value })}
         disabled={deleting}
+        lowercase
       />
 
       <ObjectSelect

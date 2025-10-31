@@ -25,6 +25,7 @@ export const Primary: Story = {
     onReorder: () => { },
     onEdit: (category: Category) => { console.info(`Editing category: ${category.name}`) },
     onDelete: (category: Category) => { console.info(`Deleting category: ${category.name}`) },
+    onNew: () => { console.info(`Creating new category`) },
   },
   render: (args) => {
     const [categories, setCategories] = useState(args.categories);
@@ -35,6 +36,7 @@ export const Primary: Story = {
         onReorder={setCategories}
         onEdit={args.onEdit}
         onDelete={args.onDelete}
+        onNew={args.onNew}
       />
     </MemoryRouter>;
   }

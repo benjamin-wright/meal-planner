@@ -121,7 +121,7 @@ test.describe('Units Page', () => {
     await editUnitPage.setMagnitude('kg', { singular: 'kilogramers', plural: 'kilogramsers', abbrev: 'kgs', multiplier: 1001 });
     await editUnitPage.addMagnitude({ singular: 'tonne', plural: 'tonnes', abbrev: 't', multiplier: 1000000 });
 
-    await editUnitPage.setName('edited gram');
+    await editUnitPage.setName('eDitEd Gram');
     await editUnitPage.save();
 
     await unitsPage.expectCurrent();

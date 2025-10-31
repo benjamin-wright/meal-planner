@@ -23,3 +23,11 @@ export function sanitize(value: unknown): Category {
     order: defaultNumber(value.order, 0),
   };
 }
+
+export function validate(category: Category): boolean {
+  if (category.name.trim() === "") {
+    return false;
+  }
+
+  return true;
+}

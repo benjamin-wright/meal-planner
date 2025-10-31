@@ -62,47 +62,47 @@
     {
       "id": 1,
       "name": "fruit",
-      "order": 0
+      "order": 1
     },
     {
       "id": 2,
       "name": "vegetable",
-      "order": 1
+      "order": 2
     },
     {
       "id": 8,
       "name": "bakery",
-      "order": 2
+      "order": 3
     },
     {
       "id": 3,
       "name": "meat",
-      "order": 3
+      "order": 4
     },
     {
       "id": 4,
       "name": "fish",
-      "order": 4
+      "order": 5
     },
     {
       "id": 5,
       "name": "dairy",
-      "order": 5
+      "order": 6
     },
     {
       "id": 6,
       "name": "home",
-      "order": 6
+      "order": 7
     },
     {
       "id": 7,
       "name": "cupboard",
-      "order": 7
+      "order": 8
     },
     {
       "id": 9,
       "name": "drugs",
-      "order": 8
+      "order": 0
     }
   ],
   "ingredients": [
