@@ -63,6 +63,18 @@ test.describe('Units Page', () => {
     ]);
   });
 
+  test('can delete an existing unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+    await unitsPage.expandUnit('gram');
+    await unitsPage.deleteUnit('gram');
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits([/* 'gram' should be gone */]);
+  });
+});
+
+test.describe('Edit Units Page', () => {
   test('can create a new unit', async ({ page }) => {
     const unitsPage = new UnitsPage(page);
     await unitsPage.goto();
@@ -171,15 +183,5 @@ test.describe('Units Page', () => {
 
     await unitsPage.expectCurrent();
     await unitsPage.expectUnits(['litre']);
-  });
-
-  test('can delete an existing unit', async ({ page }) => {
-    const unitsPage = new UnitsPage(page);
-    await unitsPage.goto();
-    await unitsPage.expandUnit('gram');
-    await unitsPage.deleteUnit('gram');
-
-    await unitsPage.expectCurrent();
-    await unitsPage.expectUnits([/* 'gram' should be gone */]);
   });
 });

@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from './pages/home';
 
 test.describe('Home Page', () => {
-  
   test('should have all the right elements', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
