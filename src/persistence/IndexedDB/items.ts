@@ -1,5 +1,4 @@
 import { Item } from "../../models/items";
-import { CourseType, DishType } from "../../models/meals";
 import { ItemStore } from "../interfaces/item";
 import { TypedDB } from "./typed-db";
 
@@ -17,27 +16,14 @@ type IndexedItem = {
   name: string;
   category: number;
   edible: number;
-  readymealCourse?: string;
-  readymealDish?: string;
-  readymealServes?: number;
-  readymealTime?: number;
 }
 
 function toItem(data: IndexedItem): Item {
-  const hasReadymeal = data.readymealCourse !== undefined;
-  
   return {
     id: data.id,
-    kind: "item",
     name: data.name,
     category: data.category,
     edible: data.edible === 1,
-    readymeal: hasReadymeal ? {
-      course: data.readymealCourse! as CourseType,
-      dish: data.readymealDish! as DishType,
-      serves: data.readymealServes!,
-      time: data.readymealTime!,
-    } : undefined,
   };
 }
 
@@ -68,32 +54,16 @@ export class Items implements ItemStore {
     return data.map(toItem);
   }
 
-  async addItem(name: string, category: number, edible: boolean): Promise<number> {
+  async add(name: string, category: number, edible: boolean): Promise<number> {
     return this.db.add(TABLE_NAME, { name, category, edible: edible ? 1 : 0 });
   }
-
-  async addReadyMeal(name: string, category: number, course: CourseType, dish: DishType, serves: number, time: number): Promise<number> {
-    return this.db.add(TABLE_NAME, {
-      name,
-      category,
-      edible: 1,
-      readymealCourse: course,
-      readymealDish: dish,
-      readymealServes: serves,
-      readymealTime: time,
-    });
-  }
-
+  
   async put(value: Item): Promise<void> {
     return this.db.put(TABLE_NAME, {
       id: value.id,
       name: value.name,
       category: value.category,
       edible: value.edible ? 1 : 0,
-      readymealCourse: value.readymeal?.course,
-      readymealDish: value.readymeal?.dish,
-      readymealServes: value.readymeal?.serves,
-      readymealTime: value.readymeal?.time,
     });
   }
 

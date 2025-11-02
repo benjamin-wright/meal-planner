@@ -105,7 +105,7 @@
       "order": 0
     }
   ],
-  "ingredients": [
+  "items": [
     {
       "id": 1,
       "name": "onions",
@@ -158,11 +158,17 @@
       "id": 9,
       "name": "pasta pot",
       "category": 7,
-      "edible": true,
-      "course": "lunch",
-      "dish": "main",
+      "edible": true
+    }
+  ],
+  "readymeals": [
+    {
+      "id": 1,
+      "item": 9,
       "serves": 1,
-      "time": 1
+      "time": 1,
+      "course": "lunch",
+      "dish": "main"
     }
   ],
   "recipies": [
