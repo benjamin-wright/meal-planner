@@ -1,8 +1,6 @@
 import Cutlery from "../../components/icons/cutlery";
 import Egg from "../../components/icons/egg";
-import FastFood from "../../components/icons/fast-food";
 import Scales from "../../components/icons/scales";
-import Shopping from "../../components/icons/shopping";
 import Tag from "../../components/icons/tag";
 import { FatIconButton } from "../../components/inputs/fat-icon-button/fat-icon-button";
 import { Page } from "../../components/layout/page/page";
@@ -14,14 +12,12 @@ type Props = {
 }
 
 export function DataView({ onNavigate }: Props) {
-  return <Page title="Data" onNav={() => onNavigate('home')}>
+  return <Page title="Data">
     <section className="data-view">
       {
         [
-          { icon: <Shopping />, name: "misc", link: "misc" },
-          { icon: <FastFood />, name: "ready meals", link: "readymeals" },
           { icon: <Cutlery />, name: "recipies", link: "recipies" },
-          { icon: <Egg />, name: "ingredients", link: "ingredients" },
+          { icon: <Egg />, name: "items", link: "items" },
           { icon: <Tag />, name: "categories", link: "categories" },
           { icon: <Scales />, name: "units", link: "units" },
         ].map(({ icon, name, link }) => (
