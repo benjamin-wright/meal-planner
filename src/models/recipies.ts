@@ -9,7 +9,6 @@ export type IngredientQuantity = {
 
 export type Recipie = {
   id: number;
-  kind: "recipie";
   name: string;
   description: string;
   serves: number;
@@ -22,12 +21,11 @@ export type Recipie = {
 
 export function sanitize(value: unknown): Recipie {
   if (!isObject(value)) {
-    return { id: 0, kind: "recipie", name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], course: CourseType.Dinner, dish: DishType.Main };
+    return { id: 0, name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], course: CourseType.Dinner, dish: DishType.Main };
   }
 
   return {
     id: defaultNumber(value["id"], 0),
-    kind: "recipie",
     name: defaultString(value["name"], ""),
     description: defaultString(value["description"], ""),
     serves: defaultNumber(value["serves"], 0),

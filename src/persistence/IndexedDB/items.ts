@@ -1,4 +1,4 @@
-import { Item } from "../../models/items";
+import { Item, ItemKind, ReadymealData } from "../../models/items";
 import { ItemStore } from "../interfaces/item";
 import { TypedDB } from "./typed-db";
 
@@ -6,25 +6,7 @@ const TABLE_NAME = "items";
 
 export function itemsV1(db: IDBDatabase) {
   const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
-  store.createIndex("name", "name", { unique: true });
-  store.createIndex("category", "category");
-  store.createIndex("edible", "edible");
-}
-
-type IndexedItem = {
-  id: number;
-  name: string;
-  category: number;
-  edible: number;
-}
-
-function toItem(data: IndexedItem): Item {
-  return {
-    id: data.id,
-    name: data.name,
-    category: data.category,
-    edible: data.edible === 1,
-  };
+  store.createIndex("kind", "kind");
 }
 
 export class Items implements ItemStore {
@@ -35,27 +17,19 @@ export class Items implements ItemStore {
   }
 
   async get(id: number): Promise<Item> {
-    const data = await this.db.get<IndexedItem>(TABLE_NAME, id);
-    return toItem(data);
+    return await this.db.get<Item>(TABLE_NAME, id);
   }
 
   async getAll(): Promise<Item[]> {
-    const data = await this.db.getAll<IndexedItem>(TABLE_NAME);
-    return data.map(toItem);
+    return await this.db.getAll<Item>(TABLE_NAME);
   }
 
-  async getEdible(): Promise<Item[]> {
-    const data = await this.db.getByIndex<IndexedItem, "edible">(TABLE_NAME, "edible", 1);
-    return data.map(toItem);
+  async getByKind(kind: ItemKind): Promise<Item[]> {
+    return await this.db.getByIndex<Item, "kind">(TABLE_NAME, "kind", kind);
   }
 
-  async getInedible(): Promise<Item[]> {
-    const data = await this.db.getByIndex<IndexedItem, "edible">(TABLE_NAME, "edible", 0);
-    return data.map(toItem);
-  }
-
-  async add(name: string, category: number, edible: boolean): Promise<number> {
-    return this.db.add(TABLE_NAME, { name, category, edible: edible ? 1 : 0 });
+  async add(name: string, category: number, kind: ItemKind, readymeal?: ReadymealData): Promise<number> {
+    return this.db.add(TABLE_NAME, { name, category, kind, readymeal });
   }
   
   async put(value: Item): Promise<void> {
@@ -63,7 +37,8 @@ export class Items implements ItemStore {
       id: value.id,
       name: value.name,
       category: value.category,
-      edible: value.edible ? 1 : 0,
+      kind: value.kind,
+      readymeal: value.readymeal
     });
   }
 
