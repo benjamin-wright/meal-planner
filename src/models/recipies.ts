@@ -1,5 +1,5 @@
-import { defaultArray, defaultNumber, defaultString, isObject } from "../utils/typing";
-import { MealType } from "./meals";
+import { defaultArray, defaultNumber, defaultString, defaultType, isObject } from "../utils/typing";
+import { CourseType, DishType } from "./meals";
 
 export type IngredientQuantity = {
   id: number;
@@ -9,22 +9,25 @@ export type IngredientQuantity = {
 
 export type Recipie = {
   id: number;
+  kind: "recipie";
   name: string;
   description: string;
   serves: number;
   time: number;
   ingredients: IngredientQuantity[];
   steps: string[];
-  meal: MealType; // breakfast, lunch, or dinner
+  course: CourseType;
+  dish: DishType;
 }
 
 export function sanitize(value: unknown): Recipie {
   if (!isObject(value)) {
-    return { id: 0, name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], meal: MealType.Dinner };
+    return { id: 0, kind: "recipie", name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], course: CourseType.Dinner, dish: DishType.Main };
   }
 
   return {
     id: defaultNumber(value["id"], 0),
+    kind: "recipie",
     name: defaultString(value["name"], ""),
     description: defaultString(value["description"], ""),
     serves: defaultNumber(value["serves"], 0),
@@ -41,6 +44,7 @@ export function sanitize(value: unknown): Recipie {
       };
     }),
     steps: defaultArray<string>(value["steps"], (item) => defaultString(item, "")),
-    meal: defaultString(value["meal"], "dinner") as MealType,
+    course: defaultType<CourseType>(value["course"], CourseType.Dinner),
+    dish: defaultType<DishType>(value["dish"], DishType.Main),
   };
 }

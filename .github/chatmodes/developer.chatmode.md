@@ -37,3 +37,7 @@ This chat mode is designed to assist with software development tasks, including 
   - **Providers**: `/src/ui/providers/` - Contains context providers for state management.
 - **Utilities**: `/src/utils/` - Contains utility functions and helpers.
 - **Tests**: `/e2e/` - Contains end-to-end playwright tests.
+
+## Persistence
+- **IndexedDB**: Uses IndexedDB for client-side data storage, with a clear separation between interfaces and implementation.
+  - **Use Basic Types**: Persistence implementations should use basic types (e.g., `number`, `string`, `boolean`) rather than JSON blob storage for better performance and queryability.

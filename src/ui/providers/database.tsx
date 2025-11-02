@@ -2,25 +2,21 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { DB } from "../../persistence/interfaces/db";
 import { UnitStore } from "../../persistence/interfaces/units";
 import { CategoryStore } from "../../persistence/interfaces/categories";
-import { IngredientStore } from "../../persistence/interfaces/ingredients";
+import { ItemStore } from "../../persistence/interfaces/item";
 import { RecipieStore } from "../../persistence/interfaces/recipies";
 import { MealStore } from "../../persistence/interfaces/meals";
 import { ExtraStore } from "../../persistence/interfaces/extras";
 import { ShoppingItemStore } from "../../persistence/interfaces/shopping-item";
-import { SettingsStore } from "../../persistence/interfaces/settings";
 import { AlertContext } from "./alerts";
-import { ReadyMealStore } from "../../persistence/interfaces/readymeals";
 
 type Stores = {
   unitStore: UnitStore;
   categoryStore: CategoryStore;
-  ingredientStore: IngredientStore;
-  readymealStore: ReadyMealStore;
+  itemStore: ItemStore;
   recipieStore: RecipieStore;
   mealStore: MealStore;
   extraStore: ExtraStore;
   shoppingStore: ShoppingItemStore;
-  settingStore: SettingsStore;
 }
 
 interface DBContextProps {
@@ -49,13 +45,11 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
       setStores({
         unitStore: db.units(),
         categoryStore: db.categories(),
-        ingredientStore: db.ingredients(),
-        readymealStore: db.readymeals(),
+        itemStore: db.items(),
         recipieStore: db.recipies(),
         mealStore: db.meals(),
         extraStore: db.extra(),
         shoppingStore: db.shopping(),
-        settingStore: db.settings(),
       })
     }).catch((error: Error) => {
       alert({

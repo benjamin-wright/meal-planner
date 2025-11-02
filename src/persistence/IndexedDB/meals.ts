@@ -1,29 +1,11 @@
-import { Meal, MealDay, MealRecipieType, MealType } from "../../models/meals";
+import { Meal, CourseType, Day, Dish } from "../../models/meals";
 import { MealStore } from "../interfaces/meals";
 import { TypedDB } from "./typed-db";
 
 const TABLE_NAME = "meals";
 
 export function mealsV1(db: IDBDatabase) {
-  const store = db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
-  store.createIndex("day", "day");
-}
-
-export function mealsV2(_db: IDBDatabase, transaction: IDBTransaction) {
-  const store = transaction.objectStore(TABLE_NAME);
-  const request = store.openCursor();
-  request.onsuccess = function (event) {
-    const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
-    if (cursor) {
-      const value = cursor.value;
-      if (!value.recipieType) {
-        // Default to Recipie if recipieType is not set
-        value.recipieType = MealRecipieType.Recipie;
-      }
-      cursor.update(value);
-      cursor.continue();
-    }
-  }
+  db.createObjectStore(TABLE_NAME, { keyPath: "id", autoIncrement: true });
 }
 
 export class Meals implements MealStore {
@@ -41,8 +23,8 @@ export class Meals implements MealStore {
     return this.db.getAll<Meal>(TABLE_NAME);
   }
 
-  async add(recipieId: number, recipieType: MealRecipieType, servings: number, meal: MealType, days: MealDay[]): Promise<number> {
-    return this.db.add(TABLE_NAME, { recipieId, recipieType, servings, meal, days });
+  async add(servings: number, course: CourseType, dishes: Dish[], days: Day[]): Promise<number> {
+    return this.db.add(TABLE_NAME, { servings, course, dishes, days });
   }
 
   async put(value: Meal): Promise<void> {

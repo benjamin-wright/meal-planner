@@ -3,7 +3,7 @@ import { CategoryStore } from "../persistence/interfaces/categories";
 import { SettingsStore } from "../persistence/interfaces/settings";
 import { ShoppingItemStore } from "../persistence/interfaces/shopping-item";
 import { UnitStore } from "../persistence/interfaces/units";
-import { IngredientStore } from "../persistence/interfaces/ingredients";
+import { IngredientStore } from "../persistence/interfaces/item";
 import { RecipieStore } from "../persistence/interfaces/recipies";
 import { MealStore } from "../persistence/interfaces/meals";
 import { ExtraStore } from "../persistence/interfaces/extras";
