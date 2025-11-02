@@ -1,5 +1,7 @@
-import { Item, ItemType } from "../../../../models/items";
+import { Item } from "../../../../models/items";
 import { Page } from "../../../components/layout/page/page";
+
+export type ItemType = "all" | "edible" | "inedible" | "readymeal"
 
 type Props = {
   items: Item[];

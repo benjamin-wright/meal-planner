@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { ItemsView } from "./items-view";
+import { ItemsView, ItemType } from "./items-view";
 import { DBContext } from "../../../providers/database";
-import { Item, ItemType } from "../../../../models/items";
+import { Item } from "../../../../models/items";
 
 export function Items() {
   const { stores } = useContext(DBContext);
   const [ items, setItems ] = useState<Item[]>([]);
-  const [ itemType, setItemType ] = useState<ItemType>(ItemType.Ingredient);
+  const [ itemType, setItemType ] = useState<ItemType>("all");
 
   useEffect(() => {
     if (!stores) return;
