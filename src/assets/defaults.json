@@ -153,16 +153,16 @@
       "name": "shampoo",
       "category": 9,
       "edible": false
-    }
-  ],
-  "readymeals": [
+    },
     {
-      "id": 1,
+      "id": 9,
       "name": "pasta pot",
+      "category": 7,
+      "edible": true,
+      "course": "lunch",
+      "dish": "main",
       "serves": 1,
-      "time": 1,
-      "meal": "lunch",
-      "category": 7
+      "time": 1
     }
   ],
   "recipies": [
@@ -170,9 +170,10 @@
       "id": 1,
       "name": "potato salad",
       "description": "A simple potato salad recipe.",
+      "course": "dinner",
+      "dish": "side",
       "serves": 4,
       "time": 30,
-      "meal": "dinner",
       "ingredients": [
         {
           "id": 2,
