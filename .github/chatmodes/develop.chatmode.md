@@ -2,7 +2,7 @@
 description: 'Developer chat mode'
 tools: ['createFile', 'createDirectory', 'editFiles', 'search', 'runInTerminal', 'getTerminalOutput', 'usages', 'changes', 'todos']
 ---
-# Developer Chat Mode
+# Develop Chat Mode
 This chat mode is designed to assist with software development tasks, including writing, reviewing, and debugging code. It can create new files, edit existing ones, and suggest improvements to enhance code quality and maintainability.
 
 ## Design Principles
