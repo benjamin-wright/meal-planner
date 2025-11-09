@@ -1,11 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import './slide-out-controls.css';
+import { useContext, useEffect, useRef, useState } from 'react';
+import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
-
-type Props = {
-  children: React.ReactNode;
-}
+import { SlideOutGroupContext } from './slide-out-group';
 
 type Selection = 'edit' | 'delete' | null;
 
@@ -15,8 +12,14 @@ type AnimatedStyles = {
   parentTransform: string;
 }
 
-export function SlideOutControls({ children }: Props) {
+type Props = {
+  children: React.ReactNode;
+  groupId?: string;
+}
+
+export function SlideOutControl({ children, groupId }: Props) {
   const parent = useRef<HTMLDivElement>(null);
+  const context = useContext(SlideOutGroupContext);
   const editControl = useRef<HTMLButtonElement>(null);
   const deleteControl = useRef<HTMLButtonElement>(null);
   const [ selection, setSelection ] = useState<Selection>(null);
@@ -61,6 +64,13 @@ export function SlideOutControls({ children }: Props) {
     deleteControl.current.style.borderBottomRightRadius = style.borderBottomRightRadius;
   }, [parent, editControl, deleteControl]);
 
+  useEffect(() => {
+    if (selection !== null && context.selectedId != null && context.selectedId !== groupId) {
+      setSelection(null);
+      setDragDistance(0);
+    }
+  }, [ context.selectedId, selection ]);
+
   function handleTouchStart(x: number) {
     setDragStart(x);
   }
@@ -95,12 +105,15 @@ export function SlideOutControls({ children }: Props) {
     setDragStart(null);
 
     if (dragDistance > 45) {
+      context.setSelectedId(groupId);
       setSelection('edit');
       setDragDistance(50);
     } else if (dragDistance < -45) {
+      context.setSelectedId(groupId);
       setSelection('delete');
       setDragDistance(-50);
     } else {
+      context.setSelectedId(undefined);
       setSelection(null);
       setDragDistance(0);
     }

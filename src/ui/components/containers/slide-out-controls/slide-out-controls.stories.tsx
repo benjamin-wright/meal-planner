@@ -1,23 +1,50 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { SlideOutControls } from './slide-out-controls';
+import { SlideOutControl } from './slide-out-control';
+import { SlideOutGroup } from './slide-out-group';
 
-const meta: Meta<typeof SlideOutControls> = {
-  component: SlideOutControls,
+function SlideOutControlStory() {
+  const items = [
+    'Item 1',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+    'Item 5',
+  ]
+
+  return (
+    <SlideOutGroup>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5em',
+        }}
+      >
+        {items.map(item => (
+          <SlideOutControl key={item} groupId={item}>
+            <p style={{
+              userSelect: 'none',
+              padding: '1em',
+              background: 'var(--thick-glazing)',
+              borderRadius: '1em',
+            }}>Slide Out: {item}</p>
+          </SlideOutControl>
+        ))}
+      </div>
+    </SlideOutGroup>
+  );
+}
+
+const meta: Meta<typeof SlideOutControlStory> = {
+  component: SlideOutControlStory,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof SlideOutControls>;
+type Story = StoryObj<typeof SlideOutControlStory>;
 
 export const Default: Story = {
   render: () => (
-    <SlideOutControls>
-      <p style={{
-        userSelect: 'none',
-        padding: '1em',
-        background: 'var(--thick-glazing)',
-        borderRadius: '1em',
-      }}>Slide Out Content</p>
-    </SlideOutControls>
+    <SlideOutControlStory />
   )
 };
