@@ -1,4 +1,4 @@
-import { Reorder, useDragControls } from "motion/react";
+import { Reorder } from "motion/react";
 import { Category } from "../../../../../models/categories"
 import DragHandle from "../../../../components/icons/drag-handle";
 import { IconButton } from "../../../../components/inputs/icon-button/icon-button";
