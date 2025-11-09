@@ -1,12 +1,27 @@
-div.slide-out-controls-container {
+.slide-out-controls-container {
   position: relative;
+  overflow: hidden;
 }
 
-div.slide-out-controls {
-  position: relative;
+.slide-out-button {
+  border: none;
+  color: var(--foreground-primary);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: clip-path 0.3s ease-in-out;
 }
 
-div.slide-out-controls-edit {
+.slide-out-button:active {
+  background: var(--background-secondary);
+}
+
+.slide-out-controls {
+  position: relative;
+  touch-action: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-out-controls-edit {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -20,7 +35,7 @@ div.slide-out-controls-edit {
   background: var(--background-secondary);
 }
 
-div.slide-out-controls-delete {
+.slide-out-controls-delete {
   position: absolute;
   top: 0;
   bottom: 0;

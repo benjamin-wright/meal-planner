@@ -1,16 +1,49 @@
-import { use, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './slide-out-controls.css';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import Pencil from '../../icons/pencil';
+import Trash from '../../icons/trash';
 
 type Props = {
   children: React.ReactNode;
 }
 
+type Selection = 'edit' | 'delete' | null;
+
+type AnimatedStyles = {
+  editClipPath: string;
+  deleteClipPath: string;
+  parentTransform: string;
+}
+
 export function SlideOutControls({ children }: Props) {
-  const x = useMotionValue(0);
   const parent = useRef<HTMLDivElement>(null);
-  const editControl = useRef<HTMLDivElement>(null);
-  const deleteControl = useRef<HTMLDivElement>(null);
+  const editControl = useRef<HTMLButtonElement>(null);
+  const deleteControl = useRef<HTMLButtonElement>(null);
+  const [ selection, setSelection ] = useState<Selection>(null);
+  const [ dragStart, setDragStart ] = useState<number | null>(null);
+  const [ dragDistance, setDragDistance ] = useState(0);
+  const [ animatedStyles, setAnimatedStyles ] = useState<AnimatedStyles>({
+    editClipPath: '',
+    deleteClipPath: '',
+    parentTransform: '',
+  });
+
+  useEffect(() => {
+    const parentElement = parent.current?.firstChild as HTMLElement | null;
+    const element = editControl.current as HTMLDivElement | null;
+    const computedStyle = getComputedStyle(element ?? document.documentElement);
+    const radius = parseFloat(getComputedStyle(parentElement ?? document.documentElement).borderRadius);
+    const height = parseFloat(computedStyle.height);
+    const width = parseFloat(computedStyle.width);
+    const editOffset = Math.max(0, dragDistance);
+    const deleteOffset = Math.min(width, width + dragDistance);
+
+    setAnimatedStyles({
+      editClipPath: `path('M 0 0 L ${editOffset + radius} 0 A ${radius} ${radius} 0 0 0 ${editOffset} ${radius} L ${editOffset} ${height - radius} A ${radius} ${radius} 0 0 0 ${editOffset + radius} ${height} L 0 ${height} Z')`,
+      deleteClipPath: `path('M ${width} 0 L ${width} ${height} L ${deleteOffset - radius} ${height} A ${radius} ${radius} 0 0 0 ${deleteOffset} ${height - radius} L ${deleteOffset} ${radius} A ${radius} ${radius} 0 0 0 ${deleteOffset - radius} 0 Z')`,
+      parentTransform: `translateX(${dragDistance}px)`,
+    });
+  }, [parent, editControl, deleteControl, dragDistance]);
 
   useEffect(() => {
     if (!parent.current) return;
@@ -28,55 +61,99 @@ export function SlideOutControls({ children }: Props) {
     deleteControl.current.style.borderBottomRightRadius = style.borderBottomRightRadius;
   }, [parent, editControl, deleteControl]);
 
+  function handleTouchStart(x: number) {
+    setDragStart(x);
+  }
+
+  function handleTouchMove(x: number) {
+    if (dragStart === null) return;
+
+    let distance = (x - dragStart) / 2;
+    switch (selection) {
+      case 'edit':
+        distance += 50;
+        break;
+      case 'delete':
+        distance -= 50;
+        break;
+    }
+
+    if (distance > 45) {
+      setDragDistance(50);
+    }
+
+    if ( 15 > distance && distance > -15) {
+      setDragDistance(0);
+    }
+
+    if (-45 > distance) {
+      setDragDistance(-50);
+    }
+  }
+
+  function handleTouchEnd() {
+    setDragStart(null);
+
+    if (dragDistance > 45) {
+      setSelection('edit');
+      setDragDistance(50);
+    } else if (dragDistance < -45) {
+      setSelection('delete');
+      setDragDistance(-50);
+    } else {
+      setSelection(null);
+      setDragDistance(0);
+    }
+  }
+
   return (
     <div className="slide-out-controls-container">
-      <motion.div
-        className="slide-out-controls-edit"
+      <button
+        className="slide-out-button slide-out-controls-edit"
         ref={editControl}
         style={{
-          clipPath: useTransform(x, (value) => {
-            const parentElement = parent.current?.firstChild as HTMLElement | null;
-            const element = editControl.current as HTMLDivElement | null;
-            const computedStyle = getComputedStyle(element ?? document.documentElement);
-            const offset = Math.max(0, value);
-            const radius = parseFloat(getComputedStyle(parentElement ?? document.documentElement).borderRadius);
-            const height = parseFloat(computedStyle.height);
-
-            return `path('M 0 0 L ${offset + radius} 0 Q ${offset} 0 ${offset} ${radius} L ${offset} ${height - radius} Q ${offset} ${height} ${offset + radius} ${height} L 0 ${height} Z')`;
-          }),
+          clipPath: animatedStyles.editClipPath,
         }}
       >
-        <p>Edit</p>
-      </motion.div>
-      <motion.div
-        className="slide-out-controls-delete"
+        <Pencil />
+      </button>
+      <button
+        className="slide-out-button slide-out-controls-delete"
         ref={deleteControl}
         style={{
-          clipPath: useTransform(x, (value) => {
-            const parentElement = parent.current?.firstChild as HTMLElement | null;
-            const element = deleteControl.current as HTMLDivElement | null;
-            const computedStyle = getComputedStyle(element ?? document.documentElement);
-            const height = parseFloat(computedStyle.height);
-            const radius = parseFloat(getComputedStyle(parentElement ?? document.documentElement).borderRadius);
-            const width = parseFloat(computedStyle.width);
-            const offset = width + Math.min(0, value);
-
-            return `path('M ${width} 0 L ${width} ${height} L ${offset - radius} ${height} Q ${offset} ${height} ${offset} ${height - radius} L ${offset} ${radius} Q ${offset} 0 ${offset - radius} 0 Z')`;
-          }),
+          clipPath: animatedStyles.deleteClipPath,
         }}
       >
-        <p>Delete</p>
-      </motion.div>
-      <motion.div
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.5}
+        <Trash />
+      </button>
+      <div
         className="slide-out-controls"
-        style={{ x }}
         ref={parent}
+        style={{
+          transform: animatedStyles.parentTransform,
+        }}
+        onTouchStart={e => handleTouchStart(e.touches[0].clientX)}
+        onTouchMove={e => handleTouchMove(e.touches[0].clientX)}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        onPointerDown={e => handleTouchStart(e.clientX)}
+        onPointerMove={e => {
+          if (dragDistance === null) return;
+
+          if (e.buttons !== 1) {
+            handleTouchEnd();
+            return;
+          }
+
+          handleTouchMove(e.clientX);
+        }}
+        onPointerUp={handleTouchEnd}
+        onPointerCancel={handleTouchEnd}
+        onPointerLeave={handleTouchEnd}
+        onPointerOut={handleTouchEnd}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }
