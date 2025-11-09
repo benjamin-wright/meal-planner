@@ -9,15 +9,18 @@ type Selection = 'edit' | 'delete' | null;
 type AnimatedStyles = {
   editClipPath: string;
   deleteClipPath: string;
-  parentTransform: string;
+  leftMargin: string;
+  rightMargin: string;
 }
 
 type Props = {
   children: React.ReactNode;
   groupId?: string;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function SlideOutControl({ children, groupId }: Props) {
+export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) {
   const parent = useRef<HTMLDivElement>(null);
   const context = useContext(SlideOutGroupContext);
   const editControl = useRef<HTMLButtonElement>(null);
@@ -25,11 +28,14 @@ export function SlideOutControl({ children, groupId }: Props) {
   const [ selection, setSelection ] = useState<Selection>(null);
   const [ dragStart, setDragStart ] = useState<number | null>(null);
   const [ dragDistance, setDragDistance ] = useState(0);
+  const [ pointerDownTime, setPointerDownTime ] = useState<number | null>(null);
   const [ animatedStyles, setAnimatedStyles ] = useState<AnimatedStyles>({
-    editClipPath: '',
-    deleteClipPath: '',
-    parentTransform: '',
+    editClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
+    deleteClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
+    leftMargin: '0',
+    rightMargin: '0',
   });
+  const [ isInitialized, setIsInitialized ] = useState(false);
 
   useEffect(() => {
     const parentElement = parent.current?.firstChild as HTMLElement | null;
@@ -44,8 +50,10 @@ export function SlideOutControl({ children, groupId }: Props) {
     setAnimatedStyles({
       editClipPath: `path('M 0 0 L ${editOffset + radius} 0 A ${radius} ${radius} 0 0 0 ${editOffset} ${radius} L ${editOffset} ${height - radius} A ${radius} ${radius} 0 0 0 ${editOffset + radius} ${height} L 0 ${height} Z')`,
       deleteClipPath: `path('M ${width} 0 L ${width} ${height} L ${deleteOffset - radius} ${height} A ${radius} ${radius} 0 0 0 ${deleteOffset} ${height - radius} L ${deleteOffset} ${radius} A ${radius} ${radius} 0 0 0 ${deleteOffset - radius} 0 Z')`,
-      parentTransform: `translateX(${dragDistance}px)`,
+      leftMargin: `${Math.max(dragDistance, 0)}px`,
+      rightMargin: `${Math.abs(Math.min(dragDistance, 0))}px`,
     });
+    setIsInitialized(true);
   }, [parent, editControl, deleteControl, dragDistance]);
 
   useEffect(() => {
@@ -73,6 +81,7 @@ export function SlideOutControl({ children, groupId }: Props) {
 
   function handleTouchStart(x: number) {
     setDragStart(x);
+    setPointerDownTime(Date.now());
   }
 
   function handleTouchMove(x: number) {
@@ -119,6 +128,19 @@ export function SlideOutControl({ children, groupId }: Props) {
     }
   }
 
+  function handleClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (pointerDownTime !== null && (Date.now() - pointerDownTime) > 200) {
+      event.preventDefault();
+      return;
+    }
+
+    if (selection !== null) {
+      context.setSelectedId(undefined);
+      setSelection(null);
+      setDragDistance(0);
+    }
+  }
+
   return (
     <div className="slide-out-controls-container">
       <button
@@ -126,7 +148,9 @@ export function SlideOutControl({ children, groupId }: Props) {
         ref={editControl}
         style={{
           clipPath: animatedStyles.editClipPath,
+          opacity: isInitialized ? 1 : 0,
         }}
+        onClick={() => onEdit?.()}
       >
         <Pencil />
       </button>
@@ -135,7 +159,9 @@ export function SlideOutControl({ children, groupId }: Props) {
         ref={deleteControl}
         style={{
           clipPath: animatedStyles.deleteClipPath,
+          opacity: isInitialized ? 1 : 0,
         }}
+        onClick={() => onDelete?.()}
       >
         <Trash />
       </button>
@@ -143,7 +169,8 @@ export function SlideOutControl({ children, groupId }: Props) {
         className="slide-out-controls"
         ref={parent}
         style={{
-          transform: animatedStyles.parentTransform,
+          marginLeft: animatedStyles.leftMargin,
+          marginRight: animatedStyles.rightMargin,
         }}
         onTouchStart={e => handleTouchStart(e.touches[0].clientX)}
         onTouchMove={e => handleTouchMove(e.touches[0].clientX)}
@@ -164,6 +191,7 @@ export function SlideOutControl({ children, groupId }: Props) {
         onPointerCancel={handleTouchEnd}
         onPointerLeave={handleTouchEnd}
         onPointerOut={handleTouchEnd}
+        onClick={handleClick}
       >
         {children}
       </div>

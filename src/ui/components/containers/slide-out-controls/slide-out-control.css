@@ -1,24 +1,24 @@
 .slide-out-controls-container {
   position: relative;
-  overflow: hidden;
 }
 
 .slide-out-button {
   border: none;
   color: var(--foreground-primary);
+  background: var(--background-secondary);
   outline: none;
   -webkit-tap-highlight-color: transparent;
   transition: clip-path 0.3s ease-in-out;
 }
 
 .slide-out-button:active {
-  background: var(--background-secondary);
+  background: var(--background-primary);
 }
 
 .slide-out-controls {
   position: relative;
   touch-action: none;
-  transition: transform 0.3s ease-in-out;
+  transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out;
 }
 
 .slide-out-controls-edit {
@@ -32,7 +32,6 @@
   align-items: center;
   justify-content: flex-start;
   user-select: none;
-  background: var(--background-secondary);
 }
 
 .slide-out-controls-delete {
@@ -46,5 +45,5 @@
   align-items: center;
   justify-content: flex-end;
   user-select: none;
-  background: var(--error-primary);
+  color: var(--error-primary);
 }

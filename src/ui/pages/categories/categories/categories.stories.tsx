@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CategoriesView } from './categories-view';
 import { MemoryRouter } from 'react-router';
 import { useState } from 'react';
-import { Category } from '../../../../models/categories';
+import { fn } from 'storybook/test'
 
 const meta = {
   component: CategoriesView,
@@ -23,9 +23,9 @@ export const Primary: Story = {
       { id: 4, name: 'Meat', order: 4 },
     ],
     onReorder: () => { },
-    onEdit: (category: Category) => { console.info(`Editing category: ${category.name}`) },
-    onDelete: (category: Category) => { console.info(`Deleting category: ${category.name}`) },
-    onNew: () => { console.info(`Creating new category`) },
+    onEdit: fn(),
+    onDelete: fn(),
+    onNew: fn(),
   },
   render: (args) => {
     const [categories, setCategories] = useState(args.categories);
