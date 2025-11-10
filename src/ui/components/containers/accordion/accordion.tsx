@@ -1,6 +1,5 @@
 import './accordion.css';
-import { AccordionProvider } from './accordion-context';
-
+import { AccordionProvider } from './accordion-provider';
 
 type Props = {
   children: React.ReactNode;

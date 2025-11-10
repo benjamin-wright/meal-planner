@@ -20,7 +20,7 @@ export function Drawer({ id, testId, title, children, open, size = 'medium' }: P
     if (open) {
       context.setInitial(id);
     }
-  }, []);
+  }, [context, open, id]);
 
   const classes = ["drawer", "glazing", isOpen ? "open" : ""];
   const toggleClasses = ["drawer-toggle", `drawer-toggle--${size}`];
