@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Item, ItemKind } from "../../../../models/items";
+import { Item } from "../../../../models/items";
 import { Page } from "../../../components/layout/page/page";
 
 import "./items-view.css"
@@ -14,23 +14,22 @@ type Props = {
 }
 
 export function ItemsView({ items, onDelete, onEdit }: Props) {
-  const [editMode, setEditMode] = useState(false);
-  const [itemKind, setItemKind] = useState<ItemKind | undefined>();
+  const [sorting, setSorting] = useState(false);
 
   function handleItemClick(item: Item) {
-    if (editMode) {
+    if (sorting) {
       return;
     }
     onEdit(item);
   }
 
-  return <Page title="Items" onEdit={() => setEditMode(!editMode)}>
+  return <Page title="Items" onSorting={() => setSorting(!sorting)}>
     <ul className="items-list">
       <AnimatePresence>
         {items.map(item => (
           <motion.li className="glazing" key={item.id} layout exit={{ opacity: 0 }} onClick={() => handleItemClick(item)}>
             <span>{item.name}</span>
-            {editMode && (
+            {sorting && (
               <IconButton
                 icon={<Trash />}
                 kind="error"
@@ -38,7 +37,7 @@ export function ItemsView({ items, onDelete, onEdit }: Props) {
                 onClick={() => onDelete(item)}
               />
             )}
-            {!editMode && (
+            {!sorting && (
               <span>&gt;</span>
             )}
           </motion.li>

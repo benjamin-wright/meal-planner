@@ -77,7 +77,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
       setSelection(null);
       setDragDistance(0);
     }
-  }, [ context.selectedId, selection ]);
+  }, [ context.selectedId, selection, groupId ]);
 
   function handleTouchStart(x: number) {
     setDragStart(x);

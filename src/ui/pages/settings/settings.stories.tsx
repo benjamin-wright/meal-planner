@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { SettingsView } from './settings-view';
-import { UnitType } from '../../../models/units';
 import { MemoryRouter } from 'react-router-dom';
 
 const meta = {

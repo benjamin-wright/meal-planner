@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { DBContext } from "../../providers/database";
-import { useForms } from "../../providers/forms";
+import { useForms } from "../../providers/forms/forms";
 import { Meal, MealDay, MealProps, MealRecipieType, MealType, validate } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
 import { SelectString } from "../../components/select-string";
@@ -43,49 +43,47 @@ export function MealsEdit() {
 
   const navigate = useNavigate();
 
-  async function load() {
-    if (mealStore === undefined || recipieStore === undefined || readymealStore === undefined) {
-      return;
-    }
-
-    const meals = await mealStore.getAll();
-    const days = meals.filter((meal) => meal.id.toString() !== params.meal).map((meal) => meal.days).flat();
-    setAvailable(Object.values(MealDay).filter((day) => !days.includes(day)));
-
-    const recipies = await recipieStore.getAll();
-    setRecipies(recipies);
-
-    const readyMeals = await readymealStore.getAll();
-    setReadyMeals(readyMeals);
-
-    if (params.meal) {
-      const meal = await mealStore.get(Number.parseInt(params.meal, 10));
-      setMeal(meal);
-      setIsNew(false);
-    } else {
-      const recipies = await recipieStore.getAll();
-      setMeal({ ...meal, recipieId: recipies.find(r => r.meal === meal.meal)?.id || 0 });
-    }
-
-    if (formsResult) {
-      const { form, response } = formsResult;
-      const meal = form.body as Meal;
-
-      if (response) {
-        switch (response.field) {
-          case "recipie":
-            meal.recipieId = response.response as number;
-            break;
-        }
+  useEffect(() => {
+    (async () => {
+      if (mealStore === undefined || recipieStore === undefined || readymealStore === undefined) {
+        return;
       }
 
-      setMeal({ ...meal });
-    }
-  }
+      const meals = await mealStore.getAll();
+      const days = meals.filter((meal) => meal.id.toString() !== params.meal).map((meal) => meal.days).flat();
+      setAvailable(Object.values(MealDay).filter((day) => !days.includes(day)));
 
-  useEffect(() => {
-    load();
-  }, [mealStore, recipieStore, formsResult]);
+      const recipies = await recipieStore.getAll();
+      setRecipies(recipies);
+
+      const readyMeals = await readymealStore.getAll();
+      setReadyMeals(readyMeals);
+
+      if (params.meal) {
+        const meal = await mealStore.get(Number.parseInt(params.meal, 10));
+        setMeal(meal);
+        setIsNew(false);
+      } else {
+        const recipies = await recipieStore.getAll();
+        setMeal(prev => ({ ...prev, recipieId: recipies.find(r => r.meal === prev.meal)?.id || 0 }));
+      }
+
+      if (formsResult) {
+        const { form, response } = formsResult;
+        const meal = form.body as Meal;
+
+        if (response) {
+          switch (response.field) {
+            case "recipie":
+              meal.recipieId = response.response as number;
+              break;
+          }
+        }
+
+        setMeal({ ...meal });
+      }
+    })();
+  }, [mealStore, recipieStore, readymealStore, params.meal, formsResult]);
 
   useEffect(() => {
     (async () => {
@@ -106,13 +104,7 @@ export function MealsEdit() {
     setMeal({ ...meal, servings });
   }
 
-  useEffect(() => {
-    setLoading(true);
-    calculateIngredients();
-    setIngredients([]);
-  }, [ingredientStore, unitStore, meal]);
-
-  async function calculateIngredients() {
+  const calculateIngredients = useCallback(async () => {
     if (ingredientStore === undefined || unitStore === undefined) {
       return;
     }
@@ -150,7 +142,13 @@ export function MealsEdit() {
     })));
 
     setLoading(false);
-  }
+  }, [ingredientStore, unitStore, recipieStore, meal, settings]);
+
+  useEffect(() => {
+    setLoading(true);
+    calculateIngredients();
+    setIngredients([]);
+  }, [calculateIngredients]);
 
   const filteredRecipies = recipies.filter(r => r.meal === meal.meal);
   const filteredReadyMeals = readyMeals.filter(r => r.meal === meal.meal);

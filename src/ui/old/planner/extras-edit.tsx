@@ -6,7 +6,7 @@ import { DBContext } from "../../providers/database";
 import { Unit } from "../../../models/units";
 import { SelectID } from "../../components/select-id";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForms } from "../../providers/forms";
+import { useForms } from "../../providers/forms/forms";
 import { Egg, ShoppingBag } from "@mui/icons-material";
 import { SimpleChoiceDialog } from "../../components/simple-choice-dialog";
 import { UnitQuantityControl } from "../../components/units/unit-quantity-control";
@@ -38,7 +38,7 @@ export function ExtrasEdit() {
         const extra = await extraStore.get(Number.parseInt(params.id, 10));
         setExtra(extra);
       } else {
-        setExtra({...extra, ingredient: ingredients[0].id, unit: units[0].id});
+        setExtra(prev => ({...prev, ingredient: ingredients[0].id, unit: units[0].id}));
       }
 
       if (formsResult) {
@@ -51,23 +51,22 @@ export function ExtrasEdit() {
             case "unit": {
               const unit = units.find(u => u.id === response.response as number);
               if (unit) {
-                setExtra({...extra, unit: unit.id});
+                setExtra(prev => ({...prev, unit: unit.id}));
               }
               break;
             }
             case "ingredient":
-              setExtra({...extra, ingredient: response.response as number});
+              setExtra(prev => ({...prev, ingredient: response.response as number}));
               break;
             case "misc":
-              setExtra({...extra, ingredient: response.response as number});
+              setExtra(prev => ({...prev, ingredient: response.response as number}));
               break;
           }
         }
       }
 
     })();
-  }
-  , [extraStore, ingredientStore, unitStore, formsResult]);
+  }, [extraStore, ingredientStore, unitStore, formsResult, params.id]);
 
   return (
     <Form

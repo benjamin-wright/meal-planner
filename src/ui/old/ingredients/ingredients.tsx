@@ -18,28 +18,26 @@ export function Ingredients() {
   const [expanded, setExpanded] = useState<number | false>(false);
   const navigate = useNavigate();
 
-  async function load() {
-    if (!categoryStore || !ingredientStore) {
-      return;
-    }
-
-    const ingredients = await ingredientStore.getEdible();
-    setIngredients(ingredients.reduce((acc, ingredient) => {
-      if (!acc[ingredient.category]) {
-        acc[ingredient.category] = [];
+  useEffect(() => {
+    (async () => {
+      if (!categoryStore || !ingredientStore) {
+        return;
       }
 
-      acc[ingredient.category].push(ingredient);
-      return acc;
-    }, {} as Record<number, Ingredient[]>));
+      const ingredients = await ingredientStore.getEdible();
+      setIngredients(ingredients.reduce((acc, ingredient) => {
+        if (!acc[ingredient.category]) {
+          acc[ingredient.category] = [];
+        }
 
-    let categories = await categoryStore.getAll();
-    categories = categories.filter((category) => ingredients.find((ingredient) => ingredient.category === category.id)).sort((a, b) => a.order - b.order);
-    setCategories(categories);
-  }
+        acc[ingredient.category].push(ingredient);
+        return acc;
+      }, {} as Record<number, Ingredient[]>));
 
-  useEffect(() => {
-    load();
+      let categories = await categoryStore.getAll();
+      categories = categories.filter((category) => ingredients.find((ingredient) => ingredient.category === category.id)).sort((a, b) => a.order - b.order);
+      setCategories(categories);
+    })();
   }, [categoryStore, ingredientStore]);
 
   function onEdit(ingredient: Ingredient) {

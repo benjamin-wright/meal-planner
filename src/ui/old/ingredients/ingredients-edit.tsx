@@ -5,7 +5,7 @@ import { SelectID } from "../../components/select-id";
 import { Category } from "../../../models/categories";
 import { Ingredient } from "../../../models/ingredients";
 import { TextInput } from "../../components/text-input";
-import { useForms } from "../../providers/forms";
+import { useForms } from "../../providers/forms/forms";
 import { DBContext } from "../../providers/database";
 
 export function IngredientsEdit() {
@@ -18,39 +18,37 @@ export function IngredientsEdit() {
   const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
 
-  async function load() {
-    if (!ingredientStore || !categoryStore) {
-      return;
-    }
-    
-    if (params.ingredient) {
-      const ingredient = await ingredientStore.get(Number.parseInt(params.ingredient, 10));
-      setIngredient(ingredient);
-      setIsNew(false);
-    }
-
-    const categories = await categoryStore.getAll();
-    setCategories(categories);
-  
-    if (formsResult) {
-      const { form, response } = formsResult;
-      const ingredient = form.body as Ingredient;
-
-      if (response) {
-        switch (response.field) {
-          case "category":
-            ingredient.category = response.response as number;
-            break;
-        }
+  useEffect(() => {
+    (async () => {
+      if (!ingredientStore || !categoryStore) {
+        return;
+      }
+      
+      if (params.ingredient) {
+        const ingredient = await ingredientStore.get(Number.parseInt(params.ingredient, 10));
+        setIngredient(ingredient);
+        setIsNew(false);
       }
 
-      setIngredient(ingredient);
-    }
-  }
+      const categories = await categoryStore.getAll();
+      setCategories(categories);
+    
+      if (formsResult) {
+        const { form, response } = formsResult;
+        const ingredient = form.body as Ingredient;
 
-  useEffect(() => {
-    load();
-  }, [ingredientStore, categoryStore, formsResult]);
+        if (response) {
+          switch (response.field) {
+            case "category":
+              ingredient.category = response.response as number;
+              break;
+          }
+        }
+
+        setIngredient(ingredient);
+      }
+    })();
+  }, [ingredientStore, categoryStore, formsResult, params.ingredient]);
 
   function validate() {
     return ingredient.name !== "" && ingredient.category !== 0;

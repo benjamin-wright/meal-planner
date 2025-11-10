@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { DBContext } from "../../providers/database";
-import { useNavigate } from "react-router-dom";
 import { SettingsView } from "./settings-view";
 import { loadFile, saveFile } from "../../../utils/browser";
 import { AlertContext } from "../../providers/alerts";

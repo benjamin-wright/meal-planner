@@ -1,6 +1,6 @@
 import { Box, Card, Tab, Tabs } from "@mui/material";
 import { Page } from "../../components/page";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DBContext } from "../../providers/database";
 import { Meal, MealDay, MealRecipieType, MealType } from "../../../models/meals";
 import { Recipie } from "../../../models/recipies";
@@ -87,7 +87,7 @@ export function Planner() {
 
   const navigate = useNavigate();
 
-  async function load() {
+  const load = useCallback(async () => {
     if (!unitStore || !ingredientStore || !mealStore || !recipieStore || !extraStore || !readymealStore) {
       return;
     }
@@ -108,11 +108,11 @@ export function Planner() {
     setLunches(meals.filter((meal) => meal.meal === MealType.Lunch).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies, readymeals)));
     setBreakfasts(meals.filter((meal) => meal.meal === MealType.Breakfast).map((meal, index) => mapMealToItem(meal, index, MealDay.Saturday, recipies, readymeals)));
     setExtras(extras.map((extra, index) => mapExtraToItem(extra, index, ingredients, units)));
-  }
+  }, [unitStore, ingredientStore, mealStore, recipieStore, extraStore, readymealStore]);
 
   useEffect(() => {
     load();
-  }, [unitStore, ingredientStore, mealStore, recipieStore, extraStore]);
+  }, [load]);
 
   function onEdit(item: MealItem | ExtraItem) {
     if (item.id === undefined) {

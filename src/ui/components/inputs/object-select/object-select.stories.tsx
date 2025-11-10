@@ -4,11 +4,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 const meta = {
-  component: ObjectSelect,
-} satisfies Meta<typeof ObjectSelect>;
+  component: ObjectSelect<OptionType>,
+} satisfies Meta<typeof ObjectSelect<OptionType>>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+type OptionType = { id: string; name: string; };
 
 export const Primary: Story = {
   args: {
@@ -18,9 +20,9 @@ export const Primary: Story = {
       { id: '1', name: 'Option 1' },
       { id: '2', name: 'Option 2' },
     ],
-    value: null,
+    value: { id: '1', name: 'Option 1' },
     onChange: fn(),
-    toDisplay: (option: any) => option.name,
+    toDisplay: (option: unknown) => (option as OptionType).name,
   }
 };
 
@@ -32,9 +34,9 @@ export const Disabled: Story = {
       { id: '1', name: 'Option 1' },
       { id: '2', name: 'Option 2' },
     ],
-    value: null,
+    value: { id: '1', name: 'Option 1' },
     onChange: fn(),
-    toDisplay: (option: any) => option.name,
+    toDisplay: (option: unknown) => (option as OptionType).name,
     disabled: true,
   }
 };

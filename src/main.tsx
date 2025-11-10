@@ -10,7 +10,7 @@ import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as items } from "./ui/pages/items/routes";
 
 import { DBProvider } from "./ui/providers/database";
-import { FormProvider } from "./ui/providers/forms";
+import { FormProvider } from "./ui/providers/forms/forms";
 import { IndexedDB } from "./persistence/IndexedDB/db";
 import { initData } from "./persistence/exporter";
 import { DBFlags } from "./persistence/db-flags";

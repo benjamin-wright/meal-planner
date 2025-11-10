@@ -21,23 +21,25 @@ export function Misc() {
   const navigate = useNavigate();
   const [toDelete, setToDelete] = useState<Ingredient | null>(null);
 
-  async function load() {
-    if (!ingredientStore || !categoryStore) return;
+  useEffect(() => {
+    (async () => {
+      if (!ingredientStore || !categoryStore) return;
 
-    const ingredients = await ingredientStore.getInedible();
-    const categories = await categoryStore.getAll();
+      const ingredients = await ingredientStore.getInedible();
+      const categories = await categoryStore.getAll();
 
-    const grouped = ingredients.reduce((acc: { [key: number]: Ingredient[] }, item: Ingredient) => {
-      if (!acc[item.category]) {
-        acc[item.category] = [];
-      }
-      acc[item.category].push(item);
-      return acc;
-    }, {});
+      const grouped = ingredients.reduce((acc: { [key: number]: Ingredient[] }, item: Ingredient) => {
+        if (!acc[item.category]) {
+          acc[item.category] = [];
+        }
+        acc[item.category].push(item);
+        return acc;
+      }, {});
 
-    setIngredients(grouped);
-    setCategories(categories.filter((category) => ingredients.find((item) => item.category === category.id)).sort((a, b) => a.order - b.order));
-  }
+      setIngredients(grouped);
+      setCategories(categories.filter((category) => ingredients.find((item) => item.category === category.id)).sort((a, b) => a.order - b.order));
+    })();
+  }, [ingredientStore, categoryStore]);
 
   function onEdit(item: Ingredient) {
     navigate(`/misc/${item.id}`);
@@ -66,10 +68,6 @@ export function Misc() {
   function onCancel() {
     setToDelete(null);
   }
-
-  useEffect(() => {
-    load();
-  }, [ingredientStore, categoryStore]);
 
   return <Page title="Misc" returnTo="/data" showNav sx={{ gap: 0 }}>
     <DetailViewGroup flexLayout bottomMargin="6em">

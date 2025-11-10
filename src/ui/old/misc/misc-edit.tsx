@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Form } from "../../components/form";
 import { TextInput } from "../../components/text-input";
 import { DBContext } from "../../providers/database";
-import { useForms } from "../../providers/forms";
+import { useForms } from "../../providers/forms/forms";
 import { Category } from "../../../models/categories";
 import { SelectID } from "../../components/select-id";
 import { Ingredient } from "../../../models/ingredients";
@@ -18,41 +18,39 @@ export function MiscEdit() {
   const navigate = useNavigate();
   const params = useParams();
 
-  async function load() {
-    if (!ingredientStore || !categoryStore) {
-      return;
-    }
-
-    const categories = await categoryStore.getAll();
-    setCategories(categories);
-
-    if (params.misc) {
-      const ingredient = await ingredientStore.get(Number.parseInt(params.misc, 10));
-      setIngredient(ingredient);
-      setIsNew(false);
-    } else {
-      setIngredient({ id: 0, name: "", category: categories[0].id, edible: false });
-    }
-
-    if (formsResult) {
-      const { form, response } = formsResult;
-      const ingredient = form.body as Ingredient;
-
-      if (response) {
-        switch (response.field) {
-          case "category":
-            ingredient.category = response.response as number;
-            break;
-        }
+  useEffect(() => {
+    (async () => {
+      if (!ingredientStore || !categoryStore) {
+        return;
       }
 
-      setIngredient(ingredient);
-    }
-  }
+      const categories = await categoryStore.getAll();
+      setCategories(categories);
 
-  useEffect(() => {
-    load();
-  }, [ingredientStore, categoryStore, formsResult]);
+      if (params.misc) {
+        const ingredient = await ingredientStore.get(Number.parseInt(params.misc, 10));
+        setIngredient(ingredient);
+        setIsNew(false);
+      } else {
+        setIngredient({ id: 0, name: "", category: categories[0].id, edible: false });
+      }
+
+      if (formsResult) {
+        const { form, response } = formsResult;
+        const ingredient = form.body as Ingredient;
+
+        if (response) {
+          switch (response.field) {
+            case "category":
+              ingredient.category = response.response as number;
+              break;
+          }
+        }
+
+        setIngredient(ingredient);
+      }
+    })();
+  }, [ingredientStore, categoryStore, formsResult, params.misc]);
 
   return (
     <Form

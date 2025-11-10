@@ -23,7 +23,7 @@ export const Primary: Story = {
       { id: 3, kind: ItemKind.Ingredient, name: 'Carrot', category: 2 },
       { id: 4, kind: ItemKind.Ingredient, name: 'Broccoli', category: 2 },
     ],
-    onDelete: (item: Item) => { },
+    onDelete: () => { },
     onEdit: fn(),
   },
   render: (args) => {

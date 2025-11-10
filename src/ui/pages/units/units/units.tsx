@@ -18,7 +18,7 @@ export function Units() {
     if (type !== unitType) {
       navigate(`/units?type=${unitType}`, { replace: true });
     }
-  }, [type, unitType]);
+  }, [type, unitType, navigate]);
 
   useEffect(() => {
     if (!stores) return;

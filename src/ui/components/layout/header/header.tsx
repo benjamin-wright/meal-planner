@@ -22,7 +22,7 @@ export function Header({ title, onNav, onSorting }: Props) {
       { onSorting && <Button
         onClick={() => {
           setSorting(!sorting);
-          onSorting && onSorting(!sorting);
+          onSorting(!sorting);
         }}
         label="Sort button"
         id="header-sort-button"

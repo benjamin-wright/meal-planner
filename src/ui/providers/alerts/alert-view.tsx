@@ -13,7 +13,6 @@ type Props = {
 
 export function AlertView({ alert, startTime, endTime }: Props) {
   const [progress, setProgress] = useState(0);
-  const [intervalHandle, setIntervalHandle] = useState<number | null>(null);
 
   function getIcon() {
     switch (alert.severity) {
@@ -40,19 +39,20 @@ export function AlertView({ alert, startTime, endTime }: Props) {
     }
 
     setProgress(0);
-    setIntervalHandle(
-      setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const total = endTime - startTime;
-        const newProgress = Math.min(100, (elapsed / total) * 100);
-        setProgress(newProgress);
+    const handle = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const total = endTime - startTime;
+      const newProgress = Math.min(100, (elapsed / total) * 100);
+      setProgress(newProgress);
 
-        if (newProgress >= 100) {
-          clearInterval(intervalHandle!);
-          setIntervalHandle(null);
-        }
-      })
-    );
+      if (newProgress >= 100) {
+        clearInterval(handle);
+      }
+    }, 10);
+
+    return () => {
+      clearInterval(handle);
+    };
   }, [startTime, endTime]);
 
   return (

@@ -3,7 +3,6 @@ import { fn } from 'storybook/test';
 import { UnitsView } from './units-view';
 import { UnitType } from '../../../../models/units';
 import { useState } from 'react';
-import { Memory } from '@mui/icons-material';
 import { MemoryRouter } from 'react-router-dom';
 
 const meta = {

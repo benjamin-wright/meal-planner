@@ -29,12 +29,12 @@ export function CategoriesEdit() {
       }
 
       const fetchedCategories = await stores.categoryStore.getAll();
-      setCategory({
-        ...category,
+      setCategory(prev => ({
+        ...prev,
         order: fetchedCategories.length
-      });
+      }));
     })();
-  }, [stores]);
+  }, [stores, categoryId, isNew]);
 
   function handleSave() {
     if (!stores) return;

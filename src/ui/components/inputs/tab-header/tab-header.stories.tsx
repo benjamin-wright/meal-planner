@@ -18,7 +18,7 @@ export const Primary: Story = {
     onTabChange: () => {},
   },
   render: (args) => {
-    const [{}, updateArgs] = useArgs();
+    const [, updateArgs] = useArgs();
 
     function onTabChange(tab: string) {
       updateArgs({ selected: tab });

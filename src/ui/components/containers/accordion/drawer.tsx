@@ -65,6 +65,8 @@ export function Drawer({ id, testId, title, children, open, size = 'medium' }: P
     if (!section || !content) return;
 
     section.style.height = isOpen ? content.scrollHeight + "px" : "0px";
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

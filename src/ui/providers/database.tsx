@@ -58,7 +58,7 @@ export function DBProvider({ children, database, dbName }: DBProviderProps) {
       });
       console.error("Error creating database", error);
     });
-  }, [database])
+  }, [database, alert])
 
   return (
     <DBContext.Provider value={{ db, dbName, stores }}>
