@@ -1,4 +1,7 @@
-import { CalendarMonth, Checklist, Settings, Storage } from "@mui/icons-material";
+import Check from "../../../components/icons/check";
+import House from "../../../components/icons/house";
+import Scales from "../../../components/icons/scales";
+import Shopping from "../../../components/icons/shopping";
 import { BannerButton } from "../../../components/inputs/banner-button/banner-button";
 import { Page } from "../../../components/layout/page/page";
 
@@ -13,10 +16,10 @@ export function Home() {
       <nav aria-label="main navigation" className="home-nav-list">
         {
           [
-            {name: "list", icon: <Checklist />, to: "/list"},
-            {name: "planner", icon: <CalendarMonth />, to: "/planner"},
-            {name: "data", icon: <Storage />, to: "/data"},
-            {name: "settings", icon: <Settings />, to: "/settings"},
+            {name: "list", icon: <Check />, to: "/list"},
+            {name: "planner", icon: <Shopping />, to: "/planner"},
+            {name: "data", icon: <House />, to: "/data"},
+            {name: "settings", icon: <Scales />, to: "/settings"},
           ].map(item => (
             <BannerButton key={item.name} icon={item.icon} label={item.name} onClick={() => navigate(item.to)} />
           ))
