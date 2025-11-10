@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { Dialog } from './dialog';
 
 const meta: Meta<typeof Dialog> = {

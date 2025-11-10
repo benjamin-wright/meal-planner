@@ -1,6 +1,6 @@
 
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StringInput } from './string-input';
 import { fn } from 'storybook/test';
 

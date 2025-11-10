@@ -7,10 +7,10 @@ import './page.css'
 type Props = {
   children: React.ReactNode;
   title: string;
-  onEdit?: (editing: boolean) => void;
+  onSorting?: (sorting: boolean) => void;
 }
 
-export function Page({ children, title, onEdit }: Props) {
+export function Page({ children, title, onSorting }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export function Page({ children, title, onEdit }: Props) {
       <section className="page-content">
         {children}
       </section>
-      <Header title={title} onNav={handleNav} onEdit={onEdit} />
+      <Header title={title} onNav={handleNav} onSorting={onSorting} />
     </>
   );
 }

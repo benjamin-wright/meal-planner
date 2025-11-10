@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { SlideOutControl } from './slide-out-control';
 import { SlideOutGroup } from './slide-out-group';
 

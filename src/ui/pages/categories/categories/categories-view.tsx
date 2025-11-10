@@ -16,10 +16,10 @@ type Props = {
 };
 
 export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew }: Props) {
-  const [editing, setEditing] = useState(false);
+  const [sorting, setSorting] = useState(false);
 
   function wrapper(children: React.ReactNode[]) {
-    return editing ? (
+    return sorting ? (
       <Reorder.Group axis="y" values={categories} onReorder={onReorder} className="categories-list" sx={{ overflowY: 'scroll' }}>
         {children}
       </Reorder.Group>
@@ -33,8 +33,8 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
   }
 
   return (
-    <Page title="Categories" onEdit={(editing: boolean) => {
-      setEditing(editing);
+    <Page title="Categories" onSorting={(sorting: boolean) => {
+      setSorting(sorting);
     }}>
       {
         wrapper(
@@ -42,12 +42,12 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
             <CategoryItem
               key={category.id}
               category={category}
-              editing={editing}
+              sorting={sorting}
               onEdit={() => onEdit(category)}
               onDelete={() => onDelete(category)}
             />
           )).concat(
-            <AddButton key="add-category-button" id="add-category-button" onClick={onNew} disabled={editing} />
+            <AddButton key="add-category-button" id="add-category-button" onClick={onNew} disabled={sorting} />
           )
         )
       }

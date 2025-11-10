@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FatIconButton } from './fat-icon-button';
 import House from '../../icons/house';
 import { fn } from 'storybook/test';

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Button } from '../../components/inputs/button/button';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AlertProvider } from './alert-provider';
 import { AlertContext } from './alert-context';
 

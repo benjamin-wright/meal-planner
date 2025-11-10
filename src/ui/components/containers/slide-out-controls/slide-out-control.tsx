@@ -129,7 +129,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   }
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (pointerDownTime !== null && (Date.now() - pointerDownTime) > 200) {
+    if (pointerDownTime !== null && (Date.now() - pointerDownTime) > 100) {
       event.preventDefault();
       return;
     }
@@ -146,6 +146,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
       <button
         className="slide-out-button slide-out-controls-edit"
         ref={editControl}
+        aria-label={`Edit ${groupId ?? ''} button`}
         style={{
           clipPath: animatedStyles.editClipPath,
           opacity: isInitialized ? 1 : 0,
@@ -157,6 +158,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
       <button
         className="slide-out-button slide-out-controls-delete"
         ref={deleteControl}
+        aria-label={`Delete ${groupId ?? ''} button`}
         style={{
           clipPath: animatedStyles.deleteClipPath,
           opacity: isInitialized ? 1 : 0,

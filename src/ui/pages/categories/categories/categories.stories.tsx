@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CategoriesView } from './categories-view';
 import { MemoryRouter } from 'react-router';
 import { useState } from 'react';

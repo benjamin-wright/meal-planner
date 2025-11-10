@@ -7,13 +7,13 @@ import { SlideOutControl } from "../../../../components/containers/slide-out-con
 
 type Props = {
   category: Category
-  editing: boolean;
+  sorting: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function CategoryItem({ category, editing, onEdit, onDelete }: Props) {
-  return editing ?
+export function CategoryItem({ category, sorting, onEdit, onDelete }: Props) {
+  return sorting ?
     (
       <Reorder.Item
         value={category}
@@ -26,7 +26,7 @@ export function CategoryItem({ category, editing, onEdit, onDelete }: Props) {
     )
     :
     (
-      <SlideOutControl groupId={category.id.toString()} onEdit={onEdit} onDelete={onDelete}>
+      <SlideOutControl groupId={category.name} onEdit={onEdit} onDelete={onDelete}>
         <li className="category-item glazing">
           <span className="category-item-name">{category.name}</span>
         </li>

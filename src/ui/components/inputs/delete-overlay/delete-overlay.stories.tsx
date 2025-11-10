@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DeleteOverlay } from './delete-overlay';
 import { Fieldset } from '../fieldset/fieldset';
 import { StringInput } from '../string-input/string-input';

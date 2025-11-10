@@ -26,7 +26,7 @@ test.describe('Categories Page', () => {
     await categoriesPage.goto();
     const categories = await categoriesPage.listCategories();
     const firstCategory = categories[0];
-    const editPage = await categoriesPage.editCategory(firstCategory);
+    await categoriesPage.editCategory(firstCategory);
     await expect(page.getByRole('heading', { name: 'Edit Category' })).toBeVisible();
   });
 
@@ -35,7 +35,7 @@ test.describe('Categories Page', () => {
     await categoriesPage.goto();
     
     // Enable edit mode before dragging
-    await categoriesPage.toggleEditMode();
+    await categoriesPage.toggleSorting();
     
     const categories = await categoriesPage.listCategories();
     if (categories.length > 1) {
@@ -45,7 +45,7 @@ test.describe('Categories Page', () => {
       await categoriesPage.dragCategory(firstCategory, secondCategory);
       
       // Disable edit mode
-      await categoriesPage.toggleEditMode();
+      await categoriesPage.toggleSorting();
 
       // Verify the reordering behavior
       const newOrder = await categoriesPage.listCategories();
@@ -98,10 +98,7 @@ test.describe('Edit Categories Page', () => {
     const categories = await categoriesPage.listCategories();
     const firstCategory = categories[0];
     
-    // Enable edit mode to show delete buttons
-    await categoriesPage.toggleEditMode();
     await categoriesPage.deleteCategory(firstCategory);
-    await categoriesPage.toggleEditMode();
     
     // Verify category was deleted
     const updatedCategories = await categoriesPage.listCategories();

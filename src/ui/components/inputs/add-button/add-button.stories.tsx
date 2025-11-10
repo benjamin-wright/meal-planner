@@ -1,6 +1,6 @@
 import { AddButton } from './add-button';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 function Buttons() {

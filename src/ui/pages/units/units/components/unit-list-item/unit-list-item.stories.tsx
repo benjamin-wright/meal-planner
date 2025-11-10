@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UnitListItem } from './unit-list-item';
 import { UnitType } from '../../../../../../models/units';
 import { Accordion } from '../../../../../components/containers/accordion/accordion';

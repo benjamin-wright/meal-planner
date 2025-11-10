@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UnitsEditView } from './units-edit-view';
 import { UnitType } from '../../../../models/units';
 import { useState } from 'react';

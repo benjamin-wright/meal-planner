@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NotFound } from './not-found';
 import { MemoryRouter } from 'react-router-dom';
 

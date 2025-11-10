@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TabHeader } from './tab-header';
 import { useArgs } from 'storybook/internal/preview-api';
 

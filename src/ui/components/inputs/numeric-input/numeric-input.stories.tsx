@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NumericInput } from './numeric-input';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 function TestComponent({ fn }: { fn: (value: number) => void }) {

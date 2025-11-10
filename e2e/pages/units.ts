@@ -1,11 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import { EditUnitPage } from "./edit-unit";
 
-type UnitData = {
-  base?: number;
-  data: string[][];
-}
-
 export class UnitsPage {
   private readonly page: Page;
 

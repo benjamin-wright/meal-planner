@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DescriptiveButton } from './descriptive-button';
 import { fn } from 'storybook/test';
 

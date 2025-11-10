@@ -1,6 +1,6 @@
 import { Fieldset } from './fieldset';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 function TestComponent() {
   return <div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>

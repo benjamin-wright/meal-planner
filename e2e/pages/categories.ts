@@ -31,7 +31,22 @@ export class CategoriesPage {
     // Find the category item by its name and click it to open the edit page
     const categoryItem = this.page.locator('.category-item', { hasText: name });
     await expect(categoryItem).toBeVisible();
-    await categoryItem.click();
+
+    // Drag the category item to the right to reveal the edit button and click it
+    const box = await categoryItem.boundingBox();
+    if (!box) throw new Error('Could not get bounding box for category item');
+
+    const startX = box.x + box.width / 2;
+    const startY = box.y + box.height / 2;
+
+    await this.page.mouse.move(startX, startY);
+    await this.page.mouse.down();
+    await this.page.mouse.move(startX + 100, startY, { steps: 10 });
+    await this.page.mouse.up();
+
+    const editButton = this.page.getByLabel(`Edit ${name} button`);
+    await expect(editButton).toBeVisible();
+    await editButton.click();
 
     return new EditCategoriesPage(this.page);
   }
@@ -63,11 +78,11 @@ export class CategoriesPage {
     await this.page.mouse.up();
   }
 
-  async toggleEditMode() {
-    // Click the Edit/Done button in the header
-    const editButton = this.page.locator('#header-edit-button');
-    await expect(editButton).toBeVisible();
-    await editButton.click();
+  async toggleSorting() {
+    // Click the Sort/Done button in the header
+    const sortButton = this.page.locator('#header-sort-button');
+    await expect(sortButton).toBeVisible();
+    await sortButton.click();
   }
 
   async newCategory(): Promise<EditCategoriesPage> {
@@ -83,8 +98,20 @@ export class CategoriesPage {
     // Find the category item and click its delete button (only visible in edit mode)
     const categoryItem = this.page.locator('.category-item', { hasText: name });
     await expect(categoryItem).toBeVisible();
-    
-    const deleteButton = categoryItem.getByLabel('Delete category');
+
+    // Drag the category item to the right to reveal the edit button and click it
+    const box = await categoryItem.boundingBox();
+    if (!box) throw new Error('Could not get bounding box for category item');
+
+    const startX = box.x + box.width / 2;
+    const startY = box.y + box.height / 2;
+
+    await this.page.mouse.move(startX, startY);
+    await this.page.mouse.down();
+    await this.page.mouse.move(startX - 100, startY, { steps: 10 });
+    await this.page.mouse.up();
+
+    const deleteButton = this.page.getByLabel(`Delete ${name} button`);
     await expect(deleteButton).toBeVisible();
     await deleteButton.click();
   }
