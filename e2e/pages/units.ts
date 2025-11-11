@@ -83,13 +83,23 @@ export class UnitsPage {
       .getByRole('button', { name: 'Delete unit' });
     await expect(deleteButton).toBeVisible();
     await expect(deleteButton).toBeEnabled();
-
     await deleteButton.click();
+  }
+  
+  async confirmDelete() {
     const confirmButton = this.page.getByRole('button', { name: 'Confirm dialog' });
     await expect(confirmButton).toBeVisible();
     await expect(confirmButton).toBeEnabled();
 
     await confirmButton.click();
+  }
+
+  async cancelDelete() {
+    const cancelButton = this.page.getByRole('button', { name: 'Cancel dialog' });
+    await expect(cancelButton).toBeVisible();
+    await expect(cancelButton).toBeEnabled();
+
+    await cancelButton.click();
   }
 
   async getUnitDetails(unitName: string): Promise<string[][]> {

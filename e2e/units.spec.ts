@@ -68,9 +68,21 @@ test.describe('Units Page', () => {
     await unitsPage.goto();
     await unitsPage.expandUnit('gram');
     await unitsPage.deleteUnit('gram');
+    await unitsPage.confirmDelete();
 
     await unitsPage.expectCurrent();
     await unitsPage.expectUnits([/* 'gram' should be gone */]);
+  });
+
+  test('can cancel deleting an existing unit', async ({ page }) => {
+    const unitsPage = new UnitsPage(page);
+    await unitsPage.goto();
+    await unitsPage.expandUnit('gram');
+    await unitsPage.deleteUnit('gram');
+    await unitsPage.cancelDelete();
+
+    await unitsPage.expectCurrent();
+    await unitsPage.expectUnits(['gram']);
   });
 });
 

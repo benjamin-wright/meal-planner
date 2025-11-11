@@ -99,9 +99,24 @@ test.describe('Edit Categories Page', () => {
     const firstCategory = categories[0];
     
     await categoriesPage.deleteCategory(firstCategory);
+    await categoriesPage.confirmDelete();
     
     // Verify category was deleted
     const updatedCategories = await categoriesPage.listCategories();
     expect(updatedCategories).not.toContain(firstCategory);
+  });
+
+  test('can cancel deleting a category', async ({ page }) => {
+    const categoriesPage = new CategoriesPage(page);
+    await categoriesPage.goto();
+    const categories = await categoriesPage.listCategories();
+    const firstCategory = categories[0];
+    
+    await categoriesPage.deleteCategory(firstCategory);
+    await categoriesPage.cancelDelete();
+    
+    // Verify category was not deleted
+    const updatedCategories = await categoriesPage.listCategories();
+    expect(updatedCategories).toContain(firstCategory);
   });
 });

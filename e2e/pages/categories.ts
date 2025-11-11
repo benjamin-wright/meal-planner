@@ -19,7 +19,7 @@ export class CategoriesPage {
 
   async listCategories(): Promise<string[]> {
     // Categories are rendered as .category-item elements with .category-item-name spans
-    const categoryItems = this.page.locator('.category-item-name');
+    const categoryItems = this.page.locator('.category-item');
     await expect(categoryItems).not.toHaveCount(0);
 
     const categoryElements = await categoryItems.all();
@@ -114,5 +114,21 @@ export class CategoriesPage {
     const deleteButton = this.page.getByLabel(`Delete ${name} button`);
     await expect(deleteButton).toBeVisible();
     await deleteButton.click();
+  }
+
+  async confirmDelete() {
+    const confirmButton = this.page.getByRole('button', { name: 'Confirm dialog' });
+    await expect(confirmButton).toBeVisible();
+    await expect(confirmButton).toBeEnabled();
+
+    await confirmButton.click();
+  }
+
+  async cancelDelete() {
+    const cancelButton = this.page.getByRole('button', { name: 'Cancel dialog' });
+    await expect(cancelButton).toBeVisible();
+    await expect(cancelButton).toBeEnabled();
+
+    await cancelButton.click();
   }
 }
