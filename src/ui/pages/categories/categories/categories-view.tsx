@@ -30,14 +30,15 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
             <Reorder.Item
               key={category.id}
               value={category}
-              className="category-item glazing"
+              className="category-item category-item-sortable glazing"
               style={{ touchAction: 'none' }}
+              aria-label={`Category list item for ${category.name}`}
             >
               <IconButton icon={<DragHandle />} />
               <span>{category.name}</span>
             </Reorder.Item>
           )).concat(
-            <li className="add-category-item">
+            <li className="category-item">
               <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
             </li>
           )
@@ -54,13 +55,13 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
             {
               categories.length === 0 ? (<></>) :
               categories.map((category) => (
-                <motion.li key={category.id} className="add-category-item" layout exit={{ opacity: 0 }}>
-                  <SlideOutControl groupId={category.name} onEdit={() => onEdit(category)} onDelete={() => setToDelete(category)} key={category.id}>
-                    <span className="category-item glazing">{category.name}</span>
+                <motion.li key={category.id} className="category-item" aria-label={`Category list item for ${category.name}`} layout exit={{ opacity: 0 }}>
+                  <SlideOutControl groupId={category.name} onEdit={() => onEdit(category)} onDelete={() => setToDelete(category)}>
+                    {category.name}
                   </SlideOutControl>
                 </motion.li>
               )).concat(
-                <motion.li className="add-category-item" layout exit={{ opacity: 0 }} key="add-category">
+                <motion.li className="category-item" layout exit={{ opacity: 0 }} key="add-category">
                   <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
                 </motion.li>
               )

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { CategoriesView } from "./categories-view";
-import { DBContext } from "../../../providers/database";
+import { DBContext } from "../../../providers/database/db-context";
 import { Category } from "../../../../models/categories";
 import { ActionQueue } from "../../../../utils/action-queue";
 import { useNavigate } from "react-router-dom";

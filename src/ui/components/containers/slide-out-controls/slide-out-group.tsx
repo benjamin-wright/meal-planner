@@ -1,14 +1,5 @@
-import { createContext, useState } from "react";
-
-interface SlideOutGroupContextProps {
-  selectedId?: string;
-  setSelectedId: (id: string | undefined) => void;
-}
-
-export const SlideOutGroupContext = createContext<SlideOutGroupContextProps>({
-  selectedId: undefined,
-  setSelectedId: () => {},
-});
+import { useState } from "react";
+import { SlideOutGroupContext } from "./slide-out-group-context";
 
 type Props = {
   children: React.ReactNode | React.ReactNode[];

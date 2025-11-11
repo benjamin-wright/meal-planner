@@ -19,6 +19,9 @@
   position: relative;
   touch-action: none;
   transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out;
+  padding: 1em;
+  border-radius: 0.5em;
+  user-select: none;
 }
 
 .slide-out-controls-edit {
@@ -32,6 +35,7 @@
   align-items: center;
   justify-content: flex-start;
   user-select: none;
+  border-radius: 0.5em 0 0 0.5em;
 }
 
 .slide-out-controls-delete {
@@ -46,4 +50,5 @@
   justify-content: flex-end;
   user-select: none;
   color: var(--error-primary);
+  border-radius: 0 0.5em 0.5em 0;
 }

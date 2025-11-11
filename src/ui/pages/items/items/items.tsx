@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ItemsView } from "./items-view";
-import { DBContext } from "../../../providers/database";
+import { DBContext } from "../../../providers/database/db-context";
 import { Item } from "../../../../models/items";
 import { useNavigate } from "react-router-dom";
 

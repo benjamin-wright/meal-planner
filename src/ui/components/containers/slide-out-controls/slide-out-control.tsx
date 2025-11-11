@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
-import { SlideOutGroupContext } from './slide-out-group';
+import { SlideOutGroupContext } from './slide-out-group-context';
 
 type Selection = 'edit' | 'delete' | null;
 
@@ -38,7 +38,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   const [ isInitialized, setIsInitialized ] = useState(false);
 
   useEffect(() => {
-    const parentElement = parent.current?.firstChild as HTMLElement | null;
+    const parentElement = parent.current as HTMLElement | null;
     const element = editControl.current as HTMLDivElement | null;
     const computedStyle = getComputedStyle(element ?? document.documentElement);
     const radius = parseFloat(getComputedStyle(parentElement ?? document.documentElement).borderRadius);
@@ -55,22 +55,6 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
     });
     setIsInitialized(true);
   }, [parent, editControl, deleteControl, dragDistance]);
-
-  useEffect(() => {
-    if (!parent.current) return;
-    if (!editControl.current) return;
-    if (!deleteControl.current) return;
-
-    const childElement = parent.current.firstChild as HTMLElement | null;
-    if (!childElement) return;
-
-    const style = getComputedStyle(childElement);
-
-    editControl.current.style.borderTopLeftRadius = style.borderTopLeftRadius;
-    editControl.current.style.borderBottomLeftRadius = style.borderBottomLeftRadius;
-    deleteControl.current.style.borderTopRightRadius = style.borderTopRightRadius;
-    deleteControl.current.style.borderBottomRightRadius = style.borderBottomRightRadius;
-  }, [parent, editControl, deleteControl]);
 
   useEffect(() => {
     if (selection !== null && context.selectedId != null && context.selectedId !== groupId) {
@@ -168,7 +152,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
         <Trash />
       </button>
       <div
-        className="slide-out-controls"
+        className="slide-out-controls glazing"
         ref={parent}
         style={{
           marginLeft: animatedStyles.leftMargin,
@@ -194,6 +178,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
         onPointerLeave={handleTouchEnd}
         onPointerOut={handleTouchEnd}
         onClick={handleClick}
+        aria-label={`Slide out controls for ${groupId ?? ''}`}
       >
         {children}
       </div>

@@ -8,11 +8,8 @@
 
 .items-list li {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   border-radius: 0.3em;
-  padding: 0.75em;
-  gap: 0.75em;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;

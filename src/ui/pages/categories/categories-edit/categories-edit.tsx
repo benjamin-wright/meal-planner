@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CategoriesEditView } from "./categories-edit-view";
 import { useContext, useEffect, useState } from "react";
 import { Category } from "../../../../models/categories";
-import { DBContext } from "../../../providers/database";
+import { DBContext } from "../../../providers/database/db-context";
 
 export function CategoriesEdit() {
   const { stores } = useContext(DBContext);

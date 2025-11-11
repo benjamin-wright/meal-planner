@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsView } from "./units-view";
 import { useContext, useEffect, useState } from "react";
 import { Unit, UnitType } from "../../../../models/units";
-import { DBContext } from "../../../providers/database";
+import { DBContext } from "../../../providers/database/db-context";
 
 export function Units() {
   const navigate = useNavigate();

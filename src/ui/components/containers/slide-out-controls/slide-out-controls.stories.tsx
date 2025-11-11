@@ -22,12 +22,7 @@ function SlideOutControlStory() {
       >
         {items.map(item => (
           <SlideOutControl key={item} groupId={item}>
-            <p style={{
-              userSelect: 'none',
-              padding: '1em',
-              background: 'var(--thick-glazing)',
-              borderRadius: '1em',
-            }}>Slide Out: {item}</p>
+            Slide Out: {item}
           </SlideOutControl>
         ))}
       </div>

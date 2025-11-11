@@ -1,5 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import { EditCategoriesPage } from "./edit-categories";
+import { deleteItem, editItem } from "./components/slide-out-controls";
 
 export class CategoriesPage {
   private readonly page: Page;
@@ -19,7 +20,7 @@ export class CategoriesPage {
 
   async listCategories(): Promise<string[]> {
     // Categories are rendered as .category-item elements with .category-item-name spans
-    const categoryItems = this.page.locator('.category-item');
+    const categoryItems = this.page.getByLabel(/Category list item for .*/);
     await expect(categoryItems).not.toHaveCount(0);
 
     const categoryElements = await categoryItems.all();
@@ -28,33 +29,14 @@ export class CategoriesPage {
   }
 
   async editCategory(name: string): Promise<EditCategoriesPage> {
-    // Find the category item by its name and click it to open the edit page
-    const categoryItem = this.page.locator('.category-item', { hasText: name });
-    await expect(categoryItem).toBeVisible();
-
-    // Drag the category item to the right to reveal the edit button and click it
-    const box = await categoryItem.boundingBox();
-    if (!box) throw new Error('Could not get bounding box for category item');
-
-    const startX = box.x + box.width / 2;
-    const startY = box.y + box.height / 2;
-
-    await this.page.mouse.move(startX, startY);
-    await this.page.mouse.down();
-    await this.page.mouse.move(startX + 100, startY, { steps: 10 });
-    await this.page.mouse.up();
-
-    const editButton = this.page.getByLabel(`Edit ${name} button`);
-    await expect(editButton).toBeVisible();
-    await editButton.click();
-
+    await editItem(this.page, name);
     return new EditCategoriesPage(this.page);
   }
 
   async dragCategory(from: string, to: string) {
     // Categories can be dragged from any part of the item when in edit mode
-    const fromCategory = this.page.locator('.category-item', { hasText: from });
-    const toCategory = this.page.locator('.category-item', { hasText: to });
+    const fromCategory = this.page.getByLabel(`Category list item for ${from}`);
+    const toCategory = this.page.getByLabel(`Category list item for ${to}`);
 
     await expect(fromCategory).toBeVisible();
     await expect(toCategory).toBeVisible();
@@ -95,25 +77,7 @@ export class CategoriesPage {
   }
 
   async deleteCategory(name: string) {
-    // Find the category item and click its delete button (only visible in edit mode)
-    const categoryItem = this.page.locator('.category-item', { hasText: name });
-    await expect(categoryItem).toBeVisible();
-
-    // Drag the category item to the right to reveal the edit button and click it
-    const box = await categoryItem.boundingBox();
-    if (!box) throw new Error('Could not get bounding box for category item');
-
-    const startX = box.x + box.width / 2;
-    const startY = box.y + box.height / 2;
-
-    await this.page.mouse.move(startX, startY);
-    await this.page.mouse.down();
-    await this.page.mouse.move(startX - 100, startY, { steps: 10 });
-    await this.page.mouse.up();
-
-    const deleteButton = this.page.getByLabel(`Delete ${name} button`);
-    await expect(deleteButton).toBeVisible();
-    await deleteButton.click();
+    await deleteItem(this.page, name);
   }
 
   async confirmDelete() {
