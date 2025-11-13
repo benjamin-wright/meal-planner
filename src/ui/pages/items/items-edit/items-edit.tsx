@@ -1,9 +1,9 @@
-import { Page } from "../../../components/layout/page/page";
+import { ItemKind } from "../../../../models/items";
+import { ItemsEditView } from "./items-edit-view";
 
 export function ItemsEdit() {
-  return <Page title="Edit Item">
-    <section>
-      Edit Item Page
-    </section>
-  </Page>;
+  return <ItemsEditView
+    item={{ id: 1, name: "Sample Item", category: 1, kind: ItemKind.Ingredient }}
+    onChange={() => { }}
+  />;
 }
