@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { Dialog } from "../../../components/containers/dialog/dialog";
+import { ItemFilter } from "./components/item-filter";
 
 type Props = {
   items: Item[];
@@ -16,8 +17,15 @@ type Props = {
 
 export function ItemsView({ items, onDelete, onEdit }: Props) {
   const [ toDelete, setToDelete ] = useState<Item | undefined>(undefined);
+  const [ filter, setFilter ] = useState({
+    ingredients: false,
+    readymeals: false,
+    misc: false,
+    search: ""
+  });
 
   return <Page title="Items">
+    <ItemFilter filter={filter} onFilterChange={setFilter} />
     <ul className="items-list">
       <SlideOutGroup>
         <AnimatePresence>

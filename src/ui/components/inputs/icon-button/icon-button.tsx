@@ -4,7 +4,7 @@ type Props = {
   id?: string;
   label?: string;
   icon: React.ReactNode;
-  kind?: 'success' | 'error';
+  kind?: 'success' | 'error' | 'selected';
   circular?: boolean;
   onClick?: () => void;
   onPointerDown?: (event: React.PointerEvent<HTMLButtonElement>) => void;
