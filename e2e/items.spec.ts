@@ -30,6 +30,6 @@ test.describe('Items Page', () => {
 
     // Verify that we are on the Edit Item page
     await expect(page).toHaveURL('/items/1');
-    await expect(page.getByRole('heading', { name: 'Edit Item' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: `Item: ${firstItem}` })).toBeVisible();
   });
 });

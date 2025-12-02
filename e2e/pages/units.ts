@@ -106,10 +106,13 @@ export class UnitsPage {
     const unitSection = this.page.getByRole('listitem', { name: `Collapsible section for ${unitName}` }).getByRole('definition');
     await expect(unitSection).toBeVisible();
 
-    const rows = await unitSection.getByRole('table').getByRole('row').all();
+    const [header, ...rest] = await unitSection.getByRole('table').getByRole('row').all();
 
-    return Promise.all(rows.map(async row => {
+    const headerCells = await Promise.all((await header.getByRole('columnheader').all()).map(async cell => (await cell.textContent()) || ''));
+    const body = await Promise.all(rest.map(async row => {
       return Promise.all((await row.getByRole('cell').all()).map(async cell => (await cell.textContent()) || ''));
     }));
+
+    return [headerCells, ...body];
   }
 }

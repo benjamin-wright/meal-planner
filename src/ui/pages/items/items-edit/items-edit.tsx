@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Item, ItemKind } from "../../../../models/items";
 import { ItemsEditView } from "./items-edit-view";
 import { DBContext } from "../../../providers/database/db-context";

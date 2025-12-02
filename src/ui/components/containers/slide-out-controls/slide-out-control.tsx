@@ -74,7 +74,10 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   }
 
   return (
-    <div className="slide-out-controls-container">
+    <div
+      className="slide-out-controls-container" 
+      aria-label={`Slide out controls for ${groupId ?? ''}`}
+    >
       <button
         className="slide-out-button slide-out-button-edit"
         ref={editControl}
@@ -106,7 +109,6 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
           marginLeft: animatedStyles.leftMargin,
           marginRight: animatedStyles.rightMargin,
         }}
-        aria-label={`Slide out controls for ${groupId ?? ''}`}
         onClick={() => handleClick(null)}
       >
         {children}
@@ -117,12 +119,12 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
             className="slide-out-overlay slide-out-overlay-delete"
             aria-label="Delete area"
             onClick={() => handleClick('delete')}
-          />
+          ></button>
           <button
             className="slide-out-overlay slide-out-overlay-edit"
             aria-label="Edit area"
             onClick={() => handleClick('edit')}
-          />
+          ></button>
         </>
       }
     </div>
