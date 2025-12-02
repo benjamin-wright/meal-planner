@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Item } from "../../../../models/items";
+import { Item, ItemKind } from "../../../../models/items";
 import { Page } from "../../../components/layout/page/page";
 
 import "./items-view.css"
@@ -8,14 +8,16 @@ import { SlideOutGroup } from "../../../components/containers/slide-out-controls
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { Dialog } from "../../../components/containers/dialog/dialog";
 import { ItemFilter } from "./components/item-filter";
+import { Category } from "../../../../models/categories";
 
 type Props = {
   items: Item[];
+  categories: Category[];
   onDelete: (item: Item) => void;
   onEdit: (item: Item) => void;
 }
-
-export function ItemsView({ items, onDelete, onEdit }: Props) {
+  
+export function ItemsView({ items, categories, onDelete, onEdit }: Props) {
   const [ toDelete, setToDelete ] = useState<Item | undefined>(undefined);
   const [ filter, setFilter ] = useState({
     ingredients: false,
@@ -29,7 +31,27 @@ export function ItemsView({ items, onDelete, onEdit }: Props) {
     <ul className="items-list">
       <SlideOutGroup>
         <AnimatePresence>
-          {items.map(item => (
+          {items.filter(item => {
+            if (filter.ingredients || filter.readymeals || filter.misc) {
+              if (!filter.ingredients && item.kind === ItemKind.Ingredient) return false;
+              if (!filter.readymeals && item.kind === ItemKind.Readymeal) return false;
+              if (!filter.misc && item.kind === ItemKind.Misc) return false;
+            }
+
+            if (filter.search) {
+              const searchLower = filter.search.toLowerCase();
+              const category = categories.find(c => c.id === item.category)?.name || "";
+
+              const nameMatches = item.name.toLowerCase().includes(searchLower);
+              const categoryMatches = category.toLowerCase().includes(searchLower);
+
+              console.log({ nameMatches, categoryMatches });
+
+              return nameMatches || categoryMatches;
+            }
+
+            return true;
+          }).map(item => (
             <motion.li key={item.id} layout exit={{ opacity: 0 }} aria-label={`Item list item for ${item.name}`}>
               <SlideOutControl groupId={item.name} onEdit={() => onEdit(item)} onDelete={() => setToDelete(item)}>
                 {item.name}

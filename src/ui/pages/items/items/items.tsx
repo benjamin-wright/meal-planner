@@ -3,12 +3,14 @@ import { ItemsView } from "./items-view";
 import { DBContext } from "../../../providers/database/db-context";
 import { Item } from "../../../../models/items";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../../../../models/categories";
 
 export function Items() {
   const navigate = useNavigate();
 
   const { stores } = useContext(DBContext);
   const [items, setItems] = useState<Item[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   function handleDelete(item: Item) {
     if (!stores) return;
@@ -28,11 +30,15 @@ export function Items() {
     (async () => {
       const items = await stores.itemStore.getAll();
       setItems(items);
+
+      const categories = await stores.categoryStore.getAll();
+      setCategories(categories);
     })();
   }, [stores]);
 
   return <ItemsView
     items={items}
+    categories={categories}
     onDelete={handleDelete}
     onEdit={handleEdit}
   />;

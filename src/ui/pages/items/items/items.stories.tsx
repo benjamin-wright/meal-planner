@@ -19,9 +19,17 @@ export const Primary: Story = {
   args: {
     items: [
       { id: 1, kind: ItemKind.Ingredient, name: 'Apple', category: 1 },
-      { id: 2, kind: ItemKind.Ingredient, name: 'Banana', category: 1 },
-      { id: 3, kind: ItemKind.Ingredient, name: 'Carrot', category: 2 },
-      { id: 4, kind: ItemKind.Ingredient, name: 'Broccoli', category: 2 },
+      { id: 2, kind: ItemKind.Readymeal, name: 'Pasta Pot', category: 3 },
+      { id: 3, kind: ItemKind.Ingredient, name: 'Banana', category: 1 },
+      { id: 4, kind: ItemKind.Misc, name: 'Soap', category: 4 },
+      { id: 5, kind: ItemKind.Ingredient, name: 'Carrot', category: 2 },
+      { id: 6, kind: ItemKind.Ingredient, name: 'Broccoli', category: 2 },
+    ],
+    categories: [
+      { id: 1, name: "Fruit", order: 1 },
+      { id: 2, name: "Vegetables", order: 2 },
+      { id: 3, name: "Readymeals", order: 3 },
+      { id: 4, name: "Household", order: 4 },
     ],
     onDelete: () => { },
     onEdit: fn(),
@@ -32,6 +40,7 @@ export const Primary: Story = {
     return <MemoryRouter>
       <ItemsView
         items={items}
+        categories={args.categories}
         onDelete={(item: Item) => setItems(items.filter(i => i.id !== item.id))}
         onEdit={args.onEdit}
       />

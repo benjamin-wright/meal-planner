@@ -3,7 +3,7 @@ import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
 import { IconButton } from '../icon-button/icon-button';
 import './sliding-button.css';
-import { SlidingButtonGroupContext } from './sliding-button-group';
+import { SlidingButtonGroupContext } from './sliding-button-group-context';
 
 type Props = {
   id: string;
