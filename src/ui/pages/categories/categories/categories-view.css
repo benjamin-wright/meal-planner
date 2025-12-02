@@ -4,6 +4,7 @@
   gap: 0.5em;
   padding: 1em;
   list-style: none;
+  overflow-y: auto;
 }
 
 .category-item {

@@ -37,11 +37,7 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
               <IconButton icon={<DragHandle />} />
               <span>{category.name}</span>
             </Reorder.Item>
-          )).concat(
-            <li className="category-item">
-              <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
-            </li>
-          )
+          ))
         }
       </Reorder.Group>
     );
@@ -60,11 +56,7 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
                     {category.name}
                   </SlideOutControl>
                 </motion.li>
-              )).concat(
-                <motion.li className="category-item" layout exit={{ opacity: 0 }} key="add-category">
-                  <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
-                </motion.li>
-              )
+              ))
             }
           </ul>
         </AnimatePresence>
@@ -77,6 +69,7 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
       setSorting(sorting);
     }}>
       { sorting ? sortingView() : fixedView() }
+      <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
       <Dialog
         isOpen={!!toDelete}
         prompt="Are you sure you want to delete this category?"

@@ -9,15 +9,17 @@ import { SlideOutControl } from "../../../components/containers/slide-out-contro
 import { Dialog } from "../../../components/containers/dialog/dialog";
 import { ItemFilter } from "./components/item-filter";
 import { Category } from "../../../../models/categories";
+import { AddButton } from "../../../components/inputs/add-button/add-button";
 
 type Props = {
   items: Item[];
   categories: Category[];
   onDelete: (item: Item) => void;
   onEdit: (item: Item) => void;
+  onNew: () => void;
 }
   
-export function ItemsView({ items, categories, onDelete, onEdit }: Props) {
+export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props) {
   const [ toDelete, setToDelete ] = useState<Item | undefined>(undefined);
   const [ filter, setFilter ] = useState({
     ingredients: false,
@@ -31,7 +33,7 @@ export function ItemsView({ items, categories, onDelete, onEdit }: Props) {
     <ul className="items-list">
       <SlideOutGroup>
         <AnimatePresence>
-          {items.filter(item => {
+          { items.length === 0 ? <></> : items.filter(item => {
             if (filter.ingredients || filter.readymeals || filter.misc) {
               if (!filter.ingredients && item.kind === ItemKind.Ingredient) return false;
               if (!filter.readymeals && item.kind === ItemKind.Readymeal) return false;
@@ -57,10 +59,14 @@ export function ItemsView({ items, categories, onDelete, onEdit }: Props) {
                 {item.name}
               </SlideOutControl>
             </motion.li>
-          ))}
+          )).concat(
+            <motion.li layout exit={{ opacity: 0 }}>
+            </motion.li>
+          )}
         </AnimatePresence>
       </SlideOutGroup>
     </ul>
+    <AddButton id="add-item-button" onClick={onNew} />
     <Dialog
       isOpen={!!toDelete}
       prompt="Are you sure you want to delete this item?"

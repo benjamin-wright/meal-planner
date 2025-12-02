@@ -3,6 +3,7 @@ import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
 import { SlideOutGroupContext } from './slide-out-group-context';
+import { N } from 'vitest/dist/chunks/environment.d.cL3nLXbE.js';
 
 type Selection = 'edit' | 'delete' | null;
 
@@ -26,9 +27,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   const editControl = useRef<HTMLButtonElement>(null);
   const deleteControl = useRef<HTMLButtonElement>(null);
   const [ selection, setSelection ] = useState<Selection>(null);
-  const [ dragStart, setDragStart ] = useState<number | null>(null);
   const [ dragDistance, setDragDistance ] = useState(0);
-  const [ pointerDownTime, setPointerDownTime ] = useState<number | null>(null);
   const [ animatedStyles, setAnimatedStyles ] = useState<AnimatedStyles>({
     editClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
     deleteClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
@@ -63,72 +62,22 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
     }
   }, [ context.selectedId, selection, groupId ]);
 
-  function handleTouchStart(x: number) {
-    setDragStart(x);
-    setPointerDownTime(Date.now());
-  }
-
-  function handleTouchMove(x: number) {
-    if (dragStart === null) return;
-
-    let distance = (x - dragStart) / 2;
-    switch (selection) {
-      case 'edit':
-        distance += 50;
-        break;
-      case 'delete':
-        distance -= 50;
-        break;
-    }
-
-    if (distance > 45) {
-      setDragDistance(50);
-    }
-
-    if ( 15 > distance && distance > -15) {
-      setDragDistance(0);
-    }
-
-    if (-45 > distance) {
-      setDragDistance(-50);
-    }
-  }
-
-  function handleTouchEnd() {
-    setDragStart(null);
-
-    if (dragDistance > 45) {
-      context.setSelectedId(groupId);
-      setSelection('edit');
-      setDragDistance(50);
-    } else if (dragDistance < -45) {
-      context.setSelectedId(groupId);
-      setSelection('delete');
-      setDragDistance(-50);
-    } else {
-      context.setSelectedId(undefined);
-      setSelection(null);
-      setDragDistance(0);
-    }
-  }
-
-  function handleClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (pointerDownTime !== null && (Date.now() - pointerDownTime) > 100) {
-      event.preventDefault();
-      return;
-    }
-
+  function handleClick(mode: "edit" | "delete" | null) {
     if (selection !== null) {
       context.setSelectedId(undefined);
       setSelection(null);
       setDragDistance(0);
+    } else {
+      context.setSelectedId(groupId);
+      setSelection(mode);
+      setDragDistance(mode === 'delete' ? -50 : 50);
     }
   }
 
   return (
     <div className="slide-out-controls-container">
       <button
-        className="slide-out-button slide-out-controls-edit"
+        className="slide-out-button slide-out-button-edit"
         ref={editControl}
         aria-label={`Edit ${groupId ?? ''} button`}
         style={{
@@ -140,7 +89,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
         <Pencil />
       </button>
       <button
-        className="slide-out-button slide-out-controls-delete"
+        className="slide-out-button slide-out-button-delete"
         ref={deleteControl}
         aria-label={`Delete ${groupId ?? ''} button`}
         style={{
@@ -158,30 +107,25 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
           marginLeft: animatedStyles.leftMargin,
           marginRight: animatedStyles.rightMargin,
         }}
-        onTouchStart={e => handleTouchStart(e.touches[0].clientX)}
-        onTouchMove={e => handleTouchMove(e.touches[0].clientX)}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
-        onPointerDown={e => handleTouchStart(e.clientX)}
-        onPointerMove={e => {
-          if (dragDistance === null) return;
-
-          if (e.buttons !== 1) {
-            handleTouchEnd();
-            return;
-          }
-
-          handleTouchMove(e.clientX);
-        }}
-        onPointerUp={handleTouchEnd}
-        onPointerCancel={handleTouchEnd}
-        onPointerLeave={handleTouchEnd}
-        onPointerOut={handleTouchEnd}
-        onClick={handleClick}
         aria-label={`Slide out controls for ${groupId ?? ''}`}
+        onClick={() => handleClick(null)}
       >
         {children}
       </div>
+      {
+        selection === null && <>
+          <button
+            className="slide-out-overlay slide-out-overlay-delete"
+            aria-label="Delete area"
+            onClick={() => handleClick('delete')}
+          />
+          <button
+            className="slide-out-overlay slide-out-overlay-edit"
+            aria-label="Edit area"
+            onClick={() => handleClick('edit')}
+          />
+        </>
+      }
     </div>
   );
 }

@@ -14,6 +14,19 @@ export enum ItemKind {
   Misc = 3,
 }
 
+export function itemKindToString(kind: ItemKind): string {
+  switch (kind) {
+    case ItemKind.Ingredient:
+      return "Ingredient";
+    case ItemKind.Readymeal:
+      return "Readymeal";
+    case ItemKind.Misc:
+      return "Misc";
+    default:
+      return "Unknown";
+  }
+}
+
 export type Item = {
   id: number;
   name: string;

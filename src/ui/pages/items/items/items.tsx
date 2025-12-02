@@ -24,6 +24,10 @@ export function Items() {
     navigate(`/items/${item.id}`);
   }
 
+  function handleNew() {
+    navigate(`/items/new`);
+  }
+
   useEffect(() => {
     if (!stores) return;
 
@@ -41,5 +45,6 @@ export function Items() {
     categories={categories}
     onDelete={handleDelete}
     onEdit={handleEdit}
+    onNew={handleNew}
   />;
 }

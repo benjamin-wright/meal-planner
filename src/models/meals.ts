@@ -6,11 +6,39 @@ export enum CourseType {
   Dinner = "dinner"
 }
 
+export function courseTypeToString(course: CourseType): string {
+  switch (course) {
+    case CourseType.Breakfast:
+      return "Breakfast";
+    case CourseType.Lunch:
+      return "Lunch";
+    case CourseType.Dinner:
+      return "Dinner";
+    default:
+      return "Unknown";
+  }
+}
+
 export enum DishType {
   Starter = "starter",
   Main = "main",
   Side = "side",
   Dessert = "dessert"
+}
+
+export function dishTypeToString(dish: DishType): string {
+  switch (dish) {
+    case DishType.Starter:
+      return "Starter";
+    case DishType.Main:
+      return "Main";
+    case DishType.Side:
+      return "Side";
+    case DishType.Dessert:
+      return "Dessert";
+    default:
+      return "Unknown";
+  }
 }
 
 export enum Day {
