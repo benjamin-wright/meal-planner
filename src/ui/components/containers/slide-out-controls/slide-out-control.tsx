@@ -3,7 +3,6 @@ import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
 import { SlideOutGroupContext } from './slide-out-group-context';
-import { N } from 'vitest/dist/chunks/environment.d.cL3nLXbE.js';
 
 type Selection = 'edit' | 'delete' | null;
 
