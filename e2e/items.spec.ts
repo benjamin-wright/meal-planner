@@ -26,10 +26,30 @@ test.describe('Items Page', () => {
     await itemsPage.goto();
     const items = await itemsPage.listItems();
     const firstItem = items[0];
-    await itemsPage.editItem(firstItem);
+    const editPage = await itemsPage.editItem(firstItem);
 
     // Verify that we are on the Edit Item page
     await expect(page).toHaveURL('/items/1');
     await expect(page.getByRole('heading', { name: `Item: ${firstItem}` })).toBeVisible();
+
+    // Change the item details
+    const newName = 'red onions';
+    await editPage.setName(newName);
+    await editPage.selectCategory('bakery');
+    await editPage.selectKind('Misc');
+    await editPage.save();
+
+    // Verify that we are back on the Items page and the name has been updated
+    await expect(page).toHaveURL('/items');
+
+    await itemsPage.setFilters({ misc: true });
+    await itemsPage.waitForListLength(2); // Expecting 2 misc items now
+
+    const updatedItems = await itemsPage.listItems();
+    expect(updatedItems).toEqual(["red onions", "shampoo"]);
+
+    await itemsPage.setFilters({}); // Reset filters
+
+    //Todo filter by "bakery" category and verify the item is listed there
   });
 });

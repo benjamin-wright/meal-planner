@@ -110,65 +110,61 @@
       "id": 1,
       "name": "onions",
       "category": 2,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 2,
       "name": "potatoes",
       "category": 2,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 3,
       "name": "bread",
       "category": 8,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 4,
       "name": "chicken",
       "category": 3,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 5,
       "name": "salmon",
       "category": 4,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 6,
       "name": "milk",
       "category": 5,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 7,
       "name": "eggs",
       "category": 8,
-      "edible": true
+      "kind": "ingredient"
     },
     {
       "id": 8,
       "name": "shampoo",
       "category": 9,
-      "edible": false
+      "kind": "misc"
     },
     {
       "id": 9,
       "name": "pasta pot",
       "category": 7,
-      "edible": true
-    }
-  ],
-  "readymeals": [
-    {
-      "id": 1,
-      "item": 9,
-      "serves": 1,
-      "time": 1,
-      "course": "lunch",
-      "dish": "main"
+      "kind": "readymeal",
+      "readymeal": {
+        "servings": 1,
+        "time": 1,
+        "course": "lunch",
+        "dish": "main"
+      }
     }
   ],
   "recipies": [

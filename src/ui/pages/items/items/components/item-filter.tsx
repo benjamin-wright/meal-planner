@@ -7,6 +7,7 @@ import Cancel from "../../../../components/icons/cross";
 import { IconButton } from "../../../../components/inputs/icon-button/icon-button";
 
 import "./item-filter.css"
+import { IconCheckbox } from "../../../../components/inputs/icon-checkbox/icon-checkbox";
 
 export type FilterState = {
   ingredients: boolean;
@@ -23,7 +24,7 @@ type Props = {
 };
 
 export function ItemFilter({ filter, onFilterChange }: Props) {
-  const [ showSearch, setShowSearch ] =  useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function toggleSearch() {
@@ -38,7 +39,7 @@ export function ItemFilter({ filter, onFilterChange }: Props) {
     if (showSearch) {
       inputRef.current?.focus();
     }
-  }, [ showSearch ])
+  }, [showSearch])
 
   return (
     <div className={`item-filter glazing${showSearch ? " expanded" : ""}`}>
@@ -46,7 +47,7 @@ export function ItemFilter({ filter, onFilterChange }: Props) {
         <input
           ref={inputRef}
           placeholder="search"
-          disabled={ !showSearch }
+          disabled={!showSearch}
           value={filter.search}
           onChange={e => onFilterChange({ ...filter, search: e.target.value })}
         />
@@ -57,23 +58,26 @@ export function ItemFilter({ filter, onFilterChange }: Props) {
           kind={showSearch ? "selected" : undefined}
         />
       </div>
-      <IconButton
+      <IconCheckbox
+        id="filter-ingredients"
+        label="Filter Ingredients"
         icon={<Egg />}
-        circular
-        kind={filter.ingredients ? "selected" : undefined}
-        onClick={() => onFilterChange({...filter, ingredients: !filter.ingredients})}
+        selected={filter.ingredients}
+        onChange={(selected) => onFilterChange({ ...filter, ingredients: selected })}
       />
-      <IconButton
+      <IconCheckbox
+        id="filter-readymeals"
+        label="Filter Ready Meals"
         icon={<FastFood />}
-        circular
-        kind={filter.readymeals ? "selected" : undefined}
-        onClick={() => onFilterChange({...filter, readymeals: !filter.readymeals})}
+        selected={filter.readymeals}
+        onChange={(selected) => onFilterChange({ ...filter, readymeals: selected })}
       />
-      <IconButton
+      <IconCheckbox
+        id="filter-misc"
+        label="Filter Miscellaneous Items"
         icon={<Shopping />}
-        circular
-        kind={filter.misc ? "selected" : undefined}
-        onClick={() => onFilterChange({...filter, misc: !filter.misc})}
+        selected={filter.misc}
+        onChange={(selected) => onFilterChange({ ...filter, misc: selected })}
       />
     </div>
   )

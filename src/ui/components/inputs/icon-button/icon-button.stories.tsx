@@ -1,4 +1,4 @@
-import House from '@mui/icons-material/House';
+import House from '../../icons/house'
 import { IconButton } from './icon-button';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

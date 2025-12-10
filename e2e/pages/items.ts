@@ -18,6 +18,11 @@ export class ItemsPage {
     await expect(this.page.getByRole('heading', { name: 'Items' })).toBeVisible();
   }
 
+  async waitForListLength(length: number) {
+    const itemItems = this.page.getByLabel(/Item list item for .*/);
+    await expect(itemItems).toHaveCount(length);
+  }
+
   async listItems(): Promise<string[]> {
     // Items are rendered as .item elements with .item-name spans
     const itemItems = this.page.getByLabel(/Item list item for .*/);
@@ -26,6 +31,30 @@ export class ItemsPage {
     const itemElements = await itemItems.all();
     const contents = await Promise.all(itemElements.map(item => item.textContent()));
     return contents.filter(text => text !== null);
+  }
+
+  async setFilters({ ingredient, readymeal, misc }: { ingredient?: boolean; readymeal?: boolean; misc?: boolean } = {}) {
+    const ingredientCheckbox = this.page.getByLabel('Filter Ingredients');
+    const readymealCheckbox = this.page.getByLabel('Filter Ready Meals');
+    const miscCheckbox = this.page.getByLabel('Filter Miscellaneous Items');
+
+    if (ingredient) {
+      await ingredientCheckbox.check();
+    } else {
+      await ingredientCheckbox.uncheck();
+    }
+
+    if (readymeal) {
+      await readymealCheckbox.check();
+    } else {
+      await readymealCheckbox.uncheck();
+    }
+
+    if (misc) {
+      await miscCheckbox.check();
+    } else {
+      await miscCheckbox.uncheck();
+    }
   }
 
   async editItem(itemName: string) {

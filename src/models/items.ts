@@ -9,9 +9,9 @@ export type ReadymealData = {
 }
 
 export enum ItemKind {
-  Ingredient = 1,
-  Readymeal = 2,
-  Misc = 3,
+  Ingredient = "ingredient",
+  Readymeal = "readymeal",
+  Misc = "misc",
 }
 
 export function itemKindToString(kind: ItemKind): string {
