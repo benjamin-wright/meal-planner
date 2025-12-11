@@ -44,6 +44,50 @@ export class EditItemPage {
     return selectedOption;
   }
 
+  async selectCourse(course: string) {
+    const courseSelect = this.page.getByLabel('Course Type');
+    await courseSelect.selectOption({ label: course });
+  }
+
+  async getCourse(): Promise<string> {
+    const courseSelect = this.page.getByLabel('Course Type');
+    const selectedOption = await courseSelect.inputValue();
+    return selectedOption;
+  }
+
+  async selectDishType(dishType: string) {
+    const dishTypeSelect = this.page.getByLabel('Dish Type');
+    await dishTypeSelect.selectOption({ label: dishType });
+  }
+
+  async getDishType(): Promise<string> {
+    const dishTypeSelect = this.page.getByLabel('Dish Type');
+    const selectedOption = await dishTypeSelect.inputValue();
+    return selectedOption;
+  }
+
+  async setServings(servings: number) {
+    const servingsInput = this.page.getByLabel('Servings');
+    await servingsInput.fill(servings.toString());
+  }
+
+  async getServings(): Promise<number> {
+    const servingsInput = this.page.getByLabel('Servings');
+    const value = await servingsInput.inputValue();
+    return parseInt(value, 10);
+  }
+
+  async setTime(time: number) {
+    const timeInput = this.page.getByLabel('Time (mins)');
+    await timeInput.fill(time.toString());
+  }
+
+  async getTime(): Promise<number> {
+    const timeInput = this.page.getByLabel('Time (mins)');
+    const value = await timeInput.inputValue();
+    return parseInt(value, 10);
+  }
+
   async save() {
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await expect(saveButton).toBeVisible();
