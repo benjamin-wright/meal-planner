@@ -17,14 +17,31 @@ export class EditItemPage {
     await nameInput.fill(name);
   }
 
+  async getName(): Promise<string> {
+    const nameInput = this.page.getByLabel('Item Name');
+    return await nameInput.inputValue();
+  }
+
   async selectCategory(category: string) {
     const categorySelect = this.page.getByLabel('Item Category');
     await categorySelect.selectOption({ label: category });
   }
 
+  async getCategory(): Promise<string> {
+    const categorySelect = this.page.getByLabel('Item Category');
+    const selectedOption = await categorySelect.inputValue();
+    return selectedOption;
+  }
+
   async selectKind(kind: string) {
     const kindSelect = this.page.getByLabel('Item Kind');
     await kindSelect.selectOption({ label: kind });
+  }
+
+  async getKind(): Promise<string> {
+    const kindSelect = this.page.getByLabel('Item Kind');
+    const selectedOption = await kindSelect.inputValue();
+    return selectedOption;
   }
 
   async save() {

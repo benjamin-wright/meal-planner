@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { Category } from "../../../../models/categories";
 
 export function ItemsEdit() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const params = useParams();
   const itemId = params.id ? parseInt(params.id, 10) : null;
   const isNew = params.id === undefined;
@@ -58,7 +58,7 @@ const navigate = useNavigate();
       await stores.itemStore.put({ ...item, readymeal });
     } else {
       const readymeal = item.kind === ItemKind.Readymeal ? item.readymeal : undefined;
-      await stores.itemStore.add(item.name, item.kind, item.category, readymeal);
+      await stores.itemStore.add(item.name, item.category, item.kind, readymeal);
     }
 
     navigate(-1);

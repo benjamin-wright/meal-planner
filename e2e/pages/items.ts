@@ -57,8 +57,29 @@ export class ItemsPage {
     }
   }
 
+  async search(term: string) {
+    const searchInput = this.page.getByPlaceholder('search');
+    if (!(await searchInput.isEnabled())) {
+      await this.page.getByLabel('Toggle Search').click();
+    }
+
+    await searchInput.fill(term);
+  }
+
+  async cancelSearch() {
+    const searchInput = this.page.getByPlaceholder('search');
+    if (await searchInput.isEnabled()) {
+      await this.page.getByLabel('Toggle Search').click();
+    }
+  }
+
   async editItem(itemName: string) {
     await editItem(this.page, itemName);
+    return new EditItemPage(this.page);
+  }
+
+  async createNewItem() {
+    await this.page.getByRole('button', { name: 'Add button' }).click();
     return new EditItemPage(this.page);
   }
 }

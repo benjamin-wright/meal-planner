@@ -25,8 +25,8 @@ export function UnitsView({ units, unitType, onTypeChanged, onEdit, onDelete, on
   }
 
   const [toDelete, setToDelete] = useState<Unit | undefined>(undefined);
-  function handleDelete() {
-    if (toDelete) {
+  function handleDelete(ok: boolean) {
+    if (ok && toDelete) {
       onDelete(toDelete);
       setToDelete(undefined);
     }

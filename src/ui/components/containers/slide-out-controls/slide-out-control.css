@@ -57,10 +57,10 @@
 
 .slide-out-overlay-delete {
   left: 0;
-  width: 50%;
+  width: 25%;
 }
 
 .slide-out-overlay-edit {
   right: 0;
-  width: 50%;
+  width: 75%;
 }

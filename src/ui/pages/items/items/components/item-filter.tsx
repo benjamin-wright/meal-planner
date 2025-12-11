@@ -52,6 +52,8 @@ export function ItemFilter({ filter, onFilterChange }: Props) {
           onChange={e => onFilterChange({ ...filter, search: e.target.value })}
         />
         <IconButton
+          id="toggle-search"
+          label="Toggle Search"
           icon={showSearch ? <Cancel /> : <Search />}
           circular
           onClick={toggleSearch}
