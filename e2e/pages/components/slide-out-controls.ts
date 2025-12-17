@@ -15,7 +15,6 @@ export async function editItem(page: Page, name: string) {
   const item = page.getByLabel(`Slide out controls for ${name}`);
   await expect(item).toBeVisible();
 
-  
   await item.getByRole('button', { name: 'Edit area' }).click();
 
   const editButton = page.getByLabel(`Edit ${name} button`);

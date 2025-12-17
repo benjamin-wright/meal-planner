@@ -14,9 +14,10 @@ type Props = {
   categories: Category[];
   onChange: (item: Item) => void;
   onSubmit: (item: Item) => void;
+  onNewCategory: () => void;
 }
 
-export function ItemsEditView({ item, isNew, categories, onChange, onSubmit }: Props) {
+export function ItemsEditView({ item, isNew, categories, onChange, onSubmit, onNewCategory }: Props) {
   const readymeal = item.readymeal || { servings: 1, time: 1, course: CourseType.Dinner, dish: DishType.Main };
 
   return <Form title={`Item: ${isNew ? "New" : item.name}`} onSubmit={() => onSubmit(item)}>
@@ -35,6 +36,7 @@ export function ItemsEditView({ item, isNew, categories, onChange, onSubmit }: P
       onChange={(value) => onChange({ ...item, category: value || 0 })}
       options={categories.map(c => c.id)}
       toDisplay={(id: number) => categories.find(c => c.id === id)?.name || "Uncategorized"}
+      onNew={onNewCategory}
     />
 
     <ObjectSelect
@@ -42,7 +44,7 @@ export function ItemsEditView({ item, isNew, categories, onChange, onSubmit }: P
       label="Item Kind"
       value={item.kind}
       onChange={(value) => onChange({ ...item, kind: value || ItemKind.Ingredient })}
-      options={[ ItemKind.Ingredient, ItemKind.Readymeal, ItemKind.Misc ]}
+      options={[ItemKind.Ingredient, ItemKind.Readymeal, ItemKind.Misc]}
       toDisplay={itemKindToString}
     />
 
@@ -53,7 +55,7 @@ export function ItemsEditView({ item, isNew, categories, onChange, onSubmit }: P
           label="Course Type"
           value={readymeal.course}
           onChange={(value) => onChange({ ...item, readymeal: { ...readymeal, course: value || CourseType.Dinner } })}
-          options={[ CourseType.Breakfast, CourseType.Lunch, CourseType.Dinner ]}
+          options={[CourseType.Breakfast, CourseType.Lunch, CourseType.Dinner]}
           toDisplay={(course: CourseType) => courseTypeToString(course)}
         />
 
@@ -62,7 +64,7 @@ export function ItemsEditView({ item, isNew, categories, onChange, onSubmit }: P
           label="Dish Type"
           value={readymeal.dish}
           onChange={(value) => onChange({ ...item, readymeal: { ...readymeal, dish: value || DishType.Main } })}
-          options={[ DishType.Starter, DishType.Main, DishType.Side, DishType.Dessert ]}
+          options={[DishType.Starter, DishType.Main, DishType.Side, DishType.Dessert]}
           toDisplay={(dish: DishType) => dishTypeToString(dish)}
         />
 

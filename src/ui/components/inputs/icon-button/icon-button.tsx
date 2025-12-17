@@ -23,7 +23,7 @@ export function IconButton({ id, label, icon, kind, circular, onClick, onPointer
       aria-label={label}
       className={classes}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
+        event.preventDefault();
         onClick?.();
       }}
       onPointerDown={(e) => onPointerDown?.(e)}

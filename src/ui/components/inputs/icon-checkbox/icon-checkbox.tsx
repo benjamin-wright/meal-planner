@@ -20,7 +20,7 @@ export function IconCheckbox({ id, label, icon, selected, onChange }: Props) {
         type="checkbox"
         id={id}
         checked={selected}
-        onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           event.stopPropagation();
           onChange?.(!selected);
         }}

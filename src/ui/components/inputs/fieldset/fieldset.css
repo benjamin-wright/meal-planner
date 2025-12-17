@@ -26,3 +26,9 @@
   position: absolute;
   top: -0.6em;
 }
+
+.fieldset-default.horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
