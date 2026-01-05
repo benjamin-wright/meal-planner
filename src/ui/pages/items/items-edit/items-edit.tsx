@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ItemsEditView } from "./items-edit-view";
-import { useCleanup } from "../../../hooks/useCleanup";
 import { useItem } from "../../../hooks/useItem";
 import { useCategories } from "../../../hooks/useCategories";
 
@@ -10,20 +9,15 @@ export function ItemsEdit() {
   const itemId = params.id ? parseInt(params.id, 10) : null;
   const isNew = params.id === undefined;
 
-  const [item, setItem, clearItem, saveItem] = useItem('items-edit-page', itemId);
+  const [item, setItem, saveItem] = useItem('items-edit-page', itemId);
   const [categories] = useCategories();
-
-  useCleanup(() => {
-    console.info(history.state);
-    clearItem();
-  });
 
   async function handleSubmit() {
     await saveItem();
     navigate(-1);
   }
 
-  async function handleNewCategory() {
+  function handleNewCategory() {
     navigate('/categories/new');
   }
 

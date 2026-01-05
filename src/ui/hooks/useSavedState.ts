@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export function useSavedState<T>(key: string, defaultValue: T): [T, (value: T) => void, () => void] {
+export function useSavedState<T>(key: string, defaultValue: T): [T, (value: T) => void] {
   const [state, setState] = useState<T>(() => {
     if (typeof window === 'undefined') {
       return defaultValue;
@@ -23,5 +23,18 @@ export function useSavedState<T>(key: string, defaultValue: T): [T, (value: T) =
     }
   }
 
-  return [state, setSavedState, clearSavedState];
+  let stackDepth = 0;
+
+  useEffect(() => {
+    stackDepth = history.state?.idx || 0;
+
+    return () => {
+      const currentDepth = history.state?.idx || 0;
+      if (currentDepth < stackDepth) {
+        clearSavedState();
+      }
+    };
+  }, []);
+
+  return [state, setSavedState];
 }

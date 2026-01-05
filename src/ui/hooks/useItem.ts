@@ -3,9 +3,9 @@ import { Item, ItemKind } from "../../models/items";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
 
-export function useItem(key: string, itemId: number | null): [Item, (item: Item) => void, () => void, () => Promise<void>] {
+export function useItem(key: string, itemId: number | null): [Item, (item: Item) => void, () => Promise<void>] {
   const { stores } = useContext(DBContext);
-  const [item, setItem, clearItem] = useSavedState<Item>(key, {
+  const [item, setItem] = useSavedState<Item>(key, {
     id: 0,
     name: "",
     category: 0,
@@ -41,5 +41,5 @@ export function useItem(key: string, itemId: number | null): [Item, (item: Item)
     }
   }
 
-  return [item, setItem, clearItem, save];
+  return [item, setItem, save];
 }

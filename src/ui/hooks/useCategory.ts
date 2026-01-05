@@ -3,9 +3,9 @@ import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
 import { Category } from "../../models/categories";
 
-export function useCategory(key: string, categoryId: number | null): [Category, (category: Category) => void, () => void, () => Promise<void>] {
+export function useCategory(key: string, categoryId: number | null): [Category, (category: Category) => void, () => Promise<void>] {
   const { stores } = useContext(DBContext);
-  const [category, setCategory, clearCategory] = useSavedState<Category>(key, {
+  const [category, setCategory] = useSavedState<Category>(key, {
     id: 0,
     order: 1,
     name: "",
@@ -38,5 +38,5 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     }
   }
 
-  return [category, setCategory, clearCategory, save];
+  return [category, setCategory, save];
 }
