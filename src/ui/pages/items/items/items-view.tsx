@@ -18,10 +18,10 @@ type Props = {
   onEdit: (item: Item) => void;
   onNew: () => void;
 }
-  
+
 export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props) {
-  const [ toDelete, setToDelete ] = useState<Item | undefined>(undefined);
-  const [ filter, setFilter ] = useState({
+  const [toDelete, setToDelete] = useState<Item | undefined>(undefined);
+  const [filter, setFilter] = useState({
     ingredients: false,
     readymeals: false,
     misc: false,
@@ -33,7 +33,7 @@ export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props)
     <ul className="items-list">
       <SlideOutGroup>
         <AnimatePresence>
-          { items.length === 0 ? <></> : items.filter(item => {
+          {items.length === 0 ? <></> : items.filter(item => {
             if (filter.ingredients || filter.readymeals || filter.misc) {
               if (!filter.ingredients && item.kind === ItemKind.Ingredient) return false;
               if (!filter.readymeals && item.kind === ItemKind.Readymeal) return false;
@@ -46,8 +46,6 @@ export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props)
 
               const nameMatches = item.name.toLowerCase().includes(searchLower);
               const categoryMatches = category.toLowerCase().includes(searchLower);
-
-              console.log({ nameMatches, categoryMatches });
 
               return nameMatches || categoryMatches;
             }

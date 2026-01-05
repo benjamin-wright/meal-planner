@@ -13,7 +13,7 @@ import { NumericInput } from "../../../components/inputs/numeric-input/numeric-i
 type Props = {
   unit: Unit;
   onChange: (unit: Unit) => void;
-  onSubmit: (unit: Unit) => void;
+  onSubmit: () => void;
 }
 
 export function UnitsEditView({ unit, onChange, onSubmit }: Props) {
@@ -40,7 +40,7 @@ export function UnitsEditView({ unit, onChange, onSubmit }: Props) {
   return (
     <Form
       title={`Unit: ${unit.id ? unit.name : "New"}`}
-      onSubmit={() => onSubmit(unit)}
+      onSubmit={onSubmit}
       disableSubmit={deleting || !validate(unit)}
     >
       <StringInput

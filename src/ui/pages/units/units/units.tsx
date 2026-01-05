@@ -1,8 +1,9 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { UnitsView } from "./units-view";
 import { useContext, useEffect, useState } from "react";
-import { Unit, UnitType } from "../../../../models/units";
+import { UnitType } from "../../../../models/units";
 import { DBContext } from "../../../providers/database/db-context";
+import { useUnits } from "../../../hooks/useUnits";
 
 export function Units() {
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ export function Units() {
   const [search] = useSearchParams();
 
   const type = search.get("type") as UnitType | undefined;
-  const [units, setUnits] = useState<Unit[]>([]);
   const [unitType, setUnitType] = useState<UnitType>(type || UnitType.Weight);
+  const [units, deleteUnit] = useUnits(unitType);
 
   useEffect(() => {
     if (type !== unitType) {
@@ -20,29 +21,9 @@ export function Units() {
     }
   }, [type, unitType, navigate]);
 
-  useEffect(() => {
-    if (!stores) return;
-
-    (async () => {
-      const units = await stores.unitStore.getAllByType(unitType);
-      setUnits(units);
-    })();
-  }, [stores, unitType]);
-
 
   if (!stores || !units) {
     return <div>Loading...</div>; // Handle loading state
-  }
-
-  async function handleDelete(unit: Unit) {
-    if (!stores) return;
-
-    try {
-      await stores.unitStore.delete(unit.id);
-      setUnits(prev => prev.filter(u => u.id !== unit.id));
-    } catch (error) {
-      console.error("Failed to delete unit:", error);
-    }
   }
 
   return <UnitsView
@@ -50,7 +31,7 @@ export function Units() {
     unitType={unitType}
     onTypeChanged={(type: UnitType) => setUnitType(type)}
     onEdit={(unit) => navigate(`/units/${unit.id}`)}
-    onDelete={handleDelete}
+    onDelete={deleteUnit}
     onNew={(type: UnitType) => navigate(`/units/new?type=${type}`)}
   />;
 }
