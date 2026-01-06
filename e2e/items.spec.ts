@@ -149,4 +149,50 @@ test.describe('Items Page', () => {
     await expect(editPage.getServings()).resolves.toBe(2);
     await expect(editPage.getTime()).resolves.toBe(3);
   });
+
+  test('can create with new category', async ({ page }) => {
+    const itemsPage = new ItemsPage(page);
+    await itemsPage.goto();
+    const initialItems = await itemsPage.listItems();
+    const initialCount = initialItems.length;
+
+    const newItemPage = await itemsPage.createNewItem();
+
+    // Verify that we are on the Edit Item page for a new item
+    await expect(page).toHaveURL('/items/new');
+    await expect(page.getByRole('heading', { name: 'Item: New' })).toBeVisible();
+
+    // Fill in the new item details
+    const itemName = 'peas';
+    await newItemPage.setName(itemName);
+
+    const newCategoryPage = await newItemPage.newCategory();
+    await newCategoryPage.setCategoryName('frozen');
+    await newCategoryPage.submitForm();
+
+    // Verify we are back on the item edit page
+    await expect(page).toHaveURL('/items/new');
+
+    await newItemPage.selectKind('Ingredient');
+    await newItemPage.save();
+
+    // Verify that we are back on the Items page and the new item is listed
+    await expect(page).toHaveURL('/items');
+
+    await itemsPage.search('peas');
+    await itemsPage.waitForListLength(1);
+
+    const newItems = await itemsPage.listItems();
+    expect(newItems).toEqual([itemName]);
+
+    // Verify the total count has increased by 1
+    await itemsPage.cancelSearch();
+    await itemsPage.waitForListLength(initialCount + 1);
+
+    // Open the edit page for the new item to verify details
+    const editPage = await itemsPage.editItem(itemName);
+    await expect(editPage.getName()).resolves.toBe(itemName);
+    await expect(editPage.getCategory()).resolves.toBe('frozen');
+    await expect(editPage.getKind()).resolves.toBe('Ingredient');
+  });
 });

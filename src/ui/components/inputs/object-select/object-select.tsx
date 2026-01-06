@@ -32,7 +32,7 @@ export function ObjectSelect<T>({ options, id, value, label, onChange, toDisplay
           </option>
         ))}
       </select>
-      {onNew && <IconButton icon={<Plus />} onClick={onNew} />}
+      {onNew && <IconButton icon={<Plus />} onClick={onNew} label={`Add new ${label}`} />}
     </Fieldset>
   );
 }

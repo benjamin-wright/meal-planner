@@ -2,13 +2,15 @@ import { useContext, useEffect } from "react";
 import { Item, ItemKind } from "../../models/items";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
+import { useIdCache } from "./useIdCache";
 
 export function useItem(key: string, itemId: number | null): [Item, (item: Item) => void, () => Promise<void>] {
   const { stores } = useContext(DBContext);
+  const categoryId = useIdCache("new-category");
   const [item, setItem] = useSavedState<Item>(key, {
     id: 0,
     name: "",
-    category: 0,
+    category: categoryId || 0,
     kind: ItemKind.Ingredient
   });
 
@@ -20,6 +22,7 @@ export function useItem(key: string, itemId: number | null): [Item, (item: Item)
     const fetchItem = async () => {
       const fetchedItem = await stores.itemStore.get(itemId);
       if (fetchedItem) {
+        fetchedItem.category = categoryId || fetchedItem.category;
         setItem(fetchedItem);
       }
     };

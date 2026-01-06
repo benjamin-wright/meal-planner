@@ -1,15 +1,11 @@
 import { expect, Page } from "@playwright/test";
+import { EditCategoriesPage } from "./edit-categories";
 
 export class EditItemPage {
   private readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
-  }
-
-  async goto() {
-    await this.page.goto('/items/edit');
-    await expect(this.page.getByRole('heading', { name: 'Edit Item' })).toBeVisible();
   }
 
   async setName(name: string) {
@@ -31,6 +27,16 @@ export class EditItemPage {
     const categorySelect = this.page.getByLabel('Item Category');
     const selectedOption = await categorySelect.inputValue();
     return selectedOption;
+  }
+
+  async newCategory(): Promise<EditCategoriesPage> {
+    const newCategoryButton = this.page.getByRole('button', { name: 'Add New Item Category' });
+    await expect(newCategoryButton).toBeVisible();
+    await newCategoryButton.click();
+
+    const editCategoryPage = new EditCategoriesPage(this.page);
+    await this.page.waitForURL(/\/categories\/new/);
+    return editCategoryPage;
   }
 
   async selectKind(kind: string) {

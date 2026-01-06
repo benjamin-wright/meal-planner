@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
 import { Category } from "../../models/categories";
+import { cacheId } from "./useIdCache";
 
 export function useCategory(key: string, categoryId: number | null): [Category, (category: Category) => void, () => Promise<void>] {
   const { stores } = useContext(DBContext);
@@ -32,9 +33,13 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     }
 
     if (category.id) {
-      stores.categoryStore.put(category);
+      await stores.categoryStore.put(category);
+      cacheId("new-category", category.id);
     } else {
-      stores.categoryStore.add(category.name, category.order);
+      const categories = await stores.categoryStore.getAll();
+      category.order = categories.length;
+      await stores.categoryStore.add(category.name, category.order);
+      cacheId("new-category", category.id);
     }
   }
 
