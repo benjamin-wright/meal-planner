@@ -28,7 +28,15 @@ export function useItem(key: string, itemId: number | null): [Item, (item: Item)
     };
 
     fetchItem();
-  }, [itemId, stores]);
+  }, [itemId, stores, setItem, categoryId]);
+
+  useEffect(() => {
+    if (!categoryId) {
+      return;
+    }
+
+    setItem({ ...item, category: categoryId || item.category });
+  }, [categoryId, item, setItem]);
 
   async function save() {
     if (!stores) {

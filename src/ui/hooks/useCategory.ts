@@ -25,7 +25,7 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     };
 
     fetchCategory();
-  }, [categoryId, stores]);
+  }, [categoryId, stores, setCategory]);
 
   async function save() {
     if (!stores) {
@@ -38,8 +38,8 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     } else {
       const categories = await stores.categoryStore.getAll();
       category.order = categories.length;
-      await stores.categoryStore.add(category.name, category.order);
-      cacheId("new-category", category.id);
+      const id = await stores.categoryStore.add(category.name, category.order);
+      cacheId("new-category", id);
     }
   }
 

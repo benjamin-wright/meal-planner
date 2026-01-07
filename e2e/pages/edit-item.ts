@@ -19,18 +19,18 @@ export class EditItemPage {
   }
 
   async selectCategory(category: string) {
-    const categorySelect = this.page.getByLabel('Item Category');
+    const categorySelect = this.page.getByLabel('Item Category', { exact: true });
     await categorySelect.selectOption({ label: category });
   }
 
   async getCategory(): Promise<string> {
-    const categorySelect = this.page.getByLabel('Item Category');
+    const categorySelect = this.page.getByLabel('Item Category', { exact: true });
     const selectedOption = await categorySelect.inputValue();
     return selectedOption;
   }
 
   async newCategory(): Promise<EditCategoriesPage> {
-    const newCategoryButton = this.page.getByRole('button', { name: 'Add New Item Category' });
+    const newCategoryButton = this.page.getByRole('button', { name: 'Add new Item Category' });
     await expect(newCategoryButton).toBeVisible();
     await newCategoryButton.click();
 

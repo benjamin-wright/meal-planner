@@ -17,24 +17,16 @@ export function useSavedState<T>(key: string, defaultValue: T): [T, (value: T) =
     }
   };
 
-  const clearSavedState = () => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(key);
-    }
-  }
-
-  let stackDepth = 0;
-
   useEffect(() => {
-    stackDepth = history.state?.idx || 0;
+    const stackDepth = history.state?.idx || 0;
 
     return () => {
       const currentDepth = history.state?.idx || 0;
-      if (currentDepth < stackDepth) {
-        clearSavedState();
+      if (currentDepth < stackDepth && typeof window !== 'undefined') {
+        window.localStorage.removeItem(key);
       }
     };
-  }, []);
+  }, [key]);
 
   return [state, setSavedState];
 }
