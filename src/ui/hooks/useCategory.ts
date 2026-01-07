@@ -25,7 +25,7 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     };
 
     fetchCategory();
-  }, [categoryId, stores, setCategory]);
+  }, [categoryId, stores]);
 
   async function save() {
     if (!stores) {

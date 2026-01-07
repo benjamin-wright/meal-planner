@@ -28,7 +28,7 @@ export function useItem(key: string, itemId: number | null): [Item, (item: Item)
     };
 
     fetchItem();
-  }, [itemId, stores, setItem, categoryId]);
+  }, [itemId, stores, categoryId]);
 
   useEffect(() => {
     if (!categoryId) {
