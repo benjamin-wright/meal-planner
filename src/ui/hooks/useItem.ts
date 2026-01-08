@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Item, ItemKind } from "../../models/items";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
@@ -7,6 +7,7 @@ import { useIdCache } from "./useIdCache";
 export function useItem(key: string, itemId: number | null): [Item, (item: Item) => void, () => Promise<void>] {
   const { stores } = useContext(DBContext);
   const categoryId = useIdCache("new-category");
+  const [overrideCategory, setOverrideCategory] = useState(true);
   const [item, setItem] = useSavedState<Item>(key, {
     id: 0,
     name: "",
@@ -28,15 +29,27 @@ export function useItem(key: string, itemId: number | null): [Item, (item: Item)
     };
 
     fetchItem();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemId, stores, categoryId]);
 
   useEffect(() => {
-    if (!categoryId) {
+    if (!categoryId || item.category === categoryId) {
       return;
     }
 
-    setItem({ ...item, category: categoryId || item.category });
-  }, [categoryId, item, setItem]);
+    if (!overrideCategory) {
+      return;
+    }
+    setOverrideCategory(false);
+
+    setItem({
+      ...item,
+      category: categoryId
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId, item.category, overrideCategory]);
 
   async function save() {
     if (!stores) {

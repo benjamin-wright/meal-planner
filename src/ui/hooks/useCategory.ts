@@ -25,6 +25,8 @@ export function useCategory(key: string, categoryId: number | null): [Category, 
     };
 
     fetchCategory();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, stores]);
 
   async function save() {
