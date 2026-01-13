@@ -7,9 +7,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { Dialog } from "../../../components/containers/dialog/dialog";
-import { ItemFilter } from "./components/item-filter";
+import { ItemFilter } from "../../../components/inputs/icon-filter/icon-filter";
 import { Category } from "../../../../models/categories";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
+import Egg from "../../../components/icons/egg";
+import FastFood from "../../../components/icons/fast-food";
+import Shopping from "../../../components/icons/shopping";
 
 type Props = {
   items: Item[];
@@ -19,17 +22,27 @@ type Props = {
   onNew: () => void;
 }
 
+const icons = {
+  ingredients: <Egg />,
+  readymeals: <FastFood />,
+  misc: <Shopping />
+}
+
 export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props) {
   const [toDelete, setToDelete] = useState<Item | undefined>(undefined);
+
+  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState({
     ingredients: false,
     readymeals: false,
-    misc: false,
-    search: ""
+    misc: false
   });
 
   return <Page title="Items">
-    <ItemFilter filter={filter} onFilterChange={setFilter} />
+    <ItemFilter icons={icons} search={search} filter={filter} onChange={(newFilter, newSearch) => {
+      setFilter(newFilter);
+      setSearch(newSearch);
+    }} />
     <ul className="items-list">
       <SlideOutGroup>
         <AnimatePresence>

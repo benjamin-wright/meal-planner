@@ -8,6 +8,7 @@ import { routes as data } from "./ui/pages/data/routes";
 import { routes as units } from "./ui/pages/units/routes";
 import { routes as categories } from "./ui/pages/categories/routes";
 import { routes as items } from "./ui/pages/items/routes";
+import { routes as recipies } from "./ui/pages/recipies/routes";
 
 import { DBProvider } from "./ui/providers/database/db-provider";
 import { FormProvider } from "./ui/providers/forms/forms";
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       ...units,
       ...categories,
       ...items,
+      ...recipies,
       {
         path: "*",
         element: <NotFound />,
