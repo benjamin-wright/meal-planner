@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { Dialog } from "../../../components/containers/dialog/dialog";
-import { ItemFilter } from "../../../components/inputs/icon-filter/icon-filter";
+import { IconFilter } from "../../../components/inputs/icon-filter/icon-filter";
 import { Category } from "../../../../models/categories";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
 import Egg from "../../../components/icons/egg";
@@ -39,7 +39,7 @@ export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props)
   });
 
   return <Page title="Items">
-    <ItemFilter icons={icons} search={search} filter={filter} onChange={(newFilter, newSearch) => {
+    <IconFilter icons={icons} search={search} filter={filter} onChange={(newFilter, newSearch) => {
       setFilter(newFilter);
       setSearch(newSearch);
     }} />
@@ -53,8 +53,8 @@ export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props)
               if (!filter.misc && item.kind === ItemKind.Misc) return false;
             }
 
-            if (filter.search) {
-              const searchLower = filter.search.toLowerCase();
+            if (search) {
+              const searchLower = search.toLowerCase();
               const category = categories.find(c => c.id === item.category)?.name || "";
 
               const nameMatches = item.name.toLowerCase().includes(searchLower);

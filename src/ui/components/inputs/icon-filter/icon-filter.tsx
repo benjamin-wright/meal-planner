@@ -6,17 +6,17 @@ import { IconButton } from "../icon-button/icon-button";
 import "./icon-filter.css"
 import { IconCheckbox } from "../icon-checkbox/icon-checkbox";
 
-type Props = {
+type Props<T extends Record<string, boolean>> = {
   search: string;
-  filter: Record<string, boolean>;
+  filter: T;
   icons: Record<string, React.ReactNode>;
   onChange: (
-    filter: Record<string, boolean>,
+    filter: T,
     search: string
   ) => void;
 };
 
-export function ItemFilter({ filter, search, icons, onChange }: Props) {
+export function IconFilter<T extends Record<string, boolean>>({ filter, search, icons, onChange }: Props<T>) {
   const [showSearch, setShowSearch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const keys = Object.keys(icons);

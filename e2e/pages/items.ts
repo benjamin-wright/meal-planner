@@ -34,9 +34,9 @@ export class ItemsPage {
   }
 
   async setFilters({ ingredient, readymeal, misc }: { ingredient?: boolean; readymeal?: boolean; misc?: boolean } = {}) {
-    const ingredientCheckbox = this.page.getByLabel('Filter Ingredients');
-    const readymealCheckbox = this.page.getByLabel('Filter Ready Meals');
-    const miscCheckbox = this.page.getByLabel('Filter Miscellaneous Items');
+    const ingredientCheckbox = this.page.getByLabel('Filter ingredients');
+    const readymealCheckbox = this.page.getByLabel('Filter readymeals');
+    const miscCheckbox = this.page.getByLabel('Filter misc');
 
     if (ingredient) {
       await ingredientCheckbox.check();
