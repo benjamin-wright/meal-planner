@@ -6,16 +6,13 @@ import { IconFilter } from "../../../components/inputs/icon-filter/icon-filter";
 import { Page } from "../../../components/layout/page/page";
 import "./recipies-view.css"
 
-type Props = {
-}
-
 const icons = {
   dinner: <Pot />,
   lunch: <Sandwich />,
   breakfast: <Breakfast />
 }
 
-export function RecipiesView({ }: Props) {
+export function RecipiesView() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState({
     ingredients: false,
@@ -24,7 +21,12 @@ export function RecipiesView({ }: Props) {
   });
 
   return <Page title="Recipies">
-    <IconFilter icons={icons} search="" filter={{}} onChange={() => { }} />
+    <IconFilter
+      icons={icons}
+      search={search}
+      filter={filter}
+      onChange={(newFilter, newSearch) => { setFilter(newFilter); setSearch(newSearch); }}
+    />
     <p>Hi</p>
   </Page>;
 }
