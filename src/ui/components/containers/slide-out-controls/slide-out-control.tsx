@@ -3,6 +3,7 @@ import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
 import { SlideOutGroupContext } from './slide-out-group-context';
+import { motion } from 'framer-motion';
 
 type Selection = 'edit' | 'delete' | null;
 
@@ -15,7 +16,7 @@ type AnimatedStyles = {
 
 type Props = {
   children: React.ReactNode;
-  groupId?: string;
+  groupId: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -25,15 +26,15 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   const context = useContext(SlideOutGroupContext);
   const editControl = useRef<HTMLButtonElement>(null);
   const deleteControl = useRef<HTMLButtonElement>(null);
-  const [ selection, setSelection ] = useState<Selection>(null);
-  const [ dragDistance, setDragDistance ] = useState(0);
-  const [ animatedStyles, setAnimatedStyles ] = useState<AnimatedStyles>({
+  const [selection, setSelection] = useState<Selection>(null);
+  const [dragDistance, setDragDistance] = useState(0);
+  const [animatedStyles, setAnimatedStyles] = useState<AnimatedStyles>({
     editClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
     deleteClipPath: 'M 0 0 L 0 0 L 0 0 L 0 0 Z',
     leftMargin: '0',
     rightMargin: '0',
   });
-  const [ isInitialized, setIsInitialized ] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const parentElement = parent.current as HTMLElement | null;
@@ -59,7 +60,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
       setSelection(null);
       setDragDistance(0);
     }
-  }, [ context.selectedId, selection, groupId ]);
+  }, [context.selectedId, selection, groupId]);
 
   function handleClick(mode: "edit" | "delete" | null) {
     if (selection !== null) {
@@ -74,14 +75,17 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
   }
 
   return (
-    <div
-      className="slide-out-controls-container" 
-      aria-label={`Slide out controls for ${groupId ?? ''}`}
+    <motion.li
+      key={groupId}
+      className="slide-out-controls-container"
+      aria-label={`Slide out controls for ${groupId}`}
+      layout
+      exit={{ opacity: 0 }}
     >
       <button
         className="slide-out-button slide-out-button-edit"
         ref={editControl}
-        aria-label={`Edit ${groupId ?? ''} button`}
+        aria-label={`Edit ${groupId} button`}
         style={{
           clipPath: animatedStyles.editClipPath,
           opacity: isInitialized ? 1 : 0,
@@ -93,7 +97,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
       <button
         className="slide-out-button slide-out-button-delete"
         ref={deleteControl}
-        aria-label={`Delete ${groupId ?? ''} button`}
+        aria-label={`Delete ${groupId} button`}
         style={{
           clipPath: animatedStyles.deleteClipPath,
           opacity: isInitialized ? 1 : 0,
@@ -127,6 +131,6 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
           ></button>
         </>
       }
-    </div>
+    </motion.li>
   );
 }

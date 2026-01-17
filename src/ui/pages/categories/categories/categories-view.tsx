@@ -46,20 +46,14 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
   function fixedView() {
     return (
       <SlideOutGroup>
-        <AnimatePresence>
-          <ul className="categories-list">
-            {
-              categories.length === 0 ? (<></>) :
-              categories.map((category) => (
-                <motion.li key={category.id} className="category-item" aria-label={`Category list item for ${category.name}`} layout exit={{ opacity: 0 }}>
-                  <SlideOutControl groupId={category.name} onEdit={() => onEdit(category)} onDelete={() => setToDelete(category)}>
-                    {category.name}
-                  </SlideOutControl>
-                </motion.li>
-              ))
-            }
-          </ul>
-        </AnimatePresence>
+        {
+          categories.length === 0 ? (<></>) :
+            categories.map((category) => (
+              <SlideOutControl key={category.name} groupId={category.name} onEdit={() => onEdit(category)} onDelete={() => setToDelete(category)}>
+                {category.name}
+              </SlideOutControl>
+            ))
+        }
       </SlideOutGroup>
     );
   }
@@ -68,7 +62,7 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
     <Page title="Categories" onSorting={(sorting: boolean) => {
       setSorting(sorting);
     }}>
-      { sorting ? sortingView() : fixedView() }
+      {sorting ? sortingView() : fixedView()}
       <AddButton id="add-category-button" onClick={onNew} disabled={sorting} />
       <Dialog
         isOpen={!!toDelete}
