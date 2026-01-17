@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Category } from "../../../../models/categories";
 import { Page } from "../../../components/layout/page/page";
-import { AnimatePresence, motion, Reorder } from "framer-motion";
+import { Reorder } from "framer-motion";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
 import './categories-view.css'
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
@@ -49,7 +49,13 @@ export function CategoriesView({ categories, onReorder, onEdit, onDelete, onNew 
         {
           categories.length === 0 ? (<></>) :
             categories.map((category) => (
-              <SlideOutControl key={category.name} groupId={category.name} onEdit={() => onEdit(category)} onDelete={() => setToDelete(category)}>
+              <SlideOutControl
+                key={category.name}
+                groupId={category.name}
+                label={`Category list item for ${category.name}`}
+                onEdit={() => onEdit(category)}
+                onDelete={() => setToDelete(category)}
+              >
                 {category.name}
               </SlideOutControl>
             ))

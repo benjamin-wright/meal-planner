@@ -17,11 +17,12 @@ type AnimatedStyles = {
 type Props = {
   children: React.ReactNode;
   groupId: string;
+  label: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) {
+export function SlideOutControl({ children, groupId, label, onEdit, onDelete }: Props) {
   const parent = useRef<HTMLDivElement>(null);
   const context = useContext(SlideOutGroupContext);
   const editControl = useRef<HTMLButtonElement>(null);
@@ -78,7 +79,7 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
     <motion.li
       key={groupId}
       className="slide-out-controls-container"
-      aria-label={`Slide out controls for ${groupId}`}
+      aria-label={label}
       layout
       exit={{ opacity: 0 }}
     >
@@ -121,12 +122,12 @@ export function SlideOutControl({ children, groupId, onEdit, onDelete }: Props) 
         selection === null && <>
           <button
             className="slide-out-overlay slide-out-overlay-delete"
-            aria-label="Delete area"
+            aria-label={`Delete ${groupId} area`}
             onClick={() => handleClick('delete')}
           ></button>
           <button
             className="slide-out-overlay slide-out-overlay-edit"
-            aria-label="Edit area"
+            aria-label={`Edit ${groupId} area`}
             onClick={() => handleClick('edit')}
           ></button>
         </>

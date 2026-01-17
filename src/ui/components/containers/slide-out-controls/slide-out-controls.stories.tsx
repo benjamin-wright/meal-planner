@@ -24,7 +24,7 @@ function SlideOutControlStory() {
       <button style={{ flexShrink: 1 }} onClick={() => setFiltering(!filtering)}>Filter</button>
       <SlideOutGroup>
         {items.filter((_item, index) => !filtering || index % 2 === 0).map(item => (
-          <SlideOutControl key={item} groupId={item}>
+          <SlideOutControl key={item} groupId={item} label={`Slide out controls for ${item}`}>
             Slide Out: {item}
           </SlideOutControl>
         ))}
