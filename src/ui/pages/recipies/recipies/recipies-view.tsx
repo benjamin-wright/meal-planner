@@ -8,6 +8,7 @@ import { Recipie } from "../../../../models/recipies";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
+import { CourseType } from "../../../../models/meals";
 
 const icons = {
   dinner: <Pot />,
@@ -17,14 +18,17 @@ const icons = {
 
 type Props = {
   recipies: Recipie[];
+  onDelete: (recipie: Recipie) => void;
+  onEdit: (recipie: Recipie) => void;
+  onNew: () => void;
 }
 
-export function RecipiesView({ recipies }: Props) {
+export function RecipiesView({ recipies, onDelete, onEdit, onNew }: Props) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState({
-    ingredients: false,
-    readymeals: false,
-    misc: false
+    breakfast: false,
+    lunch: false,
+    dinner: false
   });
 
   return <Page title="Recipies">
@@ -36,17 +40,31 @@ export function RecipiesView({ recipies }: Props) {
     />
     <SlideOutGroup>
       {
-        recipies.map(recipie => (
+        recipies.filter(
+          recipie => {
+            if (filter.breakfast || filter.lunch || filter.dinner) {
+              if (!filter.breakfast && recipie.course === CourseType.Breakfast) return false;
+              if (!filter.lunch && recipie.course === CourseType.Lunch) return false;
+              if (!filter.dinner && recipie.course === CourseType.Dinner) return false;
+            }
+
+            if (!search) return true;
+
+            return recipie.name.toLowerCase().includes(search.toLowerCase())
+          }
+        ).map(recipie => (
           <SlideOutControl
             key={recipie.id}
             groupId={recipie.name}
             label={`Recipie list item for ${recipie.name}`}
+            onDelete={() => onDelete(recipie)}
+            onEdit={() => onEdit(recipie)}
           >
             <p>{recipie.name}</p>
           </SlideOutControl>
         ))
       }
     </SlideOutGroup>
-    <AddButton id="add-recipie-button" onClick={() => {}} />
+    <AddButton id="add-recipie-button" onClick={() => onNew()} />
   </Page>;
 }

@@ -6,6 +6,7 @@
   margin: 0;
   list-style: none;
   overflow-y: auto;
+  flex-grow: 1;
 }
 
 .category-item {
