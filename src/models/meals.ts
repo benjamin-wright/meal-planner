@@ -52,7 +52,7 @@ export enum Day {
 }
 
 export type Dish = {
-  kind: "readymeal" | "recipie";
+  kind: "readymeal" | "recipe";
   id: number;
 }
 
@@ -105,7 +105,7 @@ export function sanitize(value: unknown): Meal {
       }
 
       return {
-        kind: defaultType<"readymeal" | "recipie">(item.kind, "readymeal"),
+        kind: defaultType<"readymeal" | "recipe">(item.kind, "readymeal"),
         id: defaultNumber(item.id, 0),
       };
     }),

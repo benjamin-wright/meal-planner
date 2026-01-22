@@ -9,7 +9,7 @@ export function Recipies() {
   return <RecipiesView
     recipies={recipies}
     onDelete={deleteRecipie}
-    onEdit={(recipie) => nagivate(`/recipies/${recipie.id}`)}
+    onEdit={(recipe) => nagivate(`/recipies/${recipe.id}`)}
     onNew={() => nagivate('/recipies/new')}
   />;
 }

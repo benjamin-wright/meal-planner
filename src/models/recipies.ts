@@ -7,7 +7,7 @@ export type IngredientQuantity = {
   quantity: number;
 }
 
-export type Recipie = {
+export type Recipe = {
   id: number;
   name: string;
   description: string;
@@ -19,7 +19,7 @@ export type Recipie = {
   dish: DishType;
 }
 
-export function sanitize(value: unknown): Recipie {
+export function sanitize(value: unknown): Recipe {
   if (!isObject(value)) {
     return { id: 0, name: "", description: "", serves: 0, time: 0, ingredients: [], steps: [], course: CourseType.Dinner, dish: DishType.Main };
   }

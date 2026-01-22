@@ -1,6 +1,5 @@
 import { Item, ItemKind, itemKindToString } from "../../../../models/items";
 
-import "./items-edit-view.css"
 import { Form } from "../../../components/layout/form/form";
 import { StringInput } from "../../../components/inputs/string-input/string-input";
 import { ObjectSelect } from "../../../components/inputs/object-select/object-select";

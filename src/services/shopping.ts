@@ -94,7 +94,7 @@ export async function getShoppingListItems({
       got: item.got,
       pending: false
     });
-    
+
     if (!usedCategories[category.name]) {
       usedCategories[category.name] = true;
     }
@@ -137,12 +137,12 @@ export async function resetShoppingList({
         readymealMap = await processReadyMeal(meal, readymealStore, setError, readymealMap);
         break;
       }
-      case MealRecipieType.Recipie: {
+      case MealRecipieType.Recipe: {
         shoppingMap = await processRecipie(meal, recipieStore, ingredientStore, unitStore, setError, shoppingMap);
         break;
       }
       default: {
-        setError(`Unknown recipie type ${meal.recipieType} for meal ${meal.id}`);
+        setError(`Unknown recipe type ${meal.recipieType} for meal ${meal.id}`);
         continue;
       }
     }
@@ -206,27 +206,27 @@ async function processRecipie(
   setError: (msg: string) => void,
   shoppingMap: Map<number, ShoppingItem>
 ): Promise<Map<number, ShoppingItem>> {
-  const recipie = await recipieStore.get(item.recipieId);
-  if (!recipie) {
-    setError(`Recipie ${item.recipieId} not found for meal ${item.id}`);
+  const recipe = await recipieStore.get(item.recipieId);
+  if (!recipe) {
+    setError(`Recipe ${item.recipieId} not found for meal ${item.id}`);
     return shoppingMap;
   }
-  for (const recipieIngredient of recipie.ingredients) {
+  for (const recipieIngredient of recipe.ingredients) {
     const ingredient = await ingredientStore.get(recipieIngredient.id);
     if (!ingredient) {
-      setError(`Ingredient ${recipieIngredient.id} not found for recipie ${recipie.id}`);
+      setError(`Ingredient ${recipieIngredient.id} not found for recipe ${recipe.id}`);
       continue;
     }
     const unit = await unitStore.get(recipieIngredient.unit);
     if (!unit) {
-      setError(`Unit ${recipieIngredient.unit} not found for recipie ${recipie.id}`);
+      setError(`Unit ${recipieIngredient.unit} not found for recipe ${recipe.id}`);
       continue;
     }
     let found = false;
     for (const [ingredientId, shoppingItem] of shoppingMap) {
       if (recipieIngredient.id === ingredientId && shoppingItem.unitType === unit.type) {
         found = true;
-        shoppingItem.quantity += recipieIngredient.quantity * item.servings / recipie.serves;
+        shoppingItem.quantity += recipieIngredient.quantity * item.servings / recipe.serves;
         break;
       }
     }
@@ -239,7 +239,7 @@ async function processRecipie(
       category: ingredient.category,
       unitType: unit.type,
       unit: unit.type === UnitType.Count ? unit.id : undefined,
-      quantity: recipieIngredient.quantity * item.servings / recipie.serves,
+      quantity: recipieIngredient.quantity * item.servings / recipe.serves,
       got: false
     });
   }
