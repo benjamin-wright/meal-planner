@@ -1,73 +1,59 @@
 import { useContext, useEffect, useState } from "react";
-import { Item, ItemKind } from "../../models/items";
+import { Recipe } from "../../models/recipies";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
-import { Recipe } from "../../models/recipies";
-import { CourseType, DishType } from "../../models/meals";
+import { useIdCache } from "./useIdCache";
 
-export function useRecipe(key: string, itemId: number | null): [Recipe, (recipe: Recipe) => void, () => Promise<void>] {
-  const { stores } = useContext(DBContext);
-  const [recipe, setRecipe] = useSavedState<Recipe>(key, {
-    id: 0,
-    name: "",
-    description: "",
-    serves: 0,
-    time: 0,
-    ingredients: [],
-    steps: [],
-    course: CourseType.Dinner,
-    dish: DishType.Main
-  });
+export function useRecipe(key: string, recipeId: number | null): [Recipe, (recipe: Recipe) => void, () => Promise<void>] {
+	const { stores } = useContext(DBContext);
+	const [recipe, setRecipe] = useSavedState<Recipe>(key, {
+		id: 0,
+		name: "",
+		description: "",
+		serves: 0,
+		time: 0,
+		ingredients: [],
+		steps: [],
+		course: 2, // Default to Dinner (CourseType.Dinner)
+		dish: 1    // Default to Main (DishType.Main)
+	});
 
-  useEffect(() => {
-    if (!stores || !itemId) {
-      return;
-    }
+	useEffect(() => {
+		if (!stores || !recipeId) {
+			return;
+		}
 
-    const fetchItem = async () => {
-      const fetchedItem = await stores.itemStore.get(itemId);
-      if (fetchedItem) {
-        fetchedItem.category = categoryId || fetchedItem.category;
-        setItem(fetchedItem);
-      }
-    };
+		const fetchRecipe = async () => {
+			const fetchedRecipe = await stores.recipieStore.get(recipeId);
+			if (fetchedRecipe) {
+				setRecipe(fetchedRecipe);
+			}
+		};
 
-    fetchItem();
+		fetchRecipe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recipeId, stores]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemId, stores, categoryId]);
+	async function save() {
+		if (!stores) {
+			return;
+		}
 
-  useEffect(() => {
-    if (!categoryId || item.category === categoryId) {
-      return;
-    }
+		if (recipe.id) {
+			await stores.recipieStore.put(recipe);
+		} else {
+			await stores.recipieStore.add(
+				recipe.name,
+				recipe.description,
+				recipe.serves,
+				recipe.time,
+				recipe.ingredients,
+				recipe.steps,
+				recipe.course,
+				recipe.dish
+			);
+		}
+	}
 
-    if (!overrideCategory) {
-      return;
-    }
-    setOverrideCategory(false);
-
-    setItem({
-      ...item,
-      category: categoryId
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, item.category, overrideCategory]);
-
-  async function save() {
-    if (!stores) {
-      return;
-    }
-
-    if (item.id) {
-      const readymeal = item.kind === ItemKind.Readymeal ? item.readymeal : undefined;
-      await stores.itemStore.put({ ...item, readymeal });
-    } else {
-      const readymeal = item.kind === ItemKind.Readymeal ? item.readymeal : undefined;
-      await stores.itemStore.add(item.name, item.category, item.kind, readymeal);
-    }
-  }
-
-  return [item, setItem, save];
+	return [recipe, setRecipe, save];
 }
