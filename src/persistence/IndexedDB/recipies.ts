@@ -1,4 +1,4 @@
-import { IngredientQuantity, Recipie } from "../../models/recipies";
+import { IngredientQuantity, Recipe } from "../../models/recipies";
 import { CourseType, DishType } from "../../models/meals";
 import { RecipieStore } from "../interfaces/recipies";
 import { TypedDB } from "./typed-db";
@@ -16,19 +16,19 @@ export class Recipies implements RecipieStore {
     this.db = db;
   }
 
-  async get(id: number): Promise<Recipie> {
-    return this.db.get<Recipie>(TABLE_NAME, id);
+  async get(id: number): Promise<Recipe> {
+    return this.db.get<Recipe>(TABLE_NAME, id);
   }
 
-  async getAll(): Promise<Recipie[]> {
-    return this.db.getAll<Recipie>(TABLE_NAME);
+  async getAll(): Promise<Recipe[]> {
+    return this.db.getAll<Recipe>(TABLE_NAME);
   }
 
   async add(name: string, description: string, serves: number, time: number, ingredients: IngredientQuantity[], steps: string[], course: CourseType, dish: DishType): Promise<number> {
-    return this.db.add(TABLE_NAME, { kind: "recipie", name, description, serves, time, ingredients, steps, course, dish });
+    return this.db.add(TABLE_NAME, { kind: "recipe", name, description, serves, time, ingredients, steps, course, dish });
   }
 
-  async put(value: Recipie): Promise<void> {
+  async put(value: Recipe): Promise<void> {
     return this.db.put(TABLE_NAME, value);
   }
 

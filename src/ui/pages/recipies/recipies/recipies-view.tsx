@@ -4,7 +4,7 @@ import Pot from "../../../components/icons/pot";
 import Sandwich from "../../../components/icons/sandwich";
 import { IconFilter } from "../../../components/inputs/icon-filter/icon-filter";
 import { Page } from "../../../components/layout/page/page";
-import { Recipie } from "../../../../models/recipies";
+import { Recipe } from "../../../../models/recipies";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
@@ -17,9 +17,9 @@ const icons = {
 }
 
 type Props = {
-  recipies: Recipie[];
-  onDelete: (recipie: Recipie) => void;
-  onEdit: (recipie: Recipie) => void;
+  recipies: Recipe[];
+  onDelete: (recipe: Recipe) => void;
+  onEdit: (recipe: Recipe) => void;
   onNew: () => void;
 }
 
@@ -41,30 +41,30 @@ export function RecipiesView({ recipies, onDelete, onEdit, onNew }: Props) {
     <SlideOutGroup>
       {
         recipies.filter(
-          recipie => {
+          recipe => {
             if (filter.breakfast || filter.lunch || filter.dinner) {
-              if (!filter.breakfast && recipie.course === CourseType.Breakfast) return false;
-              if (!filter.lunch && recipie.course === CourseType.Lunch) return false;
-              if (!filter.dinner && recipie.course === CourseType.Dinner) return false;
+              if (!filter.breakfast && recipe.course === CourseType.Breakfast) return false;
+              if (!filter.lunch && recipe.course === CourseType.Lunch) return false;
+              if (!filter.dinner && recipe.course === CourseType.Dinner) return false;
             }
 
             if (!search) return true;
 
-            return recipie.name.toLowerCase().includes(search.toLowerCase())
+            return recipe.name.toLowerCase().includes(search.toLowerCase())
           }
-        ).map(recipie => (
+        ).map(recipe => (
           <SlideOutControl
-            key={recipie.id}
-            groupId={recipie.name}
-            label={`Recipie list item for ${recipie.name}`}
-            onDelete={() => onDelete(recipie)}
-            onEdit={() => onEdit(recipie)}
+            key={recipe.id}
+            groupId={recipe.name}
+            label={`Recipe list item for ${recipe.name}`}
+            onDelete={() => onDelete(recipe)}
+            onEdit={() => onEdit(recipe)}
           >
-            <p>{recipie.name}</p>
+            <p>{recipe.name}</p>
           </SlideOutControl>
         ))
       }
     </SlideOutGroup>
-    <AddButton id="add-recipie-button" onClick={() => onNew()} />
+    <AddButton id="add-recipe-button" onClick={() => onNew()} />
   </Page>;
 }
