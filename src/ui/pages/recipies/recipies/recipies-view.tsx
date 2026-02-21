@@ -9,6 +9,7 @@ import { SlideOutGroup } from "../../../components/containers/slide-out-controls
 import { SlideOutControl } from "../../../components/containers/slide-out-controls/slide-out-control";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
 import { CourseType } from "../../../../models/meals";
+import { Dialog } from "../../../components/containers/dialog/dialog";
 
 const icons = {
   dinner: <Pot />,
@@ -30,6 +31,7 @@ export function RecipiesView({ recipies, onDelete, onEdit, onNew }: Props) {
     lunch: false,
     dinner: false
   });
+  const [toDelete, setToDelete] = useState<Recipe | undefined>(undefined);
 
   return <Page title="Recipies">
     <IconFilter
@@ -57,7 +59,7 @@ export function RecipiesView({ recipies, onDelete, onEdit, onNew }: Props) {
             key={recipe.id}
             groupId={recipe.name}
             label={`Recipe list item for ${recipe.name}`}
-            onDelete={() => onDelete(recipe)}
+            onDelete={() => setToDelete(recipe)}
             onEdit={() => onEdit(recipe)}
           >
             <p>{recipe.name}</p>
@@ -66,5 +68,15 @@ export function RecipiesView({ recipies, onDelete, onEdit, onNew }: Props) {
       }
     </SlideOutGroup>
     <AddButton id="add-recipe-button" onClick={() => onNew()} />
-  </Page>;
+    <Dialog
+      prompt={`Delete recipe ${toDelete ? toDelete.name : ""}?`}
+      warning="This action cannot be undone."
+      isOpen={!!toDelete}
+      onClose={(accept: boolean) => {
+        if (accept && toDelete) onDelete(toDelete);
+        
+        setToDelete(undefined)
+      }}
+    />
+   </Page>;
 }

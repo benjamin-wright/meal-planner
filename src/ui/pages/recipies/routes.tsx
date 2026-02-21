@@ -1,4 +1,4 @@
-import RecipiesEdit from "./recipies-edit/recipies-edit";
+import { RecipiesEdit } from "./recipies-edit/recipies-edit";
 import { Recipies } from "./recipies/recipies";
 
 export const routes = [

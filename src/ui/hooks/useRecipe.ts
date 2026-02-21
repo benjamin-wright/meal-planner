@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Recipe } from "../../models/recipies";
 import { DBContext } from "../providers/database/db-context";
 import { useSavedState } from "./useSavedState";
-import { useIdCache } from "./useIdCache";
+import { CourseType, DishType } from "../../models/meals";
 
 export function useRecipe(key: string, recipeId: number | null): [Recipe, (recipe: Recipe) => void, () => Promise<void>] {
 	const { stores } = useContext(DBContext);
@@ -10,12 +10,12 @@ export function useRecipe(key: string, recipeId: number | null): [Recipe, (recip
 		id: 0,
 		name: "",
 		description: "",
-		serves: 0,
-		time: 0,
+		serves: 2,
+		time: 30,
 		ingredients: [],
 		steps: [],
-		course: 2, // Default to Dinner (CourseType.Dinner)
-		dish: 1    // Default to Main (DishType.Main)
+		course: CourseType.Dinner,
+		dish: DishType.Main
 	});
 
 	useEffect(() => {
