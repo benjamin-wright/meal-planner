@@ -17,6 +17,7 @@ export const Primary: Story = {
   },
   args: {
     item: { id: 1, kind: ItemKind.Ingredient, name: 'apple', category: 1 },
+    isNew: false,
     categories: [
       { id: 1, name: "Fruit", order: 1 },
       { id: 2, name: "Vegetables", order: 2 },
@@ -25,6 +26,7 @@ export const Primary: Story = {
     ],
     onChange: () => { },
     onSubmit: () => { },
+    onNewCategory: () => { }
   },
   render: (args) => {
     const [item, setItem] = useState(args.item);
@@ -32,9 +34,11 @@ export const Primary: Story = {
     return <MemoryRouter>
       <ItemsEditView
         item={item}
+        isNew={args.isNew}
         categories={args.categories}
         onChange={setItem}
         onSubmit={args.onSubmit}
+        onNewCategory={args.onNewCategory}
       />
     </MemoryRouter>;
   }
