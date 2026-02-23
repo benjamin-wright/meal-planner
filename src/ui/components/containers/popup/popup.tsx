@@ -3,20 +3,24 @@ import './popup.css';
 
 type Props = {
   children?: React.ReactNode | React.ReactNode[];
+  title: string;
   isOpen: boolean;
   onClose: (accept: boolean) => void;
 }
 
-export function Popup({ isOpen, onClose, children }: Props) {
+export function Popup({ title, isOpen, onClose, children }: Props) {
   if (!isOpen) return null;
 
   return (
     <section className="popup">
       <div className="popup-inner">
-        {children}
+        <h2>{title}</h2>
+        <div className="popup-content">
+          {children}
+        </div>
         <div className="button-row">
-          <Button id="confirm-popup-button" onClick={() => onClose(true)} content="OK" kind="success" label="Confirm popup" />
-          <Button id="cancel-popup-button" onClick={() => onClose(false)} content="Cancel" kind="error" label="Cancel popup" />
+          <Button id="confirm-popup-button" preventDefault onClick={() => onClose(true)} content="OK" kind="success" label="Confirm popup" />
+          <Button id="cancel-popup-button" preventDefault onClick={() => onClose(false)} content="Cancel" kind="error" label="Cancel popup" />
         </div>
       </div>
     </section>

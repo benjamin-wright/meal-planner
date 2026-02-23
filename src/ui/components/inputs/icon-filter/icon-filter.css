@@ -23,6 +23,12 @@
   pointer-events: none;
 }
 
+.item-filter.no-filters .item-filter__search {
+  position: relative;
+  padding: 0;
+  width: 100%;
+}
+
 .item-filter__search svg {
   width: 1em;
   height: 1em;
@@ -50,15 +56,15 @@
   pointer-events: auto;
 }
 
-.item-filter.expanded {
+.item-filter.expanded:not(.no-filters) {
   padding-bottom: 2.5em;
 }
 
-.item-filter.expanded .item-filter__search {
+.item-filter.expanded:not(.no-filters) .item-filter__search {
   top: 2em;
 }
 
-.item-filter.expanded .item-filter__search input {
+.item-filter.expanded .item-filter__search input, .item-filter.no-filters .item-filter__search input {
   opacity: 1;
   transition: opacity 1s ease-in-out;
   pointer-events: auto;

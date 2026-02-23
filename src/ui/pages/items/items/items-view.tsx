@@ -37,10 +37,7 @@ export function ItemsView({ items, categories, onDelete, onEdit, onNew }: Props)
   });
 
   return <Page title="Items">
-    <IconFilter icons={icons} search={search} filter={filter} onChange={(newFilter, newSearch) => {
-      setFilter(newFilter);
-      setSearch(newSearch);
-    }} />
+    <IconFilter icons={icons} search={search} filter={filter} onFilter={setFilter} onSearch={setSearch} />
     <SlideOutGroup>
       {items.length === 0 ? <></> : items.filter(item => {
         if (filter.ingredients || filter.readymeals || filter.misc) {
