@@ -1,0 +1,18 @@
+button.ingredient-name-button, button.ingredient-quantity {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
+  color: var(--foreground-highlight);
+  font-weight: bold;
+  text-align: left;
+}
+
+.ingredients-list {
+  display: grid;
+  width: 100%;
+  grid-template-columns: min-content min-content auto;
+  padding-top: 0.5em;
+  gap: 0.5em 0.2em;
+}

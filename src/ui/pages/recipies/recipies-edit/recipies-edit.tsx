@@ -8,15 +8,18 @@ export function RecipiesEdit() {
   const recipieId = params.id ? parseInt(params.id, 10) : null;
   const isNew = params.id === undefined;
 
-  const [recipe, setRecipe, saveRecipe] = useRecipe('recipies-edit-page', recipieId);
+  const [recipe, setRecipe, newIngredient, saveRecipe, units, items] = useRecipe('recipies-edit-page', recipieId);
 
   return <RecipiesEditView
     recipe={recipe}
+    items={items}
+    units={units}
     isNew={isNew}
     onChange={setRecipe}
     onSubmit={async () => {
       await saveRecipe();
       navigate(-1);
     }}
+    onNewIngredient={newIngredient}
   />;
 }

@@ -4,15 +4,21 @@ import { StringInput } from "../../../components/inputs/string-input/string-inpu
 import { NumericInput } from "../../../components/inputs/numeric-input/numeric-input";
 import { ObjectSelect } from "../../../components/inputs/object-select/object-select";
 import { CourseType, DishType } from "../../../../models/meals";
+import { IngredientsList } from "./components/ingredients-list";
+import { Unit } from "../../../../models/units";
+import { Item } from "../../../../models/items";
 
 type Props = {
   recipe: Recipe;
+  items: Item[];
+  units: Unit[];
   isNew: boolean;
   onSubmit: (recipe: Recipe) => void;
   onChange: (recipe: Recipe) => void;
+  onNewIngredient: () => void;
 }
 
-export function RecipiesEditView({ recipe, isNew, onSubmit, onChange }: Props) {
+export function RecipiesEditView({ recipe, items, units, isNew, onSubmit, onChange, onNewIngredient }: Props) {
   return <Form title={`Recipe: ${isNew ? "New" : recipe.name}`} onSubmit={() => onSubmit(recipe)}>
     <StringInput
       id="recipe-name-input"
@@ -68,6 +74,13 @@ export function RecipiesEditView({ recipe, isNew, onSubmit, onChange }: Props) {
       ]}
       toDisplay={dish => dish.toString()}
       onChange={(value) => onChange({ ...recipe, dish: value || DishType.Main })}
+    />
+
+    <IngredientsList
+      ingredients={recipe.ingredients}
+      items={items}
+      units={units}
+      newIngredient={onNewIngredient}
     />
   </Form>;
 }
