@@ -4,7 +4,7 @@ import { IngredientSelect } from './ingredient-select';
 import { ItemKind } from '../../../../../models/items';
 
 function IngredientSelectStory() {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(6);
   const ingredients = [
     { id: 1, name: "Apple", category: 1, kind: ItemKind.Ingredient },
     { id: 2, name: "Banana", category: 1, kind: ItemKind.Ingredient },
@@ -18,9 +18,15 @@ function IngredientSelectStory() {
     { id: 10, name: "Juice", category: 1, kind: ItemKind.Ingredient },
   ];
 
-  return <IngredientSelect title={`Ingredient ${selected + 1}`} isOpen={true} selected={selected} ingredients={ingredients} />
-}
-
+  return <IngredientSelect
+      title={`Ingredient ${1}`}
+      isOpen={true}
+      selected={selected}
+      ingredients={ingredients}
+      onChange={id => setSelected(id)}
+    />
+  }
+  
 const meta = {
   component: IngredientSelectStory,
 } satisfies Meta<typeof IngredientSelectStory>;

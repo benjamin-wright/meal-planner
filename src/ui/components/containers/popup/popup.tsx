@@ -1,4 +1,7 @@
+import Check from '../../icons/check';
+import Cancel from '../../icons/cross';
 import { Button } from '../../inputs/button/button';
+import { IconButton } from '../../inputs/icon-button/icon-button';
 import './popup.css';
 
 type Props = {
@@ -19,8 +22,8 @@ export function Popup({ title, isOpen, onClose, children }: Props) {
           {children}
         </div>
         <div className="button-row">
-          <Button id="confirm-popup-button" preventDefault onClick={() => onClose(true)} content="OK" kind="success" label="Confirm popup" />
-          <Button id="cancel-popup-button" preventDefault onClick={() => onClose(false)} content="Cancel" kind="error" label="Cancel popup" />
+          <IconButton id="cancel-popup-button" icon={<Cancel />} onClick={() => onClose(false)} kind="error" circular label="Cancel popup" />
+          <IconButton id="confirm-popup-button" icon={<Check />} onClick={() => onClose(true)} kind="success" circular label="Confirm popup" />
         </div>
       </div>
     </section>

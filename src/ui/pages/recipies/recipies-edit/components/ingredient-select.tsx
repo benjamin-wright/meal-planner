@@ -3,21 +3,30 @@ import { Item } from "../../../../../models/items";
 import { Popup } from "../../../../components/containers/popup/popup";
 import { IconFilter } from "../../../../components/inputs/icon-filter/icon-filter";
 
+import "./ingredient-select.css";
+
 type Props = {
   title: string;
   isOpen: boolean;
   selected: number;
   ingredients: Item[];
+  onChange: (ingredientId: number) => void;
 }
 
-export function IngredientSelect({ title, isOpen, selected, ingredients }: Props) {
-  const selectedIngredient = ingredients[selected];
+export function IngredientSelect({ title, isOpen, selected, ingredients, onChange }: Props) {
   const [search, setSearch] = useState("");
-  
+  const [temporarySelected, setTemporarySelected] = useState(selected);
+
   return (
-    <Popup title={ title } isOpen={isOpen} onClose={() => {}}>
+    <Popup title={ title } isOpen={isOpen} onClose={accepted => {
+      if (accepted) {
+        onChange(temporarySelected);
+      } else {
+        setTemporarySelected(selected);
+      }
+    }}>
       <IconFilter search={search} onSearch={setSearch} />
-      <ul>
+      <ul className="ingredient-select__list">
         {
           ingredients.filter(ingredient => {
             if (!search) {
@@ -27,7 +36,16 @@ export function IngredientSelect({ title, isOpen, selected, ingredients }: Props
             return ingredient.name.toLowerCase().includes(search.toLowerCase());
           }).map((ingredient, index) => (
             <li key={index}>
-              <button onClick={(event) => {event.preventDefault()}}>{ingredient.name}</button>
+              <input
+                id={`ingredient-${index}`}
+                value={ingredient.id}
+                onChange={() => {
+                  setTemporarySelected(ingredient.id);
+                }}
+                type="checkbox"
+                checked={ingredient.id === temporarySelected}
+              />
+              <label htmlFor={`ingredient-${index}`}>{ingredient.name}</label>
             </li>
           ))
         }
