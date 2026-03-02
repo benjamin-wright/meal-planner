@@ -14,11 +14,36 @@
 .ingredient-select__list li {
   border: none;
   border-radius: 0.25em;
-  background: var(--background-primary);
+  background: var(--thick-glazing);
   color: var(--foreground-primary);
   padding: 0.5rem 1rem;
   width: 100%;
   display: flex;
   justify-content: start;
+  align-items: center;
   gap: 0.5em;
+}
+
+/* custom input checkbox styling */
+.ingredient-select__list input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.5em;
+  height: 1.5em;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.ingredient-select__list input:checked {
+  appearance:checkbox;
+  -webkit-appearance:checkbox;
+  background: var(--accent-primary);
+}
+
+.ingredient-select__list label {
+  width: 100%;
 }

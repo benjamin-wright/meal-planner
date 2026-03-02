@@ -81,6 +81,11 @@ export function RecipiesEditView({ recipe, items, units, isNew, onSubmit, onChan
       items={items}
       units={units}
       newIngredient={onNewIngredient}
+      onChange={(index, ingredient) => {
+        const newIngredients = [...recipe.ingredients];
+        newIngredients[index] = ingredient;
+        onChange({ ...recipe, ingredients: newIngredients });
+      }}
     />
   </Form>;
 }

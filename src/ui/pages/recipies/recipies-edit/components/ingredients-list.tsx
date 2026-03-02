@@ -5,9 +5,7 @@ import { format, Unit } from "../../../../../models/units";
 import { AddButton } from "../../../../components/inputs/add-button/add-button";
 import { Fieldset } from "../../../../components/inputs/fieldset/fieldset";
 import './ingredients-list.css';
-import { Popup } from "../../../../components/containers/popup/popup";
 import { useState } from "react";
-import { IconFilter } from "../../../../components/inputs/icon-filter/icon-filter";
 import { IngredientSelect } from "./ingredient-select";
 
 type Props = {
@@ -15,10 +13,13 @@ type Props = {
   items: Item[];
   units: Unit[];
   newIngredient: () => void;
+  onChange: (index: number, ingredient: IngredientQuantity) => void;
 }
 
-export function IngredientsList({ ingredients, items, units, newIngredient }: Props) {
+export function IngredientsList({ ingredients, items, units, newIngredient, onChange }: Props) {
   const [ selected, setSelected ] = useState<number | null>(null);
+  const selectedIngredient = selected !== null ? ingredients[selected] : null;
+  const selectableIngredients = items.filter(item =>  ingredients.every(ingredient => ingredient.id !== item.id) || (selectedIngredient && item.id === selectedIngredient.id));
 
   return <Fieldset id="ingredients-list" label="Ingredients">
     <div className="ingredients-list">
@@ -42,6 +43,24 @@ export function IngredientsList({ ingredients, items, units, newIngredient }: Pr
       newIngredient();
       setSelected(ingredients.length);
     }} />
-    <IngredientSelect title={`Ingredient ${selected !== null ? selected + 1 : ''}`} isOpen={selected !== null} selected={selected ?? 0} ingredients={items} />
+    <IngredientSelect
+      title={`Ingredient ${selected !== null ? selected + 1 : ''}`}
+      isOpen={selected !== null}
+      selected={selected !== null ? ingredients[selected].id : 0}
+      ingredients={selectableIngredients}
+      onChange={id => {
+        if (id === undefined) {
+          setSelected(null);
+          return;
+        }
+
+        if (selected === null) {
+          return;
+        }
+
+        onChange(selected, { ...ingredients[selected], id });
+        setSelected(null);
+      }}
+    />
   </Fieldset>;
 }

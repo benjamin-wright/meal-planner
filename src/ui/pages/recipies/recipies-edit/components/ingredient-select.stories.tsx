@@ -4,7 +4,7 @@ import { IngredientSelect } from './ingredient-select';
 import { ItemKind } from '../../../../../models/items';
 
 function IngredientSelectStory() {
-  const [selected, setSelected] = useState(6);
+  const [selected, setSelected] = useState<number>(6);
   const ingredients = [
     { id: 1, name: "Apple", category: 1, kind: ItemKind.Ingredient },
     { id: 2, name: "Banana", category: 1, kind: ItemKind.Ingredient },
@@ -23,7 +23,7 @@ function IngredientSelectStory() {
       isOpen={true}
       selected={selected}
       ingredients={ingredients}
-      onChange={id => setSelected(id)}
+      onChange={id => setSelected(id ?? selected)}
     />
   }
   
