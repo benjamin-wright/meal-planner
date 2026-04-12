@@ -8,7 +8,7 @@ const ALERT_TIMEOUT_PERIOD = 5000;
 export type RegisteredAlert = {
   alert: Alert,
   number: number,
-  timeout: number,
+  timeout: ReturnType<typeof setTimeout>,
   startTime: number,
   endTime: number
 }

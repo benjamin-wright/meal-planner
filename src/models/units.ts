@@ -74,12 +74,12 @@ export function validate(unit: Unit): boolean {
     return false;
   }
 
-  if (unit.type !== UnitType.Count && unit.magnitudes.length === 0) {
+  if (unit.magnitudes.length === 0) {
     return false;
   }
 
   for (const magnitude of unit.magnitudes) {
-    if (!magnitude.singular || !magnitude.plural) {
+    if (unit.type === UnitType.Count ? Boolean(magnitude.singular) !== Boolean(magnitude.plural) : !magnitude.singular || !magnitude.plural) {
       return false;
     }
 

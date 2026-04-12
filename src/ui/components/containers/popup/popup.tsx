@@ -1,6 +1,5 @@
 import Check from '../../icons/check';
 import Cancel from '../../icons/cross';
-import { Button } from '../../inputs/button/button';
 import { IconButton } from '../../inputs/icon-button/icon-button';
 import './popup.css';
 

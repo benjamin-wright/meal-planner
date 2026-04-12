@@ -12,6 +12,6 @@ type Props = {
 export function DescriptiveButton({ description, content, kind, onClick, disabled }: Props) {
   return <fieldset className={`descriptive-button glazing`} disabled={disabled}>
     <p>{description}</p>
-    <Button kind={kind} onClick={onClick} content={content} />
+    <Button id="" kind={kind} onClick={onClick} content={content} />
   </fieldset>;
 }

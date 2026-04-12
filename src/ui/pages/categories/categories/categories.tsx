@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCategories } from "../../../hooks/useCategories";
 import { Category } from "../../../../models/categories";
 import { Page } from "../../../components/layout/page/page";
-import { Reorder } from "framer-motion";
+import { Reorder } from "motion/react";
 import { AddButton } from "../../../components/inputs/add-button/add-button";
 import { SlideOutGroup } from "../../../components/containers/slide-out-controls/slide-out-group";
 import { IconButton } from "../../../components/inputs/icon-button/icon-button";
@@ -22,7 +22,7 @@ export function Categories() {
 
   function sortingView() {
     return (
-      <Reorder.Group axis="y" values={categories} onReorder={reorderCategories} className="categories-list" sx={{ overflowY: 'scroll' }}>
+      <Reorder.Group axis="y" values={categories} onReorder={reorderCategories} className="categories-list" style={{ overflowY: 'scroll' }}>
         {
           categories.map((category) => (
             <Reorder.Item

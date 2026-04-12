@@ -3,7 +3,7 @@ import './slide-out-control.css';
 import Pencil from '../../icons/pencil';
 import Trash from '../../icons/trash';
 import { SlideOutGroupContext } from './slide-out-group-context';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 type Selection = 'edit' | 'delete' | null;
 
