@@ -2,7 +2,7 @@
 
 > Plan your meals, build your recipes, and never forget an ingredient again.
 
-<img src="https://github.com/user-attachments/assets/bcfa0b3a-b797-4417-9aed-deeb44fa4155" alt="NomNom PLC home screen" width="280" />
+<img src="https://github.com/user-attachments/assets/63af643b-0b91-4619-bf98-0f60f542c0f4" alt="NomNom PLC home screen" width="280" />
 
 NomNom PLC is a mobile web app for organising your kitchen. Build a library of recipes with their ingredients, plan what you're cooking each week, and let the app compile your shopping list automatically.
 
@@ -67,7 +67,7 @@ A default set of metric units is pre-loaded. Tap **Data → Units** to add or cu
 
 ### Items
 
-<img src="https://github.com/user-attachments/assets/23fdd2f3-d08e-4c0a-b674-35140bd85faf" alt="Items list screen" width="280" />
+<img src="https://github.com/user-attachments/assets/3a7ce662-792c-4ad0-bc6b-75dff31e03c7" alt="Items list screen" width="280" />
 
 Items are the things you buy. Each item has a name, a category, and a kind:
 
@@ -79,7 +79,7 @@ Tap **Data → Items**, then **+** to add a new item. Use the filter icons at th
 
 ### Recipes
 
-<img src="https://github.com/user-attachments/assets/e20defc4-c706-43dd-94c4-d9a775593b8f" alt="Recipe edit screen" width="280" />
+<img src="https://github.com/user-attachments/assets/af2cbc2d-b569-4322-b68b-38377769e121" alt="Recipe edit screen" width="280" />
 
 Recipes bring your items together into a meal. Each recipe has:
 
