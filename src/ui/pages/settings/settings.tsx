@@ -1,58 +1,93 @@
-import { useContext, useState } from "react";
-import { DBContext } from "../../providers/database/db-context";
-import { SettingsView } from "./settings-view";
-import { loadFile, saveFile } from "../../../utils/browser";
-import { AlertContext } from "../../providers/alerts";
-import { exportData, importData } from "../../../persistence/exporter";
-import { DBFlags } from "../../../persistence/db-flags";
+import { useState } from "react";
+import { useSettings } from "../../hooks/useSettings";
+import { Page } from "../../components/layout/page/page";
+import { Accordion } from "../../components/containers/accordion/accordion";
+import { Drawer } from "../../components/containers/accordion/drawer";
+import { DescriptiveButton } from "../../components/inputs/descriptive-button/descriptive-button";
+import { Dialog } from "../../components/containers/dialog/dialog";
 
 type Props = {
   version: string;
 };
 
 export function Settings({ version }: Props) {
-  const { db, dbName } = useContext(DBContext);
-  const [busy, setBusy] = useState(false);
+  const { busy, backup, restore, reset } = useSettings();
 
-  const { alert } = useContext(AlertContext);
+  const [isOpen, setIsOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState<'restore' | 'reset'>('restore');
 
-  async function onBackup() {
-    if (!db) return;
-
-    setBusy(true);
-    const data = await exportData(db);
-    saveFile({ json: data, filename: "meal-planner-backup.json" });
-    setBusy(false);
+  function getDialogPrompt(action: 'restore' | 'reset') {
+    switch (action) {
+      case 'restore':
+        return "Are you sure you want to restore?";
+      case 'reset':
+        return "Are you sure you want to reset?";
+    }
   }
 
-  async function onRestore() {
-    if (!db) return;
-
-    setBusy(true);
-    const data = await loadFile();
-    await importData(db, data);
-    alert({
-      message: "Settings restored successfully.",
-      severity: "info",
-    });
-    setBusy(false);
-  }
-
-  async function onReset() {
-    if (!dbName) return;
-
-    setBusy(true);
-    DBFlags.setReset(dbName);
-    setTimeout(() => location.reload(), 2000);
+  function getDialogWarning(action: 'restore' | 'reset') {
+    switch (action) {
+      case 'restore':
+        return "This action will replace all current application data with the contents of the backup you select.";
+      case 'reset':
+        return "This action will wipe all application data and cannot be undone.";
+    }
   }
 
   return (
-    <SettingsView
-      version={version}
-      onBackup={onBackup}
-      onRestore={onRestore}
-      onReset={onReset}
-      busy={busy}
-    />
+    <Page title="Settings">
+      <Accordion>
+        <Drawer id="backup" title="backup">
+          <DescriptiveButton
+            description="Save the current application state to a JSON file on your device."
+            content="Backup"
+            kind="success"
+            onClick={backup}
+            disabled={busy}
+          />
+          <DescriptiveButton
+            description="Restore the application state from a JSON file on your device."
+            content="Restore"
+            kind="error"
+            onClick={() => {
+              setDialogAction('restore');
+              setIsOpen(true);
+            }}
+            disabled={busy}
+          />
+          <DescriptiveButton
+            description="Drop all data and reset the application to its initial state."
+            content="Reset"
+            kind="error"
+            onClick={() => {
+              setDialogAction('reset');
+              setIsOpen(true);
+            }}
+            disabled={busy}
+          />
+        </Drawer>
+        <Drawer id="info" title="info" open={true}>
+          <p>Application Version: {version}</p>
+        </Drawer>
+      </Accordion>
+      <Dialog
+        prompt={getDialogPrompt(dialogAction)}
+        warning={getDialogWarning(dialogAction)}
+        isOpen={isOpen}
+        onClose={(accept) => {
+          setIsOpen(false);
+          if (accept) {
+            switch (dialogAction) {
+              case 'restore':
+                restore();
+                break;
+              case 'reset':
+                reset();
+                break;
+            }
+          }
+        }}
+      />
+    </Page>
   );
 }

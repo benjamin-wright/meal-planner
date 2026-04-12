@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { CategoriesEditView } from "./categories-edit-view";
 import { useCategory } from "../../../hooks/useCategory";
+import { validate } from "../../../../models/categories";
+import { StringInput } from "../../../components/inputs/string-input/string-input";
+import { Form } from "../../../components/layout/form/form";
 
 export function CategoriesEdit() {
   const navigate = useNavigate();
@@ -16,11 +18,14 @@ export function CategoriesEdit() {
   }
 
   return (
-    <CategoriesEditView
-      category={category}
-      isNew={isNew}
-      onUpdate={setCategory}
-      onSave={handleSave}
-    />
+    <Form title={isNew ? "New Category" : `Edit Category`} onSubmit={handleSave} disableSubmit={!validate(category)}>
+      <StringInput
+        id="category-name-input"
+        label="Category Name"
+        value={category.name}
+        onChange={(value: string) => setCategory({ ...category, name: value })}
+        lowercase
+      />
+    </Form>
   );
 }

@@ -4,14 +4,8 @@ A simple app for recording recipies, planning weekly meals and compiling a shopp
 
 ## Documentation
 
-- [Change Log](./docs/CHANGELOG.md) - Version history and updates
-
-## TODO
-
-### Shopping Item model
-- Remove unitType and make unit non-optional, since the unit models have been unified now
-
-### Units - E2E Tests
-- Validation errors when creating/editing units
-- Validation errors when creating/editing magnitudes
-- Preventing navigation with unsaved changes
+- [docs/architecture.md](./docs/architecture.md) — technology decisions, system design, and design constraints.
+- [docs/standards.md](./docs/standards.md) — coding conventions, testing strategy, and project-wide rules.
+- [docs/contributions.md](./docs/contributions.md) — development setup, npm scripts, and project layout.
+- [docs/todo.md](./docs/todo.md) — active implementation plan.
+- [docs/CHANGELOG.md](./docs/CHANGELOG.md) — version history and updates.
