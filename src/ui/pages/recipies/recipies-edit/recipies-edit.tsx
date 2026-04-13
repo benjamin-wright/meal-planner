@@ -82,6 +82,8 @@ export function RecipiesEdit() {
       items={items}
       units={units}
       newIngredient={newIngredient}
+      newItem={() => navigate('/items/new')}
+      newUnit={() => navigate('/units/new')}
       onChange={(index, ingredient) => {
         const newIngredients = [...recipe.ingredients];
         newIngredients[index] = ingredient;

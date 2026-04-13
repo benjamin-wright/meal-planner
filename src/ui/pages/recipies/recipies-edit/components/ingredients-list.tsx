@@ -7,19 +7,26 @@ import { Fieldset } from "../../../../components/inputs/fieldset/fieldset";
 import './ingredients-list.css';
 import { useState } from "react";
 import { IngredientSelect } from "./ingredient-select";
+import { QuantitySelect } from "./quantity-select";
 
 type Props = {
   ingredients: IngredientQuantity[];
   items: Item[];
   units: Unit[];
   newIngredient: () => void;
+  newItem: () => void;
+  newUnit: () => void;
   onChange: (index: number, ingredient: IngredientQuantity) => void;
 }
 
-export function IngredientsList({ ingredients, items, units, newIngredient, onChange }: Props) {
-  const [ selected, setSelected ] = useState<number | null>(null);
-  const selectedIngredient = selected !== null ? ingredients[selected] : null;
-  const selectableIngredients = items.filter(item =>  ingredients.every(ingredient => ingredient.id !== item.id) || (selectedIngredient && item.id === selectedIngredient.id));
+export function IngredientsList({ ingredients, items, units, newIngredient, newItem, newUnit, onChange }: Props) {
+  const [selectedIngredientIndex, setSelectedIngredientIndex] = useState<number | null>(null);
+  const [selectedQuantityIndex, setSelectedQuantityIndex] = useState<number | null>(null);
+
+  const activeIngredient = selectedIngredientIndex !== null ? ingredients[selectedIngredientIndex] : null;
+  const selectableIngredients = items.filter(item =>
+    ingredients.every(ingredient => ingredient.id !== item.id) || (activeIngredient && item.id === activeIngredient.id)
+  );
 
   return <Fieldset id="ingredients-list" label="Ingredients">
     <div className="ingredients-list">
@@ -29,11 +36,13 @@ export function IngredientsList({ ingredients, items, units, newIngredient, onCh
         const unit = units.find(unit => unit.id === ingredient.unit);
         return (
           <Fragment key={index}>
-            <button className="ingredient-name-button" type="button" onClick={() => setSelected(index)}>
+            <button className="ingredient-name-button" type="button" onClick={() => setSelectedIngredientIndex(index)}>
               {ingredientItem ? ingredientItem.name : "Unknown"}
             </button>
             <span>:</span>
-            <button className="ingredient-quantity" type="button" onClick={() => setSelected(index)}>{unit ? format(unit, ingredient.quantity) : "Unknown"}</button>
+            <button className="ingredient-quantity" type="button" onClick={() => setSelectedQuantityIndex(index)}>
+              {unit ? format(unit, ingredient.quantity) : "Unknown"}
+            </button>
           </Fragment>
         )
       })
@@ -41,25 +50,39 @@ export function IngredientsList({ ingredients, items, units, newIngredient, onCh
     </div>
     <AddButton id="add-ingredient-button" onClick={() => {
       newIngredient();
-      setSelected(ingredients.length);
+      setSelectedIngredientIndex(ingredients.length);
     }} />
     <IngredientSelect
-      title={`Ingredient ${selected !== null ? selected + 1 : ''}`}
-      isOpen={selected !== null}
-      selected={selected !== null ? ingredients[selected].id : 0}
+      title={`Ingredient ${selectedIngredientIndex !== null ? selectedIngredientIndex + 1 : ''}`}
+      isOpen={selectedIngredientIndex !== null}
+      selected={selectedIngredientIndex !== null ? ingredients[selectedIngredientIndex].id : 0}
       ingredients={selectableIngredients}
+      onNewIngredient={newItem}
       onChange={id => {
         if (id === undefined) {
-          setSelected(null);
+          setSelectedIngredientIndex(null);
           return;
         }
-
-        if (selected === null) {
+        if (selectedIngredientIndex === null) return;
+        onChange(selectedIngredientIndex, { ...ingredients[selectedIngredientIndex], id });
+        setSelectedIngredientIndex(null);
+      }}
+    />
+    <QuantitySelect
+      title={`Quantity ${selectedQuantityIndex !== null ? selectedQuantityIndex + 1 : ''}`}
+      isOpen={selectedQuantityIndex !== null}
+      quantity={selectedQuantityIndex !== null ? ingredients[selectedQuantityIndex].quantity : 0}
+      unitId={selectedQuantityIndex !== null ? ingredients[selectedQuantityIndex].unit : (units[0]?.id ?? 0)}
+      units={units}
+      onNewUnit={newUnit}
+      onChange={result => {
+        if (result === undefined) {
+          setSelectedQuantityIndex(null);
           return;
         }
-
-        onChange(selected, { ...ingredients[selected], id });
-        setSelected(null);
+        if (selectedQuantityIndex === null) return;
+        onChange(selectedQuantityIndex, { ...ingredients[selectedQuantityIndex], quantity: result.quantity, unit: result.unitId });
+        setSelectedQuantityIndex(null);
       }}
     />
   </Fieldset>;

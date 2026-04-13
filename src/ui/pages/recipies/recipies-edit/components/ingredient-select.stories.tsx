@@ -23,6 +23,7 @@ function IngredientSelectStory() {
       isOpen={true}
       selected={selected}
       ingredients={ingredients}
+      onNewIngredient={() => {}}
       onChange={id => setSelected(id ?? selected)}
     />
   }

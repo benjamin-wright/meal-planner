@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Item } from "../../../../../models/items";
+import { AddButton } from "../../../../components/inputs/add-button/add-button";
 import { Popup } from "../../../../components/containers/popup/popup";
 import { IconFilter } from "../../../../components/inputs/icon-filter/icon-filter";
 
@@ -10,25 +11,28 @@ type Props = {
   isOpen: boolean;
   selected: number;
   ingredients: Item[];
+  onNewIngredient: () => void;
   onChange: (ingredientId?: number) => void;
 }
 
-export function IngredientSelect({ title, isOpen, selected, ingredients, onChange }: Props) {
+export function IngredientSelect({ isOpen, ...rest }: Props) {
+  if (!isOpen) return null;
+  return <IngredientSelectContent {...rest} />;
+}
+
+function IngredientSelectContent({ title, selected, ingredients, onNewIngredient, onChange }: Omit<Props, 'isOpen'>) {
   const [search, setSearch] = useState("");
   const [temporarySelected, setTemporarySelected] = useState(selected);
 
-  useEffect(() => {
-    setTemporarySelected(selected);
-  }, [isOpen, selected]);
-
   return (
-    <Popup title={ title } isOpen={isOpen} onClose={accepted => {
+    <Popup title={ title } isOpen={true} onClose={accepted => {
       if (accepted) {
         onChange(temporarySelected);
       } else {
         onChange();
       }
     }}>
+      <div className="ingredient-select__content">
       <IconFilter search={search} onSearch={setSearch} />
       <ul className="ingredient-select__list">
         {
@@ -54,6 +58,9 @@ export function IngredientSelect({ title, isOpen, selected, ingredients, onChang
           ))
         }
       </ul>
+      <AddButton id="add-ingredient-button" onClick={onNewIngredient} />
+      </div>
     </Popup>
   )
 }
+
