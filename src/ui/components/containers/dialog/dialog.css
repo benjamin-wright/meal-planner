@@ -1,0 +1,45 @@
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(0.2rem);
+}
+
+.dialog-inner {
+  background: var(--background-primary);
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.dialog-inner > h2 {
+  color: var(--error-primary);
+  margin: 1em 0 0;
+  text-align: center;
+}
+
+.dialog-inner > p {
+  font-style: italic;
+  color: var(--foreground-disabled);
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
+.dialog .button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}

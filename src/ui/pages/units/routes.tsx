@@ -1,5 +1,5 @@
-import { Units } from "./units";
-import { UnitsEdit } from "./units-edit";
+import { Units } from "./units/units";
+import { UnitsEdit } from "./units-edit/units-edit";
 
 export const routes = [
   {
@@ -7,11 +7,7 @@ export const routes = [
     element: <Units />,
   },
   {
-    path: "units/new",
-    element: <UnitsEdit />,
-  },
-  {
-    path: "units/:unit",
+    path: "units/:id",
     element: <UnitsEdit />,
   },
 ];

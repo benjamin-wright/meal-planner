@@ -16,7 +16,7 @@ jobs:
           node-version: '22.11.0'
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - run: npm run test:unit
 
   version_check:
     runs-on: ubuntu-latest

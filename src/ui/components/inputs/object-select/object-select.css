@@ -1,0 +1,29 @@
+.object-select {
+  background: none;
+  border: none;
+  font-size: 1em;
+  padding: 0.25em 0.1em;
+  color: var(--foreground-primary);
+  width: 100%;
+  border-radius: 0;
+  border-bottom: 1px solid var(--background-secondary);
+  text-transform: capitalize;
+}
+
+.object-select:focus {
+  outline: none;
+  border-color: var(--foreground-secondary);
+}
+
+.object-select:disabled {
+  color: var(--foreground-disabled);
+  cursor: not-allowed;
+}
+
+.object-select option {
+  background: var(--background-primary);
+  border: none;
+  font-size: 1em;
+  color: var(--foreground-primary);
+  width: 100%;
+}

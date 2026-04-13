@@ -1,0 +1,37 @@
+button.icon-button {
+  background: none;
+  color: var(--foreground-primary);
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+button.icon-button.icon-button--circular {
+  border-radius: 50%;
+  background-color: var(--background-primary);
+  padding: 0.3em;
+}
+
+button.icon-button.icon-button--success {
+  color: var(--success-primary);
+}
+
+button.icon-button.icon-button--error {
+  color: var(--error-primary);
+}
+
+button.icon-button.icon-button--selected {
+  color: var(--background-primary);
+  background-color: var(--foreground-primary);
+}
+
+button.icon-button.drag-trigger {
+  touch-action: none;
+}

@@ -1,0 +1,52 @@
+.sliding-button {
+  display: flex;
+  align-items: center;
+  border-radius: 3em;
+  overflow: hidden;
+  font-size: 0.8em;
+}
+
+button.sliding-button__title {
+  text-align: start;
+  flex-grow: 1;
+  margin: 0;
+  padding: 1em 1.5em;
+  color: var(--foreground-primary);
+  background: none;
+  border: none;
+  border-radius: 2em;
+  font-size: 1em;
+  overflow-x: hidden;
+}
+
+.sliding-button h2 {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sliding-button__content {
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  border-radius: 2em;
+  padding: 0.8em;
+  padding-left: 0;
+  padding-right: 0;
+  width: 0;
+  background-color: var(--background-primary);
+
+  transition: width 0.3s ease-in-out, padding-left 0.3s ease-in-out, padding-right 0.3s ease-in-out;
+}
+
+.sliding-button__content--open {
+  width: 5em;
+  padding-right: 1em;
+  padding-left: 1em;
+  background-color: var(--background-primary);
+
+  transition: width 0.3s ease-in-out, padding-left 0.3s ease-in-out, padding-right 0.3s ease-in-out;
+}

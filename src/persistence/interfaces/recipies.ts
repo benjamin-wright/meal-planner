@@ -1,11 +1,11 @@
-import { IngredientQuantity, Recipie } from "../../models/recipies";
-import { MealType } from "../../models/meals";
+import { CourseType, DishType } from "../../models/meals";
+import { IngredientQuantity, Recipe } from "../../models/recipies";
 
 export interface RecipieStore {
-  get(id: number): Promise<Recipie>;
-  getAll(): Promise<Recipie[]>;
-  add(name: string, description: string, serves: number, time: number, ingredients: IngredientQuantity[], steps: string[], meal: MealType): Promise<number>;
-  put(value: Recipie): Promise<void>;
+  get(id: number): Promise<Recipe>;
+  getAll(): Promise<Recipe[]>;
+  add(name: string, description: string, serves: number, time: number, ingredients: IngredientQuantity[], steps: string[], course: CourseType, dish: DishType): Promise<number>;
+  put(value: Recipe): Promise<void>;
   delete(id: number): Promise<void>;
   clear(): Promise<void>;
 }

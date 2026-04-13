@@ -1,0 +1,27 @@
+dl.storybook {
+  display: grid;
+  margin: 0;
+  padding: 1em;
+  grid-template-columns: min-content;
+  justify-content: start;
+}
+
+dl.storybook dt {
+  grid-row: 2;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+dl.storybook dd {
+  grid-row: 1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#storybook-root {
+  height: 100%;
+}

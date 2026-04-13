@@ -6,28 +6,28 @@ const validCounts = [
     id: 1,
     name: 'unnamed',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: '', plural: '' }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: '', plural: '', multiplier: 1 }
     ],
   },
   {
     id: 1,
     name: 'single named',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices' }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: 'slices', multiplier: 1 }
     ],
   },
   {
     id: 1,
     name: 'multiple',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices', multiplier: 1 },
-      { singular: 'piece', plural: 'pieces', multiplier: 10 }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: 'slices', multiplier: 1 },
+      { abbrev: '', singular: 'piece', plural: 'pieces', multiplier: 10 }
     ],
   },
 ]
@@ -37,75 +37,65 @@ const invalidCounts = [
     id: 1,
     name: 'empty',
     type: UnitType.Count,
+    base: 1,
     magnitudes: [],
-    collectives: [],
   },
   {
     id: 1,
     name: 'single missing plural',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: '' }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: '', multiplier: 1 }
     ],
   },
   {
     id: 1,
     name: 'single missing singular',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: '', plural: 'slices' }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: '', plural: 'slices', multiplier: 1 }
     ],
   },
   {
     id: 1,
     name: 'multiple missing singular',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: '', plural: 'slices', multiplier: 1 },
-      { singular: 'piece', plural: 'pieces', multiplier: 10 }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: '', plural: 'slices', multiplier: 1 },
+      { abbrev: '', singular: 'piece', plural: 'pieces', multiplier: 10 }
     ],
   },
   {
     id: 1,
     name: 'multiple missing plural',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices', multiplier: 1 },
-      { singular: '', plural: 'pieces', multiplier: 10 }
-    ],
-  },
-  {
-    id: 1,
-    name: 'multiple missing multiplier',
-    type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices', multiplier: 1 },
-      { singular: 'piece', plural: 'pieces' }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: 'slices', multiplier: 1 },
+      { abbrev: '', singular: 'piece', plural: '', multiplier: 10 }
     ],
   },
   {
     id: 1,
     name: 'multiple zero multiplier',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices', multiplier: 1 },
-      { singular: 'piece', plural: 'pieces', multiplier: 0 }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: 'slices', multiplier: 1 },
+      { abbrev: '', singular: 'piece', plural: 'pieces', multiplier: 0 }
     ],
   },
   {
     id: 1,
     name: 'multiple negative multiplier',
     type: UnitType.Count,
-    magnitudes: [],
-    collectives: [
-      { singular: 'slice', plural: 'slices', multiplier: 1 },
-      { singular: 'piece', plural: 'pieces', multiplier: -10 }
+    base: 1,
+    magnitudes: [
+      { abbrev: '', singular: 'slice', plural: 'slices', multiplier: 1 },
+      { abbrev: '', singular: 'piece', plural: 'pieces', multiplier: -10 }
     ],
   },
 ]
@@ -119,7 +109,6 @@ const validMagnitudes = [
     magnitudes: [
       { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -130,7 +119,6 @@ const validMagnitudes = [
       { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' },
       { singular: 'millilitre', plural: 'millilitres', multiplier: 0.001, abbrev: 'ml' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -140,7 +128,6 @@ const validMagnitudes = [
     magnitudes: [
       { singular: 'gram', plural: 'grams', multiplier: 1, abbrev: 'g' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -151,7 +138,6 @@ const validMagnitudes = [
       { singular: 'gram', plural: 'grams', multiplier: 1, abbrev: 'g' },
       { singular: 'kilogram', plural: 'kilograms', multiplier: 1000, abbrev: 'kg' }
     ],
-    collectives: [],
   }
 ];
 
@@ -162,7 +148,6 @@ const invalidMagnitudes = [
     type: UnitType.Volume,
     base: 1,
     magnitudes: [],
-    collectives: [],
   },
   {
     id: 1,
@@ -172,7 +157,6 @@ const invalidMagnitudes = [
     magnitudes: [
       { singular: 'litre', plural: '', multiplier: 1, abbrev: 'l' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -182,7 +166,6 @@ const invalidMagnitudes = [
     magnitudes: [
       { singular: '', plural: 'litres', multiplier: 1, abbrev: 'l' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -192,7 +175,6 @@ const invalidMagnitudes = [
     magnitudes: [
       { singular: 'litre', plural: 'litres', multiplier: 0, abbrev: 'l' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -202,7 +184,6 @@ const invalidMagnitudes = [
     magnitudes: [
       { singular: 'litre', plural: 'litres', multiplier: -1, abbrev: 'l' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -213,7 +194,6 @@ const invalidMagnitudes = [
       { singular: '', plural: 'litres', multiplier: 1, abbrev: 'l' },
       { singular: 'millilitre', plural: 'millilitres', multiplier: 0.001, abbrev: 'ml' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -224,7 +204,6 @@ const invalidMagnitudes = [
       { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' },
       { singular: '', plural: 'millilitres', multiplier: 0.001, abbrev: 'ml' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -235,7 +214,6 @@ const invalidMagnitudes = [
       { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' },
       { singular: 'millilitre', plural: 'millilitres', multiplier: 0, abbrev: 'ml' }
     ],
-    collectives: [],
   },
   {
     id: 1,
@@ -246,7 +224,6 @@ const invalidMagnitudes = [
       { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' },
       { singular: 'millilitre', plural: 'millilitres', multiplier: -0.001, abbrev: 'ml' }
     ],
-    collectives: [],
   },
 ]
 
@@ -295,7 +272,6 @@ describe('units', () => {
         magnitudes: [
           { singular: 'litre', plural: 'litres', multiplier: 1, abbrev: 'l' }
         ],
-        collectives: [],
       };
 
       expect(sanitize(unit)).toEqual(unit);
@@ -313,7 +289,6 @@ describe('units', () => {
         magnitudes: [
           { singular: '', plural: '', multiplier: 1, abbrev: '' }
         ],
-        collectives: [],
       };
       expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
@@ -327,10 +302,7 @@ describe('units', () => {
         name: '',
         type: UnitType.Count,
         base: 1,
-        magnitudes: [], 
-        collectives: [
-          { singular: '', plural: '', multiplier: 1 }
-        ],
+        magnitudes: [],
       };
       expect(sanitize(unit)).toEqual(sanitizedUnit);
     });
@@ -343,7 +315,6 @@ describe('units', () => {
         type: UnitType.Count,
         base: 1,
         magnitudes: [],
-        collectives: [],
       };
       expect(sanitize(unit)).toEqual(sanitizedUnit);
     });

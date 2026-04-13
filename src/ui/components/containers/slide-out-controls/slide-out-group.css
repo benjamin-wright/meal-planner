@@ -1,0 +1,10 @@
+ul.slide-out-group {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.5em;
+  padding: 0.5em;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+}

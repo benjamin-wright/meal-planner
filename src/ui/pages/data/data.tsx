@@ -1,42 +1,28 @@
-import Box from "@mui/material/Box";
-import { Page } from "../../components/page";
-import RestaurantRounded from "@mui/icons-material/RestaurantRounded";
-import { Egg, Fastfood, Scale, Sell, ShoppingBag } from "@mui/icons-material";
-import { Card, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Cutlery from "../../components/icons/cutlery";
+import Egg from "../../components/icons/egg";
+import Scales from "../../components/icons/scales";
+import Tag from "../../components/icons/tag";
+import { FatIconButton } from "../../components/inputs/fat-icon-button/fat-icon-button";
+import { Page } from "../../components/layout/page/page";
+
+import "./data.css"
 
 export function Data() {
   const navigate = useNavigate();
 
-  function navigateTo(category: string) {
-    navigate(`/${category}`);
-  }
-
-  return <Page title="Data" showNav>
-    <Box display="grid" gap="1em" justifyContent="center" overflow="hidden" gridTemplateColumns="50% 50%" padding="0.2em">
+  return <Page title="Data">
+    <section className="data-view">
       {
         [
-          { name: "misc", icon: ShoppingBag},
-          { name: "readymeals", alias: "ready meals", icon: Fastfood },
-          { name: "recipies", icon: RestaurantRounded },
-          { name: "ingredients", icon: Egg },
-          { name: "categories", icon: Sell },
-          { name: "units", icon: Scale },
-        ].map((category) => (
-          <Card key={category.name} sx={{
-            padding: "1em",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "1em",
-          }} onClick={() => navigateTo(category.name)} >
-            <category.icon />
-            <Typography textTransform="capitalize">
-              {category.alias || category.name}
-            </Typography>
-          </Card>
+          { icon: <Cutlery />, name: "recipies", link: "recipies" },
+          { icon: <Egg />, name: "items", link: "items" },
+          { icon: <Tag />, name: "categories", link: "categories" },
+          { icon: <Scales />, name: "units", link: "units" },
+        ].map(({ icon, name, link }) => (
+          <FatIconButton id={name} key={name} content={name} icon={icon} onClick={() => navigate(`/${link}`)} />
         ))
       }
-    </Box>
-  </ Page>;
+    </section>
+  </Page>;
 }

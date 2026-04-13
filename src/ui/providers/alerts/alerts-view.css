@@ -1,0 +1,16 @@
+section.alerts {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  user-select: none;
+  pointer-events: none;
+}
+
+section.alerts>ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}

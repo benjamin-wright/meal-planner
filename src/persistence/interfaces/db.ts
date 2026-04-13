@@ -1,21 +1,17 @@
+import { UnitStore } from "./units";
 import { CategoryStore } from "./categories";
-import { IngredientStore } from "./ingredients";
+import { ItemStore } from "./item";
 import { MealStore } from "./meals";
 import { RecipieStore } from "./recipies";
-import { UnitStore } from "./units";
 import { ExtraStore } from "./extras";
-import { SettingsStore } from "./settings";
 import { ShoppingItemStore } from "./shopping-item";
-import { ReadyMealStore } from "./readymeals";
 
 export interface DB {
   units(): UnitStore;
   categories(): CategoryStore;
-  ingredients(): IngredientStore;
-  readymeals(): ReadyMealStore;
+  items(): ItemStore;
   recipies(): RecipieStore;
   meals(): MealStore;
   extra(): ExtraStore;
   shopping(): ShoppingItemStore;
-  settings(): SettingsStore;
 }

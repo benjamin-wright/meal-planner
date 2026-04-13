@@ -1,0 +1,20 @@
+.banner-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75em 1em 0.75em 0.75em;
+  width: 100%;
+  color: var(--foreground-primary);
+  border: none;
+  border-radius: 2em;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.banner-button svg {
+  font-size: 1.25em;
+}
+
+.banner-button span {
+  text-transform: uppercase;
+}

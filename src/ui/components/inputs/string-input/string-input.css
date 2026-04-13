@@ -1,0 +1,22 @@
+.string-input {
+  font-size: 1em;
+  color: var(--foreground-primary);
+  border: none;
+  outline: none;
+  background: none;
+  border-bottom: 1px solid var(--background-secondary);
+  border-radius: 0;
+  padding: 4px;
+  width: 100%;
+}
+
+.string-input:is(:-webkit-autofill, :autofill) {
+  color: var(--foreground-primary) !important;
+  background-color: var(--background-secondary) !important;
+  appearance: inherit;
+  background-image: inherit !important;
+}
+
+.string-input:focus {
+  border-color: var(--foreground-secondary);
+}

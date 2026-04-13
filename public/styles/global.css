@@ -1,0 +1,46 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--foreground-primary);
+  position: relative;
+}
+
+button {
+  font-size: inherit;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.5em;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.glazing {
+  background-color: var(--glazing);
+  backdrop-filter: blur(0.4em);
+  -webkit-backdrop-filter: blur(0.4em);
+  box-shadow: var(--control-shadow);
+}

@@ -1,4 +1,4 @@
-import { Collective, Magnitude, Unit, UnitType } from "../../models/units";
+import { Magnitude, Unit, UnitType } from "../../models/units";
 import { UnitStore } from "../interfaces/units";
 import { TypedDB } from "./typed-db";
 
@@ -29,22 +29,16 @@ export class Units implements UnitStore {
     return this.db.getByIndex<Unit, "type">(TABLE_NAME, "type", type);
   }
 
-  async add(name: string, type: UnitType, magnitudes?: Magnitude[], collectives?: Collective[], base?: number): Promise<number> {
+  async add(name: string, type: UnitType, magnitudes?: Magnitude[], base?: number): Promise<number> {
     if (magnitudes) {
       magnitudes.sort((a, b) => a.multiplier - b.multiplier);
     }
-    if (collectives) {
-      collectives.sort((a, b) => (a.multiplier || 0) - (b.multiplier || 0));
-    }
-    return this.db.add(TABLE_NAME, { name, type, magnitudes, collectives, base });
+    return this.db.add(TABLE_NAME, { name, type, magnitudes, base });
   }
 
   async put(value: Unit): Promise<void> {
     if (value.magnitudes) {
       value.magnitudes.sort((a, b) => a.multiplier - b.multiplier);
-    }
-    if (value.collectives) {
-      value.collectives.sort((a, b) => (a.multiplier || 0) - (b.multiplier || 0));
     }
     return this.db.put(TABLE_NAME, value);
   }

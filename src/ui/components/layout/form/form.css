@@ -1,0 +1,17 @@
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+.form-section>form {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: visible;
+    height: 0px;
+}
+
+.form-section>form> :first-child {
+    margin-top: 0.2em;
+}

@@ -1,0 +1,22 @@
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.5em;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.category-item {
+  display: grid;
+}
+
+.category-item-sortable {
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}

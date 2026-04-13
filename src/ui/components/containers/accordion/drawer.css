@@ -1,0 +1,70 @@
+li.drawer {
+  border-radius: 0em;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  overflow: hidden;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
+}
+
+li.drawer.open {
+  border-radius: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  transition: margin-top 0.5s ease, margin-bottom 0.5s ease, border-radius 0.5s ease;
+}
+
+li.drawer:first-child,
+li.drawer.open+li.drawer {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+li.drawer:last-child,
+li.drawer:has(+ li.drawer.open) {
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+}
+
+li.drawer .drawer-content {
+  padding: 1em;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+}
+
+li.drawer>button {
+  background: none;
+  color: var(--foreground-primary);
+  border: none;
+  padding: 1em;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+li.drawer .drawer-toggle svg {
+  font-size: 2em;
+  transform: rotate(180deg);
+  transition: transform 0.5s ease;
+}
+
+li.drawer.open .drawer-toggle svg {
+  transform: rotate(90deg);
+}
+
+li.drawer button.drawer-toggle>h2 {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+li.drawer button.drawer-toggle--small {
+  /* padding: 0.5em; */
+  font-size: 0.7em;
+}
+
+li.drawer section {
+  height: 0px;
+}

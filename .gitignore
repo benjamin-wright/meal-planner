@@ -25,3 +25,8 @@ dist-ssr
 *.sw?
 
 .envrc
+
+test-results
+
+*storybook.log
+storybook-static

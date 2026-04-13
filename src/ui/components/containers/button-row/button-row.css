@@ -1,0 +1,14 @@
+.button-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.button-row button {
+  flex-grow: 1;
+}
+
+.button-row.button-row--spaced button {
+  flex-grow: 0;
+}

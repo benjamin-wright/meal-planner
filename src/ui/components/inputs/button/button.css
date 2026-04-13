@@ -1,0 +1,44 @@
+button.button {
+  padding: 0.5em;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  background-color: var(--background-secondary);
+  color: var(--foreground-primary);
+  border: none;
+  border-radius: 0.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+button.button:disabled {
+  background-color: var(--background-secondary);
+  color: var(--foreground-disabled);
+  cursor: not-allowed;
+}
+
+button.button.button--success {
+  background-color: var(--success-primary);
+  color: var(--background-primary);
+}
+
+button.button.button--success:disabled {
+  background-color: var(--background-secondary);
+  color: var(--success-primary);
+}
+
+button.button.button--error {
+  background-color: var(--error-primary);
+  color: var(--foreground-primary);
+}
+
+button.button.button--error:disabled {
+  background-color: var(--background-secondary);
+  color: var(--error-primary);
+}
+
+button.button--small {
+  padding: 0.2em 0.4em;
+  text-transform: capitalize;
+}

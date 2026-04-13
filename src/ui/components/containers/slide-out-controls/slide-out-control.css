@@ -1,0 +1,66 @@
+.slide-out-controls-container {
+  position: relative;
+}
+
+.slide-out-controls {
+  position: relative;
+  transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out;
+  padding: 1em;
+  border-radius: 0.5em;
+  user-select: none;
+}
+
+.slide-out-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  border: none;
+  color: var(--foreground-primary);
+  background: var(--background-secondary);
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: clip-path 0.3s ease-in-out;
+}
+
+.slide-out-button:active {
+  background: var(--background-primary);
+}
+
+.slide-out-button-edit {
+  left: 0;
+  width: 60px;
+  padding: 1em;
+  justify-content: flex-start;
+  border-radius: 0.5em 0 0 0.5em;
+}
+
+.slide-out-button-delete {
+  width: 60px;
+  right: 0;
+  padding: 1em;
+  justify-content: flex-end;
+  color: var(--error-primary);
+  border-radius: 0 0.5em 0.5em 0;
+}
+
+.slide-out-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+.slide-out-overlay-delete {
+  left: 0;
+  width: 25%;
+}
+
+.slide-out-overlay-edit {
+  right: 0;
+  width: 75%;
+}

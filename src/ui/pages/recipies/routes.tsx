@@ -1,5 +1,5 @@
-import { Recipies } from "./recipies";
-import { RecipiesEdit } from "./recipies-edit";
+import { RecipiesEdit } from "./recipies-edit/recipies-edit";
+import { Recipies } from "./recipies/recipies";
 
 export const routes = [
   {
@@ -11,7 +11,7 @@ export const routes = [
     element: <RecipiesEdit />,
   },
   {
-    path: "recipies/:recipie",
+    path: "recipies/:id",
     element: <RecipiesEdit />,
-  }
+  },
 ];

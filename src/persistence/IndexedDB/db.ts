@@ -1,37 +1,25 @@
 import { Units, unitsV1 } from "./units";
 import { Categories, categoriesV1 } from "./categories";
-import { Ingredients, ingredientsV1 } from "./ingredients";
-import { Recipies, recipiesV1, recipiesV2 } from "./recipies";
-import { Meals, mealsV1, mealsV2 } from "./meals";
+import { Items, itemsV1 } from "./items";
+import { Recipies, recipiesV1 } from "./recipies";
+import { Meals, mealsV1 } from "./meals";
 import { Extras, extraV1 } from "./extras";
-import { Settings, settingsV1 } from "./settings";
 import { TypedDB } from "./typed-db";
 import { DB } from "../interfaces/db";
 import { ShoppingItems, shoppingItemsV1 } from "./shopping-item";
-import { ReadyMeals, readymealsV1 } from "./readymeals";
 
-const DB_VERSION = 4;
+const DB_VERSION = 1;
 
 const migrations = [
   (db: IDBDatabase) => {
     unitsV1(db);
     categoriesV1(db);
-    ingredientsV1(db);
+    itemsV1(db);
     recipiesV1(db);
     mealsV1(db);
     extraV1(db);
     shoppingItemsV1(db);
-    settingsV1(db);
-  },
-  (db: IDBDatabase, transaction: IDBTransaction) => {
-    recipiesV2(db, transaction);
-  },
-  (db: IDBDatabase) => {
-    readymealsV1(db);
-  },
-  (db: IDBDatabase, transaction: IDBTransaction) => {
-    mealsV2(db, transaction)
-  },
+  }
 ]
 
 interface ICreateProps {
@@ -95,7 +83,7 @@ export class IndexedDB implements DB {
 
         for (let v = oldVersion; v < newVersion; v++) {
           console.info(`Migrating to version ${v + 1}`);
-          migrations[v](db, transaction);
+          migrations[v](db);
         }
       };
 
@@ -137,12 +125,8 @@ export class IndexedDB implements DB {
     return new Categories(this.db);
   }
 
-  ingredients() {
-    return new Ingredients(this.db);
-  }
-
-  readymeals() {
-    return new ReadyMeals(this.db);
+  items() {
+    return new Items(this.db);
   }
 
   recipies() {
@@ -159,9 +143,5 @@ export class IndexedDB implements DB {
 
   shopping() {
     return new ShoppingItems(this.db);
-  }
-  
-  settings() {
-    return new Settings(this.db);
   }
 }

@@ -1,5 +1,5 @@
-import { Categories } from "./categories";
-import { CategoriesEdit } from "./categories-edit";
+import { CategoriesEdit } from "./categories-edit/categories-edit";
+import { Categories } from "./categories/categories";
 
 export const routes = [
   {
@@ -11,7 +11,7 @@ export const routes = [
     element: <CategoriesEdit />,
   },
   {
-    path: "categories/:category",
+    path: "categories/:id",
     element: <CategoriesEdit />,
   },
 ];

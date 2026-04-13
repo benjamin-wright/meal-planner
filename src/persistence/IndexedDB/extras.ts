@@ -1,4 +1,4 @@
-import { Extra } from "../../models/extras";
+import { Extra, RandomIngredient } from "../../models/extras";
 import { ExtraStore } from "../interfaces/extras";
 import { TypedDB } from "./typed-db";
 
@@ -23,7 +23,7 @@ export class Extras implements ExtraStore {
     return this.db.getAll<Extra>(TABLE_NAME);
   }
 
-  async add(ingredient: number, unit: number, quantity: number): Promise<number> {
+  async add(ingredient: number | RandomIngredient, unit: number, quantity: number): Promise<number> {
     return this.db.add(TABLE_NAME, { ingredient, unit, quantity });
   }
 
